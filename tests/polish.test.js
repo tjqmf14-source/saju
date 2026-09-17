@@ -5,8 +5,9 @@ import { readFile } from 'node:fs/promises';
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const ui = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
 
-test('final polish stylesheet is loaded after the base theme', () => {
-  assert.match(html, /<link[^>]+href="\/polish\.css"/);
+test('final agency stylesheet is the only active site theme', () => {
+  assert.match(html, /<link[^>]+href="\/agency-v6\.css"/);
+  assert.doesNotMatch(html, /href="\/(?:premium|polish|feedback-v2|feedback-v3|redesign-v5)\.css"/);
 });
 
 test('keyboard users get a skip link and labelled primary navigation', () => {
