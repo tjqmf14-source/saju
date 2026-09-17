@@ -1,0 +1,76 @@
+/* Second-round readability and visual-depth refinements */
+body{font-size:16px}
+.topnav a{font-size:15px}
+.side-rail a{font-size:14px}
+.kicker,.micro{font-size:12px;letter-spacing:.16em}
+.privacy-pill{font-size:12px}
+.hero-lead{font-size:18px;line-height:1.9}
+.hero-meta span,.tag-row span{font-size:13px;padding:9px 13px}
+.hero-note p{font-size:16px}
+.section-label{position:relative}
+.section-label p{font-size:13px}
+.section-label span{font-size:14px}
+.section-label::after{content:"";height:1px;flex:1;margin-left:8px;background:linear-gradient(90deg,rgba(228,201,142,.46),rgba(169,156,255,.2),transparent)}
+.section-intro p,.block-head p,.year-head p,.tarot-copy>p:last-child{font-size:17px;line-height:1.9}
+.form-grid label>span,.precision-grid label>span,.tarot-controls label>span{font-size:13px}
+.form-grid input,.form-grid select,.precision-grid select,.tarot-controls select,.tarot-controls textarea{font-size:16px}
+.precision-switch{font-size:15px}
+.precision-settings summary{font-size:15px}
+.precision-explain strong{font-size:15px}.precision-explain p{font-size:14px}
+.form-error{font-size:14px}
+.reading-lead{font-size:17px;line-height:1.9}
+.mbti-orb span,.mbti-orb small{font-size:12px}
+.basis-item span{font-size:12px}.basis-item strong{font-size:15px;line-height:1.5}
+.report-nav a{font-size:13px}
+.detail-chapter-header span{font-size:13px}.detail-chapter-header p{font-size:14px;line-height:1.8}
+.detail-chapter-body p{font-size:17px;line-height:2;color:#d2d7e3}
+.big-copy{font-size:18px;line-height:1.95}
+.editorial-title>p:last-of-type{font-size:15px}
+.daily-fortune-card strong{font-size:15px}.daily-fortune-card p{font-size:14px;line-height:1.8}
+.lucky-list dt{font-size:12px}.lucky-list dd{font-size:14px;line-height:1.7}
+.advice-card span{font-size:13px}.advice-card p{font-size:15px;line-height:1.8}
+.quarter-card h3{font-size:17px}.quarter-card strong{font-size:15px}.quarter-card p{font-size:14px;line-height:1.8}
+.season-grid span{font-size:13px}.season-grid strong{font-size:16px}.season-grid p{font-size:14px;line-height:1.75}
+.month-card strong{font-size:15px}.month-card p{font-size:13px;line-height:1.8}.month-card small{font-size:12px}
+.luck-step span{font-size:13px}.luck-step p{font-size:14px;line-height:1.75}
+.tarot-controls{padding:22px}.tarot-reading span{font-size:12px}.tarot-reading h3{font-size:22px}.tarot-reading p{font-size:14px;line-height:1.9}
+.expert-panel summary{font-size:15px}
+.pillar-card>span{font-size:12px}.pillar-card dl{font-size:13px;line-height:1.6}
+.bar-row{font-size:13px}.relation-card strong{font-size:15px}.relation-card p{font-size:14px;line-height:1.75}.axis-row p{font-size:13px;line-height:1.7}
+footer p{font-size:14px;line-height:1.7}
+
+.panel{isolation:isolate}
+.panel::after{content:"";position:absolute;z-index:-1;inset:10px;border:1px solid rgba(228,201,142,.06);border-radius:calc(var(--polish-radius) - 7px);pointer-events:none;mask-image:linear-gradient(135deg,#000,transparent 38%,transparent 62%,#000)}
+.year-panel::before{content:"✦";position:absolute;right:38px;top:22px;font-family:Georgia,serif;font-size:112px;line-height:1;color:rgba(228,201,142,.035);text-shadow:0 0 55px rgba(169,156,255,.12);pointer-events:none}
+.expert-panel::before{content:"命";position:absolute;right:28px;top:24px;font-family:serif;font-size:94px;color:rgba(101,223,209,.025);pointer-events:none}
+
+.year-deep-dive{margin:34px 0 24px}
+.year-essay{position:relative;padding:30px 34px;border:1px solid rgba(228,201,142,.22);border-radius:20px;background:radial-gradient(circle at 90% 8%,rgba(228,201,142,.08),transparent 28%),linear-gradient(135deg,rgba(255,255,255,.035),rgba(169,156,255,.025))}
+.year-essay::before{content:"";position:absolute;left:0;top:30px;bottom:30px;width:2px;background:linear-gradient(var(--polish-gold),rgba(169,156,255,.4),transparent)}
+.essay-kicker{font-size:12px;letter-spacing:.18em;color:var(--polish-gold);font-weight:900}
+.year-essay h3{font:600 30px/1.25 Georgia,"Noto Serif KR",serif;margin:10px 0 18px}
+.year-essay>p{max-width:94ch;margin:0 0 18px;font-size:16px;line-height:2;color:#d1d6e3}
+.year-topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+.year-topic-grid>div{padding:19px 20px;border:1px solid rgba(196,205,236,.12);border-radius:15px;background:rgba(4,8,20,.3)}
+.year-topic-grid span{display:block;margin-bottom:7px;color:var(--polish-teal);font-size:13px;font-weight:900}.year-topic-grid p{margin:0;font-size:14px;line-height:1.8;color:#bec6d8}
+.year-action-plan{margin:28px 0 36px}.year-action-plan .block-head{display:grid;grid-template-columns:.6fr 1fr;gap:22px;align-items:end;margin-bottom:18px}.year-action-plan .block-head h3{font:600 27px/1.3 Georgia,"Noto Serif KR",serif;margin:0}.year-action-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.year-action-grid article{position:relative;padding:23px 24px 24px;border:1px solid rgba(196,205,236,.13);border-radius:17px;background:linear-gradient(145deg,rgba(16,25,52,.72),rgba(7,12,27,.75))}.year-action-grid article>span{color:var(--polish-gold);font-family:Georgia,serif;font-size:13px}.year-action-grid h4{margin:8px 0 10px;font-size:18px}.year-action-grid p{margin:0 0 13px;color:#b9c1d4;font-size:14px;line-height:1.8}.year-action-grid strong{display:block;padding-top:12px;border-top:1px solid rgba(196,205,236,.1);color:#e0e4ed;font-size:14px;line-height:1.75}
+
+.expert-guide{margin:28px 0 30px;padding:28px;border:1px solid rgba(101,223,209,.18);border-radius:20px;background:radial-gradient(circle at 0 0,rgba(101,223,209,.07),transparent 34%),rgba(3,9,21,.28)}
+.expert-guide-head{display:grid;grid-template-columns:.8fr 1.3fr;gap:22px;align-items:end;margin-bottom:22px}.expert-guide-head .micro{grid-column:1/-1}.expert-guide-head h3{margin:0;font:600 28px/1.3 Georgia,"Noto Serif KR",serif}.expert-guide-head p{margin:0;color:#c3cad9;font-size:15px;line-height:1.9}
+.expert-intro-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.expert-intro-grid article{padding:21px 22px;border-radius:16px;border:1px solid rgba(196,205,236,.12);background:rgba(255,255,255,.018)}
+.expert-intro-grid article>span{font-size:12px;color:var(--polish-gold);font-weight:900}.expert-intro-grid h4{margin:8px 0 10px;font-size:17px}.expert-intro-grid p{margin:0;color:#b8c1d3;font-size:14px;line-height:1.85}
+.expert-note{margin-top:14px;padding:17px 19px;border-left:2px solid var(--polish-teal);background:rgba(101,223,209,.035)}.expert-note strong{font-size:14px}.expert-note p{margin:6px 0 0;color:#b9c2d5;font-size:14px;line-height:1.8}
+
+.tarot-deck{align-items:start}
+.tarot-card{width:184px;height:310px}
+.tarot-front{padding:11px;background:linear-gradient(155deg,#151f3d,#080d1d)}
+.tarot-front>div{display:grid;grid-template-rows:auto 1fr auto auto;height:100%;width:100%;gap:7px;align-items:center}
+.tarot-illustration{align-self:stretch;min-height:210px;display:grid;place-items:center;border-radius:7px;overflow:hidden;transform-origin:center;transition:transform .45s ease}
+.tarot-illustration svg{display:block;width:100%;height:100%;max-height:224px;filter:saturate(.92) contrast(1.04);box-shadow:0 7px 20px rgba(0,0,0,.28)}
+.tarot-illustration.reversed-art{transform:rotate(180deg)}
+.tarot-front .arcana-no{font-size:12px}.tarot-front strong{font-size:18px}.tarot-front small{font-size:11px;line-height:1.35}
+.tarot-back::before{content:"✦";width:72%;aspect-ratio:1;border:1px solid rgba(228,201,142,.32);display:grid;place-items:center;border-radius:50%;font-size:46px;color:rgba(228,201,142,.6);box-shadow:0 0 0 15px rgba(228,201,142,.025),0 0 0 30px rgba(169,156,255,.018)}
+
+@media(max-width:900px){.year-topic-grid,.year-action-grid,.expert-intro-grid{grid-template-columns:1fr}.expert-guide-head,.year-action-plan .block-head{grid-template-columns:1fr}.tarot-card{width:min(210px,100%);height:340px}}
+@media(max-width:760px){.detail-chapter-body p{font-size:16px}.hero-lead{font-size:16px}.section-intro p,.block-head p,.year-head p,.tarot-copy>p:last-child{font-size:15px}.topnav a{font-size:13px}.year-essay{padding:24px 22px}.year-essay>p{font-size:15px}.expert-guide{padding:22px}.tarot-reading p{font-size:14px}.month-card p{font-size:14px}.expert-panel summary{font-size:15px}}
