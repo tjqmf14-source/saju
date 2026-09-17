@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 440" role="img" aria-label="전통 수묵 산수 배경">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff8ec"/><stop offset=".48" stop-color="#f6dfc5"/><stop offset="1" stop-color="#e6edf2"/></linearGradient>
+    <linearGradient id="mount" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8393a3" stop-opacity=".7"/><stop offset="1" stop-color="#c7d0d6" stop-opacity=".22"/></linearGradient>
+    <radialGradient id="sun"><stop offset="0" stop-color="#ffd39a" stop-opacity=".9"/><stop offset="1" stop-color="#ef9b63" stop-opacity=".5"/></radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="8"/></filter>
+  </defs>
+  <rect width="1600" height="440" fill="url(#sky)"/>
+  <circle cx="255" cy="155" r="88" fill="url(#sun)"/>
+  <path d="M0 345L125 230l88 70 115-118 96 107 132-171 124 143 107-96 118 117 114-82 141 118 134-68 126 95v95H0Z" fill="url(#mount)" opacity=".75"/>
+  <path d="M0 373c184-58 321-36 455-1 137 36 245 18 375-16 172-45 301-25 450 17 122 34 216 31 320-5v72H0Z" fill="#fff" opacity=".58" filter="url(#blur)"/>
+  <g fill="none" stroke="#243349" stroke-width="5" stroke-linecap="round" opacity=".8">
+    <path d="M1110 98c30-21 52-18 74 3-25 0-44 8-58 24 27-9 51-4 73 15-38-4-69 2-93 19"/>
+    <path d="M1200 127c28-22 52-25 78-8-23 3-40 13-52 30 24-8 48-3 70 14"/>
+  </g>
+  <g stroke="#5f4a36" stroke-width="8" fill="none" opacity=".72">
+    <path d="M48 50c40 44 48 95 33 153-9 36-10 73 9 111"/>
+    <path d="M1546 12c-37 44-50 92-39 144 7 36 3 75-18 119"/>
+  </g>
+  <g fill="#6d7e66" opacity=".85">
+    <circle cx="62" cy="73" r="33"/><circle cx="102" cy="91" r="26"/><circle cx="41" cy="118" r="25"/><circle cx="1527" cy="65" r="32"/><circle cx="1490" cy="95" r="24"/><circle cx="1555" cy="120" r="28"/>
+  </g>
+  <g fill="#d26c71" opacity=".78">
+    <circle cx="1470" cy="57" r="8"/><circle cx="1501" cy="44" r="7"/><circle cx="1520" cy="84" r="9"/><circle cx="1560" cy="67" r="6"/>
+  </g>
+</svg>
