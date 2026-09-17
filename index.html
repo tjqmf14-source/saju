@@ -3,241 +3,138 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="한국 만세력 기반 오프라인 프리미엄 사주 리포트">
-  <title>내사주 · 프리미엄 사주 리포트</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="description" content="정밀 만세력, 상세 사주 리포트와 오프라인 타로를 제공하는 내사주">
+  <title>내사주 · Saju & Tarot</title>
+  <link rel="stylesheet" href="/premium.css">
 </head>
 <body>
+  <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
   <header class="topbar">
-    <a class="brand" href="#home" aria-label="내사주 홈">
-      <span class="brand-mark">命</span>
-      <span><strong>내사주</strong><small>오늘도, 더 좋은 하루가 되길</small></span>
-    </a>
-    <nav class="topnav" aria-label="주요 메뉴">
-      <a href="#analysis">사주풀이</a>
-      <a href="#today">오늘의 운세</a>
-      <a href="#tojung">토정비결</a>
-      <a href="#year">올해의 운세</a>
-      <a href="#relationship">궁합·연애</a>
-      <a href="#expert">사주 심화</a>
+    <a class="brand" href="#home"><span class="seal">命</span><span><strong>내사주</strong><small>SAJU · TAROT · INSIGHT</small></span></a>
+    <nav class="topnav">
+      <a href="#reading">사주 리포트</a><a href="#today">오늘</a><a href="#year">올해</a><a href="#tarot">타로</a><a href="#expert">원국</a>
     </nav>
-    <span class="privacy-pill">서버 전송 없음</span>
+    <span class="privacy-pill">OFFLINE · PRIVATE</span>
   </header>
 
-  <section id="home" class="hero-landscape">
-    <div class="hero-inner">
-      <p class="hero-kicker">사주가 알려주는, 더 나은 오늘</p>
-      <h1>사주로 만나는<br>더 나은 오늘</h1>
-      <p>타고난 기운을 이해하면, 오늘이 조금 더 가벼워집니다.</p>
-      <blockquote>“좋은 날은, 준비된 마음에서 시작됩니다.”</blockquote>
-    </div>
-  </section>
-
-  <div class="app-layout">
-    <aside class="sidebar" aria-label="서비스 메뉴">
-      <a class="side-link active" href="#home"><span>⌂</span>홈</a>
-      <a class="side-link" href="#analysis"><span>◉</span>사주풀이</a>
-      <a class="side-link" href="#today"><span>☀</span>오늘의 운세</a>
-      <a class="side-link" href="#tojung"><span>▣</span>토정비결</a>
-      <a class="side-link" href="#year"><span>◌</span>올해의 운세</a>
-      <a class="side-link" href="#relationship"><span>♡</span>궁합·연애운</a>
-      <a class="side-link" href="#expert"><span>冊</span>사주 지식백과</a>
-      <div class="sidebar-promo">
-        <span class="moon">☾</span>
-        <strong>2026<br>토정비결</strong>
-        <p>새해의 흐름을 미리 읽어보세요.</p>
-        <a href="#tojung">바로보기 →</a>
+  <main id="home">
+    <section class="hero">
+      <div class="hero-orbit" aria-hidden="true"><span>☾</span></div>
+      <div class="hero-copy">
+        <p class="kicker">KOREAN SAJU · PRIVATE BY DESIGN</p>
+        <h1>운명을 단정하지 않고,<br><em>나를 더 정확히 읽는 법.</em></h1>
+        <p class="hero-lead">KASI 기반 만세력에 진태양시·과거 표준시 보정을 더하고, 어려운 명리 용어를 긴 호흡의 생활 언어로 해석합니다.</p>
+        <div class="hero-meta"><span>1900–2100</span><span>양력·음력·윤달</span><span>정밀 시간 보정</span><span>사주 기반 MBTI</span><span>Tarot 22</span></div>
       </div>
-      <p class="side-quote">“좋은 운은 준비된 사람에게 더 크게 찾아옵니다.”</p>
-    </aside>
+      <aside class="hero-note">
+        <span class="micro">TODAY'S NOTE</span>
+        <blockquote id="heroMessage">“결과보다 먼저, 지금의 방향을 읽어보세요.”</blockquote>
+        <p id="heroSub">생년월일을 입력하면 오늘의 흐름과 타고난 성향을 함께 보여드립니다.</p>
+      </aside>
+    </section>
 
-    <main class="content">
-      <section class="dashboard-grid">
-        <article class="card consult-card">
-          <div class="section-head compact">
-            <div>
-              <p class="eyebrow">사주 상담하기</p>
-              <h2>정확한 사주 분석으로 나만의 흐름을 확인하세요.</h2>
-            </div>
-          </div>
+    <section class="workspace">
+      <aside class="side-rail">
+        <span class="rail-index">01</span><a href="#input">Birth Data</a>
+        <span class="rail-index">02</span><a href="#reading">Saju Reading</a>
+        <span class="rail-index">03</span><a href="#today">Daily Flow</a>
+        <span class="rail-index">04</span><a href="#year">Year & Luck</a>
+        <span class="rail-index">05</span><a href="#tarot">Tarot</a>
+        <span class="rail-index">06</span><a href="#expert">Raw Chart</a>
+      </aside>
+
+      <div class="main-column">
+        <section id="input" class="panel input-panel">
+          <div class="section-label"><span>01</span><p>정밀 사주 입력</p></div>
+          <div class="section-intro"><h2>태어난 순간을 입력하세요.</h2><p>입력 정보는 이 브라우저 안에서만 계산됩니다. 서버 전송·자동 저장·쿠키 저장을 하지 않습니다.</p></div>
           <form id="birthForm" novalidate>
-            <div class="segmented wide">
-              <label><input type="radio" name="calendar" value="solar" checked><span>양력</span></label>
-              <label><input type="radio" name="calendar" value="lunar"><span>음력</span></label>
+            <div class="form-topline">
+              <div class="segmented">
+                <label><input type="radio" name="calendar" value="solar" checked><span>양력</span></label>
+                <label><input type="radio" name="calendar" value="lunar"><span>음력</span></label>
+              </div>
+              <label class="precision-switch"><input id="precisionToggle" type="checkbox" checked><span></span><b>정밀 계산 ON</b></label>
             </div>
             <div class="form-grid">
-              <label class="field"><span>이름/호칭</span><input id="name" name="name" type="text" placeholder="예: 민규"></label>
-              <label class="field"><span>연도</span><input id="birthYear" name="year" type="number" min="1900" max="2100" value="1987" required></label>
-              <label class="field"><span>월</span><input id="birthMonth" name="month" type="number" min="1" max="12" value="6" required></label>
-              <label class="field"><span>일</span><input id="birthDay" name="day" type="number" min="1" max="31" value="14" required></label>
-              <label class="field"><span>출생시간</span><input id="birthTime" name="time" type="time" value="11:45" required></label>
-              <label class="field"><span>성별</span><select id="gender" name="gender"><option value="male">남성</option><option value="female">여성</option></select></label>
-              <label class="field leap-field" id="leapField"><span>윤달</span><span class="check-row"><input id="isLeap" name="isLeap" type="checkbox"> 윤달로 입력</span></label>
+              <label><span>이름/호칭</span><input id="name" type="text" value="민규" placeholder="예: 민규"></label>
+              <label><span>연도</span><input id="birthYear" type="number" min="1900" max="2100" value="1987"></label>
+              <label><span>월</span><input id="birthMonth" type="number" min="1" max="12" value="6"></label>
+              <label><span>일</span><input id="birthDay" type="number" min="1" max="31" value="14"></label>
+              <label><span>출생 시간</span><input id="birthTime" type="time" value="11:45"></label>
+              <label><span>성별</span><select id="gender"><option value="male">남성</option><option value="female">여성</option></select></label>
+              <label id="leapField" class="leap-field"><span>윤달</span><span class="inline-check"><input id="isLeap" type="checkbox"> 윤달로 입력</span></label>
             </div>
-            <p class="privacy-note">입력 정보는 브라우저 안에서만 계산되며 서버로 전송되거나 저장되지 않습니다.</p>
-            <p class="error" id="formError" role="alert" aria-live="polite"></p>
-            <button class="primary-button" type="submit">사주 풀이 보기 <span>→</span></button>
-          </form>
-        </article>
-
-        <article id="today" class="card today-card">
-          <div class="today-sun">☀</div>
-          <p class="eyebrow">오늘의 운세</p>
-          <h2 id="todayDate">오늘</h2>
-          <strong id="todayHeadline">사주를 입력하면 오늘의 흐름을 알려드립니다.</strong>
-          <p id="todaySummary">오늘의 일진과 내 사주의 관계를 바탕으로 생활 언어로 풀어드립니다.</p>
-          <div id="todayTags" class="tag-row"></div>
-        </article>
-      </section>
-
-      <section id="results" hidden>
-        <section id="analysis" class="card report-card">
-          <div class="report-head">
-            <div>
-              <p class="eyebrow">당신의 사주 종합 분석</p>
-              <h2 id="reportTitle">사주 종합 리포트</h2>
-              <p id="reportBasis"></p>
-            </div>
-            <div id="reportNav" class="tab-row" aria-label="리포트 구분">
-              <span class="active">종합</span><span>성향</span><span>재물</span><span>연애</span><span>직업</span><span>건강</span><span>대운</span>
-            </div>
-          </div>
-
-          <div class="profile-grid">
-            <article class="profile-summary">
-              <div class="profile-illustration">山</div>
-              <div>
-                <h3 id="profileName">당신</h3>
-                <p id="profileBirth"></p>
-                <strong id="profileQuote">“나만의 기운을 읽는 중입니다.”</strong>
-                <p id="profileIntro"></p>
-                <div id="profileKeywords" class="tag-row"></div>
+            <details id="precisionSettings" class="precision-settings">
+              <summary>정밀 계산 설정 <small>출생 지역 · 자시 관법</small></summary>
+              <div class="precision-grid">
+                <label><span>출생 지역</span><select id="birthLocation"><option value="korea">대한민국 평균</option><option value="seoul">서울</option><option value="busan" selected>부산</option><option value="daegu">대구</option><option value="incheon">인천</option><option value="gwangju">광주</option><option value="daejeon">대전</option><option value="ulsan">울산</option><option value="jeju">제주</option><option value="sejong">세종</option></select></label>
+                <label><span>자시 관법</span><select id="dayBoundary"><option value="midnight">자정(00:00) 기준</option><option value="jasi">자시 환일</option><option value="splitJasi">분할자시</option></select></label>
+                <div class="precision-explain"><strong>정밀 모드가 하는 일</strong><p>출생지 경도 + 균시차 + 당시 한국 표준시/서머타임을 적용해 일주·시주의 경계 오차를 줄입니다.</p></div>
               </div>
-            </article>
-
-            <article class="mbti-summary">
-              <p class="mini-label">사주 기반 성향 유형</p>
-              <div id="mbtiType" class="mbti-type">-</div>
-              <h3 id="mbtiAlias">성향 분석</h3>
-              <p id="mbtiDescription"></p>
-              <div id="mbtiMini" class="mini-list"></div>
-            </article>
-
-            <article class="quote-card">
-              <p class="mini-label">오늘의 한마디</p>
-              <blockquote id="dailyQuote">“생각은 깊게, 행동은 분명하게.”</blockquote>
-              <p id="dailyQuoteBody"></p>
-            </article>
-          </div>
-
-          <div id="lifeSummaryGrid" class="life-summary-grid"></div>
+            </details>
+            <p id="formError" class="form-error" role="alert"></p>
+            <button class="cta" type="submit"><span>정밀 리포트 생성</span><b>↗</b></button>
+          </form>
         </section>
 
-        <section class="service-grid">
-          <article class="service-card fortune"><span>◎</span><h3>총운</h3><p id="overallFortune"></p></article>
-          <article class="service-card money"><span>◉</span><h3>재물운</h3><p id="moneyFortune"></p></article>
-          <article id="relationship" class="service-card love"><span>♡</span><h3>연애운</h3><p id="loveFortune"></p></article>
-          <article class="service-card career"><span>▣</span><h3>직업운</h3><p id="careerFortune"></p></article>
-          <article class="service-card health"><span>✦</span><h3>건강운</h3><p id="healthFortune"></p></article>
-        </section>
-
-        <section class="card section-card daily-detail-card">
-          <div class="section-head">
-            <div>
-              <p class="eyebrow">오늘의 운세 상세</p>
-              <h2>오늘 하루를 분야별로 읽어보기</h2>
-              <p>하루의 흐름을 총운·재물·연애·직업·컨디션으로 나누어 쉽게 설명합니다.</p>
+        <section id="results" hidden>
+          <section id="reading" class="reading-hero panel">
+            <div class="section-label"><span>02</span><p>당신의 사주 리포트</p></div>
+            <div class="reading-head">
+              <div><p id="profileBirth" class="micro"></p><h2 id="reportTitle">당신의 구조를 읽는 중입니다.</h2><p id="reportLead" class="reading-lead"></p><div id="profileTags" class="tag-row"></div></div>
+              <div class="mbti-orb"><span>SAJU MBTI</span><strong id="mbtiType">—</strong><small id="mbtiLabel"></small></div>
             </div>
-          </div>
-          <div class="daily-layout">
-            <div id="dailyFortuneGrid" class="daily-fortune-grid"></div>
-            <aside id="todayLucky" class="lucky-panel"></aside>
-          </div>
-        </section>
+            <div id="accuracyBasis" class="accuracy-basis"></div>
+          </section>
 
-        <section class="feature-grid">
-          <article id="tojung" class="feature-banner peach">
-            <div>
-              <p class="eyebrow">토정비결식 연간 리포트</p>
-              <h2 id="tojungTitle">올해의 큰 흐름</h2>
-              <p id="tojungSummary"></p>
-              <small>※ 사주 원국·세운·월운을 토정비결 형식의 생활 언어로 재구성한 참고 해석입니다.</small>
+          <nav id="reportNav" class="report-nav"><a href="#detailedReport">성향</a><a href="#today">오늘</a><a href="#year">올해</a><a href="#luck">대운</a><a href="#tarot">타로</a><a href="#expert">원국</a></nav>
+
+          <section id="detailedReport" class="detailed-report"></section>
+
+          <section id="today" class="editorial-split panel">
+            <div class="editorial-title"><span class="section-no">03</span><p class="micro">DAILY FLOW</p><h2>오늘의 운세</h2><p id="todayDate"></p><blockquote id="todayHeadline"></blockquote></div>
+            <div class="editorial-body"><p id="todaySummary" class="big-copy"></p><div id="dailyFortuneGrid" class="daily-list"></div><div id="todayLucky" class="lucky-strip"></div></div>
+          </section>
+
+          <section id="year" class="panel year-panel">
+            <div class="section-label"><span>04</span><p>올해의 흐름</p></div>
+            <div class="year-head"><div><p class="micro">ANNUAL READING</p><h2 id="yearTitle">올해의 핵심 흐름</h2><p id="yearSummary"></p></div><div class="year-glyph">☿</div></div>
+            <div id="yearAdviceGrid" class="advice-grid"></div>
+            <div id="tojungQuarterGrid" class="quarter-grid"></div>
+            <div id="seasonGuide" class="season-grid"></div>
+            <div class="month-block"><div class="block-head"><h3>12개월 흐름</h3><p>월운은 절기 기반 월주와 일간의 관계를 생활 언어로 풀어냅니다.</p></div><div id="monthForecast" class="month-grid"></div></div>
+          </section>
+
+          <section id="luck" class="panel luck-panel">
+            <div class="section-label"><span>05</span><p>대운 · 10년의 배경</p></div>
+            <div class="block-head"><h2>인생의 큰 계절</h2><p id="luckMeta"></p></div><div id="luckTimeline" class="luck-timeline"></div>
+          </section>
+
+          <section id="tarot" class="tarot-section panel">
+            <div class="tarot-copy"><p class="micro">TAROT · MAJOR ARCANA</p><h2>지금 마음에 걸리는 질문을<br>카드에게 건네보세요.</h2><p>22장의 메이저 아르카나를 브라우저 안에서 섞습니다. 타로는 미래를 확정하는 도구가 아니라, 질문을 다른 각도에서 바라보는 자기성찰 도구입니다.</p></div>
+            <div class="tarot-controls">
+              <label><span>리딩 방식</span><select id="tarotMode"><option value="today">오늘의 카드 · 1장</option><option value="question">질문 타로 · 3장</option><option value="love">연애 타로 · 3장</option><option value="money">일·재물 타로 · 3장</option></select></label>
+              <label><span>질문 <small>(저장되지 않음)</small></span><textarea id="tarotQuestion" rows="3" placeholder="예: 지금 이 선택에서 무엇을 먼저 봐야 할까?"></textarea></label>
+              <button id="drawTarot" class="tarot-button" type="button">카드 섞고 뽑기 <b>✦</b></button>
             </div>
-            <div class="fortune-seal">福</div>
-          </article>
+            <div id="tarotDeck" class="tarot-deck" aria-live="polite"></div>
+            <div id="tarotResult" class="tarot-result"></div>
+          </section>
 
-          <article id="year" class="feature-banner navy">
-            <div>
-              <p class="eyebrow">올해의 운세</p>
-              <h2 id="yearTitle">올해의 핵심 운</h2>
-              <p id="yearSummary"></p>
-              <div id="yearTags" class="tag-row"></div>
-            </div>
-            <div class="scroll-symbol">卷</div>
-          </article>
+          <section id="expert" class="panel expert-panel">
+            <div class="section-label"><span>06</span><p>원국 데이터</p></div>
+            <div class="block-head"><h2>전문가 보기</h2><p>아래는 해석 이전의 계산 결과입니다. 계산 근거와 전문 용어를 확인하고 싶을 때 펼쳐보세요.</p></div>
+            <details open><summary>사주 네 기둥</summary><div id="pillarGrid" class="pillar-grid"></div></details>
+            <details><summary>오행과 십성 분포</summary><div class="expert-grid"><div><h3>오행</h3><div id="elementChart" class="bar-list"></div></div><div><h3>십성</h3><div id="roleChart" class="bar-list"></div></div></div></details>
+            <details><summary>합·충·형·파·해</summary><div id="relationGrid" class="relation-grid"></div></details>
+            <details><summary>사주 기반 MBTI 4축</summary><div id="mbtiAxes" class="axis-list"></div></details>
+          </section>
         </section>
+      </div>
+    </section>
+  </main>
 
-        <section class="card section-card annual-detail-card">
-          <div class="section-head">
-            <div>
-              <p class="eyebrow">올해의 세부 흐름</p>
-              <h2>분기별로 보는 올해의 이야기</h2>
-              <p>한 해를 네 구간으로 나누어 기회와 주의점을 읽기 쉽게 정리합니다.</p>
-            </div>
-          </div>
-          <div id="tojungQuarterGrid" class="quarter-grid"></div>
-          <div id="yearAdviceGrid" class="year-advice-grid"></div>
-          <div id="seasonGuide" class="season-guide"></div>
-        </section>
-
-        <section class="card section-card">
-          <div class="section-head"><div><p class="eyebrow">월별 운세</p><h2>한 해를 12개의 흐름으로 읽기</h2><p>각 달의 중심 십성과 원국의 관계를 쉬운 문장으로 정리합니다.</p></div></div>
-          <div id="monthForecast" class="month-grid"></div>
-        </section>
-
-        <section class="card section-card lifetime-card">
-          <div class="section-head"><div><p class="eyebrow">평생 운세 흐름</p><h2>10년 단위로 보는 인생의 큰 주제</h2><p>대운은 좋고 나쁨의 점수가 아니라, 그 시기에 어떤 주제가 커지는지를 보여줍니다.</p></div></div>
-          <div id="luckMeta" class="luck-meta"></div>
-          <div id="luckTimeline" class="luck-timeline"></div>
-        </section>
-
-        <section class="quad-grid">
-          <article class="mini-feature rose"><span>♡</span><h3>궁합·연애운</h3><p id="loveDetail"></p></article>
-          <article class="mini-feature sand"><span>筆</span><h3>작명·개명 힌트</h3><p>사주에서 부족한 오행을 이름으로 보완한다는 전통 관점을 참고용으로 확인할 수 있습니다.</p></article>
-          <article class="mini-feature lavender"><span>冊</span><h3>사주풀이 심화</h3><p>원국·십성·오행·합충형파해를 자세히 확인합니다.</p></article>
-          <article class="mini-feature mint"><span>✦</span><h3>생활운세</h3><p id="lifeDetail"></p></article>
-        </section>
-
-        <section id="expert" class="card section-card expert-section">
-          <div class="section-head"><div><p class="eyebrow">전문가 보기</p><h2>원국과 구조 상세</h2><p>일반 해석 아래에서 실제 계산 결과를 확인할 수 있습니다.</p></div></div>
-
-          <details open>
-            <summary>사주 원국</summary>
-            <div id="pillarGrid" class="pillar-grid"></div>
-          </details>
-          <details>
-            <summary>오행·십성 분포</summary>
-            <div class="expert-grid"><div><h3>오행 분포</h3><div id="elementChart" class="bar-list"></div></div><div><h3>십성 그룹</h3><div id="roleChart" class="bar-list"></div></div></div>
-          </details>
-          <details>
-            <summary>합·충·형·파·해</summary>
-            <div id="relationGrid" class="relation-grid"></div>
-          </details>
-          <details>
-            <summary>사주 기반 MBTI 4축</summary>
-            <div id="mbtiAxes" class="axis-list"></div>
-          </details>
-        </section>
-      </section>
-    </main>
-  </div>
-
-  <footer class="site-footer">
-    <div class="brand footer-brand"><span class="brand-mark">命</span><span><strong>내사주</strong><small>사주는 가능성을 비추는 거울입니다.</small></span></div>
-    <p>본 서비스는 전통 명리 규칙을 구조화한 참고용 해석입니다. 건강·재정·법률 등 중요한 판단은 실제 정보와 전문가 의견을 우선하세요.</p>
-  </footer>
-
-  <script type="module" src="/src/app.js"></script>
+  <footer><div><span class="seal">命</span><strong>내사주</strong></div><p>계산은 브라우저 안에서만 수행됩니다. 사주와 타로는 자기이해를 위한 참고 정보이며, 건강·재정·법률 등 중요한 판단은 현실 정보와 전문가 의견을 우선하세요.</p></footer>
   <script type="module" src="/src/premium-ui.js"></script>
 </body>
 </html>
