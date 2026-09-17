@@ -1,3 +1,4 @@
+import '../premium.css';
 import {
   calculateSaju,
   calculateYearFlows,
@@ -170,7 +171,7 @@ function renderSeasonGuide(monthFlows) {
   $('seasonGuide').innerHTML = blocks.map(([name,flows])=>{
     const group = dominantGroup(flows);
     const copy = GROUP_COPY[group];
-    return `<article><span>${name}</span><strong>${ROLE_LABELS[group]}</strong><p>${copy.summary}. ${copy.good || copy.opportunity}</p></article>`;
+    return `<article><span>${name}</span><strong>${ROLE_LABELS[group]}</strong><p>${copy.summary}. ${copy.opportunity}</p></article>`;
   }).join('');
 }
 
