@@ -6,18 +6,21 @@
   <meta name="description" content="정밀 만세력, 상세 사주 리포트와 오프라인 타로를 제공하는 내사주">
   <title>내사주 · Saju & Tarot</title>
   <link rel="stylesheet" href="/premium.css">
+  <link rel="stylesheet" href="/polish.css">
 </head>
 <body>
+  <a class="skip-link" href="#main-content">본문 바로가기</a>
   <div class="ambient ambient-a"></div><div class="ambient ambient-b"></div>
   <header class="topbar">
     <a class="brand" href="#home"><span class="seal">命</span><span><strong>내사주</strong><small>SAJU · TAROT · INSIGHT</small></span></a>
-    <nav class="topnav">
+    <nav class="topnav" aria-label="주요 메뉴">
       <a href="#reading">사주 리포트</a><a href="#today">오늘</a><a href="#year">올해</a><a href="#tarot">타로</a><a href="#expert">원국</a>
     </nav>
     <span class="privacy-pill">OFFLINE · PRIVATE</span>
   </header>
 
-  <main id="home">
+  <main id="main-content">
+    <div id="home"></div>
     <section class="hero">
       <div class="hero-orbit" aria-hidden="true"><span>☾</span></div>
       <div class="hero-copy">
@@ -87,7 +90,7 @@
             <div id="accuracyBasis" class="accuracy-basis"></div>
           </section>
 
-          <nav id="reportNav" class="report-nav"><a href="#detailedReport">성향</a><a href="#today">오늘</a><a href="#year">올해</a><a href="#luck">대운</a><a href="#tarot">타로</a><a href="#expert">원국</a></nav>
+          <nav id="reportNav" class="report-nav" aria-label="리포트 바로가기"><a href="#detailedReport">성향</a><a href="#today">오늘</a><a href="#year">올해</a><a href="#luck">대운</a><a href="#tarot">타로</a><a href="#expert">원국</a></nav>
 
           <section id="detailedReport" class="detailed-report"></section>
 
