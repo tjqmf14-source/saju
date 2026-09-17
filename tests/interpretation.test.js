@@ -1,0 +1,32 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { calculateSaju, calculateYearFlows, calculateMonthFlows } from '../src/saju-engine.js';
+import { calculateSajuMbti } from '../src/mbti.js';
+import { buildDetailedInterpretation } from '../src/interpretation.js';
+
+const chart = calculateSaju({
+  calendar:'solar', year:1987, month:6, day:14, hour:11, minute:45,
+  gender:'male', isLeap:false, precision:true, location:'busan'
+});
+const mbti = calculateSajuMbti(chart);
+const year = 2026;
+const yearFlow = calculateYearFlows(chart, year, 1)[0];
+const monthFlows = calculateMonthFlows(chart, year);
+const report = buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows);
+
+for (const key of ['overview','temperament','innerOuter','strengths','career','money','love','relationships','recovery','year','luck']) {
+  test(`detailed interpretation contains ${key}`, () => {
+    assert.ok(report[key]);
+    assert.equal(typeof report[key].title, 'string');
+    assert.equal(typeof report[key].lead, 'string');
+    assert.ok(report[key].lead.length >= 20);
+    assert.ok(Array.isArray(report[key].paragraphs));
+    assert.ok(report[key].paragraphs.length >= 2);
+    assert.ok(report[key].paragraphs.every((p) => typeof p === 'string' && p.length >= 45));
+  });
+}
+
+test('overview includes MBTI and calculation basis context', () => {
+  assert.match(report.overview.paragraphs.join(' '), new RegExp(mbti.type));
+  assert.match(report.overview.paragraphs.join(' '), /진태양시|경도|정밀/);
+});
