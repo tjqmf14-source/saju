@@ -1,0 +1,379 @@
+/* V4 redesign: softer editorial flow, aligned margins, readable tarot, deep decade narrative */
+:root{
+  --v4-bg:#071126;
+  --v4-bg-2:#0b1834;
+  --v4-surface:rgba(11,22,48,.82);
+  --v4-surface-soft:rgba(255,255,255,.025);
+  --v4-line:rgba(207,218,246,.11);
+  --v4-line-gold:rgba(228,201,142,.18);
+  --v4-text:#f4f1e9;
+  --v4-muted:#b8c1d5;
+  --v4-gold:#e4c98e;
+  --v4-violet:#a89dff;
+  --v4-teal:#72ddce;
+  --v4-radius:26px;
+}
+
+body{
+  background:
+    radial-gradient(circle at 12% 10%,rgba(168,157,255,.10),transparent 26%),
+    radial-gradient(circle at 88% 12%,rgba(114,221,206,.07),transparent 22%),
+    linear-gradient(180deg,#071126 0%,#071024 45%,#09142b 100%);
+}
+body:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.14;
+  background-image:
+    radial-gradient(circle at 18% 28%,rgba(255,255,255,.7) 0 1px,transparent 1.2px),
+    radial-gradient(circle at 72% 14%,rgba(255,255,255,.45) 0 1px,transparent 1.2px),
+    radial-gradient(circle at 82% 72%,rgba(228,201,142,.6) 0 1px,transparent 1.2px),
+    radial-gradient(circle at 44% 88%,rgba(114,221,206,.45) 0 1px,transparent 1.2px);
+  background-size:260px 260px,310px 310px,280px 280px,340px 340px;
+}
+
+.hero,
+.workspace{
+  width:min(1380px,calc(100% - 64px));
+  border-left:0;
+  border-right:0;
+}
+.workspace{
+  grid-template-columns:150px minmax(0,1fr);
+  gap:0;
+}
+.side-rail{
+  border-right:0;
+  background:transparent;
+  padding-left:4px;
+}
+.main-column{
+  padding-top:34px;
+  padding-bottom:52px;
+  padding-inline:clamp(24px,3.2vw,56px);
+}
+
+.panel,
+.panel-flow{
+  border:1px solid var(--v4-line);
+  border-radius:var(--v4-radius);
+  background:
+    linear-gradient(145deg,rgba(15,29,59,.82),rgba(8,17,37,.84));
+  box-shadow:0 24px 70px rgba(0,0,0,.18);
+}
+.panel:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  border-radius:inherit;
+  background:linear-gradient(135deg,rgba(255,255,255,.022),transparent 30%,rgba(168,157,255,.018) 75%,transparent);
+}
+.input-panel,.reading-hero,.year-panel,.luck-panel,.tarot-section,.expert-panel,.editorial-split{
+  padding:clamp(26px,3vw,44px);
+  margin-bottom:26px;
+}
+.section-label{
+  padding-bottom:16px;
+  margin-bottom:28px;
+  border-bottom:1px solid var(--v4-line);
+}
+.section-label span{font-size:13px}
+.section-label p{font-size:12px;letter-spacing:.12em;color:#d2d8e7}
+.block-head p,.section-intro p,.year-head p,.tarot-copy>p:last-child{
+  font-size:17px;
+  line-height:1.9;
+  color:var(--v4-muted);
+}
+
+/* Reduce the old table-like feel */
+.detailed-report{
+  display:grid;
+  gap:18px;
+  background:transparent;
+  border:0;
+}
+.detail-chapter{
+  border:1px solid var(--v4-line);
+  border-radius:22px;
+  overflow:hidden;
+  background:linear-gradient(145deg,rgba(14,28,56,.74),rgba(8,17,36,.78));
+}
+.detail-chapter-header{
+  border-right:0;
+  background:rgba(255,255,255,.015);
+}
+.detail-chapter-body p{
+  font-size:17px;
+  line-height:2;
+  color:#d0d6e3;
+}
+
+.editorial-split{
+  grid-template-columns:minmax(240px,.48fr) minmax(0,1fr);
+  gap:38px;
+}
+.editorial-title{
+  border-right:0;
+  padding-right:0;
+}
+.daily-list{
+  border:0;
+  gap:12px;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.daily-fortune-card{
+  border:1px solid var(--v4-line)!important;
+  border-radius:18px;
+  background:var(--v4-surface-soft)!important;
+}
+.lucky-strip{
+  border-left:0;
+  border-top:1px solid var(--v4-line-gold);
+  border-radius:18px;
+}
+
+.year-panel{
+  background:
+    radial-gradient(circle at 92% 4%,rgba(228,201,142,.08),transparent 28%),
+    linear-gradient(145deg,rgba(15,29,59,.86),rgba(8,17,37,.90));
+}
+.advice-grid,.quarter-grid,.season-grid,.month-grid{gap:14px}
+.advice-card,.quarter-card,.season-grid>article,.month-card{
+  border:0!important;
+  border-top:1px solid var(--v4-line)!important;
+  border-radius:0!important;
+  background:transparent!important;
+  padding-left:0!important;
+  padding-right:0!important;
+}
+.month-card p,.quarter-card p,.season-grid p,.advice-card p{
+  font-size:16px!important;
+  line-height:1.9!important;
+  color:#c7cedd!important;
+}
+
+/* Decade / 10-year flow becomes editorial narrative rather than a horizontal table */
+.luck-panel{
+  background:
+    radial-gradient(circle at 8% 8%,rgba(168,157,255,.07),transparent 32%),
+    linear-gradient(145deg,rgba(13,27,55,.86),rgba(8,17,36,.92));
+}
+.luck-timeline{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:18px!important;
+  overflow:visible!important;
+  padding:0!important;
+}
+.luck-step{
+  display:grid!important;
+  grid-template-columns:minmax(165px,.26fr) minmax(0,1fr)!important;
+  gap:26px;
+  min-width:0!important;
+  padding:26px!important;
+  border:1px solid var(--v4-line)!important;
+  border-radius:22px!important;
+  background:rgba(255,255,255,.018)!important;
+}
+.luck-step.active{
+  border-color:rgba(228,201,142,.34)!important;
+  background:linear-gradient(135deg,rgba(228,201,142,.06),rgba(168,157,255,.035))!important;
+}
+.luck-marker{
+  display:grid;
+  align-content:start;
+  gap:7px;
+  padding-right:22px;
+  border-right:1px solid var(--v4-line);
+}
+.luck-marker span{
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.1em;
+  color:var(--v4-gold);
+  text-transform:uppercase;
+}
+.luck-marker strong{font-size:22px!important;color:#fff!important}
+.luck-marker b{font:600 34px/1.15 Georgia,"Noto Serif KR",serif;color:#f3e4b9}
+.luck-marker small{font-size:13px;color:#98a5bf}
+.luck-copy h3{
+  margin:0 0 12px;
+  font:600 28px/1.35 Georgia,"Noto Serif KR",serif;
+}
+.luck-lead{
+  margin:0;
+  max-width:88ch;
+  font-size:17px!important;
+  line-height:1.95!important;
+  color:#cbd2df!important;
+}
+.luck-narrative-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin-top:20px;
+}
+.luck-narrative-grid>div{
+  padding:18px;
+  border-radius:16px;
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(207,218,246,.08);
+}
+.luck-narrative-grid strong{
+  display:block;
+  margin-bottom:8px;
+  color:var(--v4-teal);
+  font-size:14px;
+}
+.luck-narrative-grid p{
+  margin:0!important;
+  font-size:15px!important;
+  line-height:1.9!important;
+  color:#bfc8d8!important;
+}
+
+/* Tarot: actual RWS art always stays upright; reversal is semantic, not visual */
+.tarot-section{
+  background:
+    radial-gradient(circle at 88% 4%,rgba(168,157,255,.11),transparent 30%),
+    radial-gradient(circle at 12% 96%,rgba(114,221,206,.05),transparent 24%),
+    linear-gradient(145deg,rgba(14,27,57,.92),rgba(7,15,33,.95));
+}
+.tarot-illustration.reversed-art{transform:none!important}
+.tarot-card-image{transform:none!important}
+.tarot-deck{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,230px))!important;
+  justify-content:center!important;
+  gap:28px!important;
+}
+.tarot-card{
+  width:100%!important;
+  max-width:230px;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.tarot-front{
+  border-radius:18px!important;
+  border:1px solid var(--v4-line-gold)!important;
+  background:linear-gradient(180deg,#0a1022,#0a132a)!important;
+}
+.tarot-result{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:18px!important;
+  max-width:1040px;
+  margin:34px auto 0!important;
+}
+.tarot-reading{
+  width:100%;
+  max-width:1040px;
+  margin:0 auto;
+  padding:28px 30px!important;
+  border:1px solid var(--v4-line)!important;
+  border-radius:22px!important;
+  background:rgba(255,255,255,.018)!important;
+}
+.tarot-reading-head{
+  grid-template-columns:135px 1fr!important;
+  gap:18px!important;
+}
+.tarot-reading-grid{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:0!important;
+  margin-top:20px!important;
+}
+.tarot-reading-grid>div{
+  display:grid;
+  grid-template-columns:170px 1fr;
+  gap:20px;
+  padding:17px 0!important;
+  border:0!important;
+  border-top:1px solid var(--v4-line)!important;
+  border-radius:0!important;
+  background:transparent!important;
+}
+.tarot-reading-grid strong{
+  margin:0!important;
+  font-size:14px!important;
+  color:var(--v4-teal)!important;
+}
+.tarot-reading-grid p{
+  font-size:16px!important;
+  line-height:1.95!important;
+  color:#cbd2df!important;
+}
+.tarot-reading-note{
+  font-size:13px!important;
+  line-height:1.8!important;
+}
+
+/* Expert section: more editorial, fewer mini boxes */
+.expert-panel{
+  background:
+    radial-gradient(circle at 4% 10%,rgba(114,221,206,.05),transparent 28%),
+    linear-gradient(145deg,rgba(12,25,52,.88),rgba(8,17,36,.94));
+}
+.expert-story-grid{
+  grid-template-columns:1fr!important;
+  gap:0!important;
+  margin-top:24px!important;
+}
+.expert-story-card{
+  display:grid;
+  grid-template-columns:48px minmax(180px,.34fr) minmax(0,1fr);
+  gap:18px;
+  padding:24px 0!important;
+  border:0!important;
+  border-top:1px solid var(--v4-line)!important;
+  border-radius:0!important;
+  background:transparent!important;
+}
+.expert-story-card:first-child{grid-column:auto!important}
+.expert-story-card h4{margin:0!important}
+.story-summary{font-size:16px!important;line-height:1.95!important}
+.life-example{
+  grid-column:2/-1;
+  margin-top:0!important;
+}
+.expert-evidence{grid-column:2/-1}
+.expert-glossary{
+  border:0!important;
+  border-top:1px solid var(--v4-line-gold)!important;
+  border-radius:0!important;
+  background:transparent!important;
+}
+
+@media(max-width:1000px){
+  .hero,.workspace{width:calc(100% - 28px)}
+  .workspace{grid-template-columns:1fr}
+  .main-column{padding-inline:8px}
+  .luck-step{grid-template-columns:1fr!important}
+  .luck-marker{border-right:0;border-bottom:1px solid var(--v4-line);padding:0 0 18px}
+  .tarot-deck{grid-template-columns:repeat(2,minmax(0,230px))!important}
+  .expert-story-card{grid-template-columns:40px 1fr}
+  .story-summary,.life-example,.expert-evidence{grid-column:2}
+}
+
+@media(max-width:760px){
+  .hero,.workspace{width:calc(100% - 12px)}
+  .main-column{padding-inline:0}
+  .input-panel,.reading-hero,.year-panel,.luck-panel,.tarot-section,.expert-panel,.editorial-split{padding:22px}
+  .editorial-split{grid-template-columns:1fr}
+  .daily-list{grid-template-columns:1fr}
+  .luck-narrative-grid{grid-template-columns:1fr}
+  .tarot-deck{grid-template-columns:1fr!important}
+  .tarot-card{max-width:min(250px,86vw);justify-self:center}
+  .tarot-reading{padding:22px!important}
+  .tarot-reading-head{grid-template-columns:1fr!important}
+  .tarot-reading-grid>div{grid-template-columns:1fr;gap:8px}
+  .expert-story-card{grid-template-columns:34px 1fr;gap:12px}
+  .expert-glossary{grid-template-columns:1fr!important}
+  .detail-chapter-body p{font-size:15px}
+}
