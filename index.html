@@ -45,7 +45,7 @@
       <div class="sidebar-promo">
         <span class="moon">☾</span>
         <strong>2026<br>토정비결</strong>
-        <p>새해의 운을 미리 읽어보세요.</p>
+        <p>새해의 흐름을 미리 읽어보세요.</p>
         <a href="#tojung">바로보기 →</a>
       </div>
       <p class="side-quote">“좋은 운은 준비된 사람에게 더 크게 찾아옵니다.”</p>
@@ -98,7 +98,7 @@
               <h2 id="reportTitle">사주 종합 리포트</h2>
               <p id="reportBasis"></p>
             </div>
-            <div class="tab-row" aria-label="리포트 구분">
+            <div id="reportNav" class="tab-row" aria-label="리포트 구분">
               <span class="active">종합</span><span>성향</span><span>재물</span><span>연애</span><span>직업</span><span>건강</span><span>대운</span>
             </div>
           </div>
@@ -141,6 +141,20 @@
           <article class="service-card health"><span>✦</span><h3>건강운</h3><p id="healthFortune"></p></article>
         </section>
 
+        <section class="card section-card daily-detail-card">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">오늘의 운세 상세</p>
+              <h2>오늘 하루를 분야별로 읽어보기</h2>
+              <p>하루의 흐름을 총운·재물·연애·직업·컨디션으로 나누어 쉽게 설명합니다.</p>
+            </div>
+          </div>
+          <div class="daily-layout">
+            <div id="dailyFortuneGrid" class="daily-fortune-grid"></div>
+            <aside id="todayLucky" class="lucky-panel"></aside>
+          </div>
+        </section>
+
         <section class="feature-grid">
           <article id="tojung" class="feature-banner peach">
             <div>
@@ -161,6 +175,19 @@
             </div>
             <div class="scroll-symbol">卷</div>
           </article>
+        </section>
+
+        <section class="card section-card annual-detail-card">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">올해의 세부 흐름</p>
+              <h2>분기별로 보는 올해의 이야기</h2>
+              <p>한 해를 네 구간으로 나누어 기회와 주의점을 읽기 쉽게 정리합니다.</p>
+            </div>
+          </div>
+          <div id="tojungQuarterGrid" class="quarter-grid"></div>
+          <div id="yearAdviceGrid" class="year-advice-grid"></div>
+          <div id="seasonGuide" class="season-guide"></div>
         </section>
 
         <section class="card section-card">
