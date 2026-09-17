@@ -1,5 +1,6 @@
 import {
   calculateFourPillars,
+  getSolarTerm,
   getTenGod
 } from 'manseryeok';
 import { normalizeBirthDate, solarToLunar } from './calendar.js';
@@ -196,13 +197,55 @@ export function calculateYearFlows(chart, startYear = new Date().getFullYear(), 
   return Array.from({length:count},(_,index)=>calculateYearFlow(chart,startYear+index));
 }
 
+function kstDateTimeParts(date) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone:'Asia/Seoul',
+    year:'numeric', month:'2-digit', day:'2-digit',
+    hour:'2-digit', minute:'2-digit', hourCycle:'h23'
+  }).formatToParts(date);
+  const value = Object.fromEntries(parts.map((part)=>[part.type,part.value]));
+  return {
+    year:Number(value.year), month:Number(value.month), day:Number(value.day),
+    hour:Number(value.hour), minute:Number(value.minute)
+  };
+}
+
+function monthBoundary(year, sajuMonth) {
+  if (sajuMonth <= 11) return getSolarTerm(year, sajuMonth * 2).date;
+  return getSolarTerm(year + 1, 0).date;
+}
+
+function nextMonthBoundary(year, sajuMonth) {
+  if (sajuMonth <= 10) return getSolarTerm(year, (sajuMonth + 1) * 2).date;
+  if (sajuMonth === 11) return getSolarTerm(year + 1, 0).date;
+  return getSolarTerm(year + 1, 2).date;
+}
+
 export function calculateMonthFlows(chart, year) {
+  if (!Number.isInteger(year) || year < 1900 || year > 2099) throw new RangeError('월운 연도는 1900~2099 범위여야 합니다.');
   const months=[];
-  for(let month=1;month<=12;month+=1){
-    const detail=calculateFourPillars({year,month,day:15,hour:12,minute:0,gender:chart.input.gender,dayBoundary:'midnight'});
+  for(let sajuMonth=1;sajuMonth<=12;sajuMonth+=1){
+    const start=monthBoundary(year,sajuMonth);
+    const end=nextMonthBoundary(year,sajuMonth);
+    const sample=kstDateTimeParts(new Date(start.getTime()+60_000));
+    const detail=calculateFourPillars({
+      ...sample,
+      gender:chart.input.gender,
+      dayBoundary:'midnight'
+    });
     const pillar=detail.month;
     const tenGod=getTenGod(chart.dayMaster,pillar.heavenlyStem);
-    months.push({month,pillar,korean:pillarString(pillar),tenGod,group:TEN_GOD_GROUP[tenGod]});
+    months.push({
+      month:sajuMonth,
+      sajuMonth,
+      branch:pillar.earthlyBranch,
+      start,
+      end,
+      pillar,
+      korean:pillarString(pillar),
+      tenGod,
+      group:TEN_GOD_GROUP[tenGod]
+    });
   }
   return months;
 }
