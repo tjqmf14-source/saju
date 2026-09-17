@@ -86,7 +86,7 @@ export function detectBranchRelations(branches) {
   }
   pushPair('형', [['자','묘']]);
   for (const self of ['진','오','유','해']) {
-    if (branches.filter((b)=>b===self).length >= 2) result.push({type:'형',members:[self,self],text:`${self} ${typeLabel('형')} (자형)`});
+    if (branches.filter((b)=>b===self).length >= 2) result.push({type:'형',members:[self,self],text:`${self} 형 (자형)`});
   }
 
   const seen = new Set();
@@ -97,8 +97,6 @@ export function detectBranchRelations(branches) {
     return true;
   });
 }
-
-function typeLabel(type){ return type; }
 
 function normalizeInput(input) {
   const required = ['year','month','day','hour','minute'];
@@ -197,4 +195,28 @@ export function calculateMonthFlows(chart, year) {
     months.push({month,pillar,korean:pillarString(pillar),tenGod,group:TEN_GOD_GROUP[tenGod]});
   }
   return months;
+}
+
+function kstParts(date) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone:'Asia/Seoul', year:'numeric', month:'2-digit', day:'2-digit'
+  }).formatToParts(date);
+  const value = Object.fromEntries(parts.map((part)=>[part.type,part.value]));
+  return { year:Number(value.year), month:Number(value.month), day:Number(value.day) };
+}
+
+export function calculateTodayFlow(chart, now = new Date()) {
+  const date = kstParts(now);
+  const detail = calculateFourPillars({
+    year:date.year, month:date.month, day:date.day,
+    hour:12, minute:0, gender:chart.input.gender, dayBoundary:'midnight'
+  });
+  const pillar = detail.day;
+  const tenGod = getTenGod(chart.dayMaster,pillar.heavenlyStem);
+  const group = TEN_GOD_GROUP[tenGod];
+  const relations = detectBranchRelations([
+    ...PILLAR_KEYS.map((key)=>chart.pillars[key].earthlyBranch),
+    pillar.earthlyBranch
+  ]).filter((relation)=>relation.members.includes(pillar.earthlyBranch));
+  return { date, pillar, korean:pillarString(pillar), tenGod, group, relations };
 }
