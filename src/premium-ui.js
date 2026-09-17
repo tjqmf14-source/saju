@@ -7,6 +7,8 @@ import {
 import { calculateSajuMbti } from './mbti.js';
 import { buildDetailedInterpretation } from './interpretation.js';
 import { drawTarot, interpretSpread } from './tarot.js';
+import { calculateDailyScores } from './daily-score.js';
+import { buildPlainChartGuide } from './plain-chart.js';
 import { ROLE_LABELS, ELEMENT_LABELS, stemByName, branchByName } from './data.js';
 
 const $ = (id) => document.getElementById(id);
@@ -70,8 +72,6 @@ const ELEMENT_HINT = {
   수:{color:'네이비 · 블랙',place:'조용한 카페나 물가',action:'메모로 생각을 밖에 꺼낸 뒤 작은 행동 하나 정하기'}
 };
 
-const TAROT_SYMBOLS = ['✦','☿','☾','♀','♄','☉','♡','♜','∞','☽','◌','⚖','▽','✧','⚗','♑','⚡','☆','☾','☀','♧','⊕'];
-
 function selectedCalendar(){ return form.elements.calendar.value; }
 function currentKstYear(){ return Number(new Intl.DateTimeFormat('en',{timeZone:'Asia/Seoul',year:'numeric'}).format(new Date())); }
 function currentKstDate(){ return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric',weekday:'short'}).format(new Date()); }
@@ -80,6 +80,7 @@ function dominantElement(chart){ return sorted(chart.elements)[0]?.[0] || '토';
 function weakestElement(chart){ return sorted(chart.elements).at(-1)?.[0] || '수'; }
 function dominantRole(chart){ return sorted(chart.roles)[0]?.[0] || '인성'; }
 function relationLabel(relations){ return relations?.length ? [...new Set(relations.map((r)=>r.type))].join('·') : '큰 충돌 신호 없음'; }
+function escapeHtml(value=''){ return value.replace(/[&<>"']/g,(char)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])); }
 
 function collectInput(){
   const [hour,minute] = $('birthTime').value.split(':').map(Number);
@@ -143,12 +144,19 @@ function renderDetailedReport(report){
 
 function renderToday(chart,todayFlow){
   const copy=GROUP_COPY[todayFlow.group];
+  const scores=calculateDailyScores(chart,todayFlow);
   $('todayDate').textContent=currentKstDate();
   $('todayHeadline').textContent=`“${copy.summary}”`;
-  $('todaySummary').textContent=`오늘은 ${copy.opportunity}에 힘을 싣는 편이 좋습니다. 반대로 ${copy.caution}은 한 번 더 점검하세요. 오늘 일진 ${todayFlow.korean}과 원국의 관계 신호는 ${relationLabel(todayFlow.relations)}입니다.`;
-  const cards=[['총운',`${copy.summary}입니다. 무엇을 더 할지보다 오늘 가장 중요한 한 가지를 먼저 정해보세요.`],['재물',copy.money],['연애',copy.love],['직업',copy.work],['컨디션',copy.health]];
+  $('todaySummary').textContent=`오늘은 ${copy.opportunity}에 힘을 싣는 편이 좋습니다. 반대로 ${copy.caution}은 한 번 더 점검하세요. 아래 점수는 원국과 오늘 일진의 관계를 0–100으로 정리한 ‘오늘의 흐름 지수’이며 확률이나 객관적 예측값이 아닙니다.`;
+  const cards=[
+    ['overall','총운',`${copy.summary}입니다. 무엇을 더 할지보다 오늘 가장 중요한 한 가지를 먼저 정해보세요.`],
+    ['money','재물',copy.money],['love','연애',copy.love],['work','직업',copy.work],['condition','컨디션',copy.health]
+  ];
   const icons={총운:'☀',재물:'◉',연애:'♡',직업:'▣',컨디션:'✦'};
-  $('dailyFortuneGrid').innerHTML=cards.map(([title,text])=>`<article class="daily-fortune-card"><span class="daily-icon">${icons[title]}</span><strong>${title}</strong><p>${text}</p></article>`).join('');
+  $('dailyFortuneGrid').innerHTML=cards.map(([key,title,body])=>{
+    const flow=scores[key];
+    return `<article class="daily-fortune-card"><div class="daily-card-top"><span class="daily-icon">${icons[title]}</span><div><strong>${title}</strong><div class="flow-score"><b>${flow.score}</b><span>/100 · ${flow.label}</span></div></div></div><div class="score-track" aria-label="${title} 오늘의 흐름 지수 ${flow.score}점"><span class="score-fill" style="width:${flow.score}%"></span></div><p>${body}</p><small class="score-reason">${flow.reason}</small></article>`;
+  }).join('');
   const strong=dominantElement(chart), weak=weakestElement(chart), hint=ELEMENT_HINT[strong];
   $('todayLucky').innerHTML=`<p class="micro">TODAY'S GUIDE</p><dl class="lucky-list"><div><dt>행동</dt><dd>${hint.action}</dd></div><div><dt>공간</dt><dd>${hint.place}</dd></div><div><dt>상징 컬러</dt><dd>${hint.color}</dd></div><div><dt>균형 포인트</dt><dd>${weak}(${ELEMENT_LABELS[weak].label}) 기운을 보완하는 휴식과 정리를 의식해 보세요.</dd></div></dl>`;
 }
@@ -163,7 +171,7 @@ function renderYear(yearFlow,monthFlows){
   const copy=GROUP_COPY[yearFlow.group];
   $('yearTitle').textContent=`${yearFlow.year} · ${ROLE_LABELS[yearFlow.group]}의 해`;
   $('yearSummary').textContent=`${copy.summary}입니다. ${copy.opportunity}에 집중하면 흐름을 활용하기 좋고, ${copy.caution}은 올해 반복해서 점검할 주제입니다. 원국과의 관계 신호는 ${relationLabel(yearFlow.relations)}입니다.`;
-  $('yearAdviceGrid').innerHTML=[['올해의 기회',copy.opportunity],['주의할 패턴',copy.caution],['돈의 포인트',copy.money],['관계의 포인트',copy.love]].map(([title,text])=>`<article class="advice-card"><span>${title}</span><p>${text}</p></article>`).join('');
+  $('yearAdviceGrid').innerHTML=[['올해의 기회',copy.opportunity],['주의할 패턴',copy.caution],['돈의 포인트',copy.money],['관계의 포인트',copy.love]].map(([title,body])=>`<article class="advice-card"><span>${title}</span><p>${body}</p></article>`).join('');
   const quarterNames=['1–3월 · 방향을 잡는 구간','4–6월 · 속도를 조절하는 구간','7–9월 · 중심을 다지는 구간','10–12월 · 정리와 다음 준비'];
   $('tojungQuarterGrid').innerHTML=[0,3,6,9].map((start,index)=>{
     const group=dominantGroup(monthFlows.slice(start,start+3)); const c=GROUP_COPY[group];
@@ -203,7 +211,14 @@ function renderMbtiAxes(mbti){
   $('mbtiAxes').innerHTML=Object.entries(mbti.axes).map(([key,axis])=>`<div class="axis-row"><div class="axis-side">${axis.left.letter}<br><small>${axis.left.percent}%</small></div><div><strong>${names[key]} · ${axis.selected} 우세</strong><div class="axis-track"><span class="axis-left" style="width:${axis.left.percent}%"></span><span class="axis-right" style="width:${axis.right.percent}%"></span></div><p>${axis.reasons.join(' · ')}</p></div><div class="axis-side">${axis.right.letter}<br><small>${axis.right.percent}%</small></div></div>`).join('');
 }
 
+function renderExpertGuide(chart){
+  const guide=buildPlainChartGuide(chart);
+  const sectionOrder=['personality','work','money','relationships','recovery'];
+  $('expertGuide').innerHTML=`<div class="expert-guide-head"><span class="micro">MY CHART IN PLAIN KOREAN</span><h3>${guide.headline}</h3><p>${guide.summary}</p></div><div class="expert-story-grid">${sectionOrder.map((key,index)=>{const section=guide.sections[key];return `<article class="expert-story-card"><span>${String(index+1).padStart(2,'0')}</span><h4>${section.title}</h4><p class="story-summary">${section.summary}</p><div class="life-example"><strong>생활에서는 이렇게 보일 수 있어요</strong><p>${section.lifeExample}</p></div><details class="expert-evidence"><summary>왜 이렇게 해석했나요?</summary><p>${section.evidence}</p></details></article>`;}).join('')}</div><div class="expert-glossary"><div><span class="micro">TERMS, SIMPLIFIED</span><h4>전문용어를 한 문장으로</h4></div><dl>${guide.glossary.map((item)=>`<div><dt>${item.term}</dt><dd>${item.plain}</dd></div>`).join('')}</dl></div><p class="expert-raw-intro"><strong>아래부터는 계산 원자료입니다.</strong> 위 해설이 어떤 데이터에서 나왔는지 확인하고 싶을 때만 펼쳐보세요.</p>`;
+}
+
 function renderExpert(chart,mbti){
+  renderExpertGuide(chart);
   renderPillars(chart);
   renderBars('elementChart',chart.elements,Object.fromEntries(Object.entries(ELEMENT_LABELS).map(([k,v])=>[k,`${k} · ${v.label}`])));
   renderBars('roleChart',chart.roles,ROLE_LABELS);
@@ -237,10 +252,10 @@ function renderAll(){
 }
 
 function renderTarot(mode,draw,reading,question){
-  $('tarotDeck').innerHTML=draw.map((item,index)=>`<article class="tarot-card" data-card="${index}"><div class="tarot-card-inner"><div class="tarot-face tarot-back"></div><div class="tarot-face tarot-front${item.reversed?' reversed':''}"><div><span class="arcana-no">${String(item.card.id).padStart(2,'0')}</span><div class="arcana-symbol">${TAROT_SYMBOLS[item.card.id]}</div><strong>${item.card.name}</strong><small>${item.card.en}<br>${item.reversed?'REVERSED':'UPRIGHT'}</small></div></div></div></article>`).join('');
+  $('tarotDeck').innerHTML=draw.map((item,index)=>`<article class="tarot-card" data-card="${index}"><div class="tarot-card-inner"><div class="tarot-face tarot-back"></div><div class="tarot-face tarot-front"><div><span class="arcana-no">${item.card.arcana==='major'?String(item.card.rank).padStart(2,'0'):item.card.en}</span><div class="tarot-illustration${item.reversed?' reversed-art':''}"><img class="tarot-card-image" src="${item.card.image}" alt="${item.card.en} Rider-Waite-Smith 카드" loading="eager"></div><strong>${item.card.name}</strong><small>${item.card.en}<br>${item.reversed?'REVERSED · 역방향':'UPRIGHT · 정방향'}</small></div></div></div></article>`).join('');
   requestAnimationFrame(()=>setTimeout(()=>document.querySelectorAll('.tarot-card').forEach((card)=>card.classList.add('revealed')),60));
-  const questionLine=question?`<p class="tarot-question-line">질문 · ${question.replace(/[<>]/g,'')}</p>`:'';
-  $('tarotResult').innerHTML=questionLine+reading.map((item)=>`<article class="tarot-reading"><span>${item.position}</span><h3>${item.card.name} · ${item.orientation}</h3><p>${item.text}</p></article>`).join('');
+  const questionLine=question?`<p class="tarot-question-line">질문 · ${escapeHtml(question)}</p>`:'';
+  $('tarotResult').innerHTML=questionLine+reading.map((item)=>`<article class="tarot-reading"><div class="tarot-reading-head"><span>${item.position}</span><div><h3>${item.card.name} · ${item.orientation}</h3><p class="tarot-keywords">${item.card.keywords}</p></div></div><div class="tarot-reading-grid"><div><strong>카드의 뜻</strong><p>${item.meaning}</p></div><div><strong>그림이 말하는 상징</strong><p>${item.symbolism}</p></div><div><strong>지금 적용할 조언</strong><p>${item.advice}</p></div></div><p class="tarot-reading-note">타로는 미래를 확정하는 예언이 아니라 현재 질문을 다른 각도에서 살펴보기 위한 상징적 참고 도구입니다.</p></article>`).join('');
 }
 
 function handleTarot(){
