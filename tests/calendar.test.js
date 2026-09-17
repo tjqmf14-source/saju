@@ -1,4 +1,3 @@
-import './setup.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { solarToLunar, lunarToSolar, isLeapMonth } from '../src/calendar.js';
