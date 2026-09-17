@@ -1,5 +1,3 @@
-import { TAROT_ILLUSTRATIONS } from './tarot-art.js';
-
 const $=(id)=>document.getElementById(id);
 
 function text(id){ return $(id)?.textContent?.trim() || ''; }
@@ -24,55 +22,13 @@ function renderYearDeepDive(){
   setHtml(plan,planHtml);
 }
 
-function renderExpertGuide(){
-  const target=$('expertGuide');
-  if(!target) return;
-  const pillarNames=cards('#pillarGrid .pillar-card').map((el)=>el.querySelector('.pillar-letters')?.textContent?.trim()).filter(Boolean);
-  const elementRows=cards('#elementChart .bar-row').map((el)=>({label:el.querySelector('strong')?.textContent?.trim(),value:Number(el.lastElementChild?.textContent)})).filter((x)=>Number.isFinite(x.value)).sort((a,b)=>b.value-a.value);
-  const roleRows=cards('#roleChart .bar-row').map((el)=>({label:el.querySelector('strong')?.textContent?.trim(),value:Number(el.lastElementChild?.textContent)})).filter((x)=>Number.isFinite(x.value)).sort((a,b)=>b.value-a.value);
-  if(!pillarNames.length) return;
-  const strongElement=elementRows[0]?.label || '오행의 강한 축';
-  const weakElement=elementRows.at(-1)?.label || '오행의 약한 축';
-  const role=roleRows[0]?.label || '가장 두드러진 십성';
-  const html=`<div class="expert-guide-head"><span class="micro">PLAIN LANGUAGE GUIDE</span><h3>처음 보는 사람을 위한 원국 읽는 법</h3><p><strong>쉽게 말하면</strong>, 이 항목은 사주 해석의 ‘원재료’를 보여주는 곳입니다. 아래 숫자나 한자를 좋은 점수·나쁜 점수로 판단하기보다, 어떤 성향과 역할이 상대적으로 자주 나타나는지를 확인하는 용도로 보세요.</p></div><div class="expert-intro-grid"><article><span>① 네 기둥</span><h4>${pillarNames.join(' · ')}</h4><p>연주·월주·일주·시주는 각각 성장 배경, 사회 환경, 나 자신, 행동과 후반 흐름을 보는 기본 축입니다. 특히 일주의 천간은 ‘일간’이라고 하며 해석의 기준점이 됩니다.</p></article><article><span>② 오행 분포</span><h4>${strongElement} 쪽이 상대적으로 두드러짐</h4><p>목·화·토·금·수는 성격 점수가 아니라 에너지를 분류하는 언어입니다. 강한 요소는 익숙하게 쓰는 방식, ${weakElement}처럼 낮은 요소는 생활에서 의식적으로 보완해 볼 수 있는 방식으로 이해하면 쉽습니다.</p></article><article><span>③ 십성 분포</span><h4>${role} 비중 확인</h4><p>십성은 나를 기준으로 사람·성과·돈·책임·배움과의 관계를 분류합니다. 비중이 높다고 무조건 좋다는 뜻은 아니며, 어떤 상황에서 내가 자연스럽게 반응하는지 설명하는 참고 지표입니다.</p></article><article><span>④ 합·충·형·파·해</span><h4>관계와 변화의 패턴</h4><p>이 항목은 ‘사건 예언’이 아닙니다. 서로 잘 묶이는 기운, 부딪히는 기운, 반복적인 긴장처럼 구조적 관계를 표시합니다. <strong>생활에서</strong>는 협업·변화·갈등 관리의 경향을 점검하는 참고 자료로 보세요.</p></article></div><div class="expert-note"><strong>읽는 순서 추천</strong><p>① 일주와 오행을 먼저 보고 → ② 십성의 큰 비중을 확인한 뒤 → ③ 합·충 등 관계 신호를 보세요. 마지막으로 앞의 상세 사주 리포트와 연결하면 한자 데이터가 실제 생활 해설과 어떻게 이어지는지 이해하기 쉽습니다.</p></div>`;
-  setHtml(target,html);
-}
-
-function enhanceTarotCards(){
-  cards('#tarotDeck .tarot-card').forEach((card)=>{
-    const front=card.querySelector('.tarot-front');
-    if(!front) return;
-    const number=Number(front.querySelector('.arcana-no')?.textContent);
-    const art=TAROT_ILLUSTRATIONS[number];
-    if(!art) return;
-    const wasReversed=front.classList.contains('reversed') || front.textContent.includes('REVERSED');
-    front.classList.remove('reversed');
-    const existing=front.querySelector('.tarot-illustration');
-    if(existing){ existing.classList.toggle('reversed-art',wasReversed); return; }
-    const symbol=front.querySelector('.arcana-symbol');
-    if(!symbol) return;
-    const illustration=document.createElement('div');
-    illustration.className=`tarot-illustration${wasReversed?' reversed-art':''}`;
-    illustration.innerHTML=art;
-    symbol.replaceWith(illustration);
-  });
-}
-
-function renderEnhancements(){
-  renderYearDeepDive();
-  renderExpertGuide();
-  enhanceTarotCards();
-}
-
 let scheduled=false;
 function scheduleEnhancements(){
   if(scheduled) return;
   scheduled=true;
-  requestAnimationFrame(()=>{ scheduled=false; renderEnhancements(); });
+  requestAnimationFrame(()=>{scheduled=false;renderYearDeepDive();});
 }
 
-const deck=$('tarotDeck');
-if(deck) new MutationObserver(scheduleEnhancements).observe(deck,{childList:true,subtree:true});
 const results=$('results');
 if(results) new MutationObserver(scheduleEnhancements).observe(results,{childList:true,subtree:true,characterData:true});
-requestAnimationFrame(()=>requestAnimationFrame(renderEnhancements));
+requestAnimationFrame(()=>requestAnimationFrame(renderYearDeepDive));
