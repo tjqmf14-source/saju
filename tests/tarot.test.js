@@ -28,9 +28,11 @@ test('today spread returns one interpreted position', () => {
   assert.ok(result[0].text.length > 30);
 });
 
-test('love and money spreads return three positions', () => {
+test('question, love, money and career spreads return three positions', () => {
   const draw = drawTarot(3, ()=>0.4);
   assert.equal(interpretSpread('love', draw).length, 3);
   assert.equal(interpretSpread('money', draw).length, 3);
+  assert.equal(interpretSpread('career', draw).length, 3);
   assert.equal(interpretSpread('question', draw).length, 3);
+  assert.deepEqual(interpretSpread('career', draw).map((v)=>v.position), ['현재 일의 흐름','성장 기회','실행 조언']);
 });
