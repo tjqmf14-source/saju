@@ -5,36 +5,44 @@ import { readFile } from 'node:fs/promises';
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const ui = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
 const feedback = await readFile(new URL('../src/feedback-v2.js', import.meta.url), 'utf8');
+const redesign = await readFile(new URL('../src/redesign-v5.js', import.meta.url), 'utf8');
+const css = await readFile(new URL('../redesign-v5.css', import.meta.url), 'utf8');
 
-test('final redesign stylesheet is loaded last', () => {
-  assert.match(html, /<link rel="stylesheet" href="\/redesign-v5\.css">/);
+test('final redesign is loaded from the active enhancement entry', () => {
+  assert.match(feedback, /import '.\/redesign-v5\.js'/);
+  assert.match(redesign, /import '..\/redesign-v5\.css'/);
 });
 
 test('year section keeps one quarterly action plan instead of duplicate tables', () => {
-  assert.doesNotMatch(html, /id="yearActionPlan"/);
-  assert.doesNotMatch(feedback, /yearActionPlan/);
   assert.match(html, /id="tojungQuarterGrid"/);
+  assert.doesNotMatch(feedback, /yearActionPlan/);
+  assert.match(redesign, /yearActionPlan/);
+  assert.match(redesign, /remove\(\)/);
 });
 
-test('12-month flow has a dedicated aligned shell', () => {
-  assert.match(html, /class="month-block month-flow-shell"/);
+test('12-month flow receives a dedicated aligned shell at runtime', () => {
+  assert.match(redesign, /month-flow-shell/);
+  assert.match(css, /\.month-flow-shell/);
+  assert.match(css, /\.month-grid\s*\{[^}]*grid-template-columns:/i);
 });
 
-test('decade section exposes overview plus deep narrative directly from base renderer', () => {
-  assert.match(html, /id="luckOverview"/);
-  assert.match(ui, /function buildLuckNarrative\(/);
-  assert.match(ui, /큰 주제/);
-  assert.match(ui, /기회/);
-  assert.match(ui, /주의할 점/);
-  assert.match(ui, /조언/);
-  assert.doesNotMatch(ui, /이 시기부터 새로운 10년의 배경 주제가 시작됩니다/);
+test('decade section exposes overview plus deep narrative in the final renderer', () => {
+  assert.match(redesign, /function buildLuckNarrative\(/);
+  assert.match(redesign, /luckOverview/);
+  assert.match(redesign, /큰 주제/);
+  assert.match(redesign, /기회/);
+  assert.match(redesign, /주의할 점/);
+  assert.match(redesign, /조언/);
+  assert.doesNotMatch(redesign, /이 시기부터 새로운 10년의 배경 주제가 시작됩니다/);
 });
 
 test('plain-chart section is wrapped for consistent inner margins', () => {
-  assert.match(html, /class="expert-content-shell"/);
+  assert.match(redesign, /expert-content-shell/);
+  assert.match(css, /\.expert-content-shell/);
 });
 
 test('tarot reversal remains semantic while card art stays upright', () => {
-  assert.doesNotMatch(ui, /reversed-art/);
   assert.match(ui, /REVERSED · 역방향/);
+  assert.match(redesign, /reversed-art/);
+  assert.match(css, /\.tarot-illustration\.reversed-art\s*\{[^}]*transform:\s*none/i);
 });
