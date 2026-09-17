@@ -1,0 +1,95 @@
+:root{
+  --v5-bg:#061022;
+  --v5-bg2:#0b1735;
+  --v5-surface:rgba(10,20,42,.9);
+  --v5-surface-soft:rgba(255,255,255,.035);
+  --v5-line:rgba(226,199,148,.16);
+  --v5-line-soft:rgba(214,223,248,.1);
+  --v5-text:#f5f2ea;
+  --v5-muted:#bec8df;
+  --v5-gold:#e2c794;
+  --v5-violet:#a8a2ff;
+  --v5-teal:#86d9cb;
+}
+
+body{
+  background:
+    radial-gradient(circle at 8% 8%,rgba(132,146,255,.11),transparent 24%),
+    radial-gradient(circle at 90% 12%,rgba(134,217,203,.08),transparent 20%),
+    radial-gradient(circle at 50% -8%,rgba(226,199,148,.08),transparent 16%),
+    linear-gradient(180deg,#051020 0%,#07152b 42%,#08162f 100%);
+  color:var(--v5-text);
+}
+body:after{
+  opacity:.14;
+  background-size:240px 240px,310px 310px,360px 360px,430px 430px;
+}
+
+.topbar{
+  height:78px;
+  padding-inline:clamp(18px,3vw,42px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  background:rgba(5,12,27,.86);
+  backdrop-filter:blur(18px);
+}
+.brand strong{font-size:25px}.brand small{letter-spacing:.17em}
+.topnav a{padding:10px 14px;border-radius:999px;color:#c5cee2}.topnav a:hover{background:rgba(255,255,255,.05);color:#fff}
+.privacy-pill{border-color:rgba(134,217,203,.2);background:rgba(134,217,203,.05)}
+
+.hero,.workspace{width:min(1380px,calc(100% - 64px));border-left:0;border-right:0}
+.hero{padding:clamp(58px,6vw,92px) clamp(32px,5vw,72px);grid-template-columns:minmax(0,1.25fr) minmax(300px,.62fr);gap:44px}
+.hero h1{font-size:clamp(54px,6.2vw,86px);line-height:1.02;letter-spacing:-.055em;max-width:940px}
+.hero-lead{font-size:18px;line-height:1.95;max-width:760px}
+.hero-meta{gap:10px}.hero-meta span{min-height:38px;display:inline-flex;align-items:center;padding:0 14px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.hero-note{border-radius:26px;border:1px solid var(--v5-line);border-left:1px solid var(--v5-line);padding:28px;background:linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.02))}
+.hero-note blockquote{font-size:30px;line-height:1.45}
+
+.workspace{grid-template-columns:132px minmax(0,1fr)}
+.side-rail{background:transparent;border-right:0;padding-left:2px}
+.side-rail a{font-size:11px;letter-spacing:.07em;color:#9da8c3}
+.main-column{padding:36px clamp(20px,3.2vw,54px) 54px}
+
+.panel,.panel-flow{border:1px solid var(--v5-line-soft);border-radius:30px;background:linear-gradient(145deg,rgba(13,27,55,.88),rgba(7,15,32,.94));box-shadow:0 28px 80px rgba(0,0,0,.19)}
+.input-panel,.reading-hero,.year-panel,.luck-panel,.tarot-section,.expert-panel,.editorial-split{padding:clamp(28px,3.4vw,48px);margin-bottom:26px}
+.section-label{padding-bottom:16px;margin-bottom:30px;border-bottom:1px solid rgba(255,255,255,.07)}
+.section-label p{font-size:12px;letter-spacing:.13em;color:#d5dbe8}.section-label span{font-size:13px;color:var(--v5-gold)}
+.block-head h2,.section-intro h2,.year-head h2,.tarot-copy h2{font-size:clamp(34px,4vw,52px);letter-spacing:-.045em}
+.block-head p,.section-intro p,.year-head p,.tarot-copy>p:last-child{font-size:17px;line-height:1.95;color:var(--v5-muted);max-width:78ch}
+
+.report-nav{top:80px;padding:12px 0 18px;gap:8px;background:linear-gradient(180deg,rgba(6,14,31,.92),rgba(6,14,31,.72),transparent);backdrop-filter:blur(14px)}
+.report-nav a{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:999px;padding:10px 14px}
+
+.detailed-report{gap:18px;background:transparent;border:0}
+.detail-chapter{border:1px solid var(--v5-line-soft);border-radius:24px;background:linear-gradient(145deg,rgba(14,28,57,.72),rgba(8,17,36,.78));overflow:hidden}
+.detail-chapter-header{background:rgba(255,255,255,.015);border-right:0}.detail-chapter-header h3{font-size:27px}.detail-chapter-body p{font-size:17px;line-height:2;color:#d0d6e4}
+
+.editorial-split{grid-template-columns:minmax(220px,.44fr) minmax(0,1fr);gap:42px}.editorial-title{border-right:0;padding-right:0}.daily-list{border:0;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}.daily-fortune-card{border:1px solid var(--v5-line-soft)!important;border-radius:20px;background:rgba(255,255,255,.025)!important}.lucky-strip{border-left:0;border-top:1px solid var(--v5-line);border-radius:20px;background:rgba(226,199,148,.035)}
+
+.year-panel{background:radial-gradient(circle at 90% 4%,rgba(226,199,148,.07),transparent 25%),linear-gradient(145deg,rgba(14,28,58,.9),rgba(7,16,34,.95))}
+.year-deep-dive{max-width:100%}.year-essay{padding:0 0 22px;border-bottom:1px solid rgba(255,255,255,.07)}.year-topic-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.advice-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.advice-card{border:1px solid var(--v5-line-soft)!important;border-radius:20px!important;background:rgba(255,255,255,.025)!important;padding:22px!important}.advice-card p{font-size:16px!important;line-height:1.9!important}
+#yearActionPlan{display:none!important}
+.quarter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:20px}.quarter-card{border:1px solid var(--v5-line-soft)!important;border-radius:22px!important;background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.018))!important;padding:22px!important}.quarter-card h3{font-size:22px}.quarter-card strong{font-size:15px;color:var(--v5-gold)}.quarter-card p{font-size:16px!important;line-height:1.9!important}
+.season-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.season-grid>article{border:1px solid var(--v5-line-soft)!important;border-radius:18px!important;background:rgba(255,255,255,.02)!important;padding:18px!important}
+.month-flow-shell{margin-top:30px;padding-top:28px;border-top:1px solid rgba(255,255,255,.08)}
+.month-flow-shell .block-head{display:flex;align-items:flex-end;justify-content:space-between;gap:22px;margin-bottom:18px}.month-flow-shell .block-head h3{font-size:28px;margin:0}.month-flow-shell .block-head p{margin:0;max-width:620px;text-align:right}
+.month-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important;margin:0!important;align-items:stretch}.month-card{min-width:0!important;width:auto!important;border:1px solid var(--v5-line-soft)!important;border-radius:20px!important;background:rgba(255,255,255,.025)!important;padding:20px!important;margin:0!important}.month-card>div{display:flex;align-items:center;justify-content:space-between;gap:10px}.month-number{font:600 24px/1 Georgia,serif;color:var(--v5-gold)}.month-card strong{font-size:15px}.month-card p{font-size:15px!important;line-height:1.9!important}.month-card small{font-size:12px;color:#8996b2}
+
+.luck-panel{background:radial-gradient(circle at 8% 6%,rgba(168,162,255,.08),transparent 28%),linear-gradient(145deg,rgba(13,27,55,.9),rgba(7,16,34,.96))}
+.luck-overview{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:24px 0 22px}
+.luck-overview-card{min-width:0;display:grid;gap:7px;padding:16px;border-radius:18px;border:1px solid var(--v5-line-soft);background:rgba(255,255,255,.022)}.luck-overview-card.active{border-color:rgba(226,199,148,.36);background:linear-gradient(145deg,rgba(226,199,148,.08),rgba(168,162,255,.04))}.luck-overview-card span{font-size:11px;letter-spacing:.09em;color:var(--v5-gold)}.luck-overview-card strong{font-size:16px}.luck-overview-card b{font:600 27px/1.1 Georgia,"Noto Serif KR",serif;color:#f1e3bd}.luck-overview-card small{color:#93a0bb;font-size:12px}
+.luck-timeline{display:grid!important;grid-template-columns:1fr!important;gap:16px!important;overflow:visible!important;padding:0!important}
+.luck-step-v5{display:grid;grid-template-columns:minmax(170px,.24fr) minmax(0,1fr);gap:26px;padding:26px;border-radius:24px;border:1px solid var(--v5-line-soft);background:rgba(255,255,255,.02)}.luck-step-v5.active{border-color:rgba(226,199,148,.36);background:linear-gradient(135deg,rgba(226,199,148,.06),rgba(168,162,255,.035))}.luck-era{display:grid;align-content:start;gap:7px;padding-right:22px;border-right:1px solid rgba(255,255,255,.08)}.luck-era span{font-size:11px;font-weight:900;letter-spacing:.1em;color:var(--v5-gold)}.luck-era strong{font-size:21px}.luck-era b{font:600 34px/1.1 Georgia,"Noto Serif KR",serif;color:#f0e1b7}.luck-era small{font-size:13px;color:#96a3bd}.luck-story h3{margin:0 0 11px;font:600 28px/1.35 Georgia,"Noto Serif KR",serif}.luck-lead-v5{margin:0;font-size:17px;line-height:1.95;color:#ccd3e1}.luck-story-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}.luck-story-grid>div{padding:17px;border-radius:16px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.065)}.luck-story-grid strong{display:block;margin-bottom:7px;font-size:14px;color:var(--v5-teal)}.luck-story-grid p{margin:0;font-size:15px;line-height:1.9;color:#bdc7d8}
+
+.expert-panel{background:radial-gradient(circle at 92% 2%,rgba(134,217,203,.055),transparent 24%),linear-gradient(145deg,rgba(13,27,55,.9),rgba(7,16,34,.96))}.expert-content-shell{display:grid;gap:18px;max-width:100%;margin:0;padding:0}.expert-guide{padding:0!important}.expert-story-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.expert-story-card{padding:24px;border:1px solid var(--v5-line-soft);border-radius:20px;background:rgba(255,255,255,.022)}.expert-story-card:first-child{grid-column:1/-1}.expert-glossary{grid-template-columns:.4fr 1fr;gap:24px;padding:24px;border-radius:20px}.expert-raw-intro{margin:0;padding:17px 18px;border-radius:16px}.expert-content-shell>details{margin:0;padding:18px 0;border-top:1px solid rgba(255,255,255,.08);border-radius:0;background:transparent}.expert-content-shell>details summary{font-size:16px}.pillar-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.pillar-card{min-width:0;border-radius:18px}.expert-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.bar-row{grid-template-columns:120px minmax(0,1fr) 50px;gap:12px}.relation-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.axis-list{display:grid;gap:12px}
+
+.tarot-section{background:radial-gradient(circle at 90% 4%,rgba(168,162,255,.1),transparent 28%),radial-gradient(circle at 10% 96%,rgba(134,217,203,.045),transparent 22%),linear-gradient(145deg,rgba(14,27,57,.94),rgba(6,14,31,.98))}.tarot-illustration.reversed-art{transform:none!important}.tarot-card-image{transform:none!important}.tarot-deck{display:grid!important;grid-template-columns:repeat(3,minmax(0,230px))!important;justify-content:center!important;gap:28px!important}.tarot-card{width:100%!important;max-width:230px;border:0!important;background:transparent!important;box-shadow:none!important}.tarot-front{border-radius:20px;overflow:hidden;border:1px solid rgba(226,199,148,.2);background:rgba(7,13,29,.95)}.tarot-result{display:grid;gap:16px;margin-top:28px}.tarot-reading{max-width:1000px;margin-inline:auto;border-radius:22px}.tarot-reading-grid{grid-template-columns:1fr!important;gap:10px}.tarot-reading-grid>div{display:grid;grid-template-columns:170px 1fr;gap:20px;padding:18px 20px}.tarot-reading-grid strong{margin:0}.tarot-reading-grid p{font-size:15px;line-height:1.95}
+
+@media(max-width:1120px){
+  .hero{grid-template-columns:1fr}.workspace{grid-template-columns:1fr}.side-rail{display:none}.main-column{padding-inline:0}.hero,.workspace{width:min(100% - 28px,1380px)}
+  .luck-overview{grid-template-columns:repeat(3,minmax(0,1fr))}.month-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.season-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pillar-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+  .topbar{padding-inline:12px}.hero,.workspace{width:min(100% - 12px,1380px)}.hero{padding:56px 20px 42px}.input-panel,.reading-hero,.year-panel,.luck-panel,.tarot-section,.expert-panel,.editorial-split{padding:22px}.report-nav{top:116px}
+  .editorial-split,.daily-list,.advice-grid,.quarter-grid,.season-grid,.month-grid,.luck-overview,.luck-step-v5,.luck-story-grid,.expert-story-grid,.expert-glossary,.pillar-grid,.expert-grid,.relation-grid{grid-template-columns:1fr!important}.month-flow-shell .block-head{display:block}.month-flow-shell .block-head p{text-align:left;margin-top:8px}.luck-era{border-right:0;border-bottom:1px solid rgba(255,255,255,.08);padding:0 0 16px}.tarot-deck{grid-template-columns:1fr!important}.tarot-card{margin-inline:auto}.tarot-reading-grid>div{grid-template-columns:1fr}.expert-story-card:first-child{grid-column:auto}
+}
