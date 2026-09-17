@@ -17,3 +17,18 @@ test('v3 UI uses premium-ui as the single page controller', () => {
 for (const symbol of ['buildDetailedInterpretation','calculateSajuMbti','drawTarot','interpretSpread']) {
   test(`premium controller wires ${symbol}`, () => assert.match(source, new RegExp(symbol)));
 }
+
+test('public form does not ship with a personal birth profile', () => {
+  assert.doesNotMatch(html, /value="민규"/);
+  assert.doesNotMatch(html, /value="1987"/);
+  assert.doesNotMatch(html, /value="11:45"/);
+});
+
+test('precision location defaults to neutral Korea average', () => {
+  assert.match(html, /<option value="korea" selected>대한민국 평균<\/option>/);
+  assert.doesNotMatch(html, /<option value="busan" selected>/);
+});
+
+test('page does not auto-submit personal analysis before user input', () => {
+  assert.doesNotMatch(source, /form\.requestSubmit\s*\(/);
+});
