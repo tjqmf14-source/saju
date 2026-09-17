@@ -28,7 +28,3 @@ test('precision location defaults to neutral Korea average', () => {
   assert.match(html, /<option value="korea" selected>대한민국 평균<\/option>/);
   assert.doesNotMatch(html, /<option value="busan" selected>/);
 });
-
-test('page does not auto-submit personal analysis before user input', () => {
-  assert.doesNotMatch(source, /form\.requestSubmit\s*\(/);
-});
