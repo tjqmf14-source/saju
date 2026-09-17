@@ -1,3 +1,5 @@
+import './feedback-v4.js';
+
 const $=(id)=>document.getElementById(id);
 
 function text(id){ return $(id)?.textContent?.trim() || ''; }
