@@ -1,130 +1,105 @@
 <!doctype html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>내사주DB 레벨10 리포트</title>
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <main class="shell">
-      <header class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow">개인 전용 사주 리포트</p>
-          <h1>1987.06.14 오전 11:45 기준 정밀 운세 대시보드</h1>
-          <p class="lead">사주 원국, 오행 균형, 성향, 일과 돈, 관계, 건강, 10년 흐름과 월별 예측을 쉬운 말로 정리했습니다.</p>
-        </div>
-        <section class="hero-summary" aria-label="오늘의 요약">
-          <span>오늘의 종합 흐름</span>
-          <strong id="heroScore">-</strong>
-          <p id="heroMessage">리포트를 계산하고 있습니다.</p>
-        </section>
-      </header>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="한국 만세력 기반 오프라인 사주 원국과 사주 기반 성향 MBTI 리포트">
+  <title>내사주DB · 오프라인 만세력</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">KOREAN SAJU · OFFLINE FIRST</p>
+        <h1>내사주DB</h1>
+        <p class="hero-lead">정확한 만세력 계산을 중심으로 원국·오행·십성·대운을 분석하고, 타고난 성향을 <strong>사주 기반 MBTI</strong>로 풀어봅니다.</p>
+      </div>
+      <div class="privacy-badge" aria-label="개인정보 처리 안내">
+        <strong>입력 정보는 밖으로 나가지 않습니다</strong>
+        <span>브라우저 내 계산 · 서버 전송 없음 · 자동 저장 없음</span>
+      </div>
+    </header>
 
-      <nav class="nav-strip" aria-label="리포트 이동">
-        <a href="#snapshot">요약</a>
-        <a href="#chart">사주 원국</a>
-        <a href="#balance">오행 분석</a>
-        <a href="#reading">쉬운 풀이</a>
-        <a href="#future">미래 예측</a>
-        <a href="#action">실행 가이드</a>
+    <section class="panel input-panel" aria-labelledby="inputTitle">
+      <div class="section-head">
+        <p class="kicker">01 · 출생 정보</p>
+        <h2 id="inputTitle">사주 계산하기</h2>
+        <p>한국 표준시(KST) 기준 간편형입니다. 출생지는 받지 않으며 진태양시 보정은 적용하지 않습니다.</p>
+      </div>
+
+      <form id="birthForm" novalidate>
+        <div class="form-grid">
+          <fieldset class="field calendar-field">
+            <legend>달력</legend>
+            <div class="segmented">
+              <label><input type="radio" name="calendar" value="solar" checked><span>양력</span></label>
+              <label><input type="radio" name="calendar" value="lunar"><span>음력</span></label>
+            </div>
+          </fieldset>
+
+          <label class="field"><span>연도</span><input id="year" name="year" type="number" min="1900" max="2100" inputmode="numeric" placeholder="예: 1987" required></label>
+          <label class="field"><span>월</span><input id="month" name="month" type="number" min="1" max="12" inputmode="numeric" placeholder="1~12" required></label>
+          <label class="field"><span>일</span><input id="day" name="day" type="number" min="1" max="31" inputmode="numeric" placeholder="1~31" required></label>
+          <label class="field"><span>출생 시간</span><input id="time" name="time" type="time" required></label>
+          <label class="field"><span>성별</span><select id="gender" name="gender"><option value="male">남성</option><option value="female">여성</option></select></label>
+          <label class="field leap-field" id="leapField"><span>윤달</span><span class="check-row"><input id="isLeap" name="isLeap" type="checkbox"> 윤달로 입력</span></label>
+        </div>
+        <p class="error" id="formError" role="alert" aria-live="polite"></p>
+        <button class="primary-button" type="submit">내 사주 분석하기</button>
+      </form>
+    </section>
+
+    <section id="results" class="results" hidden aria-live="polite">
+      <nav class="result-nav" aria-label="분석 결과 이동">
+        <a href="#summary">요약</a><a href="#mbti">성향 MBTI</a><a href="#pillars">원국</a><a href="#balance">오행·십성</a><a href="#luck">대운</a><a href="#flow">세운·월운</a>
       </nav>
 
-      <section class="control-panel panel">
-        <div>
-          <h2>고정 출생 정보</h2>
-          <p>양력 1987년 6월 14일 오전 11시 45분, 한국 표준시 기준입니다.</p>
-        </div>
-        <label>
-          큰 흐름 계산 기준
-          <select id="genderBasis">
-            <option value="male">남성 기준</option>
-            <option value="female">여성 기준</option>
-          </select>
-        </label>
+      <section id="summary" class="panel section-block">
+        <div class="section-head"><p class="kicker">02 · 핵심 요약</p><h2>한눈에 보는 원국</h2><p id="basisText"></p></div>
+        <div id="summaryGrid" class="summary-grid"></div>
       </section>
 
-      <section id="snapshot" class="snapshot-grid"></section>
+      <section id="mbti" class="panel section-block mbti-section">
+        <div class="section-head"><p class="kicker">03 · SIGNATURE</p><h2>사주 기반 성향 MBTI</h2><p>정식 심리검사가 아닌, 오행·십성 분포를 MBTI 4축 언어로 번역한 비공식 참고 지표입니다.</p></div>
+        <div class="mbti-layout"><div id="mbtiHero" class="mbti-hero"></div><div id="mbtiAxes" class="axis-list"></div></div>
+      </section>
 
-      <section id="chart" class="panel section-block">
-        <div class="section-head">
-          <h2>사주 원국</h2>
-          <p>태어난 해, 달, 날, 시간의 네 기둥입니다. 어려운 용어는 아래 설명에서 생활 언어로 풀었습니다.</p>
-        </div>
+      <section id="pillars" class="panel section-block">
+        <div class="section-head"><p class="kicker">04 · FOUR PILLARS</p><h2>사주 원국</h2><p>연주·월주·일주·시주를 절입 시각과 한국 달력 기준으로 계산합니다.</p></div>
         <div id="pillarGrid" class="pillar-grid"></div>
       </section>
 
-      <section id="balance" class="deep-grid">
-        <article class="panel section-block">
-          <div class="section-head">
-            <h2>오행 균형</h2>
-            <p>많은 기운은 강점, 부족한 기운은 의식해서 채울 과제로 봅니다.</p>
-          </div>
-          <div id="elementChart" class="element-chart"></div>
-        </article>
-        <article class="panel section-block">
-          <div class="section-head">
-            <h2>내 안의 역할</h2>
-            <p>사람이 세상과 만나는 방식을 다섯 역할로 나누어 봅니다.</p>
-          </div>
-          <div id="roleChart" class="role-chart"></div>
-        </article>
-      </section>
-
-      <section id="reading" class="panel section-block">
-        <div class="section-head">
-          <h2>쉬운 사주풀이</h2>
-          <p>전문 용어보다 실제 생활에서 느껴지는 모습 중심으로 정리했습니다.</p>
-        </div>
-        <div id="readingGrid" class="reading-grid"></div>
-      </section>
-
-      <section class="deep-grid">
-        <article class="panel section-block">
-          <div class="section-head">
-            <h2>구조 포인트</h2>
-            <p>원국 안에서 서로 당기거나 부딪히는 지점을 확인합니다.</p>
-          </div>
-          <div id="structureList" class="structure-list"></div>
-        </article>
-        <article class="panel section-block">
-          <div class="section-head">
-            <h2>인생의 큰 흐름</h2>
-            <p>10년 단위로 바뀌는 분위기를 현재 나이 기준으로 보여줍니다.</p>
-          </div>
-          <div id="decadeFlow" class="decade-flow"></div>
-        </article>
-      </section>
-
-      <section id="future" class="panel section-block">
-        <div class="section-head">
-          <h2>미래 예측</h2>
-          <p>2026년 이후 흐름을 일, 돈, 관계, 건강 관점으로 나누어 읽습니다.</p>
-        </div>
-        <div id="yearForecast" class="year-forecast"></div>
+      <section id="balance" class="two-column">
+        <article class="panel section-block"><div class="section-head"><p class="kicker">05 · FIVE ELEMENTS</p><h2>오행 분포</h2></div><div id="elementChart" class="bar-list"></div></article>
+        <article class="panel section-block"><div class="section-head"><p class="kicker">06 · TEN GODS</p><h2>십성 그룹</h2></div><div id="roleChart" class="bar-list"></div></article>
       </section>
 
       <section class="panel section-block">
-        <div class="section-head">
-          <h2>2026 월별 흐름</h2>
-          <p>월마다 집중하면 좋은 일과 조심할 점을 짧게 정리했습니다.</p>
-        </div>
-        <div id="monthForecast" class="month-forecast"></div>
+        <div class="section-head"><p class="kicker">07 · STRUCTURE</p><h2>합·충·형·파·해</h2><p>원국 지지 사이에서 확인되는 구조만 표시합니다.</p></div>
+        <div id="relationGrid" class="relation-grid"></div>
       </section>
 
-      <section id="action" class="panel section-block">
-        <div class="section-head">
-          <h2>실행 가이드</h2>
-          <p>좋은 운을 기다리기보다, 흐름에 맞춰 행동으로 옮기기 위한 체크리스트입니다.</p>
-        </div>
-        <div id="actionGuide" class="action-guide"></div>
+      <section id="luck" class="panel section-block">
+        <div class="section-head"><p class="kicker">08 · DAEWOON</p><h2>대운</h2><p id="luckMeta"></p></div>
+        <div id="luckGrid" class="luck-grid"></div>
       </section>
 
-      <footer class="footnote">
-        현재 버전은 절기 시각을 근사값으로 계산합니다. 전문 감정 수준으로 높이려면 실제 절기 시각, 출생지 경도 보정, 음력 변환 데이터를 연결하면 됩니다.
+      <section id="flow" class="two-column">
+        <article class="panel section-block"><div class="section-head"><p class="kicker">09 · YEAR FLOW</p><h2>세운 흐름</h2></div><div id="yearFlow" class="flow-list"></div></article>
+        <article class="panel section-block"><div class="section-head"><p class="kicker">10 · MONTH FLOW</p><h2 id="monthFlowTitle">월운 흐름</h2></div><div id="monthFlow" class="month-grid"></div></article>
+      </section>
+
+      <section class="panel section-block">
+        <div class="section-head"><p class="kicker">11 · INTERPRETATION</p><h2>생활 언어로 읽기</h2></div>
+        <div id="interpretationGrid" class="interpretation-grid"></div>
+      </section>
+
+      <footer class="disclaimer">
+        <strong>계산 기준</strong> 한국 표준시(KST), 자정 일진 경계, 출생지/진태양시 보정 미적용. 사주와 성향 MBTI는 전통 명리 해석을 구조화한 참고 정보이며 미래나 성격을 과학적으로 확정하지 않습니다.
       </footer>
-    </main>
-
-    <script src="app.js"></script>
-  </body>
+    </section>
+  </main>
+  <script type="module" src="/src/app.js"></script>
+</body>
 </html>
