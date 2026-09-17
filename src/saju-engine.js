@@ -9,6 +9,7 @@ import {
   stemByName,
   branchByName
 } from './data.js';
+import { resolvePrecision, DAY_BOUNDARY_LABELS } from './precision.js';
 
 const PILLAR_KEYS = ['year', 'month', 'day', 'hour'];
 
@@ -111,7 +112,10 @@ function normalizeInput(input) {
     hour: Number(input.hour),
     minute: Number(input.minute),
     isLeap: Boolean(input.isLeap),
-    gender: input.gender === 'female' ? 'female' : 'male'
+    gender: input.gender === 'female' ? 'female' : 'male',
+    precision: input.precision !== false,
+    location: input.location || 'korea',
+    dayBoundary: input.dayBoundary || 'midnight'
   };
   if (!Number.isInteger(normalized.hour) || normalized.hour < 0 || normalized.hour > 23) throw new RangeError('출생 시각의 시는 0~23이어야 합니다.');
   if (!Number.isInteger(normalized.minute) || normalized.minute < 0 || normalized.minute > 59) throw new RangeError('출생 시각의 분은 0~59여야 합니다.');
@@ -120,6 +124,7 @@ function normalizeInput(input) {
 
 export function calculateSaju(rawInput) {
   const input = normalizeInput(rawInput);
+  const precision = resolvePrecision(input);
   const solar = normalizeBirthDate(input);
   const lunar = solarToLunar(solar);
   const detail = calculateFourPillars({
@@ -130,7 +135,8 @@ export function calculateSaju(rawInput) {
     minute: input.minute,
     isLunar: input.calendar === 'lunar',
     isLeapMonth: input.isLeap,
-    dayBoundary: 'midnight',
+    trueSolarTime: precision.trueSolarTime,
+    dayBoundary: precision.dayBoundary,
     gender: input.gender
   });
 
@@ -162,10 +168,14 @@ export function calculateSaju(rawInput) {
     relations: detectBranchRelations(branches),
     luck: detail.luckPillars || null,
     basis: {
-      timezone: 'Asia/Seoul (KST)',
-      dayBoundary: '자정(00:00) 기준',
-      trueSolarTime: '출생지 미입력 간편형 — 진태양시 보정 미적용',
-      calendarEngine: '한국천문연구원(KASI) 기준 데이터 기반'
+      timezone: 'Asia/Seoul',
+      location: precision.locationLabel,
+      longitude: precision.longitude,
+      dayBoundary: DAY_BOUNDARY_LABELS[precision.dayBoundary],
+      trueSolarTime: precision.enabled ? '적용' : '미적용',
+      equationOfTime: precision.enabled ? '적용' : '미적용',
+      historicalDst: precision.enabled ? 'IANA Asia/Seoul 기준 적용' : '미적용',
+      calendarEngine: 'manseryeok 2.0 · KASI 정본/정밀 절기 기반'
     }
   };
 }
