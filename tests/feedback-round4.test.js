@@ -2,13 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const index = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+const v2js = await readFile(new URL('../src/feedback-v2.js', import.meta.url), 'utf8');
 const v4js = await readFile(new URL('../src/feedback-v4.js', import.meta.url), 'utf8').catch(()=> '');
 const v4css = await readFile(new URL('../polish-v4.css', import.meta.url), 'utf8').catch(()=> '');
 
-test('v4 patch is loaded after the previous polish layers', () => {
-  assert.match(index, /polish-v4\.css/);
-  assert.match(index, /feedback-v4\.js/);
+test('v4 patch is loaded through the existing post-render enhancement module', () => {
+  assert.match(v2js, /import ['"]\.\/feedback-v4\.js['"]/);
+  assert.match(v4js, /import ['"]\.\.\/polish-v4\.css['"]/);
 });
 
 test('reversed tarot keeps RWS artwork visually upright while retaining reversed meaning', () => {
