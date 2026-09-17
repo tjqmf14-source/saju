@@ -2,8 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { calculateSaju, detectBranchRelations } from '../src/saju-engine.js';
 
-test('1987-06-14 11:45 원국을 검증된 간지로 계산한다', () => {
-  const chart = calculateSaju({calendar:'solar',year:1987,month:6,day:14,hour:11,minute:45,gender:'male'});
+test('1987-06-14 11:45 KST 원국을 검증된 간지로 계산한다', () => {
+  const chart = calculateSaju({calendar:'solar',year:1987,month:6,day:14,hour:11,minute:45,gender:'male',precision:false});
   assert.deepEqual(chart.pillarStrings,{year:'정묘',month:'병오',day:'갑오',hour:'경오'});
   assert.equal(chart.dayMaster,'갑');
   assert.equal(chart.lunar.month,5);
@@ -11,8 +11,8 @@ test('1987-06-14 11:45 원국을 검증된 간지로 계산한다', () => {
 });
 
 test('동일 날짜의 음력 입력은 같은 원국을 만든다', () => {
-  const solar = calculateSaju({calendar:'solar',year:1987,month:6,day:14,hour:11,minute:45,gender:'male'});
-  const lunar = calculateSaju({calendar:'lunar',year:1987,month:5,day:18,hour:11,minute:45,isLeap:false,gender:'male'});
+  const solar = calculateSaju({calendar:'solar',year:1987,month:6,day:14,hour:11,minute:45,gender:'male',precision:false});
+  const lunar = calculateSaju({calendar:'lunar',year:1987,month:5,day:18,hour:11,minute:45,isLeap:false,gender:'male',precision:false});
   assert.deepEqual(lunar.pillarStrings,solar.pillarStrings);
 });
 
