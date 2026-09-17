@@ -3,8 +3,12 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-const ui = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
-const css = await readFile(new URL('../polish.css', import.meta.url), 'utf8');
+const baseUi = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
+const feedbackUi = await readFile(new URL('../src/feedback-v2.js', import.meta.url), 'utf8');
+const ui = `${baseUi}\n${feedbackUi}`;
+const baseCss = await readFile(new URL('../polish.css', import.meta.url), 'utf8');
+const feedbackCss = await readFile(new URL('../feedback-v2.css', import.meta.url), 'utf8');
+const css = `${baseCss}\n${feedbackCss}`;
 
 test('small UI copy is raised to a readable premium baseline', () => {
   assert.match(css, /\.detail-chapter-body p\s*\{[^}]*font-size:\s*17px/i);
