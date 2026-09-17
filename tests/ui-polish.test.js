@@ -7,8 +7,8 @@ const css = await readFile(new URL('../polish.css', import.meta.url), 'utf8').ca
 
 const expectedChange = '최종 폴리싱은 접근성 마크업과 polish.css를 추가하면 이 테스트가 통과한다.';
 
-test('production change: 키보드 사용자를 위한 본문 바로가기 링크를 제공한다', () => {
-  assert.match(html, /class="skip-link"[^>]*href="#main-content"/i, expectedChange);
+test('production change: 키보드 사용자를 위한 입력 바로가기 링크를 제공한다', () => {
+  assert.match(html, /class="skip-link"[^>]*href="#input"/i, expectedChange);
   assert.match(html, /<main[^>]*id="main-content"/i, expectedChange);
 });
 
