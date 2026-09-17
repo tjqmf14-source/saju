@@ -50,7 +50,8 @@ const POSITIONS = {
   today:['오늘의 메시지'],
   question:['현재 상황','장애물','조언'],
   love:['나의 마음','상대/관계의 흐름','관계를 위한 조언'],
-  money:['현재 흐름','기회','주의할 점']
+  money:['현재 흐름','기회','주의할 점'],
+  career:['현재 일의 흐름','성장 기회','실행 조언']
 };
 
 function contextText(mode, item){
