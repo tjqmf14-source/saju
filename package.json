@@ -4,8 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "node scripts/sync-rws-assets.js",
     "dev": "vite",
+    "prebuild": "node scripts/sync-rws-assets.js",
     "build": "vite build",
+    "prepreview": "node scripts/sync-rws-assets.js",
     "preview": "vite preview",
     "test": "node --test tests/*.test.js",
     "check:network": "node scripts/check-network.js",
