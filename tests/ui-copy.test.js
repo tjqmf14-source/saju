@@ -4,8 +4,14 @@ import { readFile } from 'node:fs/promises';
 
 const source = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
 
-for (const fn of ['renderDailyFortune','renderTodayLucky','renderTojungQuarters','renderYearAdvice','renderSeasonGuide']) {
+for (const fn of ['renderToday','renderYear','renderDetailedReport','renderTarot','renderAccuracyBasis']) {
   test(`premium UI defines ${fn}`, () => {
     assert.match(source, new RegExp(`function\\s+${fn}\\s*\\(`));
   });
 }
+
+test('premium UI wires daily, yearly, detailed interpretation and tarot output', () => {
+  for (const id of ['dailyFortuneGrid','todayLucky','yearAdviceGrid','tojungQuarterGrid','seasonGuide','detailedReport','tarotDeck','tarotResult']) {
+    assert.match(source, new RegExp(`['\"]${id}['\"]`));
+  }
+});
