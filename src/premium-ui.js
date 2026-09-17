@@ -134,7 +134,7 @@ function renderProfile(chart,mbti,report,name,todayFlow){
 }
 
 function renderDetailedReport(report){
-  const ordered=['overview','temperament','innerOuter','strengths','career','money','love','relationships','recovery','year','luck'];
+  const ordered=['overview','temperament','innerOuter','strengths','balance','career','money','love','relationships','recovery','year','luck','technical'];
   $('detailedReport').innerHTML=ordered.map((key,index)=>{
     const item=report[key];
     return `<article class="detail-chapter"><header class="detail-chapter-header"><span>${String(index+1).padStart(2,'0')}</span><h3>${item.title}</h3><p>${item.lead}</p></header><div class="detail-chapter-body">${item.paragraphs.map((p)=>`<p>${p}</p>`).join('')}</div></article>`;
