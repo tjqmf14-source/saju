@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>내사주DB 레벨10 리포트</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">개인 전용 사주 리포트</p>
+          <h1>1987.06.14 오전 11:45 기준 정밀 운세 대시보드</h1>
+          <p class="lead">사주 원국, 오행 균형, 성향, 일과 돈, 관계, 건강, 10년 흐름과 월별 예측을 쉬운 말로 정리했습니다.</p>
+        </div>
+        <section class="hero-summary" aria-label="오늘의 요약">
+          <span>오늘의 종합 흐름</span>
+          <strong id="heroScore">-</strong>
+          <p id="heroMessage">리포트를 계산하고 있습니다.</p>
+        </section>
+      </header>
+
+      <nav class="nav-strip" aria-label="리포트 이동">
+        <a href="#snapshot">요약</a>
+        <a href="#chart">사주 원국</a>
+        <a href="#balance">오행 분석</a>
+        <a href="#reading">쉬운 풀이</a>
+        <a href="#future">미래 예측</a>
+        <a href="#action">실행 가이드</a>
+      </nav>
+
+      <section class="control-panel panel">
+        <div>
+          <h2>고정 출생 정보</h2>
+          <p>양력 1987년 6월 14일 오전 11시 45분, 한국 표준시 기준입니다.</p>
+        </div>
+        <label>
+          큰 흐름 계산 기준
+          <select id="genderBasis">
+            <option value="male">남성 기준</option>
+            <option value="female">여성 기준</option>
+          </select>
+        </label>
+      </section>
+
+      <section id="snapshot" class="snapshot-grid"></section>
+
+      <section id="chart" class="panel section-block">
+        <div class="section-head">
+          <h2>사주 원국</h2>
+          <p>태어난 해, 달, 날, 시간의 네 기둥입니다. 어려운 용어는 아래 설명에서 생활 언어로 풀었습니다.</p>
+        </div>
+        <div id="pillarGrid" class="pillar-grid"></div>
+      </section>
+
+      <section id="balance" class="deep-grid">
+        <article class="panel section-block">
+          <div class="section-head">
+            <h2>오행 균형</h2>
+            <p>많은 기운은 강점, 부족한 기운은 의식해서 채울 과제로 봅니다.</p>
+          </div>
+          <div id="elementChart" class="element-chart"></div>
+        </article>
+        <article class="panel section-block">
+          <div class="section-head">
+            <h2>내 안의 역할</h2>
+            <p>사람이 세상과 만나는 방식을 다섯 역할로 나누어 봅니다.</p>
+          </div>
+          <div id="roleChart" class="role-chart"></div>
+        </article>
+      </section>
+
+      <section id="reading" class="panel section-block">
+        <div class="section-head">
+          <h2>쉬운 사주풀이</h2>
+          <p>전문 용어보다 실제 생활에서 느껴지는 모습 중심으로 정리했습니다.</p>
+        </div>
+        <div id="readingGrid" class="reading-grid"></div>
+      </section>
+
+      <section class="deep-grid">
+        <article class="panel section-block">
+          <div class="section-head">
+            <h2>구조 포인트</h2>
+            <p>원국 안에서 서로 당기거나 부딪히는 지점을 확인합니다.</p>
+          </div>
+          <div id="structureList" class="structure-list"></div>
+        </article>
+        <article class="panel section-block">
+          <div class="section-head">
+            <h2>인생의 큰 흐름</h2>
+            <p>10년 단위로 바뀌는 분위기를 현재 나이 기준으로 보여줍니다.</p>
+          </div>
+          <div id="decadeFlow" class="decade-flow"></div>
+        </article>
+      </section>
+
+      <section id="future" class="panel section-block">
+        <div class="section-head">
+          <h2>미래 예측</h2>
+          <p>2026년 이후 흐름을 일, 돈, 관계, 건강 관점으로 나누어 읽습니다.</p>
+        </div>
+        <div id="yearForecast" class="year-forecast"></div>
+      </section>
+
+      <section class="panel section-block">
+        <div class="section-head">
+          <h2>2026 월별 흐름</h2>
+          <p>월마다 집중하면 좋은 일과 조심할 점을 짧게 정리했습니다.</p>
+        </div>
+        <div id="monthForecast" class="month-forecast"></div>
+      </section>
+
+      <section id="action" class="panel section-block">
+        <div class="section-head">
+          <h2>실행 가이드</h2>
+          <p>좋은 운을 기다리기보다, 흐름에 맞춰 행동으로 옮기기 위한 체크리스트입니다.</p>
+        </div>
+        <div id="actionGuide" class="action-guide"></div>
+      </section>
+
+      <footer class="footnote">
+        현재 버전은 절기 시각을 근사값으로 계산합니다. 전문 감정 수준으로 높이려면 실제 절기 시각, 출생지 경도 보정, 음력 변환 데이터를 연결하면 됩니다.
+      </footer>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
