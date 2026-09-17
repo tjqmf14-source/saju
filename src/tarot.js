@@ -1,3 +1,5 @@
+import { MINOR_RWS } from './tarot-minor.js';
+
 const majorSeed = [
   ['바보','The Fool','시작·자유·가능성','새로운 길을 가볍게 시험하고 경험을 통해 배우는 흐름입니다.','준비 없이 뛰어들거나 위험을 과소평가하는 태도를 점검할 때입니다.','작게 시작해 실제 반응을 확인한 뒤 다음 걸음을 정하세요.','절벽 끝의 여행자와 흰 장미는 순수한 출발과 아직 정해지지 않은 가능성을 상징합니다.'],
   ['마법사','The Magician','집중·기술·실행','이미 가진 기술과 자원을 한곳에 모아 실제 결과로 바꾸는 힘이 강조됩니다.','능력 과시나 말뿐인 계획보다 실질적인 실행과 검증이 필요합니다.','지금 손에 있는 도구부터 정리하고 한 가지 결과물을 완성하세요.','탁자 위 네 슈트와 위·아래를 가리키는 손은 자원을 연결해 현실에 구현하는 능력을 상징합니다.'],
@@ -28,62 +30,16 @@ const major=majorSeed.map((row,id)=>({
   id,code:majorCodes[id],arcana:'major',suit:null,rank:id,name:row[0],en:row[1],keywords:row[2],
   upright:row[3],reversed:row[4],advice:row[5],symbolism:row[6],image:`/tarot-rws/${majorCodes[id]}.jpg`
 }));
-
-const SUITS={
-  cups:{prefix:'c',ko:'컵',en:'Cups',element:'물',keywords:'감정·관계·직관',symbol:'컵과 물',theme:'감정과 관계, 공감과 마음의 흐름'},
-  pentacles:{prefix:'p',ko:'펜타클',en:'Pentacles',element:'땅',keywords:'재물·현실·일',symbol:'동전과 땅',theme:'돈과 일, 몸과 생활 기반, 현실적인 성과'},
-  swords:{prefix:'s',ko:'소드',en:'Swords',element:'공기',keywords:'생각·결단·갈등',symbol:'검과 바람',theme:'생각과 판단, 말과 갈등, 어려운 결정을 다루는 방식'},
-  wands:{prefix:'w',ko:'완드',en:'Wands',element:'불',keywords:'행동·열정·창조',symbol:'지팡이와 불',theme:'의욕과 행동, 창조성, 프로젝트를 밀어붙이는 힘'}
-};
-const RANKS=[
-  {n:1,ko:'에이스',en:'Ace',key:'시작·씨앗·가능성',up:'새로운 가능성이 열리고 첫 행동을 시작하기 좋은 단계입니다.',rev:'가능성은 있지만 방향이 흐리거나 시작을 미루고 있을 수 있습니다.',advice:'완벽한 준비보다 작고 분명한 첫 행동을 정하세요.',symbol:'하늘에서 나타나는 손은 새로운 기회와 순수한 잠재력을 상징합니다.'},
-  {n:2,ko:'2',en:'Two',key:'선택·균형·관계',up:'두 선택이나 두 힘 사이에서 균형과 방향을 정하는 과정입니다.',rev:'우선순위가 흔들리거나 선택을 미루며 에너지가 분산될 수 있습니다.',advice:'둘 다 잡으려 하기보다 지금 중요한 기준 하나를 먼저 정하세요.',symbol:'둘로 나뉜 요소는 관계, 선택, 균형과 긴장을 상징합니다.'},
-  {n:3,ko:'3',en:'Three',key:'성장·협력·확장',up:'혼자 준비한 것을 밖으로 확장하고 협력해 성장시키는 단계입니다.',rev:'협업이 어긋나거나 기대한 확장이 지연될 수 있습니다.',advice:'역할과 기대치를 말로 확인하고 작은 성과부터 공유하세요.',symbol:'세 개의 반복 요소는 아이디어가 구조를 얻고 사회적으로 확장되는 과정을 상징합니다.'},
-  {n:4,ko:'4',en:'Four',key:'안정·휴식·기반',up:'흐름을 안정시키고 현재 가진 것을 지키며 기반을 다지는 단계입니다.',rev:'안정을 지나치게 붙잡거나 반대로 기반이 흔들려 불안할 수 있습니다.',advice:'지켜야 할 것과 바꿔도 되는 것을 분리해 보세요.',symbol:'네 개의 요소는 사방을 잡아주는 안정, 구조, 경계를 상징합니다.'},
-  {n:5,ko:'5',en:'Five',key:'갈등·손실·변화',up:'불편한 변화나 경쟁을 통해 무엇이 부족한지 드러나는 단계입니다.',rev:'갈등을 피하거나 오래 끌면서 회복 시점을 늦출 수 있습니다.',advice:'잃은 것만 보지 말고 남아 있는 자원과 다음 선택을 함께 확인하세요.',symbol:'다섯은 안정된 구조가 흔들리며 변화와 학습이 시작되는 숫자로 읽힙니다.'},
-  {n:6,ko:'6',en:'Six',key:'회복·교류·전진',up:'갈등 이후 균형을 되찾거나 도움을 주고받으며 앞으로 나아가는 흐름입니다.',rev:'과거에 머무르거나 주고받음의 균형이 맞지 않을 수 있습니다.',advice:'도움이 필요한 부분과 내가 제공할 수 있는 부분을 분명히 하세요.',symbol:'여섯 개의 요소는 조화와 교환, 회복된 균형을 상징합니다.'},
-  {n:7,ko:'7',en:'Seven',key:'평가·전략·시험',up:'지금까지의 결과를 평가하고 다음 전략을 세워야 하는 단계입니다.',rev:'불안 때문에 성급하게 포기하거나 반대로 현실 점검 없이 버틸 수 있습니다.',advice:'감정 대신 실제 성과와 비용을 적어 보고 다음 행동을 정하세요.',symbol:'일곱은 익숙한 흐름을 넘어 시험과 전략, 자기 점검이 필요한 단계로 읽힙니다.'},
-  {n:8,ko:'8',en:'Eight',key:'숙련·속도·제약',up:'반복과 집중을 통해 기술이 쌓이거나 상황이 빠르게 진행되는 단계입니다.',rev:'속도는 나지만 방향이 없거나 스스로 만든 제한에 묶일 수 있습니다.',advice:'반복할 가치가 있는 행동과 멈춰야 할 행동을 구분하세요.',symbol:'여덟은 힘이 반복되며 숙련되지만 동시에 패턴에 묶일 수 있음을 상징합니다.'},
-  {n:9,ko:'9',en:'Nine',key:'완성 직전·독립·지속',up:'거의 완성 단계에 와 있어 마지막 집중과 자기 관리가 중요한 시점입니다.',rev:'지쳐서 마지막 단계를 놓치거나 혼자 버티는 부담이 커질 수 있습니다.',advice:'끝까지 해야 할 한 가지를 남기고 나머지는 줄이세요.',symbol:'아홉은 한 사이클의 끝에 가까워진 성숙, 독립과 누적된 경험을 상징합니다.'},
-  {n:10,ko:'10',en:'Ten',key:'완성·책임·전환',up:'한 사이클의 결과가 분명해지고 성과나 책임을 정리할 때입니다.',rev:'책임이 과해지거나 마무리를 미뤄 다음 단계로 넘어가지 못할 수 있습니다.',advice:'성과를 정산하고 내려놓을 부담을 선택해 다음 공간을 만드세요.',symbol:'열은 완성과 다음 사이클로 넘어가기 직전의 충만함과 부담을 함께 상징합니다.'},
-  {n:11,ko:'페이지',en:'Page',key:'호기심·소식·배움',up:'새로운 정보를 배우고 시험하며 가능성을 탐색하는 초입입니다.',rev:'경험 부족이나 산만함 때문에 배움이 실제 행동으로 이어지지 않을 수 있습니다.',advice:'모르는 것을 인정하고 작은 실험으로 직접 확인하세요.',symbol:'젊은 인물은 초심, 호기심, 소식과 배우는 태도를 상징합니다.'},
-  {n:12,ko:'나이트',en:'Knight',key:'추진·탐색·행동',up:'목표를 향해 적극적으로 움직이고 경험을 통해 답을 찾는 흐름입니다.',rev:'서두르거나 한 방향에 과하게 몰입해 주변 조건을 놓칠 수 있습니다.',advice:'속도만 높이기보다 목표와 위험 한도를 함께 정하세요.',symbol:'말을 탄 기사는 움직임, 추구, 행동력과 경험을 통한 성장 과정을 상징합니다.'},
-  {n:13,ko:'퀸',en:'Queen',key:'성숙·수용·관리',up:'해당 영역의 힘을 안정적으로 다루며 자신과 주변을 함께 돌보는 단계입니다.',rev:'감정이나 기준이 안으로 과하게 쏠려 소진이나 통제가 나타날 수 있습니다.',advice:'강점을 유지하되 나와 타인의 경계를 분명히 하세요.',symbol:'왕비는 내면화된 성숙함, 돌봄, 직관과 지속적인 관리 능력을 상징합니다.'},
-  {n:14,ko:'킹',en:'King',key:'통솔·완성·책임',up:'경험을 바탕으로 방향을 정하고 책임 있게 결과를 이끄는 단계입니다.',rev:'권위나 확신이 지나쳐 독선, 통제, 경직으로 나타날 수 있습니다.',advice:'결정권을 쓰되 반대 의견과 실제 데이터를 함께 확인하세요.',symbol:'왕은 외부 세계에서 발휘되는 숙련, 책임, 통솔과 최종 의사결정을 상징합니다.'}
-];
-
-function minorMeaning(suit,rank,reversed=false){
-  const base=reversed?rank.rev:rank.up;
-  const direction=reversed
-    ? `${suit.theme}에서 막히거나 과해지는 부분을 점검하라는 메시지로 읽을 수 있습니다.`
-    : `${suit.theme}에서 현재 힘이 어떻게 움직이는지 보여주는 메시지로 읽을 수 있습니다.`;
-  return `${base} ${direction}`;
-}
-
-const minor=[];
-let id=22;
-for(const [suitKey,suit] of Object.entries(SUITS)){
-  for(const rank of RANKS){
-    const code=`${suit.prefix}${String(rank.n).padStart(2,'0')}`;
-    minor.push({
-      id:id++,code,arcana:'minor',suit:suitKey,rank:rank.n,
-      name:`${suit.ko} ${rank.ko}`,en:`${rank.en} of ${suit.en}`,
-      keywords:`${suit.keywords} · ${rank.key}`,
-      upright:minorMeaning(suit,rank,false),
-      reversed:minorMeaning(suit,rank,true),
-      advice:`${rank.advice} 특히 ${suit.theme}와 관련된 실제 상황을 한 가지 떠올려 적용해 보세요.`,
-      symbolism:`${suit.symbol}은 ${suit.element}의 성질과 ${suit.theme}을 나타냅니다. ${rank.symbol}`,
-      image:`/tarot-rws/${code}.jpg`
-    });
-  }
-}
+const minor=MINOR_RWS.map((card,index)=>({...card,id:22+index}));
 
 export const TAROT_DECK=[...major,...minor];
 export const MAJOR_ARCANA=major;
 
 function browserRandom(){
   if(globalThis.crypto?.getRandomValues){
-    const value=new Uint32Array(1);globalThis.crypto.getRandomValues(value);return value[0]/4294967296;
+    const value=new Uint32Array(1);
+    globalThis.crypto.getRandomValues(value);
+    return value[0]/4294967296;
   }
   return Math.random();
 }
@@ -100,7 +56,11 @@ export function drawTarot(count,randomSource=browserRandom){
 }
 
 const POSITIONS={
-  today:['오늘의 메시지'],question:['현재 상황','장애물','조언'],love:['나의 마음','상대/관계의 흐름','관계를 위한 조언'],money:['현재 흐름','기회','주의할 점'],career:['현재 일의 흐름','성장 기회','실행 조언']
+  today:['오늘의 메시지'],
+  question:['현재 상황','장애물','조언'],
+  love:['나의 마음','상대/관계의 흐름','관계를 위한 조언'],
+  money:['현재 흐름','기회','주의할 점'],
+  career:['현재 일의 흐름','성장 기회','실행 조언']
 };
 
 function contextualAdvice(mode,card){
@@ -121,8 +81,13 @@ export function interpretSpread(mode,draw){
     const meaning=item.reversed?item.card.reversed:item.card.upright;
     const advice=contextualAdvice(mode,item.card);
     return {
-      position:positions[index],card:item.card,reversed:item.reversed,orientation:item.reversed?'역방향':'정방향',
-      meaning,symbolism:item.card.symbolism,advice,
+      position:positions[index],
+      card:item.card,
+      reversed:item.reversed,
+      orientation:item.reversed?'역방향':'정방향',
+      meaning,
+      symbolism:item.card.symbolism,
+      advice,
       text:`${item.card.name}(${item.card.en}) ${item.reversed?'역방향':'정방향'}의 핵심은 ${item.card.keywords}입니다. ${meaning} 그림에서는 ${item.card.symbolism} 현실적으로는 ${advice} 타로는 미래를 확정하는 예언이 아니라 질문을 다른 각도에서 살펴보기 위한 상징적 참고 도구입니다.`
     };
   });
