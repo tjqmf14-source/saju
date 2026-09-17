@@ -28,6 +28,16 @@ function monthDominance(monthFlows){
   return strongest(count);
 }
 
+function balanceIndex(chart){
+  const values=Object.values(chart.elements);
+  const max=Math.max(...values);
+  const min=Math.min(...values);
+  const spread=max-min;
+  if(spread<=0.7) return '균형형';
+  if(spread<=1.5) return '약간 편중';
+  return '편중이 뚜렷';
+}
+
 export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   const strongElement=strongest(chart.elements);
   const weakElement=weakest(chart.elements);
@@ -42,6 +52,7 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   const monthsTop=monthDominance(monthFlows);
   const monthsRole=ROLE_TEXT[monthsTop];
   const relation=relationNames(chart);
+  const balance=balanceIndex(chart);
   const precisionText=chart.basis?.trueSolarTime==='적용'
     ? `${chart.basis.location} 경도 ${chart.basis.longitude}°를 반영한 진태양시 정밀 보정이 적용되었습니다.`
     : '입력된 한국 표준시를 그대로 사용한 간편 계산 기준입니다.';
@@ -65,6 +76,10 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
     strengths: section('강점과 잠재력', `${element.gift}과 ${role.core}가 결합될 때 가장 큰 장점이 드러납니다.`, [
       `강점은 단순히 잘하는 기술 하나보다, 복잡한 상황에서 자기 기준을 세우고 결과를 만들어 가는 과정에 있습니다. ${ELEMENT_LABELS[strongElement].keyword}과 ${ROLE_LABELS[strongRole]}이 함께 살아나면 남들이 놓친 문제를 발견하고, 그것을 실제 결과물이나 운영 방식으로 바꾸는 힘이 커질 수 있습니다.`,
       `다만 강점은 과하게 사용할 때 약점처럼 보일 수 있습니다. 특히 ${element.risk}과 ${role.stress}이 겹치면 스스로에게 부담을 크게 줄 수 있으므로, ${element.use}을 통해 속도를 조절하는 것이 장점을 오래 유지하는 방법입니다.`
+    ]),
+    balance: section('신강·신약과 오행 균형', `현재 가중 오행 분포는 ${balance}으로 읽히며, ${strongElement}은 상대적으로 강하고 ${weakElement}은 상대적으로 약한 편입니다.`, [
+      `신강·신약은 단순히 오행 숫자 하나만으로 확정하는 값이 아니라 월령, 통근, 투간, 계절, 생극제화와 원국 전체의 결합을 함께 보는 전통 명리 판단입니다. 이 사이트는 수치화된 오행 분포와 일간의 계절적 배경을 보조 지표로 제시하되, 특정 학파의 용신 판정을 절대적인 사실처럼 단정하지 않습니다.`,
+      `실용적으로는 강한 ${strongElement} 기운의 장점을 과도하게 밀어붙이기보다 ${weakElement} 기운이 상징하는 생활 태도를 보완하는 방식이 좋습니다. ${weak.use}을 일상 루틴에 넣는 것은 사주를 맹신하기 위한 처방이 아니라, 한쪽으로 치우친 행동 패턴을 점검하는 참고 방법으로 활용할 수 있습니다.`
     ]),
     career: section('일·직업·재능', `${role.career}에서 강점이 살아나기 쉽고, ${second.career}도 보조 재능으로 활용할 수 있습니다.`, [
       `직업에서는 단순 반복보다 판단권과 개선 여지가 있는 일이 잘 맞는 편입니다. ${role.career}처럼 내가 가진 기준과 경험을 실제 결정에 반영할 수 있을 때 몰입도가 높아지며, 결과를 축적할수록 주변의 신뢰도 함께 커질 가능성이 있습니다.`,
@@ -93,6 +108,10 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
     luck: section('대운의 큰 전환점', luckLead, [
       `대운은 10년 단위로 삶의 배경 주제가 바뀌는 흐름을 설명하는 전통 명리 개념입니다. 실제 사건을 미리 확정하는 예언이 아니라, 특정 시기에 어떤 역할과 관계, 일의 주제가 커질 수 있는지 보는 장기 프레임으로 활용하는 편이 적절합니다.`,
       `현재 대운을 볼 때는 세운과 월운을 따로 떼어 해석하기보다 원국과 함께 겹쳐 봐야 합니다. 큰 방향은 대운이 만들고, 그 안에서 해마다 강조점이 달라진다고 이해하면 좋으며, 현실의 선택과 환경 변화가 언제나 사주 결과보다 우선합니다.`
+    ]),
+    technical: section('계산 기준과 정확도', `원국은 절기·진태양시·한국 표준시 이력을 반영하고, 월운은 실제 절입 시각을 경계로 계산합니다.`, [
+      `연주와 월주는 단순한 양력 1월 1일이나 매월 1일을 경계로 바꾸지 않습니다. 연주의 핵심 경계는 입춘이며, 월운은 입춘·경칩·청명·입하·망종·소서·입추·백로·한로·입동·대설·소한의 12절입 시각을 기준으로 나누어 계산해 양력 15일 대표값 방식보다 경계 오차를 줄였습니다.`,
+      `${precisionText} 또한 음력과 윤달 변환, 과거 한국 표준시와 서머타임, 선택한 자시 관법을 계산 근거에 포함합니다. 다만 명리학 해석 자체에는 학파별 차이가 존재하므로 계산 가능한 천문·역법 값과 해석적 판단을 구분해 표시하는 것이 이 사이트의 정확도 원칙입니다.`
     ])
   };
 }
