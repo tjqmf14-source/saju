@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { calculateSaju, detectBranchRelations } from '../src/saju-engine.js';
+import { getSolarTerm } from 'manseryeok';
+import { calculateSaju, calculateMonthFlows, detectBranchRelations } from '../src/saju-engine.js';
 
 test('1987-06-14 11:45 KST 원국을 검증된 간지로 계산한다', () => {
   const chart = calculateSaju({calendar:'solar',year:1987,month:6,day:14,hour:11,minute:45,gender:'male',precision:false});
@@ -33,4 +34,18 @@ test('오행 분포는 합계가 8로 정규화된다', () => {
   const chart = calculateSaju({calendar:'solar',year:1987,month:6,day:14,hour:11,minute:45,gender:'male'});
   const total = Object.values(chart.elements).reduce((a,b)=>a+b,0);
   assert.ok(Math.abs(total-8)<1e-9);
+});
+
+test('월운은 양력 15일이 아니라 실제 12개 절입 순간을 경계로 계산한다', () => {
+  const chart = calculateSaju({calendar:'solar',year:1987,month:6,day:14,hour:11,minute:45,gender:'male'});
+  const flows = calculateMonthFlows(chart,2026);
+  assert.equal(flows.length,12);
+  assert.equal(flows[0].sajuMonth,1);
+  assert.equal(flows[0].branch,'인');
+  assert.equal(flows[0].start.toISOString(),getSolarTerm(2026,2).date.toISOString());
+  assert.equal(flows[1].start.toISOString(),getSolarTerm(2026,4).date.toISOString());
+  assert.equal(flows[10].start.toISOString(),getSolarTerm(2026,22).date.toISOString());
+  assert.equal(flows[11].start.toISOString(),getSolarTerm(2027,0).date.toISOString());
+  assert.equal(flows[11].end.toISOString(),getSolarTerm(2027,2).date.toISOString());
+  for (const flow of flows) assert.ok(flow.end > flow.start);
 });
