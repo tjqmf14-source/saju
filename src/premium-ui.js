@@ -72,6 +72,14 @@ const ELEMENT_HINT = {
   수:{color:'네이비 · 블랙',place:'조용한 카페나 물가',action:'메모로 생각을 밖에 꺼낸 뒤 작은 행동 하나 정하기'}
 };
 
+const ROLE_BY_ELEMENT = {
+  목:{목:'비겁',화:'식상',토:'재성',금:'관성',수:'인성'},
+  화:{화:'비겁',토:'식상',금:'재성',수:'관성',목:'인성'},
+  토:{토:'비겁',금:'식상',수:'재성',목:'관성',화:'인성'},
+  금:{금:'비겁',수:'식상',목:'재성',화:'관성',토:'인성'},
+  수:{수:'비겁',목:'식상',화:'재성',토:'관성',금:'인성'}
+};
+
 function selectedCalendar(){ return form.elements.calendar.value; }
 function currentKstYear(){ return Number(new Intl.DateTimeFormat('en',{timeZone:'Asia/Seoul',year:'numeric'}).format(new Date())); }
 function currentKstDate(){ return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric',weekday:'short'}).format(new Date()); }
@@ -80,7 +88,7 @@ function dominantElement(chart){ return sorted(chart.elements)[0]?.[0] || '토';
 function weakestElement(chart){ return sorted(chart.elements).at(-1)?.[0] || '수'; }
 function dominantRole(chart){ return sorted(chart.roles)[0]?.[0] || '인성'; }
 function relationLabel(relations){ return relations?.length ? [...new Set(relations.map((r)=>r.type))].join('·') : '큰 충돌 신호 없음'; }
-function escapeHtml(value=''){ return value.replace(/[&<>"']/g,(char)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])); }
+function escapeHtml(value=''){ return value.replace(/[&<>"']/g,(char)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[char])); }
 
 function collectInput(){
   const [hour,minute] = $('birthTime').value.split(':').map(Number);
@@ -109,6 +117,7 @@ function syncPrecisionUi(){
 
 function formatSolar(solar){ return `${solar.year}.${String(solar.month).padStart(2,'0')}.${String(solar.day).padStart(2,'0')}`; }
 function formatLunar(lunar){ return `${lunar.year}년 ${lunar.isLeap?'윤':''}${lunar.month}월 ${lunar.day}일`; }
+function formatKstBoundary(date){ return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(date); }
 
 function renderAccuracyBasis(chart){
   const items=[
@@ -171,21 +180,55 @@ function renderYear(yearFlow,monthFlows){
   const copy=GROUP_COPY[yearFlow.group];
   $('yearTitle').textContent=`${yearFlow.year} · ${ROLE_LABELS[yearFlow.group]}의 해`;
   $('yearSummary').textContent=`${copy.summary}입니다. ${copy.opportunity}에 집중하면 흐름을 활용하기 좋고, ${copy.caution}은 올해 반복해서 점검할 주제입니다. 원국과의 관계 신호는 ${relationLabel(yearFlow.relations)}입니다.`;
+  $('yearDeepDive').innerHTML=`<article class="year-essay"><span class="micro">YEAR IN DEPTH</span><h3>올해 전체 흐름</h3><p>${copy.summary}이라는 말은 단순히 좋은 일이 생긴다는 뜻이 아니라, 올해 여러 선택에서 ${copy.label}의 주제가 반복해서 나타날 가능성이 높다는 뜻입니다. ${copy.opportunity}을 실제 행동으로 연결할수록 체감이 좋아질 수 있고, 반대로 ${copy.caution}이 반복될 때는 속도를 늦추고 방향을 다시 확인하는 편이 좋습니다.</p><p><strong>현실적인 조언.</strong> ${copy.work} 중요한 선택을 한 번에 크게 벌이기보다 지금 가진 시간·돈·관계 자원을 점검한 뒤, 성과가 확인되는 영역부터 단계적으로 넓혀가세요.</p><p><strong>주의할 점.</strong> ${copy.caution}은 불안해하라는 경고가 아니라 올해의 체크리스트에 가깝습니다. 계약·지출·관계 결정은 감정이 가장 큰 순간보다 자료와 조건을 다시 본 뒤 결정하는 편이 안전합니다.</p></article>`;
   $('yearAdviceGrid').innerHTML=[['올해의 기회',copy.opportunity],['주의할 패턴',copy.caution],['돈의 포인트',copy.money],['관계의 포인트',copy.love]].map(([title,body])=>`<article class="advice-card"><span>${title}</span><p>${body}</p></article>`).join('');
   const quarterNames=['1–3월 · 방향을 잡는 구간','4–6월 · 속도를 조절하는 구간','7–9월 · 중심을 다지는 구간','10–12월 · 정리와 다음 준비'];
   $('tojungQuarterGrid').innerHTML=[0,3,6,9].map((start,index)=>{
     const group=dominantGroup(monthFlows.slice(start,start+3)); const c=GROUP_COPY[group];
-    return `<article class="quarter-card"><span>${String(index+1).padStart(2,'0')}</span><div><h3>${quarterNames[index]}</h3><strong>${c.summary}</strong><p>${c.opportunity}을 활용하고, ${c.caution}은 줄여보세요.</p></div></article>`;
+    return `<article class="quarter-card"><span>${String(index+1).padStart(2,'0')}</span><div><h3>${quarterNames[index]}</h3><strong>${c.summary}</strong><p>${c.opportunity}을 생활에서 실제로 실행해 보고, ${c.caution}이 반복되면 우선순위를 줄여보세요. 이 분기의 핵심은 결과를 재촉하기보다 다음 분기까지 이어질 수 있는 리듬을 만드는 것입니다.</p></div></article>`;
   }).join('');
   const seasons=[['봄',monthFlows.slice(2,5)],['여름',monthFlows.slice(5,8)],['가을',monthFlows.slice(8,11)],['겨울',[monthFlows[11],monthFlows[0],monthFlows[1]]]];
   $('seasonGuide').innerHTML=seasons.map(([name,flows])=>{const group=dominantGroup(flows),c=GROUP_COPY[group];return `<article><span>${name}</span><strong>${ROLE_LABELS[group]}</strong><p>${c.summary}. ${c.opportunity}</p></article>`;}).join('');
-  $('monthForecast').innerHTML=monthFlows.map((item)=>{const c=GROUP_COPY[item.group];return `<article class="month-card"><div><span class="month-number">${String(item.month).padStart(2,'0')}</span><strong>${ROLE_LABELS[item.group]}</strong></div><p>${c.summary}. ${c.opportunity}을 우선하고 ${c.caution}은 줄여보세요.</p><small>${item.korean} · ${item.tenGod}</small></article>`;}).join('');
+  $('monthForecast').innerHTML=monthFlows.map((item)=>{const c=GROUP_COPY[item.group];return `<article class="month-card"><div class="month-card-head"><span class="month-number">${String(item.month).padStart(2,'0')}</span><strong>${ROLE_LABELS[item.group]}</strong></div><p>${c.summary}. ${c.opportunity}을 우선하고 ${c.caution}은 줄여보세요. 한 달 전체를 미리 단정하기보다, 반복해서 같은 문제가 생길 때 이 문장을 행동 기준으로 활용하는 편이 좋습니다.</p><small>절입 기준 ${formatKstBoundary(item.start)} · ${item.korean} · ${item.tenGod}</small></article>`;}).join('');
+}
+
+function luckGroup(chart,item,index){
+  const luckStem=item.korean?.[0];
+  const dayElement=stemByName(chart.dayMaster)?.element;
+  const luckElement=luckStem ? stemByName(luckStem)?.element : null;
+  return ROLE_BY_ELEMENT[dayElement]?.[luckElement] || ['비겁','식상','재성','관성','인성'][index%5];
+}
+
+function buildLuckNarrative(chart,item,index,isActive){
+  const group=luckGroup(chart,item,index);
+  const copy=GROUP_COPY[group] || GROUP_COPY.인성;
+  return {
+    group,
+    theme:`${copy.label}이 삶의 배경으로 커지는 10년`,
+    lead:`${item.age}세부터의 시기는 ${copy.summary}으로 읽을 수 있습니다. 대운은 사건 하나를 맞히는 운세라기보다, 선택·관계·일의 방식에서 반복해서 나타나는 장기 배경에 가깝습니다. ${copy.opportunity}과 관련된 장면이 자연스럽게 늘어날 수 있습니다.`,
+    opportunity:`${copy.opportunity}을 실제 생활에서 적극적으로 활용해 보세요. 이 시기에는 잘하는 것을 넓게 퍼뜨리기보다 오래 가져갈 강점으로 정리하는 편이 더 큰 자산이 됩니다.`,
+    caution:`${copy.caution}이 반복될 때는 속도를 줄이고 기준을 다시 확인하는 편이 좋습니다. 대운의 압박을 운명처럼 받아들이기보다 반복 패턴을 알아차리는 신호로 쓰는 것이 좋습니다.`,
+    advice:`${copy.label}의 장점을 크게 쓰되 무리하게 증명하려 하지 않는 것이 핵심입니다. ${copy.work}${isActive?' 지금 지나고 있는 구간이라면 올해의 작은 선택도 이 장기 흐름 안에서 바라보고, 무엇을 더할지보다 무엇을 오래 남길지를 먼저 정해보세요.':''}`
+  };
 }
 
 function renderLuck(chart){
-  if(!chart.luck){ $('luckMeta').textContent='대운 정보를 표시할 수 없습니다.'; $('luckTimeline').innerHTML=''; return; }
-  $('luckMeta').textContent=`${chart.luck.forward?'순행':'역행'} · 첫 대운 약 ${chart.luck.startYears}년 ${chart.luck.startMonths}개월 후 시작`;
-  $('luckTimeline').innerHTML=chart.luck.pillars.slice(0,9).map((item,index)=>`<article class="luck-step"><span>${item.age}세부터</span><strong>${item.korean}</strong><p>${index===0?'첫 번째 큰 환경 변화의 배경이 시작되는 구간입니다.':'이 시기부터 새로운 10년의 배경 주제가 시작됩니다.'}</p></article>`).join('');
+  if(!chart.luck){ $('luckMeta').textContent='대운 정보를 표시할 수 없습니다.'; $('luckOverview').innerHTML=''; $('luckTimeline').innerHTML=''; return; }
+  const items=chart.luck.pillars.slice(0,9);
+  const currentAge=Math.max(0,currentKstYear()-chart.solar.year);
+  $('luckMeta').textContent=`${chart.luck.forward?'순행':'역행'} · 첫 대운 약 ${chart.luck.startYears}년 ${chart.luck.startMonths}개월 후 시작 · 대운은 약 10년 단위의 장기 배경으로 읽습니다.`;
+  $('luckOverview').innerHTML=items.map((item,index)=>{
+    const next=items[index+1];
+    const active=currentAge>=item.age && (!next || currentAge<next.age);
+    const narrative=buildLuckNarrative(chart,item,index,active);
+    return `<article class="luck-overview-item${active?' active':''}"><span>${active?'현재 대운':`${item.age}세부터`}</span><strong>${item.korean}</strong><small>${ROLE_LABELS[narrative.group]} · ${narrative.theme}</small></article>`;
+  }).join('');
+  $('luckTimeline').innerHTML=items.map((item,index)=>{
+    const next=items[index+1];
+    const active=currentAge>=item.age && (!next || currentAge<next.age);
+    const narrative=buildLuckNarrative(chart,item,index,active);
+    return `<article class="luck-step${active?' active':''}"><div class="luck-step-head"><span>${active?'현재 지나고 있는 대운':'DECADE FLOW'}</span><strong>${item.korean}</strong><small>${item.age}세부터 · ${ROLE_LABELS[narrative.group]}</small></div><div class="luck-step-body"><div class="luck-theme">큰 주제 · ${narrative.theme}</div><p>${narrative.lead}</p><div class="luck-narrative-grid"><div><strong>기회</strong><p>${narrative.opportunity}</p></div><div><strong>주의할 점</strong><p>${narrative.caution}</p></div><div><strong>조언</strong><p>${narrative.advice}</p></div></div></div></article>`;
+  }).join('');
 }
 
 function renderPillars(chart){
@@ -214,7 +257,7 @@ function renderMbtiAxes(mbti){
 function renderExpertGuide(chart){
   const guide=buildPlainChartGuide(chart);
   const sectionOrder=['personality','work','money','relationships','recovery'];
-  $('expertGuide').innerHTML=`<div class="expert-guide-head"><span class="micro">MY CHART IN PLAIN KOREAN</span><h3>${guide.headline}</h3><p>${guide.summary}</p></div><div class="expert-story-grid">${sectionOrder.map((key,index)=>{const section=guide.sections[key];return `<article class="expert-story-card"><span>${String(index+1).padStart(2,'0')}</span><h4>${section.title}</h4><p class="story-summary">${section.summary}</p><div class="life-example"><strong>생활에서는 이렇게 보일 수 있어요</strong><p>${section.lifeExample}</p></div><details class="expert-evidence"><summary>왜 이렇게 해석했나요?</summary><p>${section.evidence}</p></details></article>`;}).join('')}</div><div class="expert-glossary"><div><span class="micro">TERMS, SIMPLIFIED</span><h4>전문용어를 한 문장으로</h4></div><dl>${guide.glossary.map((item)=>`<div><dt>${item.term}</dt><dd>${item.plain}</dd></div>`).join('')}</dl></div><p class="expert-raw-intro"><strong>아래부터는 계산 원자료입니다.</strong> 위 해설이 어떤 데이터에서 나왔는지 확인하고 싶을 때만 펼쳐보세요.</p>`;
+  $('expertGuide').innerHTML=`<div class="expert-guide-head"><div><span class="micro">MY CHART IN PLAIN KOREAN</span><h3>${guide.headline}</h3></div><p>${guide.summary}</p></div><div class="expert-story-grid">${sectionOrder.map((key,index)=>{const section=guide.sections[key];return `<article class="expert-story-card"><span>${String(index+1).padStart(2,'0')}</span><h4>${section.title}</h4><p class="story-summary">${section.summary}</p><div class="life-example"><strong>생활에서는 이렇게 보일 수 있어요</strong><p>${section.lifeExample}</p></div><details class="expert-evidence"><summary>왜 이렇게 해석했나요?</summary><p>${section.evidence}</p></details></article>`;}).join('')}</div><div class="expert-glossary"><div><span class="micro">TERMS, SIMPLIFIED</span><h4>전문용어를 한 문장으로</h4></div><dl>${guide.glossary.map((item)=>`<div><dt>${item.term}</dt><dd>${item.plain}</dd></div>`).join('')}</dl></div><p class="expert-raw-intro"><strong>아래부터는 계산 원자료입니다.</strong> 위 해설이 어떤 데이터에서 나왔는지 확인하고 싶을 때만 펼쳐보세요.</p>`;
 }
 
 function renderExpert(chart,mbti){
@@ -252,7 +295,7 @@ function renderAll(){
 }
 
 function renderTarot(mode,draw,reading,question){
-  $('tarotDeck').innerHTML=draw.map((item,index)=>`<article class="tarot-card" data-card="${index}"><div class="tarot-card-inner"><div class="tarot-face tarot-back"></div><div class="tarot-face tarot-front"><div><span class="arcana-no">${item.card.arcana==='major'?String(item.card.rank).padStart(2,'0'):item.card.en}</span><div class="tarot-illustration${item.reversed?' reversed-art':''}"><img class="tarot-card-image" src="${item.card.image}" alt="${item.card.en} Rider-Waite-Smith 카드" loading="eager"></div><strong>${item.card.name}</strong><small>${item.card.en}<br>${item.reversed?'REVERSED · 역방향':'UPRIGHT · 정방향'}</small></div></div></div></article>`).join('');
+  $('tarotDeck').innerHTML=draw.map((item,index)=>`<article class="tarot-card" data-card="${index}"><div class="tarot-card-inner"><div class="tarot-face tarot-back"></div><div class="tarot-face tarot-front"><div><span class="arcana-no">${item.card.arcana==='major'?String(item.card.rank).padStart(2,'0'):item.card.en}</span><div class="tarot-illustration"><img class="tarot-card-image" src="${item.card.image}" alt="${item.card.en} Rider-Waite-Smith 카드" loading="eager"></div><strong>${item.card.name}</strong><small>${item.card.en}<br>${item.reversed?'REVERSED · 역방향':'UPRIGHT · 정방향'}</small></div></div></div></article>`).join('');
   requestAnimationFrame(()=>setTimeout(()=>document.querySelectorAll('.tarot-card').forEach((card)=>card.classList.add('revealed')),60));
   const questionLine=question?`<p class="tarot-question-line">질문 · ${escapeHtml(question)}</p>`:'';
   $('tarotResult').innerHTML=questionLine+reading.map((item)=>`<article class="tarot-reading"><div class="tarot-reading-head"><span>${item.position}</span><div><h3>${item.card.name} · ${item.orientation}</h3><p class="tarot-keywords">${item.card.keywords}</p></div></div><div class="tarot-reading-grid"><div><strong>카드의 뜻</strong><p>${item.meaning}</p></div><div><strong>그림이 말하는 상징</strong><p>${item.symbolism}</p></div><div><strong>지금 적용할 조언</strong><p>${item.advice}</p></div></div><p class="tarot-reading-note">타로는 미래를 확정하는 예언이 아니라 현재 질문을 다른 각도에서 살펴보기 위한 상징적 참고 도구입니다.</p></article>`).join('');
