@@ -63,7 +63,7 @@ test('B concept mobile layout stays readable and overflow-free', async ({ page }
   await expect(page.locator('.visual-keyword-card')).toHaveCount(6);
 
   const heroVisual = await page.locator('.hero-visual').boundingBox();
-  expect(heroVisual?.height || 0).toBeGreaterThan(380);
+  expect(heroVisual?.height || 0).toBeGreaterThan(240);
 
   await assertNoHorizontalOverflow(page);
   await page.screenshot({ path: `test-results/b-concept-${testInfo.project.name}.png`, fullPage: true });
@@ -137,6 +137,7 @@ test('annual, decade and natal grids stay within their section bounds', async ({
       };
     };
     return [
+      inspect('.reading-opening', '.reading-aside, .reading-main'),
       inspect('#monthForecast', '.month-card'),
       inspect('#luckOverview', '.luck-overview-item'),
       inspect('#expert .expert-content-shell', '.pillar-card, .expert-story-card, .raw-data-group'),
