@@ -168,7 +168,7 @@ textarea{resize:vertical}
 .detail-chapter-body p{font-size:17px;line-height:1.95;color:#30333a}
 
 .daily-layout{display:grid;grid-template-columns:5fr 7fr;gap:64px;align-items:start}
-.daily-primary{position:sticky;top:144px;align-self:start;padding-right:24px}
+.daily-primary{position:sticky;top:144px;align-self:start;padding-right:24px}.daily-primary-score{display:flex;align-items:baseline;gap:10px;margin-bottom:22px}.daily-primary-score strong{font:600 72px/1 var(--serif);color:var(--vermilion)}.daily-primary-score small{color:var(--ink-soft);font-size:13px}.daily-index{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--line);color:var(--vermilion);font-size:11px;font-weight:700;letter-spacing:.08em}
 .daily-summary{font:500 26px/1.65 var(--serif);letter-spacing:-.02em}
 .daily-metrics{border-top:1px solid var(--line)}
 .metric-row{display:grid;grid-template-columns:84px 100px 1fr;gap:18px;align-items:start;padding:22px 0;border-bottom:1px solid var(--line)}
@@ -183,7 +183,7 @@ textarea{resize:vertical}
 .lucky-list dt{color:var(--gold);font-size:11px}
 .lucky-list dd{margin:5px 0 0;font-size:14px}
 
-.year-panel,.luck-panel,.expert-panel{padding:0}
+.annual-layout{position:relative}.luck-layout{position:relative}.year-panel,.luck-panel,.expert-panel{padding:0}
 .year-deep-dive{margin-bottom:38px}
 .year-essay{max-width:900px;padding:0 0 34px;border-bottom:1px solid var(--line)}
 .year-essay h3{margin:8px 0 16px;font:600 34px/1.2 var(--serif)}
