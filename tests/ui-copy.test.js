@@ -11,7 +11,7 @@ for (const fn of ['renderToday','renderYear','renderDetailedReport','renderTarot
 }
 
 test('premium UI wires daily, yearly, detailed interpretation and tarot output', () => {
-  for (const id of ['dailyFortuneGrid','todayLucky','yearAdviceGrid','tojungQuarterGrid','seasonGuide','detailedReport','tarotDeck','tarotResult']) {
+  for (const id of ['dailyFortuneGrid','dailyPrimary','dailyMetrics','todayLucky','yearAdviceGrid','tojungQuarterGrid','detailedReport','tarotDeck','tarotResult']) {
     assert.match(source, new RegExp(`['\"]${id}['\"]`));
   }
 });
