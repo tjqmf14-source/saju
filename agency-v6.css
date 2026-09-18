@@ -1595,3 +1595,83 @@ body[data-theme="modern-oracle"] #expert .raw-data-group>details{
   body[data-theme="modern-oracle"] #expert .pillar-grid{grid-template-columns:1fr;}
   body[data-theme="modern-oracle"] #expert .pillar-card{padding-inline:8px;}
 }
+
+
+/* =========================================================
+   B CONCEPT VISUAL FIXES — atlas layers and mobile reading
+   ========================================================= */
+body[data-theme="modern-oracle"] .visual-keyword-card>.atlas-card{
+  inset:0;
+  padding:0;
+  background-image:url('/oracle/b-visual-atlas.webp');
+  background-repeat:no-repeat;
+  background-size:600% auto;
+  background-position-y:100%;
+}
+body[data-theme="modern-oracle"] .visual-keyword-card>div:not(.atlas-card){
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:2;
+  padding:46px 14px 14px;
+  background:linear-gradient(transparent,rgba(5,13,23,.96));
+}
+body[data-theme="modern-oracle"] .reading-opening,
+body[data-theme="modern-oracle"] .reading-aside,
+body[data-theme="modern-oracle"] .reading-main,
+body[data-theme="modern-oracle"] .reading-head,
+body[data-theme="modern-oracle"] .accuracy-basis,
+body[data-theme="modern-oracle"] .basis-item,
+body[data-theme="modern-oracle"] .mbti-type-panel{
+  min-width:0;
+}
+body[data-theme="modern-oracle"] .reading-head h2,
+body[data-theme="modern-oracle"] .reading-lead,
+body[data-theme="modern-oracle"] .reading-basis,
+body[data-theme="modern-oracle"] .basis-item strong{
+  overflow-wrap:anywhere;
+  word-break:keep-all;
+}
+
+@media(max-width:900px){
+  body[data-theme="modern-oracle"] .reading-opening{
+    grid-template-columns:1fr;
+    gap:20px;
+  }
+  body[data-theme="modern-oracle"] .reading-head{
+    grid-template-columns:minmax(0,1fr);
+    gap:22px;
+  }
+  body[data-theme="modern-oracle"] .mbti-type-panel{
+    padding:22px 0 0;
+    border-left:0;
+    border-top:1px solid var(--oracle-line);
+  }
+}
+
+@media(max-width:560px){
+  body[data-theme="modern-oracle"] .reading-opening{
+    width:calc(100% - 24px);
+    margin:14px auto 18px;
+    padding:22px 18px;
+  }
+  body[data-theme="modern-oracle"] .reading-aside{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+  body[data-theme="modern-oracle"] .reading-basis{
+    margin:0;
+    text-align:left;
+  }
+  body[data-theme="modern-oracle"] .reading-head h2{
+    font-size:clamp(34px,10vw,42px);
+  }
+  body[data-theme="modern-oracle"] .mbti-type-panel strong{
+    font-size:clamp(48px,16vw,62px);
+  }
+  body[data-theme="modern-oracle"] .accuracy-basis{
+    grid-template-columns:1fr;
+  }
+}
