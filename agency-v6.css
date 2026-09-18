@@ -1140,13 +1140,14 @@ body[data-theme="modern-oracle"] .hero-cta{
 .hero-proof-oracles small{font-size:10px;color:#7f8ca0;line-height:1.5}
 
 body[data-theme="modern-oracle"] .hero-visual{
-  min-height:610px;
+  min-height:0;
+  aspect-ratio:900/639;
   border:0;
   box-shadow:none;
   background:
-    linear-gradient(90deg,#071423 0%,rgba(7,20,35,.25) 19%,rgba(7,20,35,.02) 42%),
-    linear-gradient(180deg,transparent 72%,rgba(6,16,29,.72) 100%),
-    url('/oracle/hero-scene.svg') center/cover no-repeat;
+    linear-gradient(90deg,#071423 0%,rgba(7,20,35,.18) 16%,rgba(7,20,35,0) 38%),
+    linear-gradient(180deg,transparent 72%,rgba(6,16,29,.48) 100%),
+    url('/oracle/b-visual-atlas.webp') top center/100% auto no-repeat;
 }
 body[data-theme="modern-oracle"] .hero-visual::before{display:none}
 .oracle-portal{display:none}
@@ -1267,8 +1268,22 @@ body[data-theme="modern-oracle"] .reading-opening{
   border-radius:5px;
   background:#08131f;
 }
-.visual-keyword-card img{width:100%;height:100%;object-fit:cover;transition:transform .45s var(--ease-standard),filter .35s}
-.visual-keyword-card:hover img{transform:scale(1.035);filter:brightness(1.08)}
+.atlas-card{
+  position:absolute;
+  inset:0;
+  background-image:url('/oracle/b-visual-atlas.webp');
+  background-repeat:no-repeat;
+  background-size:600% auto;
+  background-position-y:100%;
+  transition:transform .45s var(--ease-standard),filter .35s;
+}
+.atlas-card-1{background-position-x:0%}
+.atlas-card-2{background-position-x:20%}
+.atlas-card-3{background-position-x:40%}
+.atlas-card-4{background-position-x:60%}
+.atlas-card-5{background-position-x:80%}
+.atlas-card-6{background-position-x:100%}
+.visual-keyword-card:hover .atlas-card{transform:scale(1.035);filter:brightness(1.08)}
 .visual-keyword-card>div{
   position:absolute;left:0;right:0;bottom:0;padding:46px 14px 14px;
   background:linear-gradient(transparent,rgba(5,13,23,.96));
@@ -1323,7 +1338,14 @@ body[data-theme="modern-oracle"] .year-panel .section-heading{margin-bottom:18px
   border-top:1px solid var(--b-line);
   border-bottom:1px solid var(--b-line);
 }
-.annual-scene{background:url('/oracle/annual-scene.svg') center/cover no-repeat;min-height:300px}
+.annual-scene{
+  min-height:300px;
+  aspect-ratio:900/424;
+  background-image:url('/oracle/b-visual-atlas.webp');
+  background-repeat:no-repeat;
+  background-size:100% auto;
+  background-position:center 72.6%;
+}
 .annual-copy{
   display:flex;flex-direction:column;justify-content:center;padding:34px 38px;
   background:linear-gradient(90deg,rgba(8,21,34,.96),rgba(8,21,34,.7));
@@ -1350,7 +1372,7 @@ body[data-theme="modern-oracle"] .tarot-stage{border-radius:10px}
 }
 @media(max-width:899px){
   body[data-theme="modern-oracle"] .hero-primary{grid-template-columns:1fr;min-height:0}
-  body[data-theme="modern-oracle"] .hero-visual{min-height:520px}
+  body[data-theme="modern-oracle"] .hero-visual{min-height:0;aspect-ratio:900/639}
   body[data-theme="modern-oracle"] .input-panel{grid-template-columns:1fr}
   body[data-theme="modern-oracle"] .input-panel .section-heading,
   body[data-theme="modern-oracle"] .input-panel form,
@@ -1371,7 +1393,7 @@ body[data-theme="modern-oracle"] .tarot-stage{border-radius:10px}
   .hero-proof-oracles{margin-left:0}
   body[data-theme="modern-oracle"] .hero-copy h1{font-size:42px}
   .hero-proof-oracles{grid-template-columns:1fr}
-  body[data-theme="modern-oracle"] .hero-visual{min-height:430px}
+  body[data-theme="modern-oracle"] .hero-visual{min-height:0;aspect-ratio:900/639}
   body[data-theme="modern-oracle"] .input-panel{width:calc(100% - 24px);padding:24px 18px}
   body[data-theme="modern-oracle"] .input-panel form{padding-inline:0;border:0;background:transparent}
   body[data-theme="modern-oracle"] .input-panel .form-grid{grid-template-columns:1fr}
@@ -1393,3 +1415,21 @@ body[data-theme="modern-oracle"] .tarot-stage{border-radius:10px}
 
 /* visual QA: decorative hero halo must not create page overflow */
 body[data-theme="modern-oracle"] .hero-primary{overflow:clip}
+
+/* generated B-concept imagery */
+body[data-theme="modern-oracle"] .visual-keyword-card{
+  aspect-ratio:150/242;
+  min-height:0;
+}
+body[data-theme="modern-oracle"] .input-panel::before{
+  background:
+    linear-gradient(90deg,rgba(7,17,31,.97),rgba(7,17,31,.70)),
+    url('/oracle/b-visual-atlas.webp') center 72.6%/100% auto no-repeat;
+  opacity:.14;
+}
+body[data-theme="modern-oracle"] .year-panel::before{
+  background:
+    linear-gradient(90deg,rgba(7,17,31,.98),rgba(7,17,31,.76)),
+    url('/oracle/b-visual-atlas.webp') center 72.6%/100% auto no-repeat;
+  opacity:.09;
+}
