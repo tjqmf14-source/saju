@@ -8,6 +8,18 @@
   <link rel="stylesheet" href="/agency-v6.css">
 </head>
 <body data-theme="modern-oracle">
+  <svg id="oracleIconSprite" class="svg-sprite" aria-hidden="true">
+    <symbol id="icon-calendar" viewBox="0 0 24 24"><path d="M5 3v3M19 3v3M4 8h16M5 5h14a1 1 0 0 1 1 1v13H4V6a1 1 0 0 1 1-1Z"/><path d="M8 12h3v3H8zM14 12h2"/></symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></symbol>
+    <symbol id="icon-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M9 9.5c.7-.6 1.7-.9 3-.9 1.8 0 3 .8 3 2s-1.2 2-3 2-3 .8-3 2 1.2 2 3 2c1.3 0 2.3-.3 3-.9M12 6.5v11"/></symbol>
+    <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-9.7C5 7.5 6.8 6 9 6c1.5 0 2.5.8 3 1.8C12.5 6.8 13.5 6 15 6c2.2 0 4 1.5 4 4.3C19 15.6 12 20 12 20Z"/></symbol>
+    <symbol id="icon-briefcase" viewBox="0 0 24 24"><path d="M4 8h16v11H4zM9 8V5h6v3M4 12h16M10 12v2h4v-2"/></symbol>
+    <symbol id="icon-health" viewBox="0 0 24 24"><path d="M4 13h4l2-5 3 9 2-4h5"/><path d="M12 21C7 18 4 15.5 4 10.5 4 7.7 5.8 6 8 6c1.7 0 3 1 4 2.4C13 7 14.3 6 16 6c2.2 0 4 1.7 4 4.5 0 5-3 7.5-8 10.5Z"/></symbol>
+    <symbol id="icon-orbit" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><ellipse cx="12" cy="12" rx="9" ry="4.5" transform="rotate(24 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="4.5" transform="rotate(-58 12 12)"/></symbol>
+    <symbol id="icon-chart" viewBox="0 0 24 24"><path d="M4 20V9M10 20V4M16 20v-7M22 20H2"/></symbol>
+    <symbol id="icon-tarot" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1"/><circle cx="12" cy="10" r="3"/><path d="M12 6V4M12 16v3M8 10H6M18 10h-2"/></symbol>
+  </svg>
+
   <a class="skip-link" href="#input">사주 입력으로 바로가기</a>
 
   <header class="topbar">
@@ -74,12 +86,38 @@
 </div>
       </div>
     </section>
+    <nav class="feature-orbit-nav agency-shell" aria-label="주요 리포트 영역">
+      <a href="#reading"><svg class="ui-icon"><use href="#icon-orbit"/></svg><span><b>사주 리포트</b><small>나를 깊이 이해하는 시간</small></span></a>
+      <a href="#today"><svg class="ui-icon"><use href="#icon-sun"/></svg><span><b>오늘의 운세</b><small>오늘의 흐름과 리듬</small></span></a>
+      <a href="#year"><svg class="ui-icon"><use href="#icon-calendar"/></svg><span><b>올해의 흐름</b><small>한 해의 큰 그림</small></span></a>
+      <a href="#luck"><svg class="ui-icon"><use href="#icon-chart"/></svg><span><b>대운</b><small>인생의 10년 주기</small></span></a>
+      <a href="#expert"><svg class="ui-icon"><use href="#icon-orbit"/></svg><span><b>원국</b><small>나의 타고난 구조</small></span></a>
+      <a href="#tarot"><svg class="ui-icon"><use href="#icon-tarot"/></svg><span><b>타로</b><small>지금 필요한 메시지</small></span></a>
+    </nav>
+
 
     <section id="input" class="input-panel oracle-panel editorial-section agency-shell">
       <header class="section-heading">
         <div><span class="section-no">01</span><p class="section-kicker">BIRTH DATA</p></div>
         <div><h2>태어난 순간을 입력하세요.</h2><p class="section-lead">복잡한 설정은 뒤로 숨기고, 꼭 필요한 정보부터 차분하게 입력하도록 구성했습니다. 입력값은 서버로 전송하거나 저장하지 않습니다.</p></div>
       </header>
+
+
+      <div class="five-elements-orbit" aria-hidden="true">
+        <svg viewBox="0 0 320 320">
+          <circle cx="160" cy="160" r="104" class="orbit-ring"/>
+          <circle cx="160" cy="160" r="72" class="orbit-ring faint"/>
+          <path d="M160 46 267 123 226 250 94 250 53 123Z" class="element-pentagon"/>
+          <g class="element-node"><circle cx="160" cy="46" r="22"/><text x="160" y="52">木</text></g>
+          <g class="element-node"><circle cx="267" cy="123" r="22"/><text x="267" y="129">火</text></g>
+          <g class="element-node"><circle cx="226" cy="250" r="22"/><text x="226" y="256">土</text></g>
+          <g class="element-node"><circle cx="94" cy="250" r="22"/><text x="94" y="256">金</text></g>
+          <g class="element-node"><circle cx="53" cy="123" r="22"/><text x="53" y="129">水</text></g>
+          <circle cx="160" cy="160" r="7" class="orbit-core"/>
+          <path d="M160 84v152M84 160h152" class="orbit-axis"/>
+        </svg>
+        <p>FIVE ELEMENTS<br><b>木 火 土 金 水</b></p>
+      </div>
 
       <form id="birthForm" novalidate>
         <div class="form-modes">
@@ -160,6 +198,20 @@
           <div><span class="section-no">04</span><p class="section-kicker">ANNUAL FLOW</p></div>
           <div><h2 id="yearTitle">올해의 핵심 흐름</h2><p id="yearSummary" class="section-lead"></p></div>
         </header>
+
+        <div class="annual-moon-illustration" aria-hidden="true">
+          <svg viewBox="0 0 760 280">
+            <defs><linearGradient id="annualGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e4c57f"/><stop offset="1" stop-color="#836735"/></linearGradient></defs>
+            <circle cx="178" cy="126" r="82" fill="url(#annualGold)" opacity=".88"/>
+            <circle cx="206" cy="104" r="82" fill="#0b1628"/>
+            <path d="M20 235 110 146l55 48 72-92 68 74 65-58 95 117Z" class="annual-mountains"/>
+            <path d="M8 244c120-28 230-26 350 0s250 28 394-2" class="annual-water"/>
+            <g class="annual-stars"><circle cx="365" cy="54" r="2"/><circle cx="470" cy="88" r="1.5"/><circle cx="540" cy="40" r="2"/><circle cx="655" cy="101" r="1.5"/><circle cx="702" cy="59" r="2"/></g>
+            <path d="M420 170h270M465 138h178M505 106h102" class="annual-lines"/>
+          </svg>
+          <span>歲月流轉 · THE YEAR IN MOTION</span>
+        </div>
+
         <div id="yearDeepDive" class="year-deep-dive"></div>
         <div id="yearAdviceGrid" class="advice-grid"></div>
         <div class="content-rule"></div>
@@ -176,6 +228,18 @@
           <div><span class="section-no">05</span><p class="section-kicker">DECADE LUCK</p></div>
           <div><h2>인생의 큰 계절</h2><p id="luckMeta" class="section-lead"></p></div>
         </header>
+
+        <div class="decade-celestial-track" aria-hidden="true">
+          <svg viewBox="0 0 1200 180">
+            <path d="M52 94H1148" class="decade-line"/>
+            <circle cx="130" cy="94" r="6"/><circle cx="270" cy="94" r="6"/><circle cx="410" cy="94" r="6"/><circle cx="550" cy="94" r="6"/><circle cx="690" cy="94" r="10" class="current-node"/><circle cx="830" cy="94" r="6"/><circle cx="970" cy="94" r="6"/><circle cx="1110" cy="94" r="6"/>
+            <path d="M690 30v128M652 56h76M664 132h52" class="current-axis"/>
+            <circle cx="690" cy="94" r="43" class="current-orbit"/>
+            <path d="M82 44 106 63M224 42l18 18M362 49l16 15M1034 48l21 17" class="decade-stars"/>
+          </svg>
+          <span>LIFE CYCLE · 10 YEAR RHYTHM</span>
+        </div>
+
         <div id="luckOverview" class="luck-overview"></div>
         <div id="luckTimeline" class="luck-timeline"></div>
       </section>
@@ -185,6 +249,19 @@
           <div><span class="section-no">06</span><p class="section-kicker">NATAL CHART, SIMPLIFIED</p></div>
           <div><h2>한자보다 먼저,<br>내 이야기로 읽습니다.</h2><p class="section-lead">성격·일·돈·관계·회복을 생활 언어로 먼저 이해하고, 계산 근거가 궁금할 때만 원자료를 펼쳐보세요.</p></div>
         </header>
+        
+          <div class="natal-orbit-graphic" aria-hidden="true">
+            <svg viewBox="0 0 460 260">
+              <circle cx="230" cy="130" r="96" class="natal-ring"/>
+              <circle cx="230" cy="130" r="66" class="natal-ring faint"/>
+              <path d="M230 32 315 179 145 179Z" class="natal-triangle"/>
+              <path d="M132 130h196M230 32v196" class="natal-axis"/>
+              <text x="230" y="140">命</text>
+              <circle cx="230" cy="32" r="4"/><circle cx="315" cy="179" r="4"/><circle cx="145" cy="179" r="4"/>
+            </svg>
+            <div><span>YEAR</span><span>MONTH</span><span>DAY</span><span>HOUR</span></div>
+          </div>
+
         <div class="expert-content-shell">
           <div id="expertGuide" class="expert-guide" aria-live="polite"></div>
           <div class="raw-data-group">
@@ -205,6 +282,19 @@
             <h2>지금 마음에 걸리는 질문을<br>카드에게 건네보세요.</h2>
             <p id="tarotHelp">Rider–Waite–Smith 78장 전체 덱을 브라우저 안에서 섞습니다. 정·역방향은 의미로만 구분하며 카드 그림은 항상 정상 방향으로 보여줍니다.</p>
           </div>
+
+          <div class="tarot-ornament" aria-hidden="true">
+            <svg viewBox="0 0 340 440">
+              <rect x="60" y="34" width="220" height="346" rx="2" class="tarot-frame"/>
+              <rect x="78" y="52" width="184" height="310" rx="92" class="tarot-arch-frame"/>
+              <circle cx="170" cy="158" r="54" class="tarot-orbit"/>
+              <path d="M170 92v132M104 158h132M122 110l96 96M218 110l-96 96" class="tarot-lines"/>
+              <path d="M170 104a54 54 0 1 0 0 108 42 42 0 1 1 0-108Z" class="tarot-crescent"/>
+              <circle cx="170" cy="74" r="3"/><circle cx="112" cy="98" r="2"/><circle cx="228" cy="98" r="2"/><circle cx="244" cy="258" r="2"/><circle cx="96" cy="258" r="2"/>
+              <path d="M114 312 170 278l56 34-56 34Z" class="tarot-diamond"/>
+            </svg>
+          </div>
+
           <div class="tarot-controls">
             <label><span>리딩 방식</span><select id="tarotMode"><option value="today">오늘의 카드 · 1장</option><option value="question">질문 타로 · 3장</option><option value="love">연애 타로 · 3장</option><option value="money">재물 타로 · 3장</option><option value="career">직업·커리어 타로 · 3장</option></select></label>
             <label><span>질문 <small>(저장되지 않음)</small></span><textarea id="tarotQuestion" rows="3" placeholder="예: 지금 이 선택에서 무엇을 먼저 봐야 할까?"></textarea></label>
