@@ -56,7 +56,7 @@ test('major sections include real graphic motifs rather than text-only panels', 
 });
 
 test('feature navigation uses reusable line icons', () => {
-  assert.match(html, /class="feature-orbit-nav"/);
+  assert.match(html, /class="[^"]*feature-orbit-nav[^"]*"/);
   assert.match(html, /<use href="#icon-orbit"/);
   assert.match(html, /<use href="#icon-tarot"/);
 });
