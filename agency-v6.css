@@ -782,3 +782,240 @@ body[data-theme="modern-oracle"] .site-footer{border-color:var(--oracle-line);co
   body[data-theme="modern-oracle"] .luck-overview::before{display:none}
   body[data-theme="modern-oracle"] .luck-overview-item::after{display:none}
 }
+
+
+/* ===== Modern Oracle graphics & icon system ===== */
+.svg-sprite{position:absolute;width:0;height:0;overflow:hidden}
+.ui-icon{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.45;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+
+.feature-orbit-nav{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  margin-top:-24px;
+  margin-bottom:78px;
+  border-top:1px solid var(--oracle-line);
+  border-bottom:1px solid var(--oracle-line);
+  background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.005));
+  box-shadow:0 18px 54px rgba(0,0,0,.18);
+}
+.feature-orbit-nav a{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-width:0;
+  padding:22px 18px;
+  color:var(--oracle-gold);
+  border-right:1px solid var(--oracle-line);
+  transition:background var(--motion-fast) var(--ease-standard),transform var(--motion-fast) var(--ease-standard);
+}
+.feature-orbit-nav a:last-child{border-right:0}
+.feature-orbit-nav a:hover{background:rgba(214,178,110,.055);transform:translateY(-2px)}
+.feature-orbit-nav span{display:grid;gap:2px;min-width:0}
+.feature-orbit-nav b{color:var(--oracle-cream);font-size:13px}
+.feature-orbit-nav small{color:#7f8da2;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.five-elements-orbit{
+  position:absolute;
+  top:118px;
+  right:42px;
+  width:290px;
+  opacity:.96;
+  pointer-events:none;
+}
+.five-elements-orbit svg{width:100%;height:auto;overflow:visible}
+.five-elements-orbit .orbit-ring,
+.five-elements-orbit .element-pentagon,
+.five-elements-orbit .orbit-axis{
+  fill:none;
+  stroke:rgba(214,178,110,.2);
+  stroke-width:1;
+}
+.five-elements-orbit .orbit-ring{stroke-dasharray:2 7}
+.five-elements-orbit .faint{opacity:.55}
+.five-elements-orbit .element-node circle{
+  fill:#0d1a2d;
+  stroke:rgba(214,178,110,.58);
+  stroke-width:1;
+}
+.five-elements-orbit .element-node text{
+  fill:var(--oracle-gold);
+  font:500 17px var(--serif);
+  text-anchor:middle;
+}
+.five-elements-orbit .orbit-core{fill:var(--oracle-gold)}
+.five-elements-orbit p{
+  margin:-6px 0 0;
+  color:#6f7d91!important;
+  text-align:center;
+  font-size:9px;
+  line-height:1.7;
+  letter-spacing:.17em;
+}
+.five-elements-orbit p b{color:var(--oracle-gold);font-weight:600}
+.input-panel{overflow:hidden}
+.input-panel form{position:relative;z-index:2}
+.input-panel .section-heading{padding-right:320px}
+
+.annual-moon-illustration{
+  position:relative;
+  height:260px;
+  margin:-4px 0 42px;
+  overflow:hidden;
+  border-top:1px solid var(--oracle-line);
+  border-bottom:1px solid var(--oracle-line);
+  background:radial-gradient(circle at 22% 40%,rgba(214,178,110,.07),transparent 36%);
+}
+.annual-moon-illustration svg{width:100%;height:100%}
+.annual-mountains{
+  fill:rgba(214,178,110,.035);
+  stroke:rgba(214,178,110,.26);
+  stroke-width:1;
+}
+.annual-water,.annual-lines{
+  fill:none;
+  stroke:rgba(214,178,110,.18);
+  stroke-width:1;
+}
+.annual-stars circle{fill:var(--oracle-gold)}
+.annual-moon-illustration>span{
+  position:absolute;
+  right:20px;
+  bottom:16px;
+  color:#7f8da2;
+  font-size:9px;
+  letter-spacing:.18em;
+}
+
+.decade-celestial-track{
+  position:relative;
+  height:160px;
+  margin:4px 0 28px;
+  overflow:hidden;
+}
+.decade-celestial-track svg{width:100%;height:100%}
+.decade-line,.current-axis,.decade-stars{
+  fill:none;
+  stroke:rgba(214,178,110,.26);
+  stroke-width:1;
+}
+.decade-celestial-track circle{fill:#0b1628;stroke:var(--oracle-gold);stroke-width:1}
+.decade-celestial-track .current-node{fill:var(--oracle-gold);filter:drop-shadow(0 0 10px rgba(214,178,110,.5))}
+.current-orbit{fill:none!important;stroke:rgba(214,178,110,.3)!important;stroke-dasharray:3 6}
+.decade-celestial-track>span{
+  position:absolute;
+  left:0;
+  bottom:6px;
+  color:#748197;
+  font-size:9px;
+  letter-spacing:.18em;
+}
+
+.natal-orbit-graphic{
+  display:grid;
+  grid-template-columns:minmax(280px,420px) 1fr;
+  gap:34px;
+  align-items:center;
+  padding:18px 0 30px;
+  border-top:1px solid var(--oracle-line);
+  border-bottom:1px solid var(--oracle-line);
+  margin-bottom:38px;
+}
+.natal-orbit-graphic svg{width:100%;max-width:420px}
+.natal-ring,.natal-triangle,.natal-axis{
+  fill:none;
+  stroke:rgba(214,178,110,.26);
+  stroke-width:1;
+}
+.natal-ring{stroke-dasharray:3 7}
+.natal-orbit-graphic text{
+  fill:var(--oracle-gold);
+  font:500 34px var(--serif);
+  text-anchor:middle;
+}
+.natal-orbit-graphic circle{fill:var(--oracle-gold)}
+.natal-orbit-graphic>div{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  align-self:end;
+}
+.natal-orbit-graphic>div span{
+  padding-top:10px;
+  border-top:1px solid var(--oracle-line);
+  color:#7d8ba0;
+  font-size:9px;
+  letter-spacing:.16em;
+}
+
+.tarot-ornament{
+  position:absolute;
+  right:56px;
+  top:42px;
+  width:270px;
+  opacity:.6;
+  pointer-events:none;
+}
+.tarot-ornament svg{width:100%}
+.tarot-frame,.tarot-arch-frame,.tarot-orbit,.tarot-lines,.tarot-diamond{
+  fill:none;
+  stroke:rgba(214,178,110,.28);
+  stroke-width:1;
+}
+.tarot-arch-frame{stroke:rgba(214,178,110,.5)}
+.tarot-crescent{fill:rgba(214,178,110,.15);stroke:rgba(214,178,110,.6);stroke-width:1}
+.tarot-ornament circle{fill:var(--oracle-gold)}
+.tarot-stage-inner{position:relative;z-index:1}
+.tarot-copy{position:relative;z-index:2;padding-right:300px}
+
+body[data-theme="modern-oracle"] .oracle-panel{
+  overflow:hidden;
+}
+body[data-theme="modern-oracle"] .oracle-panel::before{
+  content:"";
+  position:absolute;
+  inset:auto -80px -120px auto;
+  width:260px;
+  height:260px;
+  border:1px solid rgba(214,178,110,.08);
+  border-radius:50%;
+  box-shadow:0 0 0 36px rgba(214,178,110,.025),0 0 0 72px rgba(214,178,110,.018);
+  pointer-events:none;
+}
+
+@media(max-width:1199px){
+  .feature-orbit-nav{grid-template-columns:repeat(3,1fr)}
+  .feature-orbit-nav a:nth-child(3n){border-right:0}
+  .feature-orbit-nav a:nth-child(n+4){border-top:1px solid var(--oracle-line)}
+  .five-elements-orbit{width:240px;right:28px}
+  .input-panel .section-heading{padding-right:250px}
+  .tarot-ornament{width:220px;right:30px}
+  .tarot-copy{padding-right:220px}
+}
+
+@media(max-width:899px){
+  .feature-orbit-nav{grid-template-columns:repeat(2,1fr);margin-top:18px}
+  .feature-orbit-nav a:nth-child(3n){border-right:1px solid var(--oracle-line)}
+  .feature-orbit-nav a:nth-child(even){border-right:0}
+  .feature-orbit-nav a:nth-child(n+3){border-top:1px solid var(--oracle-line)}
+  .five-elements-orbit{position:relative;top:auto;right:auto;width:260px;margin:0 auto 24px}
+  .input-panel .section-heading{padding-right:0}
+  .annual-moon-illustration{height:220px}
+  .natal-orbit-graphic{grid-template-columns:1fr}
+  .natal-orbit-graphic>div{align-self:auto}
+  .tarot-ornament{position:relative;top:auto;right:auto;width:220px;margin:-10px auto 20px}
+  .tarot-copy{padding-right:0}
+}
+
+@media(max-width:639px){
+  .feature-orbit-nav{width:calc(100% - 24px);grid-template-columns:1fr 1fr;margin-bottom:54px}
+  .feature-orbit-nav a{padding:17px 12px}
+  .feature-orbit-nav small{display:none}
+  .feature-orbit-nav .ui-icon{width:20px;height:20px}
+  .five-elements-orbit{width:220px}
+  .annual-moon-illustration{height:180px;margin-bottom:30px}
+  .decade-celestial-track{height:120px}
+  .natal-orbit-graphic{padding-top:10px}
+  .natal-orbit-graphic>div{grid-template-columns:repeat(2,1fr)}
+  .tarot-ornament{width:180px}
+}
