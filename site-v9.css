@@ -411,3 +411,28 @@ select option{background:#0a1a2a;color:#eef1f4}
   .tarot-stage-inner{padding:32px 18px}.tarot-copy{padding-right:0}.tarot-ornament{display:none}.tarot-controls{grid-template-columns:1fr}.tarot-deck{grid-template-columns:1fr}.tarot-card-inner{min-height:460px}.tarot-reading-head,.tarot-reading-grid{grid-template-columns:1fr}
   .site-footer{align-items:flex-start;flex-direction:column}
 }
+
+
+/* V9.1 visual refinement from actual Chromium review */
+h1,h2,h3,h4,blockquote{word-break:keep-all;overflow-wrap:anywhere}
+.hero-primary{grid-template-columns:46% 54%}
+.hero-copy h1{max-width:640px;font-size:clamp(48px,3.8vw,56px);word-break:keep-all}
+.hero-copy h1 em{white-space:normal}
+.visual-keyword-card .atlas-card,
+.detail-visual{background-position-y:100%}
+#today .lucky-strip{display:none}
+.metric-row{grid-template-columns:40px 104px minmax(0,1fr);padding:12px 0}
+.metric-label strong{font-size:13px}
+.metric-name{font-size:12px}
+.metric-copy p{display:none}
+.daily-layout{grid-template-columns:minmax(250px,.86fr) minmax(360px,1.08fr) minmax(290px,.9fr)}
+#today{padding-top:26px;padding-bottom:26px}
+.today-quote-panel{min-height:205px}
+@media(max-width:1100px){
+  .hero-primary{grid-template-columns:1fr 1fr}
+}
+@media(max-width:760px){
+  .hero-primary{grid-template-columns:1fr}
+  .hero-copy h1{font-size:clamp(38px,10.5vw,48px)}
+  .daily-layout{grid-template-columns:1fr}
+}
