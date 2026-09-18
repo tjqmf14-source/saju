@@ -162,14 +162,14 @@ function renderToday(chart,todayFlow){
   $('dailyPrimary').innerHTML=`<div class="daily-primary-score"><span class="section-kicker">TODAY'S INDEX</span><strong>${overall.score}</strong><small>/100 · ${overall.label}</small></div><p id="todaySummary" class="daily-summary">오늘은 ${copy.opportunity}에 힘을 싣는 편이 좋습니다. 반대로 ${copy.caution}은 한 번 더 점검하세요. 이 수치는 원국과 오늘 일진의 관계를 0–100으로 정리한 ‘오늘의 흐름 지수’이며 확률이나 객관적 예측값이 아닙니다.</p><div id="todayLucky" class="lucky-strip"></div>`;
 
   const metrics=[
-    ['money','02','재물',copy.money],
-    ['love','03','연애',copy.love],
-    ['work','04','직업',copy.work],
-    ['condition','05','컨디션',copy.health]
+    ['money','02','재물',copy.money,'icon-coin'],
+    ['love','03','연애',copy.love,'icon-heart'],
+    ['work','04','직업',copy.work,'icon-briefcase'],
+    ['condition','05','컨디션',copy.health,'icon-health']
   ];
-  $('dailyMetrics').innerHTML=metrics.map(([key,index,title,body])=>{
+  $('dailyMetrics').innerHTML=metrics.map(([key,index,title,body,icon])=>{
     const flow=scores[key];
-    return `<article class="metric-row"><span class="daily-index" aria-hidden="true">${index}</span><div><strong class="metric-label">${title}</strong><div class="metric-score">${flow.score}<small>/100</small></div></div><div class="metric-copy"><p>${body}</p><small>${flow.label} · ${flow.reason}</small><div class="metric-track" aria-label="${title} 오늘의 흐름 지수 ${flow.score}점"><span style="width:${flow.score}%"></span></div></div></article>`;
+    return `<article class="metric-row"><span class="daily-index" aria-hidden="true">${index}</span><div class="metric-name"><svg class="ui-icon metric-icon" aria-hidden="true"><use href="#${icon}"/></svg><div><strong class="metric-label">${title}</strong><div class="metric-score">${flow.score}<small>/100</small></div></div></div><div class="metric-copy"><p>${body}</p><small>${flow.label} · ${flow.reason}</small><div class="metric-track" aria-label="${title} 오늘의 흐름 지수 ${flow.score}점"><span style="width:${flow.score}%"></span></div></div></article>`;
   }).join('');
 
   const strong=dominantElement(chart), weak=weakestElement(chart), hint=ELEMENT_HINT[strong];
