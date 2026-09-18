@@ -156,18 +156,23 @@ function renderToday(chart,todayFlow){
   const scores=calculateDailyScores(chart,todayFlow);
   $('todayDate').textContent=currentKstDate();
   $('todayHeadline').textContent=`“${copy.summary}”`;
-  $('todaySummary').textContent=`오늘은 ${copy.opportunity}에 힘을 싣는 편이 좋습니다. 반대로 ${copy.caution}은 한 번 더 점검하세요. 아래 점수는 원국과 오늘 일진의 관계를 0–100으로 정리한 ‘오늘의 흐름 지수’이며 확률이나 객관적 예측값이 아닙니다.`;
-  const cards=[
-    ['overall','총운',`${copy.summary}입니다. 무엇을 더 할지보다 오늘 가장 중요한 한 가지를 먼저 정해보세요.`],
-    ['money','재물',copy.money],['love','연애',copy.love],['work','직업',copy.work],['condition','컨디션',copy.health]
+
+  const overall=scores.overall;
+  $('dailyPrimary').innerHTML=`<div class="daily-primary-score"><span class="section-kicker">TODAY'S INDEX</span><strong>${overall.score}</strong><small>/100 · ${overall.label}</small></div><p id="todaySummary" class="daily-summary">오늘은 ${copy.opportunity}에 힘을 싣는 편이 좋습니다. 반대로 ${copy.caution}은 한 번 더 점검하세요. 이 수치는 원국과 오늘 일진의 관계를 0–100으로 정리한 ‘오늘의 흐름 지수’이며 확률이나 객관적 예측값이 아닙니다.</p><div id="todayLucky" class="lucky-strip"></div>`;
+
+  const metrics=[
+    ['money','02','재물',copy.money],
+    ['love','03','연애',copy.love],
+    ['work','04','직업',copy.work],
+    ['condition','05','컨디션',copy.health]
   ];
-  const indices={총운:'01',재물:'02',연애:'03',직업:'04',컨디션:'05'};
-  $('dailyFortuneGrid').innerHTML=cards.map(([key,title,body])=>{
+  $('dailyMetrics').innerHTML=metrics.map(([key,index,title,body])=>{
     const flow=scores[key];
-    return `<article class="daily-fortune-card"><div class="daily-card-top"><span class="daily-index" aria-hidden="true">${indices[title]}</span><div><strong>${title}</strong><div class="flow-score"><b>${flow.score}</b><span>/100 · ${flow.label}</span></div></div></div><div class="score-track" aria-label="${title} 오늘의 흐름 지수 ${flow.score}점"><span class="score-fill" style="width:${flow.score}%"></span></div><p>${body}</p><small class="score-reason">${flow.reason}</small></article>`;
+    return `<article class="metric-row"><span class="daily-index" aria-hidden="true">${index}</span><div><strong class="metric-label">${title}</strong><div class="metric-score">${flow.score}<small>/100</small></div></div><div class="metric-copy"><p>${body}</p><small>${flow.label} · ${flow.reason}</small><div class="metric-track" aria-label="${title} 오늘의 흐름 지수 ${flow.score}점"><span style="width:${flow.score}%"></span></div></div></article>`;
   }).join('');
+
   const strong=dominantElement(chart), weak=weakestElement(chart), hint=ELEMENT_HINT[strong];
-  $('todayLucky').innerHTML=`<p class="micro">TODAY'S GUIDE</p><dl class="lucky-list"><div><dt>행동</dt><dd>${hint.action}</dd></div><div><dt>공간</dt><dd>${hint.place}</dd></div><div><dt>상징 컬러</dt><dd>${hint.color}</dd></div><div><dt>균형 포인트</dt><dd>${weak}(${ELEMENT_LABELS[weak].label}) 기운을 보완하는 휴식과 정리를 의식해 보세요.</dd></div></dl>`;
+  $('todayLucky').innerHTML=`<p class="section-kicker">PRACTICAL GUIDE</p><dl class="lucky-list"><div><dt>오늘의 행동</dt><dd>${hint.action}</dd></div><div><dt>어울리는 공간</dt><dd>${hint.place}</dd></div><div><dt>상징 컬러</dt><dd>${hint.color}</dd></div><div><dt>균형 포인트</dt><dd>${weak}(${ELEMENT_LABELS[weak].label}) 기운을 보완하는 휴식과 정리를 의식해 보세요.</dd></div></dl>`;
 }
 
 function dominantGroup(flows){
@@ -187,8 +192,6 @@ function renderYear(yearFlow,monthFlows){
     const group=dominantGroup(monthFlows.slice(start,start+3)); const c=GROUP_COPY[group];
     return `<article class="quarter-card"><span>${String(index+1).padStart(2,'0')}</span><div><h3>${quarterNames[index]}</h3><strong>${c.summary}</strong><p>${c.opportunity}을 생활에서 실제로 실행해 보고, ${c.caution}이 반복되면 우선순위를 줄여보세요. 이 분기의 핵심은 결과를 재촉하기보다 다음 분기까지 이어질 수 있는 리듬을 만드는 것입니다.</p></div></article>`;
   }).join('');
-  const seasons=[['봄',monthFlows.slice(2,5)],['여름',monthFlows.slice(5,8)],['가을',monthFlows.slice(8,11)],['겨울',[monthFlows[11],monthFlows[0],monthFlows[1]]]];
-  $('seasonGuide').innerHTML=seasons.map(([name,flows])=>{const group=dominantGroup(flows),c=GROUP_COPY[group];return `<article><span>${name}</span><strong>${ROLE_LABELS[group]}</strong><p>${c.summary}. ${c.opportunity}</p></article>`;}).join('');
   $('monthForecast').innerHTML=monthFlows.map((item)=>{const c=GROUP_COPY[item.group];return `<article class="month-card"><div class="month-card-head"><span class="month-number">${String(item.month).padStart(2,'0')}</span><strong>${ROLE_LABELS[item.group]}</strong></div><p>${c.summary}. ${c.opportunity}을 우선하고 ${c.caution}은 줄여보세요. 한 달 전체를 미리 단정하기보다, 반복해서 같은 문제가 생길 때 이 문장을 행동 기준으로 활용하는 편이 좋습니다.</p><small>절입 기준 ${formatKstBoundary(item.start)} · ${item.korean} · ${item.tenGod}</small></article>`;}).join('');
 }
 
