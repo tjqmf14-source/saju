@@ -24,7 +24,7 @@
 
   <header class="topbar">
     <a class="brand" href="#home" aria-label="내사주 홈">
-      <span class="seal" aria-hidden="true">命</span>
+      <span class="seal brand-oracle-mark" aria-hidden="true"><img src="/oracle/logo-mark.svg" alt=""></span>
       <span class="brand-word"><strong>내사주</strong><small>SAJU · TAROT</small></span>
     </a>
     <nav class="topnav" aria-label="주요 메뉴">
@@ -35,7 +35,7 @@
       <a href="#expert">원국</a>
       <a href="#tarot">타로</a>
     </nav>
-    <span class="privacy-note">브라우저 안에서만 계산</span>
+    <div class="topbar-actions"><span class="privacy-note">브라우저 안에서만 계산</span><a class="premium-link" href="#input">프리미엄 리포트</a></div>
   </header>
 
   <main id="main-content">
@@ -44,11 +44,13 @@
     <section class="hero hero-primary agency-shell">
       <div class="hero-copy">
         <p class="section-kicker">SAJU · TAROT · PRIVATE READING</p>
-        <h1>나를 이해하는 일은,<br><em>운을 기다리는 것보다 먼저입니다.</em></h1>
-        <p class="hero-lead">정밀 절기 기반 만세력과 긴 호흡의 사주 해설, Rider–Waite–Smith 78장 타로를 하나의 디지털 리포트로 구성했습니다.</p>
-        <a class="hero-cta" href="#input">정밀 리포트 만들기 <span aria-hidden="true">↘</span></a>
-        <div class="hero-proof" aria-label="서비스 특징">
-          <span>1900–2100</span><span>양력·음력·윤달</span><span>정밀 시간 보정</span><span>RWS 78</span>
+        <h1>흐르는 운명 속에서,<br><em>지금의 나를 만나다.</em></h1>
+        <p class="hero-lead">사주와 타로가 전하는 더 깊은 나의 이야기. 지금, 당신의 인생 지도를 열어보세요.</p>
+        <a class="hero-cta" href="#input">정밀 리포트 시작하기 <span aria-hidden="true">→</span></a>
+        <div class="hero-proof-oracles" aria-label="서비스 특징">
+          <div><svg class="ui-icon"><use href="#icon-calendar"/></svg><span><b>정확한 인사이트</b><small>신뢰할 수 있는 정밀 달력 기반</small></span></div>
+          <div><svg class="ui-icon"><use href="#icon-orbit"/></svg><span><b>사주 + 타로</b><small>동양의 사주와 서양의 타로를 함께</small></span></div>
+          <div><svg class="ui-icon"><use href="#icon-health"/></svg><span><b>프라이버시 보호</b><small>모든 데이터는 내 PC에서만 처리</small></span></div>
         </div>
       </div>
       <div class="hero-visual" aria-label="오늘의 메시지">
@@ -176,6 +178,22 @@
         </div>
       </section>
 
+      <section class="visual-keyword-showcase agency-shell" aria-label="리포트 핵심 키워드">
+        <div class="visual-keyword-intro">
+          <span class="section-no">02</span>
+          <p class="section-kicker">REPORT</p>
+          <h2>나를 이해하는<br>6가지 키워드</h2>
+          <p>사주가 알려주는 타고난 흐름과 지금의 선택이 만드는 더 나은 내일.</p>
+          <a href="#detailedReport">리포트 미리보기 <span aria-hidden="true">→</span></a>
+        </div>
+        <article class="visual-keyword-card"><img src="/oracle/keyword-character.svg" alt=""><div><strong>성격</strong><small>내 안의 본질</small></div></article>
+        <article class="visual-keyword-card"><img src="/oracle/keyword-work.svg" alt=""><div><strong>일</strong><small>일과 적성의 흐름</small></div></article>
+        <article class="visual-keyword-card"><img src="/oracle/keyword-money.svg" alt=""><div><strong>돈</strong><small>재물의 흐름</small></div></article>
+        <article class="visual-keyword-card"><img src="/oracle/keyword-relation.svg" alt=""><div><strong>관계</strong><small>사람과 인연</small></div></article>
+        <article class="visual-keyword-card"><img src="/oracle/keyword-health.svg" alt=""><div><strong>건강</strong><small>몸과 에너지</small></div></article>
+        <article class="visual-keyword-card"><img src="/oracle/keyword-advice.svg" alt=""><div><strong>조언</strong><small>지금 필요한 한마디</small></div></article>
+      </section>
+
       <nav id="reportNav" class="report-nav agency-shell" aria-label="리포트 바로가기">
         <a href="#detailedReport">성향</a><a href="#today">오늘</a><a href="#year">올해</a><a href="#luck">대운</a><a href="#expert">원국</a><a href="#tarot">타로</a>
       </nav>
@@ -190,6 +208,7 @@
         <div id="dailyFortuneGrid" class="daily-layout">
           <article id="dailyPrimary" class="daily-primary"><p id="todaySummary" class="daily-summary"></p><div id="todayLucky" class="lucky-strip"></div></article>
           <div id="dailyMetrics" class="daily-metrics"></div>
+          <aside class="today-quote-panel"><span>“</span><blockquote>새로운 기회가<br>다가오는 날입니다.</blockquote><p>평소보다 열린 마음으로 소통하면 좋은 인연과 기회를 만날 수 있어요.</p><i aria-hidden="true">→</i></aside>
         </div>
       </section>
 
@@ -199,17 +218,13 @@
           <div><h2 id="yearTitle">올해의 핵심 흐름</h2><p id="yearSummary" class="section-lead"></p></div>
         </header>
 
-        <div class="annual-moon-illustration" aria-hidden="true">
-          <svg viewBox="0 0 760 280">
-            <defs><linearGradient id="annualGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e4c57f"/><stop offset="1" stop-color="#836735"/></linearGradient></defs>
-            <circle cx="178" cy="126" r="82" fill="url(#annualGold)" opacity=".88"/>
-            <circle cx="206" cy="104" r="82" fill="#0b1628"/>
-            <path d="M20 235 110 146l55 48 72-92 68 74 65-58 95 117Z" class="annual-mountains"/>
-            <path d="M8 244c120-28 230-26 350 0s250 28 394-2" class="annual-water"/>
-            <g class="annual-stars"><circle cx="365" cy="54" r="2"/><circle cx="470" cy="88" r="1.5"/><circle cx="540" cy="40" r="2"/><circle cx="655" cy="101" r="1.5"/><circle cx="702" cy="59" r="2"/></g>
-            <path d="M420 170h270M465 138h178M505 106h102" class="annual-lines"/>
-          </svg>
-          <span>歲月流轉 · THE YEAR IN MOTION</span>
+        <div class="annual-visual-copy">
+          <div class="annual-scene" aria-hidden="true"></div>
+          <div class="annual-copy">
+            <span class="annual-quote-mark">“</span>
+            <blockquote>변화는 언제나,<br>더 나은 나를 위한 과정입니다.</blockquote>
+            <p>올해는 새로운 가능성이 열리는 확장의 시기입니다. 흐름을 이해하고, 기회를 준비하세요.</p>
+          </div>
         </div>
 
         <div id="yearDeepDive" class="year-deep-dive"></div>
