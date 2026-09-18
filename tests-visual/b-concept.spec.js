@@ -9,6 +9,7 @@ async function assertNoHorizontalOverflow(page) {
 }
 
 test('B concept desktop composition renders with illustrated assets and reference-like order', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'desktop-only visual contract');
   await page.goto('/');
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'modern-oracle');
   await expect(page.locator('#results')).toBeVisible();
@@ -49,6 +50,7 @@ test('B concept desktop composition renders with illustrated assets and referenc
 });
 
 test('B concept mobile layout stays readable and overflow-free', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'mobile-only visual contract');
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
 
