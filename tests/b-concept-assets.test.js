@@ -11,7 +11,7 @@ test('B concept uses local illustrated hero and annual assets', () => {
 });
 
 test('B concept report preview exposes six illustrated keyword cards', () => {
-  assert.match(html, /class="visual-keyword-showcase"/);
+  assert.match(html, /class="[^"]*visual-keyword-showcase[^"]*"/);
   const cards = html.match(/class="visual-keyword-card"/g) || [];
   assert.equal(cards.length, 6);
   for (const asset of [
