@@ -153,3 +153,37 @@ test('annual, decade and natal grids stay within their section bounds', async ({
 
   await assertNoHorizontalOverflow(page);
 });
+
+
+test('approved reference keeps desktop content at editorial scale', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto('/');
+  await expect(page.locator('#results')).toBeVisible();
+  const geometry = await page.evaluate(() => {
+    const box = (selector) => {
+      const el = document.querySelector(selector);
+      if (!el) return null;
+      const rect = el.getBoundingClientRect();
+      const style = getComputedStyle(el);
+      return { width: rect.width, height: rect.height, fontSize: parseFloat(style.fontSize) || 0 };
+    };
+    return {
+      shell: box('.agency-shell'),
+      hero: box('.hero-primary'),
+      heroTitle: box('.hero-copy h1'),
+      keywords: box('.visual-keyword-showcase'),
+      keywordCards: [...document.querySelectorAll('.visual-keyword-card')].map((el) => el.getBoundingClientRect().width),
+      today: box('#today'),
+      annual: box('.year-panel'),
+    };
+  });
+  expect(geometry.shell?.width || 0).toBeGreaterThanOrEqual(1300);
+  expect(geometry.hero?.height || 0).toBeGreaterThanOrEqual(560);
+  expect(geometry.heroTitle?.fontSize || 0).toBeGreaterThanOrEqual(52);
+  expect(geometry.keywords?.width || 0).toBeGreaterThanOrEqual(1300);
+  expect(geometry.keywordCards).toHaveLength(6);
+  expect(Math.min(...geometry.keywordCards)).toBeGreaterThan(130);
+  expect(geometry.today?.width || 0).toBeGreaterThanOrEqual(1300);
+  expect(geometry.annual?.width || 0).toBeGreaterThanOrEqual(1300);
+  await assertNoHorizontalOverflow(page);
+});
