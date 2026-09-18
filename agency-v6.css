@@ -1390,3 +1390,6 @@ body[data-theme="modern-oracle"] .tarot-stage{border-radius:10px}
   .annual-copy{padding:24px 18px}
   .annual-copy blockquote{font-size:23px}
 }
+
+/* visual QA: decorative hero halo must not create page overflow */
+body[data-theme="modern-oracle"] .hero-primary{overflow:clip}
