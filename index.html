@@ -7,7 +7,7 @@
   <title>내사주 · Saju & Tarot</title>
   <link rel="stylesheet" href="/agency-v6.css">
 </head>
-<body>
+<body data-theme="modern-oracle">
   <a class="skip-link" href="#input">사주 입력으로 바로가기</a>
 
   <header class="topbar">
@@ -41,13 +41,41 @@
       </div>
       <div class="hero-visual" aria-label="오늘의 메시지">
         <div class="hero-visual-top"><span>今日</span><small>TODAY'S NOTE</small></div>
+<div class="oracle-stars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <blockquote id="heroMessage">“결과보다 먼저, 지금의 방향을 읽어보세요.”</blockquote>
         <p id="heroSub">생년월일을 입력하면 오늘의 흐름과 타고난 성향을 함께 보여드립니다.</p>
-        <div class="hero-symbols" aria-hidden="true"><b>命</b><i></i><span>☾</span></div>
+        <div class="oracle-portal" aria-hidden="true">
+  <svg class="constellation-geometry" viewBox="0 0 420 520" role="presentation">
+    <defs>
+      <linearGradient id="oracleGold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#e9cf95" stop-opacity=".95"/>
+        <stop offset="1" stop-color="#8b6f3d" stop-opacity=".35"/>
+      </linearGradient>
+    </defs>
+    <circle class="oracle-orbit orbit-a" cx="210" cy="226" r="136"/>
+    <circle class="oracle-orbit orbit-b" cx="210" cy="226" r="103"/>
+    <circle class="oracle-orbit orbit-c" cx="210" cy="226" r="72"/>
+    <path class="oracle-arch" d="M94 350V188c0-91 52-145 116-145s116 54 116 145v162"/>
+    <path class="oracle-arch" d="M120 350V196c0-70 41-118 90-118s90 48 90 118v154"/>
+    <path class="oracle-line" d="M210 44V12M210 440v56M52 226H14M406 226h-38"/>
+    <path class="oracle-line" d="M86 103 58 74M334 103l28-29M85 350l-28 31M335 350l28 31"/>
+    <circle class="oracle-star" cx="210" cy="12" r="3"/>
+    <circle class="oracle-star" cx="406" cy="226" r="3"/>
+    <circle class="oracle-star" cx="58" cy="74" r="2.5"/>
+    <circle class="oracle-star" cx="363" cy="381" r="2.5"/>
+    <g class="oracle-moon">
+      <circle cx="210" cy="226" r="41" fill="url(#oracleGold)"/>
+      <circle cx="226" cy="214" r="41" fill="#101a2e"/>
+    </g>
+    <path class="oracle-mountain" d="M74 374 145 308l42 40 54-62 99 88Z"/>
+    <path class="oracle-water" d="M112 397c47-18 143-18 196 0M132 416c38-12 118-12 156 0"/>
+  </svg>
+  <div class="oracle-portal-caption"><span>SAJU · TAROT</span><b>A BRIGHTER TOMORROW</b></div>
+</div>
       </div>
     </section>
 
-    <section id="input" class="input-panel editorial-section agency-shell">
+    <section id="input" class="input-panel oracle-panel editorial-section agency-shell">
       <header class="section-heading">
         <div><span class="section-no">01</span><p class="section-kicker">BIRTH DATA</p></div>
         <div><h2>태어난 순간을 입력하세요.</h2><p class="section-lead">복잡한 설정은 뒤로 숨기고, 꼭 필요한 정보부터 차분하게 입력하도록 구성했습니다. 입력값은 서버로 전송하거나 저장하지 않습니다.</p></div>
@@ -89,7 +117,7 @@
     </section>
 
     <section id="results" hidden>
-      <section id="reading" class="reading-opening editorial-section agency-shell">
+      <section id="reading" class="reading-opening oracle-panel editorial-section agency-shell">
         <div class="reading-aside">
           <span class="section-no">02</span>
           <p class="section-kicker">YOUR SAJU READING</p>
@@ -127,7 +155,7 @@
         </div>
       </section>
 
-      <section id="year" class="year-panel annual-layout editorial-section agency-shell">
+      <section id="year" class="year-panel annual-layout oracle-panel editorial-section agency-shell">
         <header class="section-heading">
           <div><span class="section-no">04</span><p class="section-kicker">ANNUAL FLOW</p></div>
           <div><h2 id="yearTitle">올해의 핵심 흐름</h2><p id="yearSummary" class="section-lead"></p></div>
@@ -143,7 +171,7 @@
         </div>
       </section>
 
-      <section id="luck" class="luck-panel luck-layout editorial-section agency-shell">
+      <section id="luck" class="luck-panel luck-layout oracle-panel editorial-section agency-shell">
         <header class="section-heading">
           <div><span class="section-no">05</span><p class="section-kicker">DECADE LUCK</p></div>
           <div><h2>인생의 큰 계절</h2><p id="luckMeta" class="section-lead"></p></div>
@@ -152,7 +180,7 @@
         <div id="luckTimeline" class="luck-timeline"></div>
       </section>
 
-      <section id="expert" class="expert-panel expert-layout editorial-section agency-shell">
+      <section id="expert" class="expert-panel expert-layout oracle-panel editorial-section agency-shell">
         <header class="section-heading">
           <div><span class="section-no">06</span><p class="section-kicker">NATAL CHART, SIMPLIFIED</p></div>
           <div><h2>한자보다 먼저,<br>내 이야기로 읽습니다.</h2><p class="section-lead">성격·일·돈·관계·회복을 생활 언어로 먼저 이해하고, 계산 근거가 궁금할 때만 원자료를 펼쳐보세요.</p></div>
