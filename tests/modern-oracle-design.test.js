@@ -38,3 +38,31 @@ test('site includes decorative constellation geometry with no external asset dep
   assert.match(html, /class="constellation-geometry"/);
   assert.doesNotMatch(html, /https?:\/\//);
 });
+
+
+test('Modern Oracle ships a local SVG icon system for key product actions', () => {
+  assert.match(html, /id="oracleIconSprite"/);
+  for (const id of ['icon-calendar','icon-sun','icon-coin','icon-heart','icon-briefcase','icon-health','icon-orbit','icon-chart','icon-tarot']) {
+    assert.match(html, new RegExp('id="'+id+'"'));
+  }
+});
+
+test('major sections include real graphic motifs rather than text-only panels', () => {
+  assert.match(html, /class="five-elements-orbit"/);
+  assert.match(html, /class="annual-moon-illustration"/);
+  assert.match(html, /class="decade-celestial-track"/);
+  assert.match(html, /class="natal-orbit-graphic"/);
+  assert.match(html, /class="tarot-ornament"/);
+});
+
+test('feature navigation uses reusable line icons', () => {
+  assert.match(html, /class="feature-orbit-nav"/);
+  assert.match(html, /<use href="#icon-orbit"/);
+  assert.match(html, /<use href="#icon-tarot"/);
+});
+
+test('oracle graphics have dedicated responsive styling', () => {
+  for (const cls of ['\.five-elements-orbit','\.annual-moon-illustration','\.decade-celestial-track','\.natal-orbit-graphic','\.feature-orbit-nav']) {
+    assert.match(css, new RegExp(cls+'\\{'));
+  }
+});
