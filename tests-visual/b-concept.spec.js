@@ -107,3 +107,47 @@ test('B concept image atlas and spacing hold across all viewport profiles', asyn
   await assertNoHorizontalOverflow(page);
   await page.screenshot({ path: `test-results/b-concept-full-${testInfo.project.name}.png`, fullPage: true });
 });
+
+
+test('annual, decade and natal grids stay within their section bounds', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#results')).toBeVisible();
+  await expect(page.locator('#monthForecast .month-card')).toHaveCount(12);
+  await expect(page.locator('#luckOverview .luck-overview-item')).toHaveCount(9);
+  await expect(page.locator('#pillarGrid .pillar-card')).toHaveCount(4);
+
+  const audit = await page.evaluate(() => {
+    const inspect = (selector, childSelector) => {
+      const root = document.querySelector(selector);
+      if (!root) return { selector, missing: true };
+      const rootRect = root.getBoundingClientRect();
+      const children = [...root.querySelectorAll(childSelector)];
+      const escaped = children.filter((child) => {
+        const rect = child.getBoundingClientRect();
+        return rect.left < rootRect.left - 1 || rect.right > rootRect.right + 1;
+      }).length;
+      return {
+        selector,
+        missing: false,
+        escaped,
+        scrollWidth: root.scrollWidth,
+        clientWidth: root.clientWidth,
+        minChildWidth: children.length ? Math.min(...children.map((child) => child.getBoundingClientRect().width)) : 0,
+      };
+    };
+    return [
+      inspect('#monthForecast', '.month-card'),
+      inspect('#luckOverview', '.luck-overview-item'),
+      inspect('#expert .expert-content-shell', '.pillar-card, .expert-story-card, .raw-data-group'),
+    ];
+  });
+
+  for (const item of audit) {
+    expect(item.missing, item.selector).toBeFalsy();
+    expect(item.escaped, item.selector).toBe(0);
+    expect(item.scrollWidth, item.selector).toBeLessThanOrEqual(item.clientWidth + 1);
+    expect(item.minChildWidth, item.selector).toBeGreaterThan(0);
+  }
+
+  await assertNoHorizontalOverflow(page);
+});
