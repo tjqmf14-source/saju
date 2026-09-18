@@ -18,6 +18,8 @@ export default defineConfig({
   },
   projects: [
     { name: 'desktop', use: { browserName: 'chromium', ...devices['Desktop Chrome'], viewport: { width: 1440, height: 1000 } } },
-    { name: 'mobile', use: { browserName: 'chromium', ...devices['iPhone 13'], viewport: { width: 390, height: 844 } } },
+    { name: 'tablet', use: { browserName: 'chromium', ...devices['Desktop Chrome'], viewport: { width: 1024, height: 1366 } } },
+    { name: 'compact', use: { browserName: 'chromium', ...devices['Desktop Chrome'], viewport: { width: 768, height: 1024 } } },
+    { name: 'mobile', use: { browserName: 'chromium', ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 } } },
   ],
 });
