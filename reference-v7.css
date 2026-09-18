@@ -1,0 +1,162 @@
+/* Reference v7 — approved B-concept composition. Loaded last on purpose. */
+body[data-theme="modern-oracle"]{
+  --v7-shell:min(1340px,calc(100vw - 48px));
+  --v7-gold:#dfb86d;
+  --v7-line:rgba(223,184,109,.28);
+  --v7-panel:#071522;
+  --v7-panel-2:#091a2a;
+  font-size:16px;
+}
+body[data-theme="modern-oracle"] main{width:100%;overflow:clip}
+body[data-theme="modern-oracle"] :is(.agency-shell,.input-panel,.feature-orbit-nav,.visual-keyword-showcase,#today,.year-panel){
+  width:var(--v7-shell)!important;
+  max-width:none!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+body[data-theme="modern-oracle"] .editorial-section{margin-bottom:22px!important}
+body[data-theme="modern-oracle"] .oracle-panel{border-radius:8px!important}
+
+/* HERO — reference: large copy at left, cinematic image at right */
+body[data-theme="modern-oracle"] .hero-primary{
+  display:grid!important;
+  grid-template-columns:43% 57%!important;
+  gap:0!important;
+  min-height:600px!important;
+  padding:18px 0 12px!important;
+  align-items:center!important;
+}
+body[data-theme="modern-oracle"] .hero-copy{padding:54px 42px 46px 20px!important}
+body[data-theme="modern-oracle"] .hero-copy h1{
+  margin:22px 0 24px!important;
+  max-width:570px!important;
+  font-size:clamp(50px,4.35vw,66px)!important;
+  line-height:1.18!important;
+  letter-spacing:-.055em!important;
+}
+body[data-theme="modern-oracle"] .hero-copy h1 em{display:inline!important}
+body[data-theme="modern-oracle"] .hero-lead{
+  margin:0!important;max-width:520px!important;font-size:17px!important;line-height:1.8!important
+}
+body[data-theme="modern-oracle"] .hero-cta{margin:28px 0 0!important;min-height:58px!important;font-size:15px!important}
+body[data-theme="modern-oracle"] .hero-proof-oracles{margin:34px 0 0!important;max-width:570px!important}
+body[data-theme="modern-oracle"] .hero-visual{
+  width:100%!important;min-height:0!important;aspect-ratio:900/639!important;
+  background-position:top center!important;background-size:100% auto!important
+}
+
+/* 01 — one wide 3-column panel */
+body[data-theme="modern-oracle"] .input-panel{
+  display:grid!important;grid-template-columns:250px minmax(430px,1fr) 260px!important;
+  gap:34px!important;padding:30px 32px!important;margin-top:12px!important;margin-bottom:18px!important
+}
+body[data-theme="modern-oracle"] .input-panel .section-heading{grid-column:1!important}
+body[data-theme="modern-oracle"] .input-panel form{grid-column:2!important}
+body[data-theme="modern-oracle"] .birth-side-copy{grid-column:3!important}
+body[data-theme="modern-oracle"] .input-panel .section-heading h2{font-size:34px!important}
+body[data-theme="modern-oracle"] .input-panel :is(label,input,select,button){font-size:13px!important}
+
+/* six service nav */
+body[data-theme="modern-oracle"] .feature-orbit-nav{
+  display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  margin-top:0!important;margin-bottom:20px!important
+}
+body[data-theme="modern-oracle"] .feature-orbit-nav a{justify-content:center!important;padding:18px 12px!important}
+
+/* results must remain full editorial width, not a narrow article column */
+body[data-theme="modern-oracle"] #results{width:100%!important;max-width:none!important}
+body[data-theme="modern-oracle"] #results>:not(.tarot-stage){
+  width:var(--v7-shell)!important;max-width:none!important;margin-left:auto!important;margin-right:auto!important
+}
+body[data-theme="modern-oracle"] #results .reading-opening{
+  display:grid!important;grid-template-columns:220px minmax(0,1fr)!important;
+  gap:34px!important;padding:30px 32px!important;margin-bottom:18px!important
+}
+body[data-theme="modern-oracle"] #results .reading-head h2{font-size:clamp(34px,3vw,44px)!important}
+body[data-theme="modern-oracle"] #results :is(p,li,dd){font-size:15px;line-height:1.75}
+
+/* 02 — title + six image cards in a single editorial row */
+body[data-theme="modern-oracle"] .visual-keyword-showcase{
+  display:grid!important;grid-template-columns:1.18fr repeat(6,minmax(0,1fr))!important;
+  gap:10px!important;padding:16px 18px!important;margin-bottom:20px!important
+}
+body[data-theme="modern-oracle"] .visual-keyword-intro{grid-column:auto!important;padding:12px 12px 12px 0!important}
+body[data-theme="modern-oracle"] .visual-keyword-intro h2{font-size:32px!important;line-height:1.3!important}
+body[data-theme="modern-oracle"] .visual-keyword-card{min-width:0!important;min-height:0!important;aspect-ratio:150/225!important}
+body[data-theme="modern-oracle"] .visual-keyword-card strong{font-size:18px!important}
+body[data-theme="modern-oracle"] .visual-keyword-card small{font-size:11px!important}
+
+/* 03 — one horizontal band */
+body[data-theme="modern-oracle"] #today{padding:28px 30px!important}
+body[data-theme="modern-oracle"] #today .section-heading{
+  display:grid!important;grid-template-columns:220px minmax(0,1fr)!important;
+  gap:30px!important;margin-bottom:18px!important;padding-top:0!important
+}
+body[data-theme="modern-oracle"] #today .section-heading h2{font-size:36px!important}
+body[data-theme="modern-oracle"] .daily-layout{
+  display:grid!important;grid-template-columns:minmax(260px,.9fr) minmax(340px,1.15fr) minmax(280px,.9fr)!important;
+  gap:34px!important;align-items:center!important
+}
+body[data-theme="modern-oracle"] .daily-primary-score{width:220px!important;height:220px!important}
+body[data-theme="modern-oracle"] .today-quote-panel{grid-column:auto!important;min-height:210px!important}
+
+/* 04 — title/image/copy + four quarters */
+body[data-theme="modern-oracle"] .year-panel{padding:28px 30px!important}
+body[data-theme="modern-oracle"] .year-panel .section-heading{margin-bottom:18px!important}
+body[data-theme="modern-oracle"] .annual-visual-copy{
+  display:grid!important;grid-template-columns:250px minmax(300px,.9fr) minmax(0,1.25fr)!important;
+  gap:24px!important;align-items:stretch!important
+}
+body[data-theme="modern-oracle"] .annual-scene{min-height:300px!important}
+body[data-theme="modern-oracle"] .annual-copy{padding:24px!important}
+body[data-theme="modern-oracle"] .annual-copy blockquote{font-size:26px!important}
+body[data-theme="modern-oracle"] .quarter-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+
+/* 05/06/detail — stop the long thin report look */
+body[data-theme="modern-oracle"] :is(.luck-panel,.expert-panel,.detailed-report){
+  width:var(--v7-shell)!important;max-width:none!important
+}
+body[data-theme="modern-oracle"] :is(.luck-panel,.expert-panel){padding:34px 36px!important}
+body[data-theme="modern-oracle"] :is(.luck-panel,.expert-panel) .section-heading{
+  grid-template-columns:250px minmax(0,1fr)!important;gap:36px!important;margin-bottom:30px!important
+}
+body[data-theme="modern-oracle"] .luck-overview{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))!important}
+body[data-theme="modern-oracle"] #expert .pillar-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+body[data-theme="modern-oracle"] .detailed-report{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px!important
+}
+body[data-theme="modern-oracle"] .detailed-report>.detail-chapter{min-width:0!important;margin:0!important}
+
+/* tarot follows the same visual scale */
+body[data-theme="modern-oracle"] .tarot-stage-inner{width:var(--v7-shell)!important;max-width:none!important;margin-inline:auto!important}
+
+/* responsive — only stack when the viewport actually needs it */
+@media(max-width:1100px){
+ body[data-theme="modern-oracle"] .hero-primary{grid-template-columns:1fr 1fr!important}
+ body[data-theme="modern-oracle"] .input-panel{grid-template-columns:220px minmax(0,1fr)!important}
+ body[data-theme="modern-oracle"] .birth-side-copy{grid-column:1/-1!important}
+ body[data-theme="modern-oracle"] .visual-keyword-showcase{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ body[data-theme="modern-oracle"] .visual-keyword-intro{grid-column:1/-1!important}
+ body[data-theme="modern-oracle"] .daily-layout{grid-template-columns:1fr 1fr!important}
+ body[data-theme="modern-oracle"] .today-quote-panel{grid-column:1/-1!important}
+ body[data-theme="modern-oracle"] .annual-visual-copy{grid-template-columns:1fr 1fr!important}
+ body[data-theme="modern-oracle"] .annual-copy{grid-column:1/-1!important}
+}
+@media(max-width:760px){
+ body[data-theme="modern-oracle"]{--v7-shell:calc(100vw - 24px)}
+ body[data-theme="modern-oracle"] .hero-primary{grid-template-columns:1fr!important}
+ body[data-theme="modern-oracle"] .hero-copy{padding:30px 8px!important}
+ body[data-theme="modern-oracle"] .hero-copy h1{font-size:clamp(38px,11vw,52px)!important}
+ body[data-theme="modern-oracle"] .input-panel{grid-template-columns:1fr!important;padding:22px 18px!important}
+ body[data-theme="modern-oracle"] .input-panel :is(.section-heading,form,.birth-side-copy){grid-column:1!important}
+ body[data-theme="modern-oracle"] .feature-orbit-nav{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ body[data-theme="modern-oracle"] #results .reading-opening{grid-template-columns:1fr!important;padding:22px 18px!important}
+ body[data-theme="modern-oracle"] .visual-keyword-showcase{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ body[data-theme="modern-oracle"] .daily-layout{grid-template-columns:1fr!important}
+ body[data-theme="modern-oracle"] .annual-visual-copy{grid-template-columns:1fr!important}
+ body[data-theme="modern-oracle"] .quarter-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ body[data-theme="modern-oracle"] .detailed-report{grid-template-columns:1fr!important}
+ body[data-theme="modern-oracle"] :is(.luck-panel,.expert-panel){padding:24px 18px!important}
+ body[data-theme="modern-oracle"] :is(.luck-panel,.expert-panel) .section-heading{grid-template-columns:1fr!important}
+ body[data-theme="modern-oracle"] #expert .pillar-grid{grid-template-columns:1fr!important}
+}
