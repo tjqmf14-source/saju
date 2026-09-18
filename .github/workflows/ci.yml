@@ -19,3 +19,12 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npm run check
+      - run: npx playwright install --with-deps chromium
+      - run: npm run visual:check
+      - name: Upload visual QA screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: b-concept-visual-qa
+          path: test-results/*.png
+          if-no-files-found: ignore
