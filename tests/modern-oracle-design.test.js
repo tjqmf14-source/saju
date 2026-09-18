@@ -49,7 +49,7 @@ test('Modern Oracle ships a local SVG icon system for key product actions', () =
 
 test('major sections include real graphic motifs rather than text-only panels', () => {
   assert.match(html, /class="five-elements-orbit"/);
-  assert.match(html, /class="annual-moon-illustration"/);
+  assert.match(html, /class="annual-visual-copy"/);
   assert.match(html, /class="decade-celestial-track"/);
   assert.match(html, /class="natal-orbit-graphic"/);
   assert.match(html, /class="tarot-ornament"/);
@@ -62,7 +62,7 @@ test('feature navigation uses reusable line icons', () => {
 });
 
 test('oracle graphics have dedicated responsive styling', () => {
-  for (const cls of ['\.five-elements-orbit','\.annual-moon-illustration','\.decade-celestial-track','\.natal-orbit-graphic','\.feature-orbit-nav']) {
+  for (const cls of ['\.five-elements-orbit','\.annual-visual-copy','\.decade-celestial-track','\.natal-orbit-graphic','\.feature-orbit-nav']) {
     assert.match(css, new RegExp(cls+'\\{'));
   }
 });
