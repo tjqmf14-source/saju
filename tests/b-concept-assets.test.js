@@ -5,25 +5,20 @@ import { readFile } from 'node:fs/promises';
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const css = await readFile(new URL('../agency-v6.css', import.meta.url), 'utf8');
 
-test('B concept uses local illustrated hero and annual assets', () => {
-  assert.match(css, /url\(['"]?\/oracle\/hero-scene\.svg/);
-  assert.match(css, /url\(['"]?\/oracle\/annual-scene\.svg/);
+test('B concept uses the generated local visual atlas for hero and annual imagery', async () => {
+  assert.match(css, /url\(['"]?\/oracle\/b-visual-atlas\.webp/);
+  const atlas = await readFile(new URL('../public/oracle/b-visual-atlas.webp', import.meta.url));
+  assert.ok(atlas.byteLength > 50000);
 });
 
 test('B concept report preview exposes six illustrated keyword cards', () => {
   assert.match(html, /class="[^"]*visual-keyword-showcase[^"]*"/);
   const cards = html.match(/class="visual-keyword-card"/g) || [];
   assert.equal(cards.length, 6);
-  for (const asset of [
-    'keyword-character.svg',
-    'keyword-work.svg',
-    'keyword-money.svg',
-    'keyword-relation.svg',
-    'keyword-health.svg',
-    'keyword-advice.svg'
-  ]) {
-    assert.match(html, new RegExp('/oracle/'+asset.replace('.', '\\.')));
+  for (let index = 1; index <= 6; index += 1) {
+    assert.match(html, new RegExp('atlas-card atlas-card-'+index));
   }
+  assert.doesNotMatch(html, /keyword-(character|work|money|relation|health|advice)\.svg/);
 });
 
 test('B concept keeps the reference-like composition blocks', () => {
