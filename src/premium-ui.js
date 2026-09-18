@@ -161,10 +161,10 @@ function renderToday(chart,todayFlow){
     ['overall','총운',`${copy.summary}입니다. 무엇을 더 할지보다 오늘 가장 중요한 한 가지를 먼저 정해보세요.`],
     ['money','재물',copy.money],['love','연애',copy.love],['work','직업',copy.work],['condition','컨디션',copy.health]
   ];
-  const icons={총운:'☀',재물:'◉',연애:'♡',직업:'▣',컨디션:'✦'};
+  const indices={총운:'01',재물:'02',연애:'03',직업:'04',컨디션:'05'};
   $('dailyFortuneGrid').innerHTML=cards.map(([key,title,body])=>{
     const flow=scores[key];
-    return `<article class="daily-fortune-card"><div class="daily-card-top"><span class="daily-icon">${icons[title]}</span><div><strong>${title}</strong><div class="flow-score"><b>${flow.score}</b><span>/100 · ${flow.label}</span></div></div></div><div class="score-track" aria-label="${title} 오늘의 흐름 지수 ${flow.score}점"><span class="score-fill" style="width:${flow.score}%"></span></div><p>${body}</p><small class="score-reason">${flow.reason}</small></article>`;
+    return `<article class="daily-fortune-card"><div class="daily-card-top"><span class="daily-index" aria-hidden="true">${indices[title]}</span><div><strong>${title}</strong><div class="flow-score"><b>${flow.score}</b><span>/100 · ${flow.label}</span></div></div></div><div class="score-track" aria-label="${title} 오늘의 흐름 지수 ${flow.score}점"><span class="score-fill" style="width:${flow.score}%"></span></div><p>${body}</p><small class="score-reason">${flow.reason}</small></article>`;
   }).join('');
   const strong=dominantElement(chart), weak=weakestElement(chart), hint=ELEMENT_HINT[strong];
   $('todayLucky').innerHTML=`<p class="micro">TODAY'S GUIDE</p><dl class="lucky-list"><div><dt>행동</dt><dd>${hint.action}</dd></div><div><dt>공간</dt><dd>${hint.place}</dd></div><div><dt>상징 컬러</dt><dd>${hint.color}</dd></div><div><dt>균형 포인트</dt><dd>${weak}(${ELEMENT_LABELS[weak].label}) 기운을 보완하는 휴식과 정리를 의식해 보세요.</dd></div></dl>`;
