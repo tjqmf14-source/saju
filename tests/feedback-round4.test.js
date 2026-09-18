@@ -23,7 +23,7 @@ test('tarot interpretation uses readable editorial columns instead of narrow ver
 });
 
 test('agency layout aligns content margins and reduces table-box visual density', () => {
-  assert.match(css, /--content:1280px/i);
+  assert.match(css, /--content:1320px/i);
   assert.match(css, /\.detail-chapter\{[^}]*border-top:1px solid var\(--line\)/i);
   assert.match(css, /\.luck-step\{[^}]*grid-template-columns:190px minmax\(0,1fr\)/i);
 });
