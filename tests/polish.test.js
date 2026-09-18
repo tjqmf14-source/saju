@@ -5,9 +5,10 @@ import { readFile } from 'node:fs/promises';
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const ui = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
 
-test('final agency stylesheet is the only active site theme', () => {
-  assert.match(html, /<link[^>]+href="\/agency-v6\.css"/);
-  assert.doesNotMatch(html, /href="\/(?:premium|polish|feedback-v2|feedback-v3|redesign-v5)\.css"/);
+test('clean v9 stylesheet is the only active site theme', () => {
+  assert.match(html, /<link[^>]+href="\/site-v9\.css"/);
+  assert.equal((html.match(/<link rel="stylesheet"/g) || []).length, 1);
+  assert.doesNotMatch(html, /href="\/(?:agency-v6|reference-v\d+|premium|polish|feedback-v2|feedback-v3|redesign-v5)\.css"/);
 });
 
 test('keyboard users get a skip link and labelled primary navigation', () => {
