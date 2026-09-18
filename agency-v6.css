@@ -390,3 +390,395 @@ textarea{resize:vertical}
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+
+/* =========================================================
+   MODERN ORACLE — premium dark editorial redesign
+   ========================================================= */
+:root{
+  --oracle-bg:#07111f;
+  --oracle-bg-2:#0b1628;
+  --oracle-panel:#0d1a2d;
+  --oracle-panel-2:#111f35;
+  --oracle-line:rgba(214,178,110,.22);
+  --oracle-line-soft:rgba(255,255,255,.08);
+  --oracle-gold:#d6b26e;
+  --oracle-gold-soft:#a98a52;
+  --oracle-cream:#f4ead3;
+  --oracle-muted:#9faabc;
+  --oracle-jade:#5f8f88;
+  --oracle-danger:#c76f62;
+  --oracle-glow:0 0 0 1px rgba(214,178,110,.06),0 24px 80px rgba(0,0,0,.28);
+}
+
+body[data-theme="modern-oracle"]{
+  background:
+    radial-gradient(circle at 15% 8%,rgba(214,178,110,.08),transparent 24%),
+    radial-gradient(circle at 82% 16%,rgba(75,103,145,.11),transparent 28%),
+    linear-gradient(180deg,#06101e 0%,#081423 42%,#07111f 100%);
+  color:var(--oracle-cream);
+}
+body[data-theme="modern-oracle"]::before{
+  opacity:.7;
+  background-image:
+    radial-gradient(circle at 14px 18px,rgba(214,178,110,.16) 0 1px,transparent 1.4px),
+    radial-gradient(circle at 72px 52px,rgba(255,255,255,.08) 0 1px,transparent 1.4px),
+    linear-gradient(rgba(214,178,110,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(214,178,110,.02) 1px,transparent 1px);
+  background-size:94px 94px,126px 126px,48px 48px,48px 48px;
+  mask-image:linear-gradient(to bottom,black 0%,rgba(0,0,0,.7) 55%,transparent 100%);
+}
+body[data-theme="modern-oracle"] h1,
+body[data-theme="modern-oracle"] h2,
+body[data-theme="modern-oracle"] h3,
+body[data-theme="modern-oracle"] h4{color:var(--oracle-cream)}
+body[data-theme="modern-oracle"] p,
+body[data-theme="modern-oracle"] dd,
+body[data-theme="modern-oracle"] .section-lead,
+body[data-theme="modern-oracle"] .reading-lead{color:var(--oracle-muted)}
+body[data-theme="modern-oracle"] .section-kicker,
+body[data-theme="modern-oracle"] .section-no{color:var(--oracle-gold)}
+
+body[data-theme="modern-oracle"] .topbar{
+  background:rgba(6,16,30,.88);
+  border-bottom:1px solid var(--oracle-line);
+  backdrop-filter:blur(18px) saturate(120%);
+}
+body[data-theme="modern-oracle"] .brand-word strong{color:var(--oracle-cream)}
+body[data-theme="modern-oracle"] .brand-word small,
+body[data-theme="modern-oracle"] .topnav a,
+body[data-theme="modern-oracle"] .privacy-note{color:var(--oracle-muted)}
+body[data-theme="modern-oracle"] .seal{
+  background:transparent;
+  color:var(--oracle-gold);
+  border:1px solid var(--oracle-line);
+}
+.topnav a:hover,.topnav a[aria-current="true"]{color:var(--oracle-gold);border-color:var(--oracle-gold)}
+
+body[data-theme="modern-oracle"] .hero-primary{
+  position:relative;
+  min-height:760px;
+  padding-top:72px;
+}
+body[data-theme="modern-oracle"] .hero-primary::before{
+  content:"";
+  position:absolute;
+  inset:0 -7% auto auto;
+  width:48%;
+  height:68%;
+  pointer-events:none;
+  background:radial-gradient(circle,rgba(214,178,110,.08),transparent 68%);
+  filter:blur(14px);
+}
+body[data-theme="modern-oracle"] .hero-copy h1{
+  color:var(--oracle-cream);
+  text-shadow:0 8px 40px rgba(0,0,0,.28);
+}
+body[data-theme="modern-oracle"] .hero-copy h1 em{color:var(--oracle-gold)}
+body[data-theme="modern-oracle"] .hero-lead{color:#aeb8c8}
+body[data-theme="modern-oracle"] .hero-cta{
+  min-width:248px;
+  padding:0 22px;
+  border:1px solid var(--oracle-gold);
+  color:#08111f;
+  background:linear-gradient(90deg,#e2c484,#cda45c);
+}
+body[data-theme="modern-oracle"] .hero-cta:hover{
+  color:#08111f;
+  border-color:#f1d99f;
+  filter:brightness(1.06);
+}
+body[data-theme="modern-oracle"] .hero-proof{
+  border-color:var(--oracle-line);
+  color:#8895a9;
+}
+body[data-theme="modern-oracle"] .hero-visual{
+  min-height:600px;
+  padding:38px;
+  background:
+    radial-gradient(circle at 50% 26%,rgba(214,178,110,.13),transparent 27%),
+    linear-gradient(180deg,#0b1728,#081321);
+  border:1px solid var(--oracle-line);
+  box-shadow:var(--oracle-glow);
+}
+body[data-theme="modern-oracle"] .hero-visual::before{
+  background:
+    radial-gradient(circle at 76% 14%,rgba(214,178,110,.12),transparent 18%),
+    linear-gradient(180deg,rgba(255,255,255,.015),transparent);
+}
+body[data-theme="modern-oracle"] .hero-visual-top{border-color:var(--oracle-line)}
+body[data-theme="modern-oracle"] .hero-visual blockquote{
+  margin-top:auto;
+  max-width:430px;
+  font-size:33px;
+  color:var(--oracle-cream);
+}
+body[data-theme="modern-oracle"] .hero-visual>p{color:#96a3b7}
+.oracle-portal{
+  position:absolute;
+  inset:76px 34px 158px 34px;
+  display:grid;
+  place-items:center;
+  pointer-events:none;
+}
+.constellation-geometry{
+  width:min(100%,430px);
+  height:100%;
+  overflow:visible;
+}
+.oracle-orbit,.oracle-arch,.oracle-line,.oracle-mountain,.oracle-water{
+  fill:none;
+  stroke:rgba(214,178,110,.34);
+  stroke-width:1;
+}
+.oracle-orbit{stroke-dasharray:3 8}
+.oracle-arch{stroke:rgba(214,178,110,.62)}
+.oracle-line{stroke:rgba(214,178,110,.3)}
+.oracle-star{fill:var(--oracle-gold)}
+.oracle-mountain{fill:rgba(214,178,110,.025);stroke:rgba(214,178,110,.25)}
+.oracle-water{stroke:rgba(214,178,110,.18)}
+.oracle-moon{filter:drop-shadow(0 0 22px rgba(214,178,110,.18))}
+.oracle-portal-caption{
+  position:absolute;
+  bottom:-6px;
+  left:50%;
+  transform:translateX(-50%);
+  display:grid;
+  gap:2px;
+  text-align:center;
+  color:#887249;
+  font-size:9px;
+  letter-spacing:.18em;
+  white-space:nowrap;
+}
+.oracle-portal-caption b{color:var(--oracle-gold);font-size:10px}
+.oracle-stars{position:absolute;inset:0;pointer-events:none}
+.oracle-stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:var(--oracle-gold);box-shadow:0 0 8px rgba(214,178,110,.7)}
+.oracle-stars i:nth-child(1){left:12%;top:18%}.oracle-stars i:nth-child(2){left:86%;top:26%}.oracle-stars i:nth-child(3){left:76%;top:56%}.oracle-stars i:nth-child(4){left:18%;top:62%}.oracle-stars i:nth-child(5){left:64%;top:12%}.oracle-stars i:nth-child(6){left:34%;top:36%}
+
+body[data-theme="modern-oracle"] .oracle-panel{
+  position:relative;
+  padding:44px 42px 48px;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.018),transparent 30%),
+    linear-gradient(145deg,rgba(13,26,45,.94),rgba(8,19,34,.96));
+  border:1px solid var(--oracle-line);
+  box-shadow:var(--oracle-glow);
+}
+body[data-theme="modern-oracle"] .oracle-panel::after{
+  content:"";
+  position:absolute;
+  width:74px;
+  height:1px;
+  top:0;
+  right:42px;
+  background:var(--oracle-gold);
+}
+body[data-theme="modern-oracle"] .section-heading{border-color:var(--oracle-line)}
+body[data-theme="modern-oracle"] .section-heading blockquote{color:#c9d0dc}
+body[data-theme="modern-oracle"] .content-rule,
+body[data-theme="modern-oracle"] .detail-chapter,
+body[data-theme="modern-oracle"] .report-nav,
+body[data-theme="modern-oracle"] .year-essay,
+body[data-theme="modern-oracle"] .quarter-grid,
+body[data-theme="modern-oracle"] .month-grid,
+body[data-theme="modern-oracle"] .luck-overview,
+body[data-theme="modern-oracle"] .luck-timeline,
+body[data-theme="modern-oracle"] .expert-story-grid,
+body[data-theme="modern-oracle"] .expert-panel details{border-color:var(--oracle-line)}
+
+body[data-theme="modern-oracle"] input,
+body[data-theme="modern-oracle"] select,
+body[data-theme="modern-oracle"] textarea{
+  color:var(--oracle-cream);
+  border-color:rgba(214,178,110,.28);
+}
+body[data-theme="modern-oracle"] input::placeholder,
+body[data-theme="modern-oracle"] textarea::placeholder{color:#69788e}
+body[data-theme="modern-oracle"] select option{color:#101722}
+body[data-theme="modern-oracle"] .segmented{border-color:var(--oracle-line)}
+body[data-theme="modern-oracle"] .segmented span{color:#8794a7}
+body[data-theme="modern-oracle"] .segmented input:checked+span{
+  color:var(--oracle-gold);
+  border-color:var(--oracle-gold);
+}
+body[data-theme="modern-oracle"] .precision-settings,
+body[data-theme="modern-oracle"] .inline-check{border-color:var(--oracle-line)}
+body[data-theme="modern-oracle"] .precision-explain{border-color:var(--oracle-gold)}
+.cta{
+  background:var(--oracle-gold);
+  color:#08111f;
+  box-shadow:0 10px 34px rgba(0,0,0,.16);
+}
+body[data-theme="modern-oracle"] .cta:hover{filter:brightness(1.08)}
+
+body[data-theme="modern-oracle"] .reading-opening{
+  grid-template-columns:2.5fr 9.5fr;
+}
+body[data-theme="modern-oracle"] .reading-head{border-color:var(--oracle-line)}
+body[data-theme="modern-oracle"] .mbti-type-panel{border-color:var(--oracle-line)}
+body[data-theme="modern-oracle"] .mbti-type-panel strong{color:var(--oracle-gold)}
+body[data-theme="modern-oracle"] .tag-row span{border-color:var(--oracle-gold);color:#aeb7c5}
+body[data-theme="modern-oracle"] .accuracy-basis{border-color:var(--oracle-line)}
+body[data-theme="modern-oracle"] .basis-item span{color:var(--oracle-gold)}
+body[data-theme="modern-oracle"] .report-nav{
+  background:rgba(7,17,31,.92);
+  backdrop-filter:blur(16px);
+}
+body[data-theme="modern-oracle"] .report-nav a{color:#8f9bad}
+body[data-theme="modern-oracle"] .report-nav a:hover,
+body[data-theme="modern-oracle"] .report-nav a[aria-current="true"]{color:var(--oracle-gold);border-color:var(--oracle-gold)}
+
+body[data-theme="modern-oracle"] .detail-chapter-body p{color:#b6bfcc}
+body[data-theme="modern-oracle"] .detail-chapter-header span{color:var(--oracle-gold)}
+
+.daily-primary-score{
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  display:grid;
+  place-content:center;
+  justify-items:center;
+  gap:4px;
+  padding:26px;
+  margin-bottom:30px;
+  background:
+    radial-gradient(circle at center,var(--oracle-panel) 0 58%,transparent 59%),
+    conic-gradient(var(--oracle-gold) 0 74%,rgba(214,178,110,.12) 74% 100%);
+  border:1px solid rgba(214,178,110,.2);
+  box-shadow:inset 0 0 0 14px #0b1628,0 16px 48px rgba(0,0,0,.24);
+}
+body[data-theme="modern-oracle"] .daily-primary-score strong{
+  color:var(--oracle-gold);
+  font-size:74px;
+}
+body[data-theme="modern-oracle"] .daily-primary-score small{color:#9da9ba}
+body[data-theme="modern-oracle"] .daily-summary{color:#c8d0dc}
+body[data-theme="modern-oracle"] .daily-metrics{border-color:var(--oracle-line)}
+body[data-theme="modern-oracle"] .metric-row{border-color:var(--oracle-line)}
+body[data-theme="modern-oracle"] .metric-score{color:var(--oracle-gold)}
+body[data-theme="modern-oracle"] .daily-index{
+  border-color:var(--oracle-line);
+  color:var(--oracle-gold);
+}
+body[data-theme="modern-oracle"] .metric-track{background:rgba(255,255,255,.08)}
+body[data-theme="modern-oracle"] .metric-track span{background:linear-gradient(90deg,#94743e,var(--oracle-gold))}
+body[data-theme="modern-oracle"] .lucky-strip{border-color:var(--oracle-line)}
+body[data-theme="modern-oracle"] .lucky-list dt{color:var(--oracle-gold)}
+
+body[data-theme="modern-oracle"] .advice-card{border-color:var(--oracle-gold)}
+body[data-theme="modern-oracle"] .advice-card span{color:var(--oracle-gold)}
+body[data-theme="modern-oracle"] .quarter-card+.quarter-card,
+body[data-theme="modern-oracle"] .month-card:nth-child(3n+2),
+body[data-theme="modern-oracle"] .month-card:nth-child(3n+3),
+body[data-theme="modern-oracle"] .luck-overview-item+.luck-overview-item{border-color:var(--oracle-line)}
+body[data-theme="modern-oracle"] .month-card,
+body[data-theme="modern-oracle"] .quarter-card{border-color:var(--oracle-line)}
+body[data-theme="modern-oracle"] .month-number{color:var(--oracle-gold)}
+body[data-theme="modern-oracle"] .month-card small{color:#99825a}
+
+body[data-theme="modern-oracle"] .luck-overview{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(180deg,rgba(214,178,110,.025),transparent);
+}
+body[data-theme="modern-oracle"] .luck-overview::before{
+  content:"";
+  position:absolute;
+  left:0;right:0;top:51px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--oracle-line),transparent);
+}
+body[data-theme="modern-oracle"] .luck-overview-item{position:relative}
+body[data-theme="modern-oracle"] .luck-overview-item::after{
+  content:"";
+  position:absolute;
+  left:17px;top:47px;
+  width:7px;height:7px;border-radius:50%;
+  background:#0d1a2d;border:1px solid var(--oracle-gold);
+}
+body[data-theme="modern-oracle"] .luck-overview-item.active{
+  box-shadow:inset 0 3px 0 var(--oracle-gold);
+  background:rgba(214,178,110,.05);
+}
+body[data-theme="modern-oracle"] .luck-overview-item.active::after{
+  width:11px;height:11px;top:45px;background:var(--oracle-gold);box-shadow:0 0 18px rgba(214,178,110,.55)
+}
+body[data-theme="modern-oracle"] .luck-overview-item span,
+body[data-theme="modern-oracle"] .luck-step-head span,
+body[data-theme="modern-oracle"] .luck-narrative-grid strong{color:var(--oracle-gold)}
+body[data-theme="modern-oracle"] .luck-overview-item p{
+  margin:12px 0 0;
+  color:#8f9bad;
+  font-size:12px;
+  line-height:1.65;
+}
+body[data-theme="modern-oracle"] .luck-step{border-color:var(--oracle-line)}
+body[data-theme="modern-oracle"] .luck-narrative-grid div{border-color:var(--oracle-line)}
+body[data-theme="modern-oracle"] .luck-step-body>p,
+body[data-theme="modern-oracle"] .luck-narrative-grid p{color:#aeb8c7}
+
+body[data-theme="modern-oracle"] .expert-story-grid,
+body[data-theme="modern-oracle"] .expert-story-card,
+body[data-theme="modern-oracle"] .expert-glossary dl>div,
+body[data-theme="modern-oracle"] .pillar-card dl>div{border-color:var(--oracle-line-soft)}
+body[data-theme="modern-oracle"] .expert-story-card>span,
+body[data-theme="modern-oracle"] .raw-data-label,
+body[data-theme="modern-oracle"] .pillar-card>span{color:var(--oracle-gold)}
+body[data-theme="modern-oracle"] .relation-card{border-color:var(--oracle-gold)}
+body[data-theme="modern-oracle"] .bar-track,
+body[data-theme="modern-oracle"] .axis-track{background:rgba(255,255,255,.08)}
+body[data-theme="modern-oracle"] .bar-fill{background:linear-gradient(90deg,#496d69,var(--oracle-jade))}
+body[data-theme="modern-oracle"] .axis-left{background:var(--oracle-gold-soft)}
+body[data-theme="modern-oracle"] .axis-right{background:var(--oracle-jade)}
+
+body[data-theme="modern-oracle"] .tarot-stage{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 78% 18%,rgba(214,178,110,.08),transparent 20%),
+    linear-gradient(145deg,#0a1424,#050d19);
+  border:1px solid var(--oracle-line);
+  box-shadow:0 35px 100px rgba(0,0,0,.34);
+}
+body[data-theme="modern-oracle"] .tarot-stage::before{
+  content:"☾";
+  position:absolute;
+  right:7%;
+  top:38px;
+  color:rgba(214,178,110,.16);
+  font:400 120px/1 var(--serif);
+}
+body[data-theme="modern-oracle"] .tarot-front,
+body[data-theme="modern-oracle"] .tarot-back{border-color:rgba(214,178,110,.34)}
+body[data-theme="modern-oracle"] .tarot-button{border-color:var(--oracle-gold);color:var(--oracle-gold)}
+body[data-theme="modern-oracle"] .tarot-button:hover{background:var(--oracle-gold);color:#07111f}
+body[data-theme="modern-oracle"] .tarot-reading,
+body[data-theme="modern-oracle"] .tarot-question-line,
+body[data-theme="modern-oracle"] .tarot-reading-grid>div{border-color:var(--oracle-line)}
+
+body[data-theme="modern-oracle"] .site-footer{border-color:var(--oracle-line);color:#7f8ca0}
+
+@media(max-width:1199px){
+  body[data-theme="modern-oracle"] .oracle-panel{padding:38px 34px 42px}
+  .oracle-portal{inset:72px 22px 154px}
+  .daily-primary-score{width:190px;height:190px}
+}
+@media(max-width:899px){
+  body[data-theme="modern-oracle"] .hero-primary{min-height:auto}
+  body[data-theme="modern-oracle"] .hero-visual{min-height:540px}
+  .oracle-portal{inset:62px 70px 146px}
+  body[data-theme="modern-oracle"] .oracle-panel{padding:34px 28px 38px}
+}
+@media(max-width:639px){
+  body[data-theme="modern-oracle"] .oracle-panel{
+    width:calc(100% - 24px);
+    padding:28px 18px 30px;
+  }
+  body[data-theme="modern-oracle"] .hero-visual{min-height:470px;padding:26px 22px}
+  .oracle-portal{inset:58px 18px 148px}
+  .oracle-portal-caption{bottom:-14px}
+  .daily-primary-score{width:176px;height:176px;margin-inline:auto}
+  body[data-theme="modern-oracle"] .daily-primary-score strong{font-size:62px}
+  body[data-theme="modern-oracle"] .luck-overview::before{display:none}
+  body[data-theme="modern-oracle"] .luck-overview-item::after{display:none}
+}
