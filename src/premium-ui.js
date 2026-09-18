@@ -309,10 +309,30 @@ function handleTarot(){
   renderTarot(mode,draw,reading,$('tarotQuestion').value.trim());
 }
 
+
+function setupSectionSpy(){
+  const links=[...document.querySelectorAll('.topnav a[href^="#"], .report-nav a[href^="#"]')];
+  const targets=[...new Set(links.map((link)=>document.querySelector(link.getAttribute('href'))).filter(Boolean))];
+  if(!('IntersectionObserver' in window) || !targets.length) return;
+  const setCurrent=(id)=>{
+    links.forEach((link)=>{
+      const active=link.getAttribute('href')===`#${id}`;
+      if(active) link.setAttribute('aria-current','true');
+      else link.removeAttribute('aria-current');
+    });
+  };
+  const observer=new IntersectionObserver((entries)=>{
+    const visible=entries.filter((entry)=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio);
+    if(visible[0]?.target?.id) setCurrent(visible[0].target.id);
+  },{rootMargin:'-20% 0px -65% 0px',threshold:[0,.15,.35,.6]});
+  targets.forEach((target)=>observer.observe(target));
+}
+
 form.elements.calendar.forEach((radio)=>radio.addEventListener('change',syncCalendarUi));
 $('precisionToggle').addEventListener('change',syncPrecisionUi);
 form.addEventListener('submit',(event)=>{event.preventDefault();renderAll();});
 $('drawTarot').addEventListener('click',handleTarot);
 syncCalendarUi();
 syncPrecisionUi();
+setupSectionSpy();
 requestAnimationFrame(()=>form.requestSubmit());
