@@ -1019,3 +1019,7 @@ body[data-theme="modern-oracle"] .oracle-panel::before{
   .natal-orbit-graphic>div{grid-template-columns:repeat(2,1fr)}
   .tarot-ornament{width:180px}
 }
+
+.metric-name{display:flex;align-items:center;gap:10px}
+.metric-icon{color:var(--oracle-gold)}
+.metric-name .metric-score{margin-top:4px}
