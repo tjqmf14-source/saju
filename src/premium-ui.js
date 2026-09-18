@@ -10,6 +10,7 @@ import { drawTarot, interpretSpread } from './tarot.js';
 import { calculateDailyScores } from './daily-score.js';
 import { buildPlainChartGuide } from './plain-chart.js';
 import { ROLE_LABELS, ELEMENT_LABELS, stemByName, branchByName } from './data.js';
+import { buildLuckNarrativeCopy } from './luck-copy.js';
 
 const $ = (id) => document.getElementById(id);
 const form = $('birthForm');
@@ -204,15 +205,12 @@ function luckGroup(chart,item,index){
 
 function buildLuckNarrative(chart,item,index,isActive){
   const group=luckGroup(chart,item,index);
-  const copy=GROUP_COPY[group] || GROUP_COPY.인성;
-  return {
+  return buildLuckNarrativeCopy({
     group,
-    theme:`${copy.label}이 삶의 배경으로 커지는 10년`,
-    lead:`${item.age}세부터의 시기는 ${copy.summary}으로 읽을 수 있습니다. 대운은 사건 하나를 맞히는 운세라기보다, 선택·관계·일의 방식에서 반복해서 나타나는 장기 배경에 가깝습니다. ${copy.opportunity}과 관련된 장면이 자연스럽게 늘어날 수 있습니다.`,
-    opportunity:`${copy.opportunity}을 실제 생활에서 적극적으로 활용해 보세요. 이 시기에는 잘하는 것을 넓게 퍼뜨리기보다 오래 가져갈 강점으로 정리하는 편이 더 큰 자산이 됩니다.`,
-    caution:`${copy.caution}이 반복될 때는 속도를 줄이고 기준을 다시 확인하는 편이 좋습니다. 대운의 압박을 운명처럼 받아들이기보다 반복 패턴을 알아차리는 신호로 쓰는 것이 좋습니다.`,
-    advice:`${copy.label}의 장점을 크게 쓰되 무리하게 증명하려 하지 않는 것이 핵심입니다. ${copy.work}${isActive?' 지금 지나고 있는 구간이라면 올해의 작은 선택도 이 장기 흐름 안에서 바라보고, 무엇을 더할지보다 무엇을 오래 남길지를 먼저 정해보세요.':''}`
-  };
+    pillar:item.korean,
+    age:item.age,
+    active:isActive
+  });
 }
 
 function renderLuck(chart){
@@ -224,7 +222,7 @@ function renderLuck(chart){
     const next=items[index+1];
     const active=currentAge>=item.age && (!next || currentAge<next.age);
     const narrative=buildLuckNarrative(chart,item,index,active);
-    return `<article class="luck-overview-item${active?' active':''}"><span>${active?'현재 대운':`${item.age}세부터`}</span><strong>${item.korean}</strong><small>${ROLE_LABELS[narrative.group]} · ${narrative.theme}</small></article>`;
+    return `<article class="luck-overview-item${active?' active':''}"><span>${active?'현재 대운':`${item.age}세부터`}</span><strong>${item.korean}</strong><small>${ROLE_LABELS[narrative.group]}</small><p>${narrative.overview}</p></article>`;
   }).join('');
   $('luckTimeline').innerHTML=items.map((item,index)=>{
     const next=items[index+1];
