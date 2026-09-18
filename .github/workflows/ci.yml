@@ -9,6 +9,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  statuses: write
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -28,3 +32,28 @@ jobs:
           name: b-concept-visual-qa
           path: test-results/*.png
           if-no-files-found: ignore
+
+      - name: Publish verified commit status
+        if: success()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh api -X POST
+          repos/${{ github.repository }}/statuses/${{ github.sha }}
+          -f state=success
+          -f context=ci/verify
+          -f description='Unit, privacy, build and Chromium QA passed'
+          -f target_url='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+      - name: Publish failed commit status
+        if: failure()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh api -X POST
+          repos/${{ github.repository }}/statuses/${{ github.sha }}
+          -f state=failure
+          -f context=ci/verify
+          -f description='Verification failed; inspect the workflow run'
+          -f target_url='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
