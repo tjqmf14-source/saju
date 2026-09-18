@@ -1675,3 +1675,9 @@ body[data-theme="modern-oracle"] .basis-item strong{
     grid-template-columns:1fr;
   }
 }
+
+
+/* B CONCEPT OVERFLOW CONTAINMENT — keep decorative halo inside panel bounds */
+body[data-theme="modern-oracle"] .oracle-panel::before{
+  right:0;
+}
