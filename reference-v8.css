@@ -1,0 +1,479 @@
+/* =========================================================
+   REFERENCE V8 — full visual rebuild
+   Goal: premium cinematic SAJU + TAROT, readable editorial UI
+   ========================================================= */
+:root{
+  --v8-bg:#061321;
+  --v8-bg-2:#081827;
+  --v8-panel:#0a1b2b;
+  --v8-panel-soft:#0d2134;
+  --v8-cream:#f4ead6;
+  --v8-text:#e9edf2;
+  --v8-muted:#9ca9b9;
+  --v8-gold:#d9ae66;
+  --v8-gold-2:#f0cf8b;
+  --v8-line:rgba(217,174,102,.24);
+  --v8-line-soft:rgba(255,255,255,.08);
+  --v8-shell:min(1360px,calc(100vw - 56px));
+  --v8-serif:"KoPubWorldBatang","KoPub Batang","Noto Serif KR","Batang","AppleMyungjo",serif;
+  --v8-sans:"Pretendard Variable","Pretendard","SUIT Variable","SUIT","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;
+  --v8-shadow:0 24px 80px rgba(0,0,0,.28);
+}
+html{scroll-padding-top:78px}
+body[data-theme="modern-oracle"]{
+  margin:0;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(38,74,112,.14),transparent 26%),
+    linear-gradient(180deg,#06111f 0%,#071522 48%,#06111e 100%);
+  color:var(--v8-text);
+  font-family:var(--v8-sans)!important;
+  font-size:16px!important;
+  line-height:1.72!important;
+  letter-spacing:-.015em;
+}
+body[data-theme="modern-oracle"] h1,
+body[data-theme="modern-oracle"] h2,
+body[data-theme="modern-oracle"] h3,
+body[data-theme="modern-oracle"] h4{color:var(--v8-cream)}
+body[data-theme="modern-oracle"] p{color:#c1cad5}
+body[data-theme="modern-oracle"] main{width:100%;overflow:clip}
+body[data-theme="modern-oracle"] :is(.agency-shell,.tarot-stage){
+  width:var(--v8-shell)!important;
+  max-width:none!important;
+  margin-inline:auto!important;
+}
+body[data-theme="modern-oracle"] .editorial-section{margin-bottom:28px!important}
+body[data-theme="modern-oracle"] .section-kicker{
+  color:var(--v8-gold)!important;
+  font-family:var(--v8-sans)!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  letter-spacing:.2em!important;
+}
+body[data-theme="modern-oracle"] .section-no{
+  color:var(--v8-gold-2)!important;
+  font:700 15px/1 var(--v8-sans)!important;
+}
+body[data-theme="modern-oracle"] .oracle-panel{
+  border:1px solid var(--v8-line)!important;
+  border-radius:12px!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.018),transparent 34%),
+    linear-gradient(145deg,rgba(11,28,45,.96),rgba(7,19,32,.98))!important;
+  box-shadow:0 14px 44px rgba(0,0,0,.14)!important;
+}
+body[data-theme="modern-oracle"] .oracle-panel::before{right:0!important}
+body[data-theme="modern-oracle"] .oracle-panel::after{background:var(--v8-gold)!important;opacity:.75}
+
+/* header */
+body[data-theme="modern-oracle"] .topbar{
+  min-height:72px!important;
+  padding:10px max(28px,calc((100vw - 1360px)/2))!important;
+  background:rgba(4,14,25,.86)!important;
+  border-bottom:1px solid rgba(217,174,102,.14)!important;
+  backdrop-filter:blur(18px);
+}
+body[data-theme="modern-oracle"] .brand-word strong{
+  color:var(--v8-cream);font:700 22px/1.05 var(--v8-serif)!important
+}
+body[data-theme="modern-oracle"] .brand-word small{font-size:10px!important;color:#a6b0bd!important}
+body[data-theme="modern-oracle"] .topnav{gap:30px!important}
+body[data-theme="modern-oracle"] .topnav a{font-size:13px!important;color:#c9d0d9!important}
+body[data-theme="modern-oracle"] .topnav a:hover{color:var(--v8-gold-2)!important}
+body[data-theme="modern-oracle"] .premium-link{
+  min-height:42px!important;padding:0 20px!important;border-color:var(--v8-gold)!important;
+  font-size:12px!important
+}
+
+/* HERO */
+body[data-theme="modern-oracle"] .hero-primary{
+  display:grid!important;
+  grid-template-columns:43% 57%!important;
+  gap:0!important;
+  align-items:center!important;
+  min-height:620px!important;
+  padding:18px 0 12px!important;
+  border-bottom:1px solid rgba(217,174,102,.12)!important;
+}
+body[data-theme="modern-oracle"] .hero-copy{
+  position:relative;z-index:2;padding:52px 48px 48px 20px!important
+}
+body[data-theme="modern-oracle"] .hero-copy::before{
+  display:block!important;left:0!important;top:28px!important;bottom:28px!important;
+  background:linear-gradient(transparent,var(--v8-gold),transparent)!important
+}
+body[data-theme="modern-oracle"] .hero-copy .section-kicker{margin-left:24px!important}
+body[data-theme="modern-oracle"] .hero-copy h1{
+  max-width:600px!important;
+  margin:26px 0 22px 24px!important;
+  font-family:var(--v8-serif)!important;
+  font-size:clamp(52px,4.45vw,68px)!important;
+  font-weight:500!important;
+  line-height:1.16!important;
+  letter-spacing:-.055em!important;
+  text-wrap:balance;
+}
+body[data-theme="modern-oracle"] .hero-copy h1 em{
+  display:inline!important;color:var(--v8-cream)!important;font-style:normal!important
+}
+body[data-theme="modern-oracle"] .hero-lead{
+  max-width:520px!important;margin:0 0 0 24px!important;
+  color:#c5ced8!important;font-size:17px!important;line-height:1.85!important
+}
+body[data-theme="modern-oracle"] .hero-cta{
+  margin:28px 0 0 24px!important;min-width:235px!important;min-height:58px!important;
+  padding:0 26px!important;border:1px solid #efca83!important;border-radius:5px!important;
+  background:linear-gradient(100deg,#eccd8c,#c99d57)!important;color:#07111b!important;
+  font-size:15px!important;font-weight:800!important;box-shadow:0 14px 34px rgba(217,174,102,.15)!important
+}
+body[data-theme="modern-oracle"] .hero-proof-oracles{
+  margin:34px 0 0 24px!important;max-width:580px!important;gap:18px!important
+}
+body[data-theme="modern-oracle"] .hero-proof-oracles .ui-icon{
+  width:38px!important;height:38px!important;color:var(--v8-gold)!important
+}
+body[data-theme="modern-oracle"] .hero-proof-oracles b{font-size:13px!important}
+body[data-theme="modern-oracle"] .hero-proof-oracles small{font-size:11px!important;color:#8f9baa!important}
+body[data-theme="modern-oracle"] .hero-visual{
+  align-self:center!important;width:100%!important;min-height:0!important;aspect-ratio:900/639!important;
+  border-radius:0!important;background-position:top center!important;background-size:100% auto!important;
+  box-shadow:inset 42px 0 52px -46px #061321!important
+}
+body[data-theme="modern-oracle"] .hero-visual-top{opacity:.9}
+
+/* 01 BIRTH */
+body[data-theme="modern-oracle"] .input-panel{
+  display:grid!important;
+  grid-template-columns:250px minmax(430px,1fr) 270px!important;
+  gap:34px!important;
+  width:var(--v8-shell)!important;
+  max-width:none!important;
+  margin:12px auto 18px!important;
+  padding:32px 34px!important;
+}
+body[data-theme="modern-oracle"] .input-panel .section-heading{
+  grid-column:1!important;display:block!important;margin:0!important;padding:0!important;border:0!important
+}
+body[data-theme="modern-oracle"] .input-panel .section-heading h2{
+  margin:14px 0!important;font:500 36px/1.28 var(--v8-serif)!important;letter-spacing:-.04em!important
+}
+body[data-theme="modern-oracle"] .input-panel .section-lead{font-size:14px!important;line-height:1.8!important}
+body[data-theme="modern-oracle"] .input-panel form{
+  grid-column:2!important;align-self:center!important;padding:16px 20px!important;
+  border:1px solid rgba(217,174,102,.18)!important;border-radius:8px!important;background:rgba(3,13,23,.28)!important
+}
+body[data-theme="modern-oracle"] .input-panel .form-grid{gap:14px 18px!important}
+body[data-theme="modern-oracle"] .input-panel label>span{font-size:12px!important;color:#aeb8c5!important}
+body[data-theme="modern-oracle"] .input-panel :is(input,select,textarea){
+  min-height:46px!important;font-size:14px!important;color:#f0f2f5!important
+}
+body[data-theme="modern-oracle"] .birth-side-copy{
+  grid-column:3!important;align-self:stretch!important;display:flex!important;flex-direction:column!important;
+  justify-content:center!important;padding:12px 0 12px 26px!important;border-left:1px solid var(--v8-line-soft)!important
+}
+body[data-theme="modern-oracle"] .birth-side-copy p{
+  color:var(--v8-cream)!important;font:500 19px/1.7 var(--v8-serif)!important
+}
+body[data-theme="modern-oracle"] .birth-side-copy a{
+  margin-top:20px!important;min-height:50px!important;border-radius:4px!important;font-size:14px!important
+}
+
+/* service navigation */
+body[data-theme="modern-oracle"] .feature-orbit-nav{
+  display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  width:var(--v8-shell)!important;max-width:none!important;margin:0 auto 20px!important;
+  border:1px solid rgba(217,174,102,.15)!important;border-radius:0!important
+}
+body[data-theme="modern-oracle"] .feature-orbit-nav a{
+  min-width:0!important;justify-content:center!important;gap:12px!important;padding:17px 14px!important
+}
+body[data-theme="modern-oracle"] .feature-orbit-nav .ui-icon{width:30px!important;height:30px!important}
+body[data-theme="modern-oracle"] .feature-orbit-nav b{font-size:13px!important}
+body[data-theme="modern-oracle"] .feature-orbit-nav small{font-size:10px!important;color:#8592a2!important}
+
+/* reading summary */
+body[data-theme="modern-oracle"] #results{width:100%!important;max-width:none!important}
+body[data-theme="modern-oracle"] #results>:not(.tarot-stage){
+  width:var(--v8-shell)!important;max-width:none!important;margin-inline:auto!important
+}
+body[data-theme="modern-oracle"] .reading-opening{
+  display:grid!important;grid-template-columns:220px minmax(0,1fr)!important;gap:36px!important;
+  padding:30px 34px!important;margin:0 auto 18px!important
+}
+body[data-theme="modern-oracle"] .reading-head{gap:34px!important}
+body[data-theme="modern-oracle"] .reading-head h2{
+  margin-bottom:14px!important;font:500 clamp(34px,3vw,44px)/1.2 var(--v8-serif)!important;letter-spacing:-.04em!important
+}
+body[data-theme="modern-oracle"] .reading-lead{font-size:16px!important;line-height:1.75!important}
+body[data-theme="modern-oracle"] .mbti-type-panel strong{
+  font:600 58px/1 var(--v8-serif)!important;color:var(--v8-gold-2)!important
+}
+body[data-theme="modern-oracle"] .basis-item strong{font-size:12px!important;line-height:1.55!important}
+
+/* 02 IMAGE SHOWCASE — correct sprite row */
+body[data-theme="modern-oracle"] .visual-keyword-showcase{
+  display:grid!important;grid-template-columns:1.18fr repeat(6,minmax(0,1fr))!important;
+  gap:10px!important;width:var(--v8-shell)!important;max-width:none!important;margin:0 auto 22px!important;
+  padding:16px 18px!important;border:1px solid var(--v8-line)!important;border-radius:12px!important;
+  background:linear-gradient(145deg,#091a2a,#071521)!important
+}
+body[data-theme="modern-oracle"] .visual-keyword-intro{grid-column:auto!important;padding:12px 14px 12px 0!important}
+body[data-theme="modern-oracle"] .visual-keyword-intro h2{
+  font:500 33px/1.28 var(--v8-serif)!important;letter-spacing:-.04em!important
+}
+body[data-theme="modern-oracle"] .visual-keyword-intro p{font-size:13px!important;line-height:1.65!important}
+body[data-theme="modern-oracle"] .visual-keyword-card{
+  min-width:0!important;min-height:0!important;aspect-ratio:150/242!important;
+  border-color:rgba(217,174,102,.38)!important;border-radius:6px!important
+}
+body[data-theme="modern-oracle"] .visual-keyword-card>.atlas-card{
+  inset:0!important;padding:0!important;
+  background-image:url('/oracle/b-visual-atlas.webp')!important;
+  background-size:600% auto!important;
+  background-position-y:60.1%!important;
+  filter:saturate(.88) contrast(1.04)!important;
+  transition:transform .55s cubic-bezier(.2,.8,.2,1),filter .35s ease!important
+}
+body[data-theme="modern-oracle"] .visual-keyword-card:hover>.atlas-card{
+  transform:scale(1.045)!important;filter:saturate(1) brightness(1.06)!important
+}
+body[data-theme="modern-oracle"] .visual-keyword-card>div:not(.atlas-card){
+  z-index:2!important;padding:56px 14px 14px!important;background:linear-gradient(transparent,rgba(3,12,21,.96))!important
+}
+body[data-theme="modern-oracle"] .visual-keyword-card strong{font:500 18px/1.1 var(--v8-serif)!important}
+body[data-theme="modern-oracle"] .visual-keyword-card small{font-size:11px!important}
+
+/* report nav */
+body[data-theme="modern-oracle"] .report-nav{
+  width:var(--v8-shell)!important;max-width:none!important;margin:0 auto 22px!important;
+  padding:0!important;gap:0!important;border:1px solid rgba(217,174,102,.14)!important;
+  background:rgba(5,16,27,.92)!important
+}
+body[data-theme="modern-oracle"] .report-nav a{
+  flex:1;justify-content:center;min-height:48px!important;font-size:12px!important;border-right:1px solid var(--v8-line-soft)!important
+}
+
+/* detailed report — image-led accordion cards instead of endless text wall */
+body[data-theme="modern-oracle"] .detailed-report{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:16px!important;width:var(--v8-shell)!important;max-width:none!important;margin:0 auto 28px!important
+}
+body[data-theme="modern-oracle"] .detail-chapter{
+  position:relative!important;display:grid!important;grid-template-columns:180px minmax(0,1fr)!important;
+  gap:0!important;min-width:0!important;margin:0!important;padding:0!important;
+  overflow:hidden!important;border:1px solid rgba(217,174,102,.16)!important;border-radius:10px!important;
+  background:linear-gradient(145deg,rgba(12,30,48,.94),rgba(7,19,32,.98))!important
+}
+body[data-theme="modern-oracle"] .detail-visual{
+  min-height:210px!important;background-image:url('/oracle/b-visual-atlas.webp')!important;
+  background-repeat:no-repeat!important;background-size:600% auto!important;background-position-y:60.1%!important;
+  border-right:1px solid rgba(217,174,102,.16)!important
+}
+body[data-theme="modern-oracle"] .detail-chapter:nth-child(6n+1) .detail-visual{background-position-x:0%!important}
+body[data-theme="modern-oracle"] .detail-chapter:nth-child(6n+2) .detail-visual{background-position-x:20%!important}
+body[data-theme="modern-oracle"] .detail-chapter:nth-child(6n+3) .detail-visual{background-position-x:40%!important}
+body[data-theme="modern-oracle"] .detail-chapter:nth-child(6n+4) .detail-visual{background-position-x:60%!important}
+body[data-theme="modern-oracle"] .detail-chapter:nth-child(6n+5) .detail-visual{background-position-x:80%!important}
+body[data-theme="modern-oracle"] .detail-chapter:nth-child(6n+6) .detail-visual{background-position-x:100%!important}
+body[data-theme="modern-oracle"] .detail-disclosure{min-width:0!important}
+body[data-theme="modern-oracle"] .detail-disclosure summary{
+  display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;gap:12px!important;
+  align-items:start!important;min-height:210px!important;padding:24px 22px!important;cursor:pointer!important;list-style:none!important
+}
+body[data-theme="modern-oracle"] .detail-disclosure summary::-webkit-details-marker{display:none}
+body[data-theme="modern-oracle"] .detail-disclosure summary>span{
+  color:var(--v8-gold)!important;font-size:11px!important;letter-spacing:.12em!important
+}
+body[data-theme="modern-oracle"] .detail-disclosure summary h3{
+  margin:0 0 10px!important;font:500 25px/1.28 var(--v8-serif)!important;letter-spacing:-.035em!important
+}
+body[data-theme="modern-oracle"] .detail-disclosure summary p{margin:0!important;font-size:14px!important;line-height:1.7!important}
+body[data-theme="modern-oracle"] .detail-toggle{
+  display:grid;place-items:center;width:28px;height:28px;border:1px solid var(--v8-line);border-radius:50%;
+  color:var(--v8-gold);font-size:17px;transition:transform .25s ease
+}
+body[data-theme="modern-oracle"] .detail-disclosure[open] .detail-toggle{transform:rotate(45deg)}
+body[data-theme="modern-oracle"] .detail-chapter-body{
+  max-width:none!important;padding:0 22px 22px 45px!important;border-top:1px solid var(--v8-line-soft)!important
+}
+body[data-theme="modern-oracle"] .detail-chapter-body p{
+  margin:18px 0 0!important;color:#bcc6d1!important;font-size:14px!important;line-height:1.82!important
+}
+
+/* 03 TODAY */
+body[data-theme="modern-oracle"] #today{
+  width:var(--v8-shell)!important;max-width:none!important;margin:0 auto 28px!important;padding:30px 32px!important
+}
+body[data-theme="modern-oracle"] #today .section-heading{
+  display:grid!important;grid-template-columns:220px minmax(0,1fr)!important;gap:34px!important;
+  margin:0 0 22px!important;padding:0!important;border:0!important
+}
+body[data-theme="modern-oracle"] #today .section-heading h2{
+  margin:0!important;font:500 38px/1.22 var(--v8-serif)!important
+}
+body[data-theme="modern-oracle"] #today .section-heading blockquote{
+  margin:10px 0 0!important;font:500 20px/1.55 var(--v8-serif)!important
+}
+body[data-theme="modern-oracle"] .daily-layout{
+  display:grid!important;grid-template-columns:minmax(260px,.88fr) minmax(380px,1.18fr) minmax(280px,.9fr)!important;
+  gap:34px!important;align-items:center!important
+}
+body[data-theme="modern-oracle"] .daily-primary{position:static!important;padding:0!important}
+body[data-theme="modern-oracle"] .daily-primary-score{width:220px!important;height:220px!important;margin:0 auto 20px!important}
+body[data-theme="modern-oracle"] .daily-primary-score strong{font-size:66px!important}
+body[data-theme="modern-oracle"] .daily-summary{font-size:15px!important;line-height:1.75!important;text-align:left!important}
+body[data-theme="modern-oracle"] .metric-row{
+  grid-template-columns:38px minmax(110px,130px) minmax(0,1fr)!important;gap:14px!important;padding:16px 0!important
+}
+body[data-theme="modern-oracle"] .metric-score{font-size:25px!important;color:var(--v8-gold-2)!important}
+body[data-theme="modern-oracle"] .metric-copy p{font-size:14px!important;line-height:1.65!important}
+body[data-theme="modern-oracle"] .today-quote-panel{
+  grid-column:auto!important;min-height:230px!important;padding:30px 26px!important;
+  border:1px solid rgba(217,174,102,.35)!important;background:rgba(4,14,24,.28)!important
+}
+body[data-theme="modern-oracle"] .today-quote-panel blockquote{
+  color:var(--v8-cream)!important;font:500 25px/1.45 var(--v8-serif)!important
+}
+
+/* 04 ANNUAL */
+body[data-theme="modern-oracle"] .year-panel{
+  width:var(--v8-shell)!important;max-width:none!important;margin:0 auto 28px!important;padding:30px 32px!important
+}
+body[data-theme="modern-oracle"] .year-panel>.section-heading{
+  grid-template-columns:220px minmax(0,1fr)!important;gap:34px!important;margin-bottom:22px!important
+}
+body[data-theme="modern-oracle"] .year-panel .section-heading h2{
+  font:500 38px/1.22 var(--v8-serif)!important
+}
+body[data-theme="modern-oracle"] .annual-visual-copy{
+  display:grid!important;grid-template-columns:minmax(320px,.95fr) minmax(0,1.35fr)!important;
+  gap:0!important;overflow:hidden!important;border:1px solid rgba(217,174,102,.18)!important;border-radius:8px!important;
+  background:rgba(3,13,22,.28)!important
+}
+body[data-theme="modern-oracle"] .annual-scene{min-height:300px!important;background-position:center 100%!important}
+body[data-theme="modern-oracle"] .annual-copy{
+  display:flex!important;flex-direction:column!important;justify-content:center!important;padding:34px 38px!important
+}
+body[data-theme="modern-oracle"] .annual-copy blockquote{
+  margin:8px 0 18px!important;color:var(--v8-cream)!important;font:500 29px/1.45 var(--v8-serif)!important
+}
+body[data-theme="modern-oracle"] .year-essay{max-width:none!important;padding:30px 0!important}
+body[data-theme="modern-oracle"] .year-essay h3{font:500 31px/1.3 var(--v8-serif)!important}
+body[data-theme="modern-oracle"] .year-essay p{max-width:1100px!important;font-size:15px!important;line-height:1.82!important}
+body[data-theme="modern-oracle"] .advice-grid{gap:14px!important;margin:16px 0 26px!important}
+body[data-theme="modern-oracle"] .advice-card{
+  padding:18px!important;border:1px solid var(--v8-line-soft)!important;border-top:2px solid var(--v8-gold)!important;
+  background:rgba(4,14,24,.2)!important
+}
+body[data-theme="modern-oracle"] .quarter-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:0!important;border:1px solid var(--v8-line-soft)!important
+}
+body[data-theme="modern-oracle"] .quarter-card{
+  padding:22px!important;border-right:1px solid var(--v8-line-soft)!important
+}
+body[data-theme="modern-oracle"] .quarter-card h3{font:500 20px/1.4 var(--v8-serif)!important}
+body[data-theme="modern-oracle"] .month-flow-shell{margin-top:46px!important}
+body[data-theme="modern-oracle"] .month-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+body[data-theme="modern-oracle"] .month-card{padding:22px!important}
+body[data-theme="modern-oracle"] .month-card p{font-size:14px!important;line-height:1.7!important}
+
+/* 05/06 */
+body[data-theme="modern-oracle"] :is(.luck-panel,.expert-panel){
+  width:var(--v8-shell)!important;max-width:none!important;margin:0 auto 28px!important;padding:32px 34px!important
+}
+body[data-theme="modern-oracle"] :is(.luck-panel,.expert-panel)>.section-heading{
+  grid-template-columns:220px minmax(0,1fr)!important;gap:34px!important;margin-bottom:26px!important
+}
+body[data-theme="modern-oracle"] :is(.luck-panel,.expert-panel) .section-heading h2{
+  font:500 38px/1.25 var(--v8-serif)!important
+}
+body[data-theme="modern-oracle"] .luck-overview{
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr))!important;gap:1px!important;margin-bottom:30px!important
+}
+body[data-theme="modern-oracle"] .luck-step{
+  grid-template-columns:180px minmax(0,1fr)!important;gap:30px!important;padding:28px 0!important
+}
+body[data-theme="modern-oracle"] .luck-theme{font:500 25px/1.35 var(--v8-serif)!important}
+body[data-theme="modern-oracle"] .expert-story-card{
+  grid-template-columns:56px 210px minmax(0,1fr)!important;gap:20px!important;padding:24px 0!important
+}
+body[data-theme="modern-oracle"] .expert-story-card h4{font:500 24px/1.35 var(--v8-serif)!important}
+body[data-theme="modern-oracle"] #expert .pillar-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+
+/* tarot */
+body[data-theme="modern-oracle"] .tarot-stage{
+  width:var(--v8-shell)!important;max-width:none!important;margin:0 auto 40px!important;border:1px solid var(--v8-line)!important;
+  border-radius:12px!important;background:
+    radial-gradient(circle at 84% 12%,rgba(217,174,102,.08),transparent 28%),
+    linear-gradient(145deg,#09182b,#070f1e)!important
+}
+body[data-theme="modern-oracle"] .tarot-stage-inner{width:100%!important;max-width:none!important;padding:54px 48px!important}
+body[data-theme="modern-oracle"] .tarot-copy h2{font:500 40px/1.24 var(--v8-serif)!important}
+body[data-theme="modern-oracle"] .tarot-controls{grid-template-columns:220px minmax(0,1fr) 190px!important}
+body[data-theme="modern-oracle"] .tarot-card-inner{
+  transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease!important
+}
+body[data-theme="modern-oracle"] .tarot-card:hover .tarot-card-inner{
+  transform:translateY(-6px)!important;box-shadow:0 20px 50px rgba(0,0,0,.28)!important
+}
+
+/* subtle motion */
+@media(prefers-reduced-motion:no-preference){
+  body[data-theme="modern-oracle"] .hero-visual{
+    animation:v8-hero-drift 14s ease-in-out infinite alternate;
+    transform-origin:center;
+  }
+  body[data-theme="modern-oracle"] .visual-keyword-card,
+  body[data-theme="modern-oracle"] .oracle-panel{
+    animation:v8-rise .55s both;
+  }
+}
+@keyframes v8-hero-drift{from{background-size:100% auto}to{background-size:103% auto}}
+@keyframes v8-rise{from{opacity:.88;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* responsive */
+@media(max-width:1100px){
+  :root{--v8-shell:min(100% - 40px,980px)}
+  body[data-theme="modern-oracle"] .topbar{grid-template-columns:auto 1fr!important}
+  body[data-theme="modern-oracle"] .hero-primary{grid-template-columns:1fr 1fr!important}
+  body[data-theme="modern-oracle"] .input-panel{grid-template-columns:220px minmax(0,1fr)!important}
+  body[data-theme="modern-oracle"] .birth-side-copy{grid-column:1/-1!important;border-left:0!important;border-top:1px solid var(--v8-line-soft)!important}
+  body[data-theme="modern-oracle"] .feature-orbit-nav{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  body[data-theme="modern-oracle"] .visual-keyword-showcase{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  body[data-theme="modern-oracle"] .visual-keyword-intro{grid-column:1/-1!important}
+  body[data-theme="modern-oracle"] .detailed-report{grid-template-columns:1fr!important}
+  body[data-theme="modern-oracle"] .daily-layout{grid-template-columns:1fr 1fr!important}
+  body[data-theme="modern-oracle"] .today-quote-panel{grid-column:1/-1!important}
+  body[data-theme="modern-oracle"] .quarter-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:760px){
+  :root{--v8-shell:calc(100vw - 24px)}
+  body[data-theme="modern-oracle"] .topbar{position:relative!important;grid-template-columns:1fr!important}
+  body[data-theme="modern-oracle"] .topnav{overflow-x:auto!important;justify-content:flex-start!important}
+  body[data-theme="modern-oracle"] .hero-primary{grid-template-columns:1fr!important;padding-top:8px!important}
+  body[data-theme="modern-oracle"] .hero-copy{padding:30px 8px 24px!important}
+  body[data-theme="modern-oracle"] .hero-copy::before{display:none!important}
+  body[data-theme="modern-oracle"] .hero-copy :is(.section-kicker,h1,.hero-lead,.hero-cta){margin-left:0!important}
+  body[data-theme="modern-oracle"] .hero-copy h1{font-size:clamp(38px,11vw,52px)!important}
+  body[data-theme="modern-oracle"] .hero-proof-oracles{margin-left:0!important;grid-template-columns:1fr!important}
+  body[data-theme="modern-oracle"] .input-panel{grid-template-columns:1fr!important;padding:22px 18px!important}
+  body[data-theme="modern-oracle"] .input-panel :is(.section-heading,form,.birth-side-copy){grid-column:1!important}
+  body[data-theme="modern-oracle"] .feature-orbit-nav{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body[data-theme="modern-oracle"] .reading-opening{grid-template-columns:1fr!important;padding:22px 18px!important}
+  body[data-theme="modern-oracle"] .visual-keyword-showcase{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  body[data-theme="modern-oracle"] .detail-chapter{grid-template-columns:120px minmax(0,1fr)!important}
+  body[data-theme="modern-oracle"] .detail-visual{min-height:180px!important}
+  body[data-theme="modern-oracle"] .detail-disclosure summary{min-height:180px!important;padding:18px 16px!important}
+  body[data-theme="modern-oracle"] .detail-disclosure summary h3{font-size:21px!important}
+  body[data-theme="modern-oracle"] #today .section-heading,
+  body[data-theme="modern-oracle"] .year-panel>.section-heading,
+  body[data-theme="modern-oracle"] :is(.luck-panel,.expert-panel)>.section-heading{grid-template-columns:1fr!important;gap:12px!important}
+  body[data-theme="modern-oracle"] .daily-layout{grid-template-columns:1fr!important}
+  body[data-theme="modern-oracle"] .annual-visual-copy{grid-template-columns:1fr!important}
+  body[data-theme="modern-oracle"] .quarter-grid{grid-template-columns:1fr!important}
+  body[data-theme="modern-oracle"] .month-grid{grid-template-columns:1fr!important}
+  body[data-theme="modern-oracle"] .luck-step{grid-template-columns:1fr!important}
+  body[data-theme="modern-oracle"] #expert .pillar-grid{grid-template-columns:1fr!important}
+  body[data-theme="modern-oracle"] .tarot-stage-inner{padding:34px 20px!important}
+  body[data-theme="modern-oracle"] .tarot-controls{grid-template-columns:1fr!important}
+}
