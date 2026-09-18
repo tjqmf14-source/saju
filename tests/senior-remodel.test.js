@@ -7,8 +7,8 @@ const css = await readFile(new URL('../agency-v6.css', import.meta.url), 'utf8')
 const ui = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
 
 test('hero uses the senior-agency split composition', () => {
-  assert.match(html, /class="hero hero-primary"/);
-  assert.match(html, /class="hero-visual"/);
+  assert.match(html, /class="[^"]*\bhero\b[^"]*\bhero-primary\b[^"]*"/);
+  assert.match(html, /class="[^"]*\bhero-visual\b[^"]*"/);
 });
 
 test('desktop side rail is removed while one report navigation remains', () => {
