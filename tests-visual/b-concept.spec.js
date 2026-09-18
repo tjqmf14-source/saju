@@ -115,6 +115,7 @@ test('annual, decade and natal grids stay within their section bounds', async ({
   await expect(page.locator('#monthForecast .month-card')).toHaveCount(12);
   await expect(page.locator('#luckOverview .luck-overview-item')).toHaveCount(9);
   await expect(page.locator('#pillarGrid .pillar-card')).toHaveCount(4);
+  await page.locator('#expert details').first().evaluate((details) => { details.open = true; });
 
   const audit = await page.evaluate(() => {
     const inspect = (selector, childSelector) => {
