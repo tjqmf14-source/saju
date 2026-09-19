@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="정밀 만세력과 생활 언어 사주 해설, Rider–Waite–Smith 78장 타로를 제공하는 내사주">
+  <meta name="description" content="정밀 만세력과 생활 언어 사주 해설, Rider–Waite–Smith 78장 타로를 제공하는 내사주">\n  <meta name="theme-color" content="#03111d">
   <title>내사주 · Saju & Tarot</title>
   <link rel="stylesheet" href="/site-v12.css">
 </head>
@@ -32,7 +32,7 @@
       <a href="#today">오늘의운세</a>
       <a href="#year">올해의흐름</a>
       <a href="#tarot">타로</a>
-      <a href="#reviews">해석 기준</a>
+      <a href="#standards">해석 기준</a>
       <a href="#faq">자주 묻는 질문</a>
     </nav>
     <div class="topbar-actions">
@@ -83,8 +83,8 @@
           <label class="precision-switch"><input id="precisionToggle" type="checkbox" checked><span aria-hidden="true"></span><b>진태양시 보정</b></label>
         </div>
 
-        <div class="form-grid">
-          <label class="field-name"><span>이름</span><input id="name" type="text" placeholder="이름을 입력하세요" autocomplete="off"></label>
+        <p class="form-demo-note">현재 입력값은 화면 확인용 예시입니다. 본인의 출생정보로 변경한 뒤 리포트를 생성하세요.</p>\n\n        <div class="form-grid">
+          <label class="field-name"><span>이름 <small>(선택)</small></span><input id="name" type="text" placeholder="이름을 입력하세요" autocomplete="off"></label>
           <label><span>출생연도</span><input id="birthYear" type="number" min="1900" max="2100" value="1990" inputmode="numeric"></label>
           <label><span>월</span><input id="birthMonth" type="number" min="1" max="12" value="1" inputmode="numeric"></label>
           <label><span>일</span><input id="birthDay" type="number" min="1" max="31" value="1" inputmode="numeric"></label>
@@ -120,7 +120,7 @@
       <a href="#today"><svg class="ui-icon"><use href="#icon-sun"/></svg><span><b>오늘의운세</b><small>오늘의 흐름을 확인하세요</small></span></a>
       <a href="#year"><svg class="ui-icon"><use href="#icon-calendar"/></svg><span><b>올해의흐름</b><small>한 해의 큰 그림을 읽다</small></span></a>
       <a href="#tarot"><svg class="ui-icon"><use href="#icon-tarot"/></svg><span><b>타로리딩</b><small>지금, 필요한 메시지</small></span></a>
-      <a href="#full-report"><svg class="ui-icon"><use href="#icon-heart"/></svg><span><b>정밀 원국</b><small>계산 근거와 심화 해석</small></span></a>
+      <a href="#full-report"><svg class="ui-icon"><use href="#icon-chart"/></svg><span><b>정밀 원국</b><small>계산 근거와 심화 해석</small></span></a>
       <a href="#faq"><svg class="ui-icon"><use href="#icon-briefcase"/></svg><span><b>이용 가이드</b><small>해석 기준과 사용 방법</small></span></a>
     </nav>
 
@@ -187,9 +187,9 @@
           </div>
 
           <div class="tarot-preview" aria-label="타로 카드 예시">
-            <article class="tarot-preview-card"><img src="/tarot-rws/m17.jpg" alt="별 타로 카드"><strong>오늘의 타로</strong></article>
-            <article class="tarot-preview-card"><img src="/tarot-rws/m06.jpg" alt="연인 타로 카드"><strong>연애 타로</strong></article>
-            <article class="tarot-preview-card"><img src="/tarot-rws/m01.jpg" alt="마법사 타로 카드"><strong>진로 타로</strong></article>
+            <article class="tarot-preview-card"><img src="/tarot-rws/m17.jpg" loading="lazy" alt="별 타로 카드"><strong>오늘의 타로</strong></article>
+            <article class="tarot-preview-card"><img src="/tarot-rws/m06.jpg" loading="lazy" alt="연인 타로 카드"><strong>연애 타로</strong></article>
+            <article class="tarot-preview-card"><img src="/tarot-rws/m01.jpg" loading="lazy" alt="마법사 타로 카드"><strong>진로 타로</strong></article>
           </div>
 
           <aside class="tarot-quote"><span>“</span><blockquote>때로는,<br>카드가 먼저 알고 있습니다.</blockquote><p>지금, 당신에게 필요한 메시지를 만나보세요.</p></aside>
@@ -204,7 +204,7 @@
         </div>
       </section>
 
-      <section id="reviews" class="reviews-section oracle-panel agency-shell" aria-labelledby="reviewsHeading">
+      <section id="standards" class="reviews-section oracle-panel agency-shell" aria-labelledby="reviewsHeading">
         <header class="reviews-head">
           <div><span class="section-no">06</span><p class="section-kicker">해석 기준</p></div>
           <div><h2 id="reviewsHeading">계산과 해석의 경계를 분명하게.</h2><p class="section-lead">최종 빌드에서는 중복 소개나 과장된 후기보다 결과가 어디에서 왔는지 확인할 수 있는 신뢰 구조를 우선합니다.</p></div>
@@ -263,7 +263,7 @@
       <section class="closing-cta agency-shell" aria-labelledby="closingHeading">
         <h2 id="closingHeading">지금, 당신의 이야기를 시작하세요.</h2>
         <p>사주와 타로가 함께하는 더 깊은 내일. 내사주가 늘 함께하겠습니다.</p>
-        <a href="#input">무료 사주 시작하기 <span aria-hidden="true">→</span></a>
+        <a href="#input">사주 정보 다시 입력하기 <span aria-hidden="true">→</span></a>
       </section>
 
     </section>
