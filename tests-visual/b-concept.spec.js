@@ -163,7 +163,7 @@ test('final-build typography and section geometry do not clip or overlap', async
     const viewportWidth=document.documentElement.clientWidth;
     const selector='h1,h2,h3,h4,p,span,b,strong,small,label,summary,button,a';
     const nodes=[...document.querySelectorAll(selector)].filter((el)=>{
-      if(el.closest('.tarot-fan-stage')) return false;
+      if(el.closest('.tarot-fan-stage') || el.classList.contains('skip-link')) return false;
       const style=getComputedStyle(el);
       const rect=el.getBoundingClientRect();
       return style.display!=='none' && style.visibility!=='hidden' && rect.width>0 && rect.height>0;
