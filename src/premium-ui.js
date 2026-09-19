@@ -367,7 +367,7 @@ function runTarotRoll(){
     return;
   }
   deck.classList.add('is-rolling');
-  const duration=3200;
+  const duration=5200;
   const started=performance.now();
   const ease=(t)=>1-Math.pow(1-t,3);
   const step=(now)=>{
