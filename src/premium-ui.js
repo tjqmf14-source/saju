@@ -112,8 +112,9 @@ function syncCalendarUi(){
 
 function syncPrecisionUi(){
   const enabled=$('precisionToggle').checked;
-  $('precisionSettings').classList.toggle('precision-off',!enabled);
-  $('birthLocation').disabled=!enabled;
+  const location=$('birthLocation');
+  location.disabled=!enabled;
+  location.closest('label')?.classList.toggle('field-disabled',!enabled);
 }
 
 function formatSolar(solar){ return `${solar.year}.${String(solar.month).padStart(2,'0')}.${String(solar.day).padStart(2,'0')}`; }
