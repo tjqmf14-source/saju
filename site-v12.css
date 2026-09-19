@@ -384,9 +384,9 @@ section[id],details[id]{scroll-margin-top:96px}
   box-shadow:inset 0 18px 60px rgba(0,0,0,.18);
   touch-action:none;
   user-select:none;
-  cursor:crosshair
+  cursor:grab
 }
-.tarot-fan-stage:focus-visible{outline:2px solid var(--gold-bright);outline-offset:3px}
+.tarot-fan-stage:focus-visible{outline:2px solid var(--gold-bright);outline-offset:3px}\n.tarot-fan-stage:active{cursor:grabbing}
 .tarot-fan-table{
   position:absolute;left:4%;right:4%;bottom:22px;height:72px;z-index:1;
   border-radius:50%;
@@ -402,7 +402,7 @@ section[id],details[id]{scroll-margin-top:96px}
   border-radius:50%;background:radial-gradient(ellipse,rgba(216,167,95,.12),transparent 70%);filter:blur(12px);pointer-events:none
 }
 .tarot-fan-deck .tarot-pick{
-  position:absolute;top:48px;left:50%;z-index:var(--z);
+  position:absolute;top:68px;left:50%;z-index:var(--z);
   width:118px;aspect-ratio:2/3;margin:0;padding:0;border:0;background:none;
   transform:translateX(-50%);
   transform-origin:50% 112%;
@@ -419,12 +419,12 @@ section[id],details[id]{scroll-margin-top:96px}
 }
 .tarot-fan-deck .tarot-pick.is-active{
   z-index:220;
-  transform:translateX(var(--shift)) translateY(calc(var(--drop) - 54px)) rotate(0deg) scale(1.045);
+  transform:translateX(var(--shift)) translateY(calc(var(--drop) - 48px)) rotate(0deg) scale(1.045);
   filter:drop-shadow(0 18px 24px rgba(0,0,0,.5))
 }
 .tarot-fan-deck .tarot-pick.selected{
   z-index:240;
-  transform:translateX(var(--shift)) translateY(calc(var(--drop) - 72px)) rotate(0deg) scale(1.07);
+  transform:translateX(var(--shift)) translateY(calc(var(--drop) - 62px)) rotate(0deg) scale(1.07);
   filter:drop-shadow(0 20px 28px rgba(216,167,95,.2))
 }
 .tarot-fan-deck.is-dealing .tarot-pick{filter:drop-shadow(0 14px 18px rgba(0,0,0,.28))}
@@ -734,9 +734,9 @@ section[id],details[id]{scroll-margin-top:96px}
   .tarot-fan-meta{justify-items:start}
   .tarot-fan-stage{height:270px}
   .tarot-fan-track{inset:24px 14px 28px}
-  .tarot-fan-deck .tarot-pick{top:46px;width:102px}
-  .tarot-fan-deck .tarot-pick.is-active{transform:translateX(var(--shift)) translateY(calc(var(--drop) - 42px)) rotate(0deg) scale(1.04)}
-  .tarot-fan-deck .tarot-pick.selected{transform:translateX(var(--shift)) translateY(calc(var(--drop) - 58px)) rotate(0deg) scale(1.055)}
+  .tarot-fan-deck .tarot-pick{top:64px;width:102px}
+  .tarot-fan-deck .tarot-pick.is-active{transform:translateX(var(--shift)) translateY(calc(var(--drop) - 40px)) rotate(0deg) scale(1.04)}
+  .tarot-fan-deck .tarot-pick.selected{transform:translateX(var(--shift)) translateY(calc(var(--drop) - 52px)) rotate(0deg) scale(1.055)}
   .tarot-pick-status{align-items:flex-start;flex-direction:column;gap:4px}
   .tarot-pick-status span{text-align:left}
   .tarot-reading-grid{grid-template-columns:1fr}
@@ -771,7 +771,7 @@ section[id],details[id]{scroll-margin-top:96px}
   .tarot-fan-copy strong{font-size:22px}
   .tarot-fan-stage{height:240px}
   .tarot-fan-track{inset:20px 10px 24px}
-  .tarot-fan-deck .tarot-pick{top:42px;width:88px}
+  .tarot-fan-deck .tarot-pick{top:58px;width:88px}
   .tarot-reveal-deck{grid-template-columns:1fr;padding:14px}
   .tarot-reveal-deck.one-card{grid-template-columns:1fr}
   .tarot-reading-head{grid-template-columns:1fr}
