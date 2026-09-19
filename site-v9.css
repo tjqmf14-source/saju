@@ -1003,3 +1003,8 @@ body[data-theme="modern-oracle"] .tarot-stage .section-no{color:#c8aa73}
 @media(max-width:760px){
   #today .lucky-strip{display:block}
 }
+
+
+/* Precision controls: location correction can be disabled independently of day-boundary convention. */
+.field-disabled{opacity:.5}
+.field-disabled select{cursor:not-allowed}
