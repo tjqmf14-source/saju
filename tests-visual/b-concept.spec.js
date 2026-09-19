@@ -133,6 +133,8 @@ test('tarot exposes all 78 cards as one overlapping fan without a scrollbar', as
   const stage=page.locator('.tarot-fan-stage');
   await expect(page.locator('.tarot-pick')).toHaveCount(78);
   await expect(stage).toBeVisible();
+  await expect(stage).toHaveAttribute('role','listbox');
+  await expect(stage).toHaveAttribute('aria-multiselectable','true');
   await expect(deck).toHaveClass(/is-spread/);
 
   const geometry=await stage.evaluate((el)=>({
@@ -232,6 +234,26 @@ test('desktop tarot deal animation expands one stacked deck into a full overlapp
   if(!box) throw new Error('tarot fan stage missing');
   await stage.hover({position:{x:box.width*.34,y:box.height*.55}});
   await expect(page.locator('.tarot-pick.is-active')).toHaveCount(1);
+
+  const activeBounds=await page.evaluate(() => {
+    const stage=document.querySelector('.tarot-fan-stage').getBoundingClientRect();
+    const active=document.querySelector('.tarot-pick.is-active').getBoundingClientRect();
+    return {stageTop:stage.top,stageBottom:stage.bottom,cardTop:active.top,cardBottom:active.bottom};
+  });
+  expect(activeBounds.cardTop).toBeGreaterThanOrEqual(activeBounds.stageTop - 1);
+  expect(activeBounds.cardBottom).toBeLessThanOrEqual(activeBounds.stageBottom + 1);
+
+  await stage.click({position:{x:box.width*.34,y:box.height*.55}});
+  const selected=page.locator('.tarot-pick.selected');
+  await expect(selected).toHaveCount(1);
+  await expect(selected).toHaveAttribute('aria-selected','true');
+  const selectedBounds=await page.evaluate(() => {
+    const stage=document.querySelector('.tarot-fan-stage').getBoundingClientRect();
+    const card=document.querySelector('.tarot-pick.selected').getBoundingClientRect();
+    return {stageTop:stage.top,stageBottom:stage.bottom,cardTop:card.top,cardBottom:card.bottom};
+  });
+  expect(selectedBounds.cardTop).toBeGreaterThanOrEqual(selectedBounds.stageTop - 1);
+  expect(selectedBounds.cardBottom).toBeLessThanOrEqual(selectedBounds.stageBottom + 1);
 
   await page.locator('#tarot').screenshot({path:'test-results/v12-tarot-78-fan-desktop.png'});
 });
