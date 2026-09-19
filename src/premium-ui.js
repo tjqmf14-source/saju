@@ -173,6 +173,8 @@ function renderToday(chart,todayFlow){
   const scores=calculateDailyScores(chart,todayFlow);
   $('todayDate').textContent=currentKstDate();
   $('todayHeadline').textContent=`“${copy.summary}”`;
+  $('todayQuoteTitle').textContent=copy.summary;
+  $('todayQuoteBody').textContent=`${copy.opportunity}에 힘을 싣고, ${copy.caution}은 한 번 더 점검하세요.`;
 
   const overall=scores.overall;
   $('dailyPrimary').innerHTML=`<div class="daily-primary-score"><span class="section-kicker">TODAY'S INDEX</span><strong>${overall.score}</strong><small>/100 · ${overall.label}</small></div><p id="todaySummary" class="daily-summary">오늘은 ${copy.opportunity}에 힘을 싣는 편이 좋습니다. 반대로 ${copy.caution}은 한 번 더 점검하세요. 이 수치는 원국과 오늘 일진의 관계를 0–100으로 정리한 ‘오늘의 흐름 지수’이며 확률이나 객관적 예측값이 아닙니다.</p><div id="todayLucky" class="lucky-strip"></div>`;
@@ -202,6 +204,8 @@ function renderYear(yearFlow,monthFlows){
   const copy=GROUP_COPY[yearFlow.group];
   $('yearTitle').textContent=`${yearFlow.year} · ${ROLE_LABELS[yearFlow.group]}의 해`;
   $('yearSummary').textContent=`${copy.summary}입니다. ${copy.opportunity}에 집중하면 흐름을 활용하기 좋고, ${copy.caution}은 올해 반복해서 점검할 주제입니다. 원국과의 관계 신호는 ${relationLabel(yearFlow.relations)}입니다.`;
+  $('annualQuote').textContent=copy.summary;
+  $('annualGuide').textContent=`${copy.opportunity}에 집중하고, ${copy.caution}은 올해의 반복 체크포인트로 두세요.`;
   $('yearDeepDive').innerHTML=`<article class="year-essay"><span class="micro">YEAR IN DEPTH</span><h3>올해 전체 흐름</h3><p>${copy.summary}이라는 말은 단순히 좋은 일이 생긴다는 뜻이 아니라, 올해 여러 선택에서 ${copy.label}의 주제가 반복해서 나타날 가능성이 높다는 뜻입니다. ${copy.opportunity}을 실제 행동으로 연결할수록 체감이 좋아질 수 있고, 반대로 ${copy.caution}이 반복될 때는 속도를 늦추고 방향을 다시 확인하는 편이 좋습니다.</p><p><strong>현실적인 조언.</strong> ${copy.work} 중요한 선택을 한 번에 크게 벌이기보다 지금 가진 시간·돈·관계 자원을 점검한 뒤, 성과가 확인되는 영역부터 단계적으로 넓혀가세요.</p><p><strong>주의할 점.</strong> ${copy.caution}은 불안해하라는 경고가 아니라 올해의 체크리스트에 가깝습니다. 계약·지출·관계 결정은 감정이 가장 큰 순간보다 자료와 조건을 다시 본 뒤 결정하는 편이 안전합니다.</p></article>`;
   $('yearAdviceGrid').innerHTML=[['올해의 기회',copy.opportunity],['주의할 패턴',copy.caution],['돈의 포인트',copy.money],['관계의 포인트',copy.love]].map(([title,body])=>`<article class="advice-card"><span>${title}</span><p>${body}</p></article>`).join('');
   const quarterStarts=[0,3,6,9];
@@ -401,7 +405,7 @@ function renderTarotFan(){
       <div class="tarot-roller-copy">
         <span class="section-kicker">FULL 78-CARD DECK</span>
         <strong>78장의 카드를 모두 펼쳤습니다.</strong>
-        <small>자동 롤이 끝난 뒤 좌우로 밀거나 화살표 버튼으로 이동해 마음이 가는 카드를 선택하세요.</small>
+        <small>롤 애니메이션으로 78장을 훑습니다. 언제든 직접 멈추고 좌우로 밀거나 화살표·키보드로 이동해 카드를 선택하세요.</small>
       </div>
       <div class="tarot-roller-actions" aria-label="타로 카드 이동">
         <button id="tarotRollPrev" type="button" aria-label="이전 카드 묶음 보기">←</button>
@@ -430,6 +434,10 @@ function renderTarotFan(){
   viewport.addEventListener('keydown',(event)=>{
     if(event.key==='ArrowLeft'){event.preventDefault();scrollTarotRoll(-1);}
     if(event.key==='ArrowRight'){event.preventDefault();scrollTarotRoll(1);}
+    if(event.key==='PageUp'){event.preventDefault();scrollTarotRoll(-1);}
+    if(event.key==='PageDown'){event.preventDefault();scrollTarotRoll(1);}
+    if(event.key==='Home'){event.preventDefault();cancelTarotRoll();viewport.scrollTo({left:0,behavior:'smooth'});}
+    if(event.key==='End'){event.preventDefault();cancelTarotRoll();viewport.scrollTo({left:viewport.scrollWidth,behavior:'smooth'});}
   });
   $('tarotRollPrev')?.addEventListener('click',()=>scrollTarotRoll(-1));
   $('tarotRollNext')?.addEventListener('click',()=>scrollTarotRoll(1));
@@ -510,7 +518,14 @@ function setupSectionSpy(){
 
 form.elements.calendar.forEach((radio)=>radio.addEventListener('change',syncCalendarUi));
 $('precisionToggle').addEventListener('change',syncPrecisionUi);
-form.addEventListener('submit',(event)=>{event.preventDefault();renderAll();});
+form.addEventListener('submit',(event)=>{
+  event.preventDefault();
+  renderAll();
+  if(event.isTrusted){
+    const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    requestAnimationFrame(()=>document.querySelector('.visual-keyword-showcase')?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'}));
+  }
+});
 $('drawTarot').addEventListener('click',handleTarot);
 syncCalendarUi();
 syncPrecisionUi();
