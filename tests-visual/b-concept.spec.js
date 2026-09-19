@@ -122,26 +122,33 @@ test('calculation renderers still populate all retained data targets', async ({ 
   await assertNoHorizontalOverflow(page);
 });
 
-test('tarot exposes all 78 cards in an accessible rolling selector', async ({ page }) => {
+test('tarot exposes all 78 cards as one overlapping fan without a scrollbar', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   await expect(page.locator('.tarot-preview-card')).toHaveCount(3);
   await page.locator('#tarotMode').selectOption('question');
   await page.locator('#drawTarot').click();
+
+  const deck=page.locator('#tarotDeck');
+  const stage=page.locator('.tarot-fan-stage');
   await expect(page.locator('.tarot-pick')).toHaveCount(78);
-  await expect(page.locator('.tarot-roller-viewport')).toBeVisible();
-  const geometry = await page.locator('.tarot-roller-viewport').evaluate((el) => ({
+  await expect(stage).toBeVisible();
+  await expect(deck).toHaveClass(/is-spread/);
+
+  const geometry=await stage.evaluate((el)=>({
     scrollWidth:el.scrollWidth,
-    clientWidth:el.clientWidth
+    clientWidth:el.clientWidth,
+    overflowX:getComputedStyle(el).overflowX
   }));
-  expect(geometry.scrollWidth).toBeGreaterThan(geometry.clientWidth * 5);
-  const first = page.locator('.tarot-pick').nth(0);
-  const second = page.locator('.tarot-pick').nth(1);
-  const third = page.locator('.tarot-pick').nth(2);
-  await first.click();
-  await expect(first).toHaveClass(/selected/);
-  await second.click();
-  await third.click();
+  expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.clientWidth + 1);
+  expect(geometry.overflowX).toBe('hidden');
+
+  const box=await stage.boundingBox();
+  if(!box) throw new Error('tarot fan stage missing');
+  for(const ratio of [0.2,0.5,0.8]){
+    await stage.click({position:{x:box.width*ratio,y:box.height*.58}});
+  }
+
   await expect(page.locator('.tarot-card')).toHaveCount(3);
   await expect(page.locator('.tarot-reading')).toHaveCount(3);
   await assertNoHorizontalOverflow(page);
@@ -156,7 +163,7 @@ test('final-build typography and section geometry do not clip or overlap', async
     const viewportWidth=document.documentElement.clientWidth;
     const selector='h1,h2,h3,h4,p,span,b,strong,small,label,summary,button,a';
     const nodes=[...document.querySelectorAll(selector)].filter((el)=>{
-      if(el.closest('.tarot-roller-viewport')) return false;
+      if(el.closest('.tarot-fan-stage')) return false;
       const style=getComputedStyle(el);
       const rect=el.getBoundingClientRect();
       return style.display!=='none' && style.visibility!=='hidden' && rect.width>0 && rect.height>0;
@@ -185,21 +192,31 @@ test('final-build typography and section geometry do not clip or overlap', async
 });
 
 
-test('desktop tarot roll visibly travels through the full deck and can be interrupted', async ({ page }, testInfo) => {
+test('desktop tarot deal animation expands one stacked deck into a full overlapping fan', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'desktop animation contract');
   await page.goto('/');
   await page.locator('#tarotMode').selectOption('question');
   await page.locator('#drawTarot').click();
   await expect(page.locator('.tarot-pick')).toHaveCount(78);
-  const viewport=page.locator('.tarot-roller-viewport');
-  const before=await viewport.evaluate((el)=>el.scrollLeft);
-  await page.waitForTimeout(450);
-  const after=await viewport.evaluate((el)=>el.scrollLeft);
-  expect(after).toBeGreaterThan(before + 100);
-  await expect(page.locator('#tarotDeck')).toHaveClass(/is-rolling/);
-  await viewport.dispatchEvent('pointerdown',{pointerType:'mouse'});
-  await expect(page.locator('#tarotDeck')).not.toHaveClass(/is-rolling/);
-  await page.locator('#tarot').screenshot({path:'test-results/v12-tarot-78-roller-desktop.png'});
+
+  const deck=page.locator('#tarotDeck');
+  const stage=page.locator('.tarot-fan-stage');
+  await expect(deck).toHaveClass(/is-spread/);
+
+  const spread=await page.locator('.tarot-pick').evaluateAll((cards)=>cards.map((card)=>{
+    const r=card.getBoundingClientRect();
+    return {left:r.left,right:r.right,width:r.width};
+  }));
+  expect(spread[0].left).toBeLessThan(spread.at(-1).left);
+  expect(spread.at(-1).right - spread[0].left).toBeGreaterThan(900);
+  expect(spread[1].left - spread[0].left).toBeLessThan(spread[0].width * .4);
+
+  const box=await stage.boundingBox();
+  if(!box) throw new Error('tarot fan stage missing');
+  await stage.hover({position:{x:box.width*.34,y:box.height*.55}});
+  await expect(page.locator('.tarot-pick.is-active')).toHaveCount(1);
+
+  await page.locator('#tarot').screenshot({path:'test-results/v12-tarot-78-fan-desktop.png'});
 });
 
 
