@@ -66,8 +66,37 @@ test('V11 remains readable and overflow-free on mobile', async ({ page }, testIn
   await expect(page.locator('.visual-keyword-card')).toHaveCount(6);
   await expect(page.locator('.review-card')).toHaveCount(3);
 
-  const keywordWidth = await page.locator('.visual-keyword-card').first().evaluate((el) => el.getBoundingClientRect().width);
-  expect(keywordWidth).toBeGreaterThan(150);
+  const mobileAudit = await page.evaluate(() => {
+    const rect = (selector) => {
+      const el = document.querySelector(selector);
+      if (!el) return null;
+      const r = el.getBoundingClientRect();
+      return { x:r.x, width:r.width, height:r.height, right:r.right };
+    };
+    const cards=[...document.querySelectorAll('.visual-keyword-card')].map((el)=>{
+      const r=el.getBoundingClientRect();
+      return { x:r.x, width:r.width, height:r.height, right:r.right };
+    });
+    return {
+      input:rect('#input'),
+      form:rect('#birthForm'),
+      hero:rect('.hero-primary'),
+      heroVisual:rect('.hero-visual'),
+      keywordShell:rect('.visual-keyword-showcase'),
+      cards,
+    };
+  });
+  expect(mobileAudit.form?.width || 0).toBeGreaterThan(300);
+  expect(mobileAudit.input?.height || 9999).toBeLessThan(1050);
+  expect(mobileAudit.hero?.height || 9999).toBeLessThan(1250);
+  expect(mobileAudit.heroVisual?.height || 0).toBeGreaterThan(250);
+  expect(mobileAudit.keywordShell?.height || 9999).toBeLessThan(1650);
+  expect(mobileAudit.cards).toHaveLength(6);
+  for (const card of mobileAudit.cards) {
+    expect(card.width).toBeGreaterThan(140);
+    expect(card.x).toBeGreaterThanOrEqual(0);
+    expect(card.right).toBeLessThanOrEqual(390);
+  }
 
   await assertNoHorizontalOverflow(page);
   await page.screenshot({ path: 'test-results/v11-reference-mobile.png', fullPage: true });
