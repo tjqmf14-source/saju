@@ -81,6 +81,13 @@ section[id],details[id]{scroll-margin-top:96px}
 .hero-primary,.feature-orbit-nav,.visual-keyword-showcase,.quote-band,
 .landing-section,.tarot-stage,.reviews-section,.faq-section,
 .full-report-shell,.closing-cta{margin-bottom:var(--section-gap)}
+#results[data-mode="demo"]::before{
+  content:"예시 결과 · 현재 입력값을 기준으로 생성된 화면입니다. 본인의 출생정보를 입력하면 전체 결과가 다시 계산됩니다.";
+  display:block;width:var(--shell);margin:0 auto 12px;padding:10px 14px;
+  border:1px solid var(--line-soft);border-radius:7px;
+  background:rgba(216,167,95,.05);color:var(--muted);font-size:15px;line-height:1.6
+}
+
 .section-heading>*,.reviews-head>*,.tarot-stage-inner>*,.faq-section>*,
 .feature-orbit-nav a>*,.review-card>*,.full-report-shell summary>*{min-width:0}
 
@@ -168,17 +175,24 @@ section[id],details[id]{scroll-margin-top:96px}
 .input-panel .section-heading h2{margin:0 0 14px;font-size:34px;line-height:1.27}
 .five-elements-orbit{display:none}
 .input-panel form{position:relative;z-index:2;min-width:0;padding:19px 20px 18px;border:1px solid var(--line-soft);border-radius:7px;background:rgba(1,10,18,.36)}
+.form-demo-note{
+  margin:0 0 14px;padding:10px 12px;border-left:2px solid var(--gold);
+  background:rgba(216,167,95,.05);color:var(--muted);font-size:15px;line-height:1.6
+}
+.field-name>span small{color:var(--muted-2);font-size:15px;font-weight:400}
 .form-modes{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:17px}
 .segmented{display:flex;margin:0;padding:3px;border:1px solid var(--line);border-radius:999px}
 .segmented label{cursor:pointer}
 .segmented input{position:absolute;opacity:0}
 .segmented span{display:block;padding:5px 14px;border-radius:999px;color:var(--muted)}
 .segmented input:checked+span{background:var(--gold);color:#0c1720}
+.segmented input:focus-visible+span{outline:2px solid var(--gold-bright);outline-offset:2px}
 .precision-switch{display:flex;align-items:center;gap:9px;color:var(--muted)}
 .precision-switch>input{position:absolute;opacity:0}
 .precision-switch>span{position:relative;width:38px;height:22px;border:1px solid var(--line);border-radius:999px;background:#071522}
 .precision-switch>span::after{content:"";position:absolute;left:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#74818c;transition:.18s}
 .precision-switch input:checked+span::after{left:19px;background:var(--gold-bright)}
+.precision-switch input:focus-visible+span{outline:2px solid var(--gold-bright);outline-offset:3px}
 .precision-switch b{font-size:15px}
 .form-grid{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:12px 11px}
 .form-grid label{display:grid;gap:6px;min-width:0;color:#bdc6ce;font-size:15px}
