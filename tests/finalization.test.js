@@ -23,7 +23,7 @@ test('minimum readable UI type is 11pt-equivalent or larger', () => {
 });
 
 test('landing page follows the supplied section order', () => {
-  const order = ['id="input"','visual-keyword-showcase','quote-band','id="today"','id="year"','id="tarot"','id="reviews"','id="faq"','closing-cta'];
+  const order = ['id="input"','visual-keyword-showcase','quote-band','id="today"','id="year"','id="tarot"','id="standards"','id="faq"','closing-cta'];
   let cursor = -1;
   for (const token of order) {
     const next = html.indexOf(token);
