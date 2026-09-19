@@ -314,6 +314,7 @@ function renderAll(){
 }
 
 let tarotSession=null;
+let tarotRevealTimer=null;
 
 function tarotPickCount(mode){ return mode==='today'?1:3; }
 function tarotFanSize(mode){ return mode==='today'?12:18; }
@@ -364,11 +365,15 @@ function selectTarotCard(index){
     const reading=interpretSpread(mode,chosen);
     const question=tarotSession.question;
     const delay=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches?0:320;
-    setTimeout(()=>renderTarot(mode,chosen,reading,question),delay);
+    tarotRevealTimer=setTimeout(()=>{ tarotRevealTimer=null; renderTarot(mode,chosen,reading,question); },delay);
   }
 }
 
 function handleTarot(){
+  if(tarotRevealTimer){
+    clearTimeout(tarotRevealTimer);
+    tarotRevealTimer=null;
+  }
   const mode=$('tarotMode').value;
   tarotSession={
     mode,
