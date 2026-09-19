@@ -39,14 +39,15 @@ test('document IDs are unique and primary recalculation CTA submits the live for
   assert.match(ui,/event\.isTrusted/);
 });
 
-test('tarot exposes the complete 78-card rolling picker', () => {
+test('tarot exposes the complete 78-card overlapping fan picker', () => {
   assert.match(html, /타로 리딩 시작하기/);
   assert.match(ui, /prepareTarotFan\(78\)/);
   assert.match(ui, /FULL 78-CARD DECK/);
+  assert.match(ui, /스크롤바 없이 전체 덱을 한 장면에서 보여줍니다/);
   assert.match(ui, /function runTarotRoll/);
   assert.match(ui, /function selectTarotCard/);
-  assert.ok(css.includes('.tarot-roller-viewport{'));
-  assert.ok(css.includes('.tarot-roller-track{'));
+  assert.ok(css.includes('.tarot-fan-stage{'));
+  assert.ok(css.includes('.tarot-fan-track{'));
 });
 
 test('final information architecture keeps detailed year data inside precision report', () => {
