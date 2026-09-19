@@ -44,8 +44,10 @@ test('tarot exposes the complete 78-card overlapping fan picker', () => {
   assert.match(ui, /prepareTarotFan\(78\)/);
   assert.match(ui, /FULL 78-CARD DECK/);
   assert.match(ui, /스크롤바 없이 전체 덱을 한 장면에서 보여줍니다/);
-  assert.match(ui, /function runTarotRoll/);
+  assert.match(ui, /function runTarotDeal/);
   assert.match(ui, /function selectTarotCard/);
+  assert.match(ui, /aria-multiselectable/);
+  assert.match(ui, /aria-selected/);
   assert.ok(css.includes('.tarot-fan-stage{'));
   assert.ok(css.includes('.tarot-fan-track{'));
 });
