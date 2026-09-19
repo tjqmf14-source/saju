@@ -50,11 +50,12 @@ test('V11 desktop follows the supplied landing-page composition', async ({ page 
   expect(minFont).toBeGreaterThanOrEqual(15);
 
   await assertNoHorizontalOverflow(page);
-  await page.screenshot({ path: 'test-results/v11-reference-desktop.png', fullPage: true });
+  await page.evaluate(() => scrollTo(0,0));
+  await page.screenshot({ path: 'test-results/v12-reference-desktop.png', fullPage: true });
 });
 
 test('V11 remains readable and overflow-free on mobile', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'mobile', 'mobile-only contract');
+  test.skip(!['mobile','mobile-small'].includes(testInfo.project.name), 'mobile-only contract');
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
 
@@ -89,23 +90,25 @@ test('V11 remains readable and overflow-free on mobile', async ({ page }, testIn
       cards,
     };
   });
-  expect(mobileAudit.form?.width || 0).toBeGreaterThan(300);
+  const viewportWidth=page.viewportSize()?.width || 390;
+  expect(mobileAudit.form?.width || 0).toBeGreaterThan(viewportWidth - 80);
   expect(mobileAudit.input?.height || 9999).toBeLessThan(1150);
   expect(mobileAudit.hero?.height || 9999).toBeLessThan(1250);
   expect(mobileAudit.heroVisual?.height || 0).toBeGreaterThan(250);
   expect(mobileAudit.keywordShell?.height || 9999).toBeLessThan(1650);
-  expect(mobileAudit.faq?.width || 0).toBeGreaterThan(340);
-  expect(mobileAudit.faqList?.width || 0).toBeGreaterThan(300);
+  expect(mobileAudit.faq?.width || 0).toBeGreaterThan(viewportWidth - 40);
+  expect(mobileAudit.faqList?.width || 0).toBeGreaterThan(viewportWidth - 80);
   expect(mobileAudit.heroBackground).toContain('/oracle/hero-scene.svg');
   expect(mobileAudit.cards).toHaveLength(6);
   for (const card of mobileAudit.cards) {
-    expect(card.width).toBeGreaterThan(140);
+    expect(card.width).toBeGreaterThan(120);
     expect(card.x).toBeGreaterThanOrEqual(0);
-    expect(card.right).toBeLessThanOrEqual(390);
+    expect(card.right).toBeLessThanOrEqual(viewportWidth);
   }
 
   await assertNoHorizontalOverflow(page);
-  await page.screenshot({ path: 'test-results/v11-reference-mobile.png', fullPage: true });
+  await page.evaluate(() => scrollTo(0,0));
+  await page.screenshot({ path: `test-results/v12-reference-${testInfo.project.name}.png`, fullPage: true });
 });
 
 test('calculation renderers still populate all retained data targets', async ({ page }) => {
@@ -196,5 +199,62 @@ test('desktop tarot roll visibly travels through the full deck and can be interr
   await expect(page.locator('#tarotDeck')).toHaveClass(/is-rolling/);
   await viewport.dispatchEvent('pointerdown',{pointerType:'mouse'});
   await expect(page.locator('#tarotDeck')).not.toHaveClass(/is-rolling/);
-  await page.locator('#tarot').screenshot({path:'test-results/tarot-78-roller-desktop.png'});
+  await page.locator('#tarot').screenshot({path:'test-results/v12-tarot-78-roller-desktop.png'});
+});
+
+
+test('birth CTA recalculates current input and precision report exposes retained detail', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#name').fill('QA사용자');
+  await page.locator('.birth-side-submit').click();
+  await expect(page.locator('#reportTitle')).toContainText('QA사용자');
+  await expect(page.locator('#results')).toBeVisible();
+
+  const fullReport=page.locator('#full-report');
+  await page.locator('.visual-keyword-intro a[href="#full-report"]').click();
+  await expect(fullReport).toHaveAttribute('open', '');
+  await expect(page.locator('#yearDeepDive .year-essay')).toHaveCount(1);
+  await expect(page.locator('#monthForecast .month-card')).toHaveCount(12);
+  await expect(page.locator('#detailedReport .detail-chapter')).toHaveCount(13);
+  await assertNoHorizontalOverflow(page);
+});
+
+test('expanded precision report has no clipped text or viewport escape', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#full-report').evaluate((el) => { el.open=true; });
+  await expect(page.locator('#monthForecast .month-card')).toHaveCount(12);
+
+  const audit=await page.evaluate(() => {
+    const root=document.querySelector('#full-report');
+    const viewportWidth=document.documentElement.clientWidth;
+    const textNodes=[...root.querySelectorAll('h2,h3,h4,p,span,strong,small,dt,dd,summary')].filter((el)=>{
+      const s=getComputedStyle(el),r=el.getBoundingClientRect();
+      return s.display!=='none' && s.visibility!=='hidden' && r.width>0 && r.height>0;
+    });
+    return {
+      escaped:textNodes.filter((el)=>{
+        const r=el.getBoundingClientRect();
+        return r.left < -2 || r.right > viewportWidth + 2;
+      }).map((el)=>({tag:el.tagName,text:(el.textContent||'').trim().slice(0,60)})),
+      clipped:textNodes.filter((el)=>{
+        const s=getComputedStyle(el);
+        return ['hidden','clip'].includes(s.overflowX) && el.scrollWidth > el.clientWidth + 2;
+      }).map((el)=>({tag:el.tagName,text:(el.textContent||'').trim().slice(0,60)}))
+    };
+  });
+  expect(audit.escaped,JSON.stringify(audit.escaped)).toEqual([]);
+  expect(audit.clipped,JSON.stringify(audit.clipped)).toEqual([]);
+  await assertNoHorizontalOverflow(page);
+});
+
+test('core form and tarot controls retain touch-friendly targets', async ({ page }) => {
+  await page.goto('/');
+  const audit=await page.evaluate(() => {
+    const selectors=['#birthForm input','#birthForm select','#birthForm button','.birth-side-submit','#drawTarot','#full-report>summary'];
+    return selectors.flatMap((selector)=>[...document.querySelectorAll(selector)]).map((el)=>{
+      const r=el.getBoundingClientRect();
+      return {tag:el.tagName,id:el.id||'',cls:el.className||'',width:r.width,height:r.height};
+    }).filter((item)=>item.width>0 && item.height>0 && item.height<43.5);
+  });
+  expect(audit,JSON.stringify(audit)).toEqual([]);
 });
