@@ -240,7 +240,7 @@ test('desktop tarot deal animation expands one stacked deck into a full overlapp
 test('birth CTA recalculates current input and precision report exposes retained detail', async ({ page }) => {
   await page.goto('/');
   await page.locator('#name').fill('QA사용자');
-  await page.locator('.birth-side-submit').click();
+  await page.locator('#birthForm .cta').click();
   await expect(page.locator('#reportTitle')).toContainText('QA사용자');
   await expect(page.locator('#results')).toBeVisible();
 
