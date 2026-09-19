@@ -132,9 +132,15 @@ test('tarot exposes all 78 cards in an accessible rolling selector', async ({ pa
     clientWidth:el.clientWidth
   }));
   expect(geometry.scrollWidth).toBeGreaterThan(geometry.clientWidth * 5);
-  const first = page.locator('.tarot-pick').first();
+  const first = page.locator('.tarot-pick').nth(0);
+  const second = page.locator('.tarot-pick').nth(1);
+  const third = page.locator('.tarot-pick').nth(2);
   await first.click();
   await expect(first).toHaveClass(/selected/);
+  await second.click();
+  await third.click();
+  await expect(page.locator('.tarot-card')).toHaveCount(3);
+  await expect(page.locator('.tarot-reading')).toHaveCount(3);
   await assertNoHorizontalOverflow(page);
 });
 
@@ -173,4 +179,22 @@ test('final-build typography and section geometry do not clip or overlap', async
   expect(audit.clipped, JSON.stringify(audit.clipped)).toEqual([]);
   expect(audit.badSections, JSON.stringify(audit.badSections)).toEqual([]);
   await assertNoHorizontalOverflow(page);
+});
+
+
+test('desktop tarot roll visibly travels through the full deck and can be interrupted', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'desktop animation contract');
+  await page.goto('/');
+  await page.locator('#tarotMode').selectOption('question');
+  await page.locator('#drawTarot').click();
+  await expect(page.locator('.tarot-pick')).toHaveCount(78);
+  const viewport=page.locator('.tarot-roller-viewport');
+  const before=await viewport.evaluate((el)=>el.scrollLeft);
+  await page.waitForTimeout(450);
+  const after=await viewport.evaluate((el)=>el.scrollLeft);
+  expect(after).toBeGreaterThan(before + 100);
+  await expect(page.locator('#tarotDeck')).toHaveClass(/is-rolling/);
+  await viewport.dispatchEvent('pointerdown',{pointerType:'mouse'});
+  await expect(page.locator('#tarotDeck')).not.toHaveClass(/is-rolling/);
+  await page.locator('#tarot').screenshot({path:'test-results/tarot-78-roller-desktop.png'});
 });
