@@ -40,13 +40,13 @@ test('B concept desktop composition renders with illustrated assets and referenc
   const score = page.locator('.daily-primary-score');
   const scoreBox = await score.boundingBox();
   expect(scoreBox?.width || 0).toBeGreaterThan(180);
-  expect(scoreBox?.width || 0).toBeGreaterThan((scoreBox?.height || 0) * 2);
+  expect(Math.abs((scoreBox?.width || 0) - (scoreBox?.height || 0))).toBeLessThan(8);
   const scoreStyle = await score.evaluate((el) => ({
     borderRadius:getComputedStyle(el).borderRadius,
     backgroundImage:getComputedStyle(el).backgroundImage,
   }));
-  expect(scoreStyle.borderRadius).toBe('0px');
-  expect(scoreStyle.backgroundImage).toBe('none');
+  expect(parseFloat(scoreStyle.borderRadius)).toBeGreaterThan(80);
+  expect(scoreStyle.backgroundImage).toContain('conic-gradient');
 
   const annual = page.locator('.annual-scene');
   const annualBg = await annual.evaluate((el) => getComputedStyle(el).backgroundImage);
