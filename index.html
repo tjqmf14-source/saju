@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="정밀 만세력과 생활 언어 사주 해설, Rider–Waite–Smith 78장 타로를 제공하는 내사주">
   <title>내사주 · Saju & Tarot</title>
-  <link rel="stylesheet" href="/site-v11.css">
+  <link rel="stylesheet" href="/site-v12.css">
 </head>
 <body data-theme="modern-oracle">
   <svg id="oracleIconSprite" class="svg-sprite" aria-hidden="true">
@@ -111,7 +111,7 @@
       <aside class="birth-side-copy">
         <p>당신의 이야기는<br>이미 이 안에 있습니다.<br>이제, 그 흐름을<br>함께 읽어볼게요.</p>
         <img src="/oracle/tassel.svg" alt="" aria-hidden="true">
-        <a href="#results">사주 리포트 보기 <span aria-hidden="true">→</span></a>
+        <button class="birth-side-submit" type="submit" form="birthForm">사주 리포트 보기 <span aria-hidden="true">→</span></button>
       </aside>
     </section>
 
@@ -156,7 +156,7 @@
         <div class="daily-layout">
           <article id="dailyPrimary" class="daily-primary"><p id="todaySummary" class="daily-summary"></p><div id="todayLucky" class="lucky-strip"></div></article>
           <div id="dailyMetrics" class="daily-metrics"></div>
-          <aside class="today-quote-panel"><span>“</span><blockquote>새로운 기회가<br>다가오는 날입니다.</blockquote><p>평소보다 열린 마음으로 소통하면 좋은 인연과 기회를 만날 수 있어요.</p><i aria-hidden="true">→</i></aside>
+          <aside class="today-quote-panel"><span>“</span><blockquote id="todayQuoteTitle">오늘의 흐름을 차분히 읽어보세요.</blockquote><p id="todayQuoteBody">오늘의 원국 관계를 바탕으로 현실적인 행동 포인트를 정리합니다.</p><i aria-hidden="true">→</i></aside>
         </div>
       </section>
 
@@ -169,16 +169,12 @@
           <div class="annual-scene" aria-hidden="true"></div>
           <div class="annual-copy">
             <span class="annual-quote-mark">“</span>
-            <blockquote>변화는 언제나,<br>더 나은 나를 위한 과정입니다.</blockquote>
-            <p>올해는 새로운 가능성이 열리는 확장의 시기입니다. 흐름을 이해하고 기회를 준비하세요.</p>
+            <blockquote id="annualQuote">올해의 큰 흐름을 읽는 중입니다.</blockquote>
+            <p id="annualGuide">연운과 원국의 관계를 바탕으로 기회와 주의점을 정리합니다.</p>
           </div>
         </div>
-        <div id="yearDeepDive"></div>
-        <div id="yearAdviceGrid"></div>
-        <div class="content-rule"></div>
         <header class="block-head"><span>QUARTERLY ACTION PLAN</span><h3>분기별 행동 계획</h3></header>
         <div id="tojungQuarterGrid" class="quarter-grid"></div>
-        <div class="month-block"><div id="monthForecast"></div></div>
       </section>
 
       <section id="tarot" class="tarot-stage">
@@ -252,6 +248,13 @@
             <div id="accuracyBasis" class="accuracy-basis"></div>
           </section>
           <section id="detailedReport" class="detailed-report"></section>
+          <section id="annualDetailReport" class="deep-report-block">
+            <header><p class="section-kicker">YEAR IN DEPTH</p><h2>올해의 상세 흐름</h2><p class="section-lead">연간 전체 해설과 월별 절기 흐름을 정밀 리포트 안에서 확인할 수 있습니다.</p></header>
+            <div id="yearDeepDive"></div>
+            <div id="yearAdviceGrid" class="advice-grid"></div>
+            <div class="month-detail-head"><h3>월별 흐름</h3><p>각 월은 양력 1일이 아니라 절입 시각을 기준으로 나뉩니다.</p></div>
+            <div id="monthForecast" class="month-forecast"></div>
+          </section>
           <section id="luck" class="deep-report-block"><header><p class="section-kicker">DECADE LUCK</p><h2>인생의 큰 계절</h2><p id="luckMeta" class="section-lead"></p></header><div id="luckOverview" class="luck-overview"></div><div id="luckTimeline" class="luck-timeline"></div></section>
           <section id="expert" class="deep-report-block"><header><p class="section-kicker">NATAL CHART</p><h2>계산 근거와 원국</h2></header><div id="expertGuide"></div><div id="pillarGrid" class="pillar-grid"></div><div id="elementChart" class="bar-list"></div><div id="roleChart" class="bar-list"></div><div id="relationGrid"></div><div id="mbtiAxes"></div></section>
         </div>
