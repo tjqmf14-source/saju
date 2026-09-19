@@ -6,11 +6,11 @@ const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const css = await readFile(new URL('../site-v9.css', import.meta.url), 'utf8');
 const ui = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
 
-test('production saju theme is light editorial while tarot remains dark', () => {
-  assert.match(css, /FINAL EDITORIAL LIGHT/);
-  assert.match(css, /--paper:#f2efe7/);
-  assert.match(css, /body\[data-theme="modern-oracle"\]\{[\s\S]*background:var\(--paper\)/);
-  assert.match(css, /tarot-stage[\s\S]*background:[\s\S]*var\(--tarot\)/);
+test('production saju theme follows the supplied dark navy and antique-gold reference', () => {
+  assert.match(css, /REFERENCE SCREENSHOT LOCK/);
+  assert.match(css, /#05111e/);
+  assert.match(css, /url\('\/oracle\/hero-scene\.svg'\)/);
+  assert.match(css, /daily-primary-score[\s\S]*border-radius:50%/);
 });
 
 test('tarot starts with an explicit fan-and-pick interaction', () => {
