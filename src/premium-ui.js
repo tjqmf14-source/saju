@@ -6,7 +6,7 @@ import {
 } from './saju-engine.js';
 import { calculateSajuMbti } from './mbti.js';
 import { buildDetailedInterpretation } from './interpretation.js';
-import { drawTarot, interpretSpread } from './tarot.js';
+import { prepareTarotFan, interpretSpread } from './tarot.js';
 import { calculateDailyScores } from './daily-score.js';
 import { buildPlainChartGuide } from './plain-chart.js';
 import { ROLE_LABELS, ELEMENT_LABELS, stemByName, branchByName } from './data.js';
@@ -119,6 +119,10 @@ function syncPrecisionUi(){
 function formatSolar(solar){ return `${solar.year}.${String(solar.month).padStart(2,'0')}.${String(solar.day).padStart(2,'0')}`; }
 function formatLunar(lunar){ return `${lunar.year}년 ${lunar.isLeap?'윤':''}${lunar.month}월 ${lunar.day}일`; }
 function formatKstBoundary(date){ return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(date); }
+function kstMonthNumber(date){
+  const part=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',month:'2-digit'}).formatToParts(date).find((item)=>item.type==='month');
+  return part?.value || '—';
+}
 
 function renderAccuracyBasis(chart){
   const items=[
@@ -199,12 +203,14 @@ function renderYear(yearFlow,monthFlows){
   $('yearSummary').textContent=`${copy.summary}입니다. ${copy.opportunity}에 집중하면 흐름을 활용하기 좋고, ${copy.caution}은 올해 반복해서 점검할 주제입니다. 원국과의 관계 신호는 ${relationLabel(yearFlow.relations)}입니다.`;
   $('yearDeepDive').innerHTML=`<article class="year-essay"><span class="micro">YEAR IN DEPTH</span><h3>올해 전체 흐름</h3><p>${copy.summary}이라는 말은 단순히 좋은 일이 생긴다는 뜻이 아니라, 올해 여러 선택에서 ${copy.label}의 주제가 반복해서 나타날 가능성이 높다는 뜻입니다. ${copy.opportunity}을 실제 행동으로 연결할수록 체감이 좋아질 수 있고, 반대로 ${copy.caution}이 반복될 때는 속도를 늦추고 방향을 다시 확인하는 편이 좋습니다.</p><p><strong>현실적인 조언.</strong> ${copy.work} 중요한 선택을 한 번에 크게 벌이기보다 지금 가진 시간·돈·관계 자원을 점검한 뒤, 성과가 확인되는 영역부터 단계적으로 넓혀가세요.</p><p><strong>주의할 점.</strong> ${copy.caution}은 불안해하라는 경고가 아니라 올해의 체크리스트에 가깝습니다. 계약·지출·관계 결정은 감정이 가장 큰 순간보다 자료와 조건을 다시 본 뒤 결정하는 편이 안전합니다.</p></article>`;
   $('yearAdviceGrid').innerHTML=[['올해의 기회',copy.opportunity],['주의할 패턴',copy.caution],['돈의 포인트',copy.money],['관계의 포인트',copy.love]].map(([title,body])=>`<article class="advice-card"><span>${title}</span><p>${body}</p></article>`).join('');
-  const quarterNames=['1–3월 · 방향을 잡는 구간','4–6월 · 속도를 조절하는 구간','7–9월 · 중심을 다지는 구간','10–12월 · 정리와 다음 준비'];
-  $('tojungQuarterGrid').innerHTML=[0,3,6,9].map((start,index)=>{
-    const group=dominantGroup(monthFlows.slice(start,start+3)); const c=GROUP_COPY[group];
-    return `<article class="quarter-card"><span>${String(index+1).padStart(2,'0')}</span><div><h3>${quarterNames[index]}</h3><strong>${c.summary}</strong><p>${c.opportunity}을 생활에서 실제로 실행해 보고, ${c.caution}이 반복되면 우선순위를 줄여보세요. 이 분기의 핵심은 결과를 재촉하기보다 다음 분기까지 이어질 수 있는 리듬을 만드는 것입니다.</p></div></article>`;
+  const quarterStarts=[0,3,6,9];
+  $('tojungQuarterGrid').innerHTML=quarterStarts.map((start,index)=>{
+    const slice=monthFlows.slice(start,start+3);
+    const group=dominantGroup(slice); const c=GROUP_COPY[group];
+    const from=kstMonthNumber(slice[0].start), to=kstMonthNumber(slice.at(-1).start);
+    return `<article class="quarter-card"><span>${String(index+1).padStart(2,'0')}</span><div><h3>${from}월~${to}월 · 절기 기준</h3><strong>${c.summary}</strong><p>${c.opportunity}을 생활에서 실제로 실행해 보고, ${c.caution}이 반복되면 우선순위를 줄여보세요. 여기의 월 구간은 양력 1일이 아니라 각 절입 시각부터 시작합니다.</p></div></article>`;
   }).join('');
-  $('monthForecast').innerHTML=monthFlows.map((item)=>{const c=GROUP_COPY[item.group];return `<article class="month-card"><div class="month-card-head"><span class="month-number">${String(item.month).padStart(2,'0')}</span><strong>${ROLE_LABELS[item.group]}</strong></div><p>${c.summary}. ${c.opportunity}을 우선하고 ${c.caution}은 줄여보세요. 한 달 전체를 미리 단정하기보다, 반복해서 같은 문제가 생길 때 이 문장을 행동 기준으로 활용하는 편이 좋습니다.</p><small>절입 기준 ${formatKstBoundary(item.start)} · ${item.korean} · ${item.tenGod}</small></article>`;}).join('');
+  $('monthForecast').innerHTML=monthFlows.map((item)=>{const c=GROUP_COPY[item.group];const month=kstMonthNumber(item.start);return `<article class="month-card"><div class="month-card-head"><span class="month-number">${month}</span><strong>${month}월 절기운 · ${ROLE_LABELS[item.group]}</strong></div><p>${c.summary}. ${c.opportunity}을 우선하고 ${c.caution}은 줄여보세요. 이 월운은 양력 월초가 아니라 아래 절입 시각부터 다음 절입 직전까지의 흐름입니다.</p><small>${formatKstBoundary(item.start)} ~ ${formatKstBoundary(item.end)} · ${item.korean} · ${item.tenGod}</small></article>`;}).join('');
 }
 
 function luckGroup(chart,item,index){
@@ -306,21 +312,65 @@ function renderAll(){
   }
 }
 
+let tarotSession=null;
+
+function tarotPickCount(mode){ return mode==='today'?1:3; }
+function tarotFanSize(mode){ return mode==='today'?12:18; }
+
 function renderTarot(mode,draw,reading,question){
-  $('tarotDeck').innerHTML=draw.map((item,index)=>`<article class="tarot-card" data-card="${index}"><div class="tarot-card-inner"><div class="tarot-face tarot-back"></div><div class="tarot-face tarot-front"><div><span class="arcana-no">${item.card.arcana==='major'?String(item.card.rank).padStart(2,'0'):item.card.en}</span><div class="tarot-illustration"><img class="tarot-card-image" src="${item.card.image}" alt="${item.card.en} Rider-Waite-Smith 카드" loading="eager"></div><strong>${item.card.name}</strong><small>${item.card.en}<br>${item.reversed?'REVERSED · 역방향':'UPRIGHT · 정방향'}</small></div></div></div></article>`).join('');
-  requestAnimationFrame(()=>setTimeout(()=>document.querySelectorAll('.tarot-card').forEach((card)=>card.classList.add('revealed')),60));
+  const deck=$('tarotDeck');
+  deck.className=`tarot-deck tarot-reveal-deck${draw.length===1?' one-card':''}`;
+  deck.innerHTML=draw.map((item,index)=>`<article class="tarot-card" data-card="${index}"><div class="tarot-card-inner"><div class="tarot-face tarot-back"></div><div class="tarot-face tarot-front"><div><span class="arcana-no">${item.card.arcana==='major'?String(item.card.rank).padStart(2,'0'):item.card.en}</span><div class="tarot-illustration"><img class="tarot-card-image" src="${item.card.image}" alt="${item.card.en} Rider-Waite-Smith 카드" loading="eager"></div><strong>${item.card.name}</strong><small>${item.card.en}<br>${item.reversed?'REVERSED · 역방향':'UPRIGHT · 정방향'}</small></div></div></div></article>`).join('');
+  requestAnimationFrame(()=>setTimeout(()=>deck.querySelectorAll('.tarot-card').forEach((card)=>card.classList.add('revealed')),60));
   const questionLine=question?`<p class="tarot-question-line">질문 · ${escapeHtml(question)}</p>`:'';
   $('tarotResult').innerHTML=questionLine+reading.map((item)=>`<article class="tarot-reading"><div class="tarot-reading-head"><span>${item.position}</span><div><h3>${item.card.name} · ${item.orientation}</h3><p class="tarot-keywords">${item.card.keywords}</p></div></div><div class="tarot-reading-grid"><div><strong>카드의 뜻</strong><p>${item.meaning}</p></div><div><strong>그림이 말하는 상징</strong><p>${item.symbolism}</p></div><div><strong>지금 적용할 조언</strong><p>${item.advice}</p></div></div><p class="tarot-reading-note">타로는 미래를 확정하는 예언이 아니라 현재 질문을 다른 각도에서 살펴보기 위한 상징적 참고 도구입니다.</p></article>`).join('');
+  $('tarotHelp').textContent='선택한 카드를 펼쳤습니다. 같은 질문으로 다시 보고 싶다면 카드를 다시 섞어 직접 선택하세요.';
+  $('drawTarot').querySelector('span')?.replaceChildren(document.createTextNode(''));
+}
+
+function renderTarotFan(){
+  if(!tarotSession) return;
+  const {fan,selected,count}=tarotSession;
+  const deck=$('tarotDeck');
+  deck.className='tarot-deck tarot-pick-deck';
+  const mid=(fan.length-1)/2;
+  deck.innerHTML=fan.map((item,index)=>{
+    const distance=index-mid;
+    const drop=Math.round(Math.abs(distance)*Math.abs(distance)*0.55);
+    const rotation=(distance*1.45).toFixed(2);
+    const picked=selected.includes(index);
+    return `<button type="button" class="tarot-pick${picked?' selected':''}" data-pick="${index}" aria-pressed="${picked}" aria-label="타로 카드 ${index+1} 선택" style="--rot:${rotation}deg;--drop:${drop}px;--z:${index+1}"><span class="tarot-pick-back" aria-hidden="true"><i></i></span><span class="tarot-pick-number">${String(index+1).padStart(2,'0')}</span></button>`;
+  }).join('');
+  $('tarotResult').innerHTML=`<div class="tarot-pick-status"><strong>${count}장 중 ${selected.length}장 선택</strong><span>${selected.length<count?'끌리는 카드를 직접 골라주세요.':'선택한 카드를 펼치는 중입니다.'}</span></div>`;
+  deck.querySelectorAll('.tarot-pick').forEach((button)=>button.addEventListener('click',()=>selectTarotCard(Number(button.dataset.pick))));
+}
+
+function selectTarotCard(index){
+  if(!tarotSession || tarotSession.selected.includes(index) || tarotSession.selected.length>=tarotSession.count) return;
+  tarotSession.selected.push(index);
+  renderTarotFan();
+  if(tarotSession.selected.length===tarotSession.count){
+    const chosen=tarotSession.selected.map((i)=>tarotSession.fan[i]);
+    const reading=interpretSpread(tarotSession.mode,chosen);
+    const question=tarotSession.question;
+    const delay=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches?0:280;
+    setTimeout(()=>renderTarot(tarotSession.mode,chosen,reading,question),delay);
+  }
 }
 
 function handleTarot(){
   const mode=$('tarotMode').value;
-  const count=mode==='today'?1:3;
-  const draw=drawTarot(count);
-  const reading=interpretSpread(mode,draw);
-  renderTarot(mode,draw,reading,$('tarotQuestion').value.trim());
+  tarotSession={
+    mode,
+    count:tarotPickCount(mode),
+    fan:prepareTarotFan(tarotFanSize(mode)),
+    selected:[],
+    question:$('tarotQuestion').value.trim()
+  };
+  $('tarotHelp').textContent=`${tarotSession.fan.length}장의 카드를 섞어 펼쳤습니다. ${tarotSession.count}장을 직접 선택하세요. 카드의 정·역방향은 선택 순간 이미 정해져 있지만 그림은 읽기 쉽게 항상 정상 방향으로 표시합니다.`;
+  $('drawTarot').innerHTML='다시 섞기 <b aria-hidden="true">↻</b>';
+  renderTarotFan();
 }
-
 
 function setupSectionSpy(){
   const links=[...document.querySelectorAll('.topnav a[href^="#"], .report-nav a[href^="#"]')];
