@@ -123,6 +123,7 @@ test('tarot exposes all 78 cards in an accessible rolling selector', async ({ pa
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   await expect(page.locator('.tarot-preview-card')).toHaveCount(3);
+  await page.locator('#tarotMode').selectOption('question');
   await page.locator('#drawTarot').click();
   await expect(page.locator('.tarot-pick')).toHaveCount(78);
   await expect(page.locator('.tarot-roller-viewport')).toBeVisible();
