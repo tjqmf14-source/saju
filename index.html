@@ -120,7 +120,7 @@
             <label><input type="radio" name="calendar" value="solar" checked><span>양력</span></label>
             <label><input type="radio" name="calendar" value="lunar"><span>음력</span></label>
           </fieldset>
-          <label class="precision-switch"><input id="precisionToggle" type="checkbox" checked><span aria-hidden="true"></span><b>정밀 계산</b></label>
+          <label class="precision-switch"><input id="precisionToggle" type="checkbox" checked><span aria-hidden="true"></span><b>진태양시 보정</b></label>
         </div>
 
         <div class="form-grid">
@@ -138,7 +138,7 @@
           <div class="precision-grid">
             <label><span>출생 지역</span><select id="birthLocation"><option value="korea" selected>대한민국 평균</option><option value="seoul">서울</option><option value="busan">부산</option><option value="daegu">대구</option><option value="incheon">인천</option><option value="gwangju">광주</option><option value="daejeon">대전</option><option value="ulsan">울산</option><option value="jeju">제주</option><option value="sejong">세종</option></select></label>
             <label><span>자시 관법</span><select id="dayBoundary"><option value="midnight">자정(00:00) 기준</option><option value="jasi">자시 환일</option><option value="splitJasi">분할자시</option></select></label>
-            <div class="precision-explain"><strong>왜 정밀 계산을 쓰나요?</strong><p>출생지 경도, 균시차, 당시 한국 표준시·서머타임을 반영해 일주와 시주의 경계 오차를 줄입니다.</p></div>
+            <div class="precision-explain"><strong>왜 시간 보정을 쓰나요?</strong><p>출생지 경도와 균시차, 당시 한국 표준시·서머타임을 반영해 시각 경계의 오차를 줄입니다. 자시 관법은 이 보정과 별도로 선택할 수 있습니다.</p></div>
           </div>
         </details>
 
