@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-const css = await readFile(new URL('../site-v11.css', import.meta.url), 'utf8');
+const css = await readFile(new URL('../site-v12.css', import.meta.url), 'utf8');
 const EXPECTED_ATLAS_BYTES = 79548;
 const EXPECTED_ATLAS_SHA256 = '9ab3f1366bf1ed44b937d8abc7fcdedbf03bcc8272711ab77ea664faf11d5bb2';
 
