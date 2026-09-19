@@ -708,8 +708,7 @@ section[id],details[id]{scroll-margin-top:96px}
   .hero-visual-top{right:16px;top:18px}
   .input-panel{grid-template-columns:1fr;gap:18px;padding:24px 18px}
   .input-panel .section-heading,.input-panel form,.birth-side-copy{grid-column:1;min-width:0}
-  .birth-side-copy{padding:20px 0 0;border-left:0;border-top:1px solid var(--line-soft)}
-  .birth-side-copy img{top:18px}
+  .birth-side-copy{display:none}
   .form-grid{grid-template-columns:1fr 1fr}
   .precision-grid{grid-template-columns:1fr}
   .block-head{grid-template-columns:1fr;gap:4px;align-items:start}
@@ -766,7 +765,7 @@ section[id],details[id]{scroll-margin-top:96px}
   .form-modes{align-items:flex-start;flex-direction:column}
   .form-grid{grid-template-columns:1fr 1fr;gap:11px 9px}
   .field-name{grid-column:1/-1}
-  .birth-side-copy{padding-top:16px}.birth-side-copy p{font-size:19px;line-height:1.55}
+  .birth-side-copy{display:none}
   .visual-keyword-card{aspect-ratio:3/4}
   .quarter-grid{grid-template-columns:1fr}.quarter-card{border-right:0;border-bottom:1px solid var(--line-soft)}
   .tarot-fan-copy strong{font-size:22px}
