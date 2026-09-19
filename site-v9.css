@@ -482,39 +482,19 @@ h1,h2,h3,h4,blockquote{word-break:keep-all;overflow-wrap:anywhere}
 }
 
 
-/* FINAL EDITORIAL LIGHT — source-of-truth alignment */
-:root{
-  --paper:#f2efe7;
-  --paper-2:#e8e1d5;
-  --surface:#fffdf7;
-  --ink:#191b22;
-  --ink-soft:#4d515b;
-  --brand:#b54b3f;
-  --brand-deep:#963b33;
-  --gold:#af9567;
-  --jade:#2f6c66;
-  --tarot:#11182b;
-  --tarot-raised:#171f38;
-  --paper-line:rgba(25,27,34,.15);
-  --paper-line-soft:rgba(25,27,34,.085);
-  --shell:min(1320px,calc(100vw - 64px));
-  --radius:3px;
-  --radius-sm:2px;
-  --shadow:none;
-  --text:var(--ink);
-  --muted:var(--ink-soft);
-}
+/* REFERENCE SCREENSHOT LOCK — dark navy + antique gold, image-led layout */
 body[data-theme="modern-oracle"]{
-  background:var(--paper);
-  color:var(--ink);
-  letter-spacing:-.01em;
+  background:
+    radial-gradient(circle at 48% -8%,rgba(59,94,128,.16),transparent 30%),
+    linear-gradient(180deg,#05111e 0%,#071522 46%,#06111e 100%);
+  color:var(--text);
 }
 body[data-theme="modern-oracle"]::before{
-  opacity:.22;
   background-image:
-    linear-gradient(rgba(25,27,34,.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(25,27,34,.018) 1px,transparent 1px);
-  background-size:34px 34px;
+    radial-gradient(circle at 12% 20%,rgba(216,173,102,.08) 0 1px,transparent 1.5px),
+    radial-gradient(circle at 82% 12%,rgba(255,255,255,.11) 0 1px,transparent 1.4px);
+  background-size:160px 160px,220px 220px;
+  opacity:.55;
 }
 body[data-theme="modern-oracle"] h1,
 body[data-theme="modern-oracle"] h2,
@@ -523,355 +503,45 @@ body[data-theme="modern-oracle"] h4{color:var(--ink)}
 body[data-theme="modern-oracle"] p,
 body[data-theme="modern-oracle"] dd,
 body[data-theme="modern-oracle"] .section-lead,
-body[data-theme="modern-oracle"] .reading-lead{color:var(--ink-soft)}
-body[data-theme="modern-oracle"] .section-kicker{color:var(--brand)}
-body[data-theme="modern-oracle"] .section-no{color:var(--gold)}
-.oracle-panel{
-  border:1px solid var(--paper-line);
-  border-radius:var(--radius);
-  background:rgba(255,253,247,.52);
-  box-shadow:none;
-}
-.oracle-panel::after{background:var(--brand);opacity:.55}
-.section-heading{grid-template-columns:220px minmax(0,1fr);gap:46px;margin-bottom:42px}
-.section-heading h2{font-size:clamp(36px,3.3vw,50px);color:var(--ink)}
-.section-heading blockquote{color:var(--ink-soft);font-size:22px}
-.section-lead{font-size:17px;line-height:1.9}
-.content-rule{background:var(--paper-line)}
+body[data-theme="modern-oracle"] .reading-lead{color:inherit}
 
-body[data-theme="modern-oracle"] .topbar{
-  background:rgba(242,239,231,.94);
-  border-color:var(--paper-line);
-  box-shadow:none;
-}
-body[data-theme="modern-oracle"] .brand-word strong{color:var(--ink)}
-body[data-theme="modern-oracle"] .brand-word small{color:var(--ink-soft)}
-body[data-theme="modern-oracle"] .topnav a{color:var(--ink-soft)}
-body[data-theme="modern-oracle"] .topnav a:hover,
-body[data-theme="modern-oracle"] .topnav a[aria-current="true"]{color:var(--brand);border-color:var(--brand)}
-body[data-theme="modern-oracle"] .privacy-note{color:var(--jade)}
-.brand-oracle-mark{border:0;background:transparent}
-.premium-link{
-  border-color:var(--brand);
-  border-radius:2px;
-  color:var(--brand);
-  background:transparent;
-}
-.premium-link:hover{background:var(--brand);color:#fff}
-
-.hero-primary{min-height:660px;padding:68px 0 74px;grid-template-columns:56% 44%;gap:58px}
-.hero-copy{padding:0}
-.hero-copy::before{display:none}
-.hero-copy .section-kicker,
-.hero-copy h1,
-.hero-lead,
-.hero-cta{margin-left:0}
-.hero-copy h1{
-  max-width:720px;
-  margin-top:18px;
-  color:var(--ink);
-  font-size:clamp(54px,5vw,76px);
-  line-height:1.08;
-  text-shadow:none;
-}
-.hero-copy h1 em{color:var(--brand)}
-.hero-lead{max-width:630px;color:var(--ink-soft);font-size:18px;line-height:1.9}
-.hero-cta{
-  min-width:245px;
-  min-height:54px;
-  border:0;
-  border-radius:2px;
-  background:var(--brand);
-  color:#fff;
-  box-shadow:none;
-}
-.hero-cta:hover{background:var(--brand-deep);color:#fff;filter:none}
-.hero-proof-oracles{margin-left:0;max-width:660px;padding-top:24px;border-top:1px solid var(--paper-line)}
-.hero-proof-oracles .ui-icon{border-color:var(--paper-line);color:var(--brand);border-radius:50%}
-.hero-proof-oracles b{color:var(--ink)}
-.hero-proof-oracles small{color:var(--ink-soft)}
 .hero-visual{
-  min-height:540px;
-  aspect-ratio:auto;
-  border:1px solid var(--paper-line);
-  border-radius:2px;
   background:
-    linear-gradient(180deg,rgba(255,253,247,.08),rgba(25,27,34,.14)),
-    url('/oracle/b-visual-atlas.webp') top center/auto 115% no-repeat,
-    var(--paper-2);
-  box-shadow:none;
+    linear-gradient(90deg,#061321 0%,rgba(6,19,33,.08) 18%,transparent 38%),
+    linear-gradient(180deg,transparent 76%,rgba(6,19,33,.42)),
+    url('/oracle/hero-scene.svg') center/cover no-repeat;
 }
-.hero-visual::before{background:linear-gradient(90deg,rgba(242,239,231,.2),transparent 38%)}
-.hero-visual-top{color:#6f5941}
-.hero-visual>blockquote,.hero-visual>p,.oracle-portal,.oracle-stars{display:none}
+.atlas-card{
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+.atlas-card-1{background-image:url('/oracle/keyword-character.svg')}
+.atlas-card-2{background-image:url('/oracle/keyword-work.svg')}
+.atlas-card-3{background-image:url('/oracle/keyword-money.svg')}
+.atlas-card-4{background-image:url('/oracle/keyword-relation.svg')}
+.atlas-card-5{background-image:url('/oracle/keyword-health.svg')}
+.atlas-card-6{background-image:url('/oracle/keyword-advice.svg')}
+.annual-scene{background:url('/oracle/annual-scene.svg') center/cover no-repeat}
 
-.input-panel{
-  grid-template-columns:250px minmax(460px,1fr) 250px;
-  gap:42px;
-  padding:38px 40px;
-  background:var(--surface);
-}
-.input-panel form{
-  border:0;
-  border-left:1px solid var(--paper-line);
-  border-radius:0;
-  background:transparent;
-  padding:6px 0 6px 28px;
-}
-.input-panel .section-heading h2{color:var(--ink)}
-.segmented{border-color:var(--paper-line);border-radius:2px}
-.segmented span{border-radius:1px;color:var(--ink-soft)}
-.segmented input:checked+span{background:var(--ink);color:#fff}
-.precision-switch{color:var(--ink-soft)}
-.precision-switch input{accent-color:var(--brand)}
-.form-grid label>span,
-.precision-settings summary,
-.precision-settings summary span{color:var(--ink-soft)}
-input,select,textarea{
-  border:0;
-  border-bottom:1px solid var(--paper-line);
-  border-radius:0;
-  background:transparent;
-  color:var(--ink);
-}
-input:focus,select:focus,textarea:focus{
-  border-color:var(--brand);
-  box-shadow:none;
-}
-select option{background:var(--surface);color:var(--ink)}
-.inline-check{border:0;border-bottom:1px solid var(--paper-line);border-radius:0}
-.precision-settings{border-color:var(--paper-line)}
-.precision-settings.precision-off{opacity:.55}
-.precision-explain{border-color:var(--gold);background:transparent}
-.precision-explain strong{color:var(--ink)}
-.precision-explain p{color:var(--ink-soft)}
-.cta{border-radius:2px;background:var(--brand);color:#fff}
-.cta:hover{background:var(--brand-deep)}
-.birth-side-copy{border-color:var(--paper-line)}
-.birth-side-copy p{color:var(--ink)}
-.birth-side-copy a{border-radius:2px;background:var(--ink);color:#fff}
-
-.feature-orbit-nav{
-  border-color:var(--paper-line);
-  background:transparent;
-}
-.feature-orbit-nav a{color:var(--brand);border-color:var(--paper-line-soft)}
-.feature-orbit-nav a:hover{background:rgba(181,75,63,.045)}
-.feature-orbit-nav b{color:var(--ink)}
-.feature-orbit-nav small{color:var(--ink-soft)}
-
-.reading-opening{background:transparent;border-left:0;border-right:0;border-radius:0;padding:38px 0}
-.reading-basis{color:var(--ink-soft)}
-.reading-head{border-color:var(--paper-line)}
-.reading-head h2{color:var(--ink)}
-.reading-lead{color:var(--ink-soft)}
-.tag-row span{border-color:var(--gold);color:var(--ink-soft)}
-.mbti-type-panel{border-color:var(--paper-line)}
-.mbti-type-panel>span,.mbti-type-panel>small{color:var(--ink-soft)}
-.mbti-type-panel strong{color:var(--brand)}
-.accuracy-basis{border-color:var(--paper-line)}
-.basis-item span{color:var(--jade)}
-.basis-item strong{color:var(--ink)}
-
-.visual-keyword-showcase{
-  border-color:var(--paper-line);
-  border-radius:2px;
-  background:var(--surface);
-  padding:20px;
-}
-.visual-keyword-intro h2{color:var(--ink)}
-.visual-keyword-intro p{color:var(--ink-soft)}
-.visual-keyword-intro a{color:var(--brand)}
-.visual-keyword-card{
-  border-color:var(--paper-line);
-  border-radius:1px;
-  background:var(--paper-2);
-}
-.visual-keyword-card>div:not(.atlas-card){
-  background:linear-gradient(transparent,rgba(25,27,34,.82));
-}
-.visual-keyword-card strong{color:#fff}
-.visual-keyword-card small{color:#e8e3da}
-
-.report-nav{
-  border-color:var(--paper-line);
-  background:rgba(242,239,231,.95);
-  box-shadow:none;
-}
-.report-nav a{border-color:var(--paper-line-soft);color:var(--ink-soft)}
-.report-nav a:hover,.report-nav a[aria-current="true"]{color:var(--brand);background:transparent}
-
-.detailed-report{gap:0}
-.detail-chapter{
-  grid-template-columns:210px minmax(0,1fr);
-  border:0;
-  border-top:1px solid var(--paper-line);
-  border-radius:0;
-  background:transparent;
-}
-.detail-chapter:last-child{border-bottom:1px solid var(--paper-line)}
-.detail-visual{min-height:240px;border-color:var(--paper-line-soft)}
-.detail-disclosure summary{min-height:240px;padding:30px 26px}
-.detail-disclosure summary>span{color:var(--gold)}
-.detail-disclosure summary h3{color:var(--ink);font-size:28px}
-.detail-disclosure summary p{color:var(--ink-soft);font-size:15px;line-height:1.85}
-.detail-toggle{border-color:var(--paper-line);color:var(--brand)}
-.detail-chapter-body{max-width:820px;border-color:var(--paper-line-soft);padding:0 30px 30px 50px}
-.detail-chapter-body p{color:#30333a;font-size:16.5px;line-height:1.95}
-
-#today{
-  border:0;
-  border-top:1px solid var(--paper-line);
-  border-bottom:1px solid var(--paper-line);
-  border-radius:0;
-  background:transparent;
-  padding:42px 0;
-}
-#today .section-heading h2{color:var(--ink)}
+/* The supplied reference uses a circular daily score, not a rectangular editorial score. */
 .daily-primary-score{
-  width:auto;height:auto;margin:0 0 28px;
-  display:flex;align-items:baseline;justify-content:flex-start;gap:10px;
-  border:0;border-radius:0;background:transparent;box-shadow:none;
-}
-.daily-primary-score strong{color:var(--brand);font-size:78px}
-.daily-primary-score small{color:var(--ink-soft)}
-.daily-summary{color:var(--ink);font-size:20px;line-height:1.8;text-align:left}
-.metric-row{border-color:var(--paper-line)}
-.daily-index{color:var(--gold)}
-.metric-name .ui-icon{color:var(--brand)}
-.metric-label{color:var(--ink)}
-.metric-score{color:var(--brand)}
-.metric-copy p,.metric-copy small{color:var(--ink-soft)}
-.metric-track{background:var(--paper-2)}
-.metric-track span{background:var(--brand)}
-.today-quote-panel{
-  border:0;border-left:1px solid var(--paper-line);border-radius:0;background:transparent;color:var(--ink);box-shadow:none
-}
-.today-quote-panel blockquote{color:var(--ink)}
-.today-quote-panel p{color:var(--ink-soft)}
-
-.year-panel,.luck-panel,.expert-panel{
-  border:0;
-  border-top:1px solid var(--paper-line);
-  border-radius:0;
-  background:transparent;
-  box-shadow:none;
-  padding:42px 0;
-}
-.annual-visual-copy{
-  border:1px solid var(--paper-line);
-  border-radius:0;
-  background:var(--surface);
-}
-.annual-copy{background:transparent}
-.annual-copy blockquote{color:var(--ink)}
-.annual-copy p{color:var(--ink-soft)}
-.year-essay{border-color:var(--paper-line)}
-.year-essay h3{color:var(--ink)}
-.year-essay p{color:#30333a}
-.advice-card{border-color:var(--ink)}
-.advice-card span{color:var(--brand)}
-.advice-card p{color:var(--ink-soft)}
-.quarter-grid,.month-grid{border-color:var(--paper-line);background:transparent}
-.quarter-card,.month-card{background:transparent;border-color:var(--paper-line)}
-.quarter-card span,.month-number{color:var(--brand)}
-.quarter-card h3,.month-card strong{color:var(--ink)}
-.quarter-card p,.month-card p{color:var(--ink-soft)}
-.month-card small{color:var(--gold)}
-
-.decade-celestial-track .decade-line,
-.decade-celestial-track .current-axis,
-.decade-celestial-track .decade-stars{stroke:rgba(25,27,34,.2)}
-.decade-celestial-track .current-orbit{stroke:var(--brand)}
-.decade-celestial-track .current-node{fill:var(--brand)}
-.decade-celestial-track span{color:var(--ink-soft)}
-.luck-overview{border-color:var(--paper-line);background:transparent}
-.luck-overview-item{background:transparent}
-.luck-overview-item.active{box-shadow:inset 0 3px 0 var(--brand);background:rgba(181,75,63,.035)}
-.luck-overview-item span,.luck-overview-item small{color:var(--ink-soft)}
-.luck-overview-item strong{color:var(--ink)}
-.luck-overview-item p{color:var(--ink-soft)}
-.luck-timeline,.luck-step{border-color:var(--paper-line)}
-.luck-step-head span{color:var(--brand)}
-.luck-step-head strong,.luck-theme{color:var(--ink)}
-.luck-step-head small,.luck-step-body>p{color:var(--ink-soft)}
-.luck-narrative-grid div{border-color:var(--paper-line)}
-.luck-narrative-grid strong{color:var(--brand)}
-.luck-narrative-grid p{color:var(--ink-soft)}
-
-.natal-orbit-graphic{
-  border-color:var(--paper-line);
-  background:var(--surface);
-}
-.natal-ring,.natal-axis,.natal-triangle{stroke:rgba(25,27,34,.22)}
-.natal-orbit-graphic text{fill:var(--brand)}
-.natal-orbit-graphic>div{background:var(--paper-line)}
-.natal-orbit-graphic>div span{background:var(--surface);color:var(--ink-soft)}
-.expert-guide-head,.expert-story-grid,.expert-story-card{border-color:var(--paper-line)}
-.expert-guide-head h3,.expert-story-card h4{color:var(--ink)}
-.expert-guide-head p,.story-summary{color:var(--ink-soft)}
-.life-example{border-color:var(--jade);background:transparent}
-.life-example strong{color:var(--jade)}
-.life-example p,.expert-evidence p{color:var(--ink-soft)}
-.expert-evidence summary{color:var(--brand)}
-.expert-glossary{border-color:var(--paper-line)}
-.expert-glossary h4{color:var(--ink)}
-.expert-glossary dt{color:var(--brand)}
-.expert-glossary dd{color:var(--ink-soft)}
-.expert-raw-intro{color:var(--ink-soft)}
-.raw-data-group>details{border-color:var(--paper-line)}
-.raw-data-group>details>summary{color:var(--ink)}
-.pillar-card{border-color:var(--paper-line);background:transparent}
-.pillar-card>span{color:var(--gold)}
-.pillar-letters{color:var(--brand)}
-.pillar-card dt{color:var(--ink-soft)}
-.pillar-card dd{color:var(--ink)}
-.bar-track,.axis-track{background:var(--paper-2)}
-.bar-fill{background:var(--jade)}
-.relation-card{border:0;border-left:2px solid var(--gold);background:transparent}
-.relation-card strong{color:var(--ink)}
-.relation-card p{color:var(--ink-soft)}
-.axis-side{color:var(--brand)}
-.axis-side small,.axis-row p{color:var(--ink-soft)}
-.axis-left{background:var(--brand)}
-.axis-right{background:var(--jade)}
-
-.site-footer{border-color:var(--paper-line);color:var(--ink-soft)}
-.site-footer strong{color:var(--ink)}
-.site-footer p{color:var(--ink-soft)}
-
-/* Tarot remains the single persistent dark stage. */
-body[data-theme="modern-oracle"] .tarot-stage{
+  display:grid;
+  place-content:center;
+  justify-items:center;
+  width:220px;
+  height:220px;
+  margin:0 auto 20px;
+  border:1px solid rgba(216,173,102,.22);
+  border-radius:50%;
   background:
-    radial-gradient(circle at 84% 12%,rgba(175,149,103,.08),transparent 28%),
-    var(--tarot);
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:2px;
-  color:#fffdf7;
-  box-shadow:none;
+    radial-gradient(circle,#0a1a2a 0 60%,transparent 61%),
+    conic-gradient(var(--gold) 0 78%,rgba(216,173,102,.11) 78% 100%);
+  box-shadow:inset 0 0 0 12px #081624;
 }
-body[data-theme="modern-oracle"] .tarot-stage h2,
-body[data-theme="modern-oracle"] .tarot-stage h3,
-body[data-theme="modern-oracle"] .tarot-stage h4{color:#fffdf7}
-body[data-theme="modern-oracle"] .tarot-stage p{color:#b9c0d0}
-body[data-theme="modern-oracle"] .tarot-stage .section-kicker,
-body[data-theme="modern-oracle"] .tarot-stage .section-no{color:#c8aa73}
-.tarot-controls label>span{color:#b9c0d0}
-.tarot-controls select,.tarot-controls textarea{
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:2px;
-  background:rgba(255,255,255,.025);
-  color:#fffdf7;
-  padding:10px 12px;
-}
-.tarot-controls select option{background:var(--tarot);color:#fff}
-.tarot-button{
-  border:1px solid #c8aa73;
-  border-radius:2px;
-  background:transparent;
-  color:#f4e6c3;
-}
-.tarot-button:hover{background:#c8aa73;color:var(--tarot)}
+.daily-primary-score strong{color:var(--gold-bright);font-family:var(--display);font-size:64px;line-height:1}
+.daily-primary-score small{color:#8492a2;font-size:10px}
+
 
 /* Direct-choice tarot fan */
 .tarot-pick-deck{
