@@ -150,7 +150,23 @@ test('tarot exposes all 78 cards as one overlapping fan without a scrollbar', as
   }
 
   await expect(page.locator('.tarot-card')).toHaveCount(3);
+  await expect(page.locator('.tarot-card-caption')).toHaveCount(3);
   await expect(page.locator('.tarot-reading')).toHaveCount(3);
+
+  const revealGeometry=await page.evaluate(() => {
+    const captions=[...document.querySelectorAll('.tarot-card-caption')].map((el)=>{
+      const r=el.getBoundingClientRect();
+      return {bottom:r.bottom,height:r.height,scrollHeight:el.scrollHeight,clientHeight:el.clientHeight};
+    });
+    const firstReading=document.querySelector('.tarot-reading')?.getBoundingClientRect();
+    return {captions,readingTop:firstReading?.top ?? 0};
+  });
+  const maxCaptionBottom=Math.max(...revealGeometry.captions.map((item)=>item.bottom));
+  expect(revealGeometry.readingTop).toBeGreaterThan(maxCaptionBottom + 8);
+  for(const caption of revealGeometry.captions){
+    expect(caption.scrollHeight).toBeLessThanOrEqual(caption.clientHeight + 1);
+  }
+
   await assertNoHorizontalOverflow(page);
 });
 
