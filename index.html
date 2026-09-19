@@ -32,7 +32,7 @@
       <a href="#today">오늘의운세</a>
       <a href="#year">올해의흐름</a>
       <a href="#tarot">타로</a>
-      <a href="#reviews">리포트 구성</a>
+      <a href="#reviews">해석 기준</a>
       <a href="#faq">자주 묻는 질문</a>
     </nav>
     <div class="topbar-actions">
@@ -203,20 +203,20 @@
             <label><span>질문 <small>(저장되지 않음)</small></span><textarea id="tarotQuestion" rows="2" placeholder="예: 지금 이 선택에서 무엇을 먼저 봐야 할까?"></textarea></label>
             <button id="drawTarot" class="tarot-button" type="button" aria-describedby="tarotHelp">타로 리딩 시작하기 <b aria-hidden="true">✦</b></button>
           </div>
-          <div id="tarotDeck" class="tarot-deck" aria-live="polite"></div>
-          <div id="tarotResult" class="tarot-result"></div>
+          <div id="tarotDeck" class="tarot-deck" aria-live="off"></div>
+          <div id="tarotResult" class="tarot-result" aria-live="polite"></div>
         </div>
       </section>
 
       <section id="reviews" class="reviews-section oracle-panel agency-shell" aria-labelledby="reviewsHeading">
         <header class="reviews-head">
-          <div><span class="section-no">06</span><p class="section-kicker">리포트 구성</p></div>
-          <div><h2 id="reviewsHeading">무엇을 읽어주는지 먼저 확인하세요.</h2><p class="section-lead">과장된 후기 대신 실제 리포트가 다루는 범위를 투명하게 보여드립니다.</p></div>
+          <div><span class="section-no">06</span><p class="section-kicker">해석 기준</p></div>
+          <div><h2 id="reviewsHeading">계산과 해석의 경계를 분명하게.</h2><p class="section-lead">최종 빌드에서는 중복 소개나 과장된 후기보다 결과가 어디에서 왔는지 확인할 수 있는 신뢰 구조를 우선합니다.</p></div>
         </header>
-        <div class="review-grid">
-          <article class="review-card"><span class="quote">01</span><h3>성격 · 관계</h3><p>일간과 오행, 십성의 분포를 바탕으로 타고난 반응 방식과 사람 사이에서 반복되기 쉬운 패턴을 생활 언어로 풀어냅니다.</p><footer>원국 기반 · 성향 해석</footer></article>
-          <article class="review-card"><span class="quote">02</span><h3>일 · 재물</h3><p>강점이 드러나는 업무 방식, 책임과 성과의 흐름, 돈을 다루는 습관처럼 현실에서 바로 확인할 수 있는 주제를 중심으로 정리합니다.</p><footer>십성 기반 · 현실 적용</footer></article>
-          <article class="review-card"><span class="quote">03</span><h3>오늘 · 올해 · 대운</h3><p>현재 원국 위에 들어오는 일진·연운·대운을 분리해서 보여주고, 확정적 예언이 아니라 선택을 점검하는 참고 정보로 제공합니다.</p><footer>시간 흐름 · 참고 해석</footer></article>
+        <div class="review-grid trust-grid">
+          <article class="review-card trust-card"><span class="quote">01</span><h3>계산 근거 공개</h3><p>양력·음력 변환, 절기 경계, 출생 지역과 시간 보정처럼 결과에 직접 영향을 주는 계산 기준을 정밀 리포트에서 확인할 수 있습니다.</p><footer>CALCULATION · 확인 가능한 근거</footer></article>
+          <article class="review-card trust-card"><span class="quote">02</span><h3>해석과 예측 분리</h3><p>원국과 운의 관계를 설명하되 확정적인 미래 예언으로 표현하지 않습니다. 계산 데이터와 생활 언어 해설의 성격을 구분해 제공합니다.</p><footer>INTERPRETATION · 참고를 위한 해석</footer></article>
+          <article class="review-card trust-card"><span class="quote">03</span><h3>개인정보 최소화</h3><p>현재 버전은 생년월일과 타로 질문을 브라우저 안에서 처리하며 별도의 계정·결제·서버 저장 기능을 전제로 하지 않습니다.</p><footer>PRIVACY · 로컬 처리 우선</footer></article>
         </div>
       </section>
 
