@@ -1,10 +1,23 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { MAJOR_ARCANA, drawTarot, interpretSpread } from '../src/tarot.js';
+import { MAJOR_ARCANA, prepareTarotFan, drawTarot, interpretSpread } from '../src/tarot.js';
 
 test('major arcana contains 22 unique cards', () => {
   assert.equal(MAJOR_ARCANA.length, 22);
   assert.equal(new Set(MAJOR_ARCANA.map((c)=>c.id)).size, 22);
+});
+
+
+test('selection fan prepares unique hidden choices', () => {
+  const fan = prepareTarotFan(18, ()=>0.37);
+  assert.equal(fan.length, 18);
+  assert.equal(new Set(fan.map((item)=>item.card.id)).size, 18);
+  assert.ok(fan.every((item)=>typeof item.reversed === 'boolean'));
+});
+
+test('selection fan validates its size', () => {
+  assert.throws(()=>prepareTarotFan(2), RangeError);
+  assert.throws(()=>prepareTarotFan(79), RangeError);
 });
 
 test('three card draw has no duplicate cards', () => {
