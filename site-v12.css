@@ -189,8 +189,9 @@ section[id],details[id]{scroll-margin-top:96px}
 .precision-settings summary{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;color:var(--gold-bright);cursor:pointer}
 .precision-settings summary span{color:var(--muted)}
 .precision-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-bottom:8px}
-.precision-grid label{display:grid;gap:6px;color:var(--muted)}
-.precision-grid select{height:46px;padding:0 10px;border:1px solid var(--line-soft);border-radius:4px;background:#071827;color:var(--ink)}
+.precision-grid>*{min-width:0}
+.precision-grid label{display:grid;gap:6px;min-width:0;color:var(--muted)}
+.precision-grid select{width:100%;min-width:0;height:46px;padding:0 10px;border:1px solid var(--line-soft);border-radius:4px;background:#071827;color:var(--ink)}
 .precision-explain{display:none}
 .form-submit-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:15px}
 .form-error{margin:0;color:#f0a0a0;font-size:15px}
@@ -299,7 +300,7 @@ section[id],details[id]{scroll-margin-top:96px}
 .annual-quote-mark{color:var(--gold);font-family:var(--serif);font-size:44px;line-height:.6}
 .annual-copy blockquote{margin:12px 0 14px;font-family:var(--serif);font-size:27px;line-height:1.45}
 .annual-copy p{margin:0;color:var(--muted);font-size:15px}
-.block-head{display:grid;grid-template-columns:230px 1fr;gap:26px;align-items:end;margin:18px 0 12px;padding-top:4px}
+.block-head{display:grid;grid-template-columns:230px minmax(0,1fr);gap:26px;align-items:end;margin:18px 0 12px;padding-top:4px}
 .block-head span{color:var(--gold);font-size:15px;letter-spacing:.1em}
 .block-head h3{margin:0;font-family:var(--serif);font-size:24px}
 .quarter-grid{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line-soft)}
@@ -613,6 +614,8 @@ section[id],details[id]{scroll-margin-top:96px}
   .birth-side-copy{padding:20px 0 0;border-left:0;border-top:1px solid var(--line-soft)}
   .birth-side-copy img{top:18px}
   .form-grid{grid-template-columns:1fr 1fr}
+  .precision-grid{grid-template-columns:1fr}
+  .block-head{grid-template-columns:1fr;gap:4px;align-items:start}
   .feature-orbit-nav{grid-template-columns:repeat(2,1fr)}
   .feature-orbit-nav a{justify-content:flex-start;padding-left:18px;border-bottom:1px solid var(--line-soft)}
   .feature-orbit-nav a:nth-child(even){border-right:0}
