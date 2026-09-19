@@ -211,7 +211,7 @@ function renderYear(yearFlow,monthFlows){
     const from=kstMonthNumber(slice[0].start), to=kstMonthNumber(slice.at(-1).start);
     return `<article class="quarter-card"><span>${String(index+1).padStart(2,'0')}</span><div><h3>${from}월~${to}월 · 절기 기준</h3><strong>${c.summary}</strong><p>${c.opportunity}을 생활에서 실제로 실행해 보고, ${c.caution}이 반복되면 우선순위를 줄여보세요. 여기의 월 구간은 양력 1일이 아니라 각 절입 시각부터 시작합니다.</p></div></article>`;
   }).join('');
-  $('monthForecast').innerHTML=monthFlows.map((item)=>{const c=GROUP_COPY[item.group];const month=kstMonthNumber(item.start);return `<article class="month-card"><div class="month-card-head"><span class="month-number">${month}</span><strong>${month}월 절기운 · ${ROLE_LABELS[item.group]}</strong></div><p>${c.summary}. ${c.opportunity}을 우선하고 ${c.caution}은 줄여보세요. 이 월운은 양력 월초가 아니라 아래 절입 시각부터 다음 절입 직전까지의 흐름입니다.</p><small>${formatKstBoundary(item.start)} ~ ${formatKstBoundary(item.end)} · ${item.korean} · ${item.tenGod}</small></article>`;}).join('');
+  $('monthForecast').innerHTML=monthFlows.map((item)=>{const c=GROUP_COPY[item.group];const month=kstMonthNumber(item.start);return `<article class="month-card"><div class="month-card-head"><span class="month-number">${month}</span><strong>${month}월 절기운 · ${ROLE_LABELS[item.group]}</strong></div><p>${c.summary}. ${c.opportunity}을 우선하고 ${c.caution}은 줄여보세요. 이 월운은 양력 월초가 아니라 아래 절입 시각부터 다음 절입 직전까지의 흐름입니다. 반복해서 같은 문제가 생길 때 이 문장을 행동 기준으로 활용해 보세요.</p><small>${formatKstBoundary(item.start)} ~ ${formatKstBoundary(item.end)} · ${item.korean} · ${item.tenGod}</small></article>`;}).join('');
 }
 
 function luckGroup(chart,item,index){
