@@ -44,15 +44,22 @@ function browserRandom(){
   return Math.random();
 }
 
-export function drawTarot(count,randomSource=browserRandom){
-  if(![1,3].includes(count)) throw new RangeError('타로는 1장 또는 3장만 뽑을 수 있습니다.');
+export function prepareTarotFan(size=18,randomSource=browserRandom){
+  if(!Number.isInteger(size) || size < 3 || size > TAROT_DECK.length) {
+    throw new RangeError(`타로 선택지는 3~${TAROT_DECK.length}장 사이여야 합니다.`);
+  }
   const pool=[...TAROT_DECK],result=[];
-  while(result.length<count){
+  while(result.length<size){
     const index=Math.min(pool.length-1,Math.floor(randomSource()*pool.length));
     const [card]=pool.splice(index,1);
     result.push({card,reversed:randomSource()>=0.5});
   }
   return result;
+}
+
+export function drawTarot(count,randomSource=browserRandom){
+  if(![1,3].includes(count)) throw new RangeError('타로는 1장 또는 3장만 뽑을 수 있습니다.');
+  return prepareTarotFan(count,randomSource);
 }
 
 const POSITIONS={
