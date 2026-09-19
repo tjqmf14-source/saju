@@ -468,7 +468,20 @@ function renderTarot(mode,draw,reading,question){
   cancelTarotRoll();
   const deck=$('tarotDeck');
   deck.className=`tarot-deck tarot-reveal-deck${draw.length===1?' one-card':''}`;
-  deck.innerHTML=draw.map((item,index)=>`<article class="tarot-card" data-card="${index}"><div class="tarot-card-inner"><div class="tarot-face tarot-back"></div><div class="tarot-face tarot-front"><div><span class="arcana-no">${item.card.arcana==='major'?String(item.card.rank).padStart(2,'0'):item.card.en}</span><div class="tarot-illustration"><img class="tarot-card-image" src="${item.card.image}" alt="${item.card.en} Rider-Waite-Smith 카드" loading="eager"></div><strong>${item.card.name}</strong><small>${item.card.en}<br>${item.reversed?'REVERSED · 역방향':'UPRIGHT · 정방향'}</small></div></div></div></article>`).join('');
+  deck.innerHTML=draw.map((item,index)=>`<article class="tarot-card" data-card="${index}">
+    <div class="tarot-card-inner">
+      <div class="tarot-face tarot-back"></div>
+      <div class="tarot-face tarot-front">
+        <span class="arcana-no">${item.card.arcana==='major'?String(item.card.rank).padStart(2,'0'):item.card.en}</span>
+        <div class="tarot-illustration"><img class="tarot-card-image" src="${item.card.image}" alt="${item.card.en} Rider-Waite-Smith 카드" loading="eager"></div>
+      </div>
+    </div>
+    <div class="tarot-card-caption">
+      <strong>${item.card.name}</strong>
+      <small>${item.card.en}</small>
+      <span>${item.reversed?'REVERSED · 역방향':'UPRIGHT · 정방향'}</span>
+    </div>
+  </article>`).join('');
   requestAnimationFrame(()=>setTimeout(()=>deck.querySelectorAll('.tarot-card').forEach((card)=>card.classList.add('revealed')),60));
   const questionLine=question?`<p class="tarot-question-line">질문 · ${escapeHtml(question)}</p>`:'';
   $('tarotResult').innerHTML=questionLine+reading.map((item)=>`<article class="tarot-reading"><div class="tarot-reading-head"><span>${item.position}</span><div><h3>${item.card.name} · ${item.orientation}</h3><p class="tarot-keywords">${item.card.keywords}</p></div></div><div class="tarot-reading-grid"><div><strong>카드의 뜻</strong><p>${item.meaning}</p></div><div><strong>그림이 말하는 상징</strong><p>${item.symbolism}</p></div><div><strong>지금 적용할 조언</strong><p>${item.advice}</p></div></div><p class="tarot-reading-note">타로는 미래를 확정하는 예언이 아니라 현재 질문을 다른 각도에서 살펴보기 위한 상징적 참고 도구입니다.</p></article>`).join('');
