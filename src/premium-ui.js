@@ -65,14 +65,6 @@ const GROUP_COPY = {
   }
 };
 
-const ELEMENT_HINT = {
-  목:{color:'딥 그린 · 청록',place:'식물이 있는 조용한 공간',action:'새 계획을 한 줄로 적고 첫 단계만 시작하기'},
-  화:{color:'코랄 · 앰버',place:'밝고 따뜻한 공간',action:'생각을 말·글·결과물로 밖에 꺼내기'},
-  토:{color:'샌드 · 골드',place:'정돈된 익숙한 공간',action:'책상과 일정에서 불필요한 한 가지를 정리하기'},
-  금:{color:'실버 · 아이보리',place:'깔끔하고 조용한 작업 공간',action:'결정 기한을 정하고 한 가지를 마무리하기'},
-  수:{color:'네이비 · 블랙',place:'조용한 카페나 물가',action:'메모로 생각을 밖에 꺼낸 뒤 작은 행동 하나 정하기'}
-};
-
 const ROLE_BY_ELEMENT = {
   목:{목:'비겁',화:'식상',토:'재성',금:'관성',수:'인성'},
   화:{화:'비겁',토:'식상',금:'재성',수:'관성',목:'인성'},
@@ -86,17 +78,49 @@ function currentKstYear(){ return Number(new Intl.DateTimeFormat('en',{timeZone:
 function currentKstDate(){ return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric',weekday:'short'}).format(new Date()); }
 function sorted(object){ return Object.entries(object).sort((a,b)=>b[1]-a[1]); }
 function dominantElement(chart){ return sorted(chart.elements)[0]?.[0] || '토'; }
-function weakestElement(chart){ return sorted(chart.elements).at(-1)?.[0] || '수'; }
 function dominantRole(chart){ return sorted(chart.roles)[0]?.[0] || '인성'; }
 function relationLabel(relations){ return relations?.length ? [...new Set(relations.map((r)=>r.type))].join('·') : '큰 충돌 신호 없음'; }
-function escapeHtml(value=''){ return value.replace(/[&<>"']/g,(char)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[char])); }
+function escapeHtml(value=''){ return value.replace(/[&<>"']/g,(char)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])); }
+
+function inputError(fieldId,message){
+  const error=new RangeError(message);
+  error.fieldId=fieldId;
+  throw error;
+}
+
+function integerInput(fieldId,label,min,max){
+  const field=$(fieldId);
+  const raw=field.value.trim();
+  if(!raw) inputError(fieldId,`${label}을 입력해 주세요.`);
+  const value=Number(raw);
+  if(!Number.isInteger(value) || value<min || value>max){
+    inputError(fieldId,`${label}은 ${min}~${max} 범위로 입력해 주세요.`);
+  }
+  return value;
+}
 
 function collectInput(){
-  const [hour,minute] = $('birthTime').value.split(':').map(Number);
+  const calendar=selectedCalendar();
+  const year=integerInput('birthYear','출생연도',1900,2100);
+  const month=integerInput('birthMonth','출생월',1,12);
+  const day=integerInput('birthDay','출생일',1,calendar==='lunar'?30:31);
+
+  if(calendar==='solar'){
+    const maxDay=new Date(Date.UTC(year,month,0)).getUTCDate();
+    if(day>maxDay) inputError('birthDay',`${year}년 ${month}월에는 ${day}일이 없습니다.`);
+  }
+
+  const time=$('birthTime').value.trim();
+  if(!/^\d{2}:\d{2}$/.test(time)) inputError('birthTime','출생시간을 입력해 주세요.');
+  const [hour,minute]=time.split(':').map(Number);
+  if(!Number.isInteger(hour) || hour<0 || hour>23 || !Number.isInteger(minute) || minute<0 || minute>59){
+    inputError('birthTime','출생시간은 00:00~23:59 범위로 입력해 주세요.');
+  }
+
   return {
-    calendar:selectedCalendar(),
-    year:Number($('birthYear').value), month:Number($('birthMonth').value), day:Number($('birthDay').value),
-    hour, minute, gender:$('gender').value, isLeap:$('isLeap').checked,
+    calendar,year,month,day,hour,minute,
+    gender:$('gender').value,
+    isLeap:$('isLeap').checked,
     precision:$('precisionToggle').checked,
     location:$('birthLocation').value,
     dayBoundary:$('dayBoundary').value
@@ -144,8 +168,6 @@ function renderProfile(chart,mbti,report,name,todayFlow){
   $('profileTags').innerHTML=[`${strongElement} · ${ELEMENT_LABELS[strongElement].label}`,ROLE_LABELS[strongRole],mbti.type,relationLabel(chart.relations)].map((v)=>`<span>${v}</span>`).join('');
   $('mbtiType').textContent=mbti.type;
   $('mbtiLabel').textContent='사주 기반 성향 · 비공식 참고';
-  $('heroMessage').textContent=`“오늘은 ${GROUP_COPY[todayFlow.group].label}의 흐름을 어떻게 쓰느냐가 포인트입니다.”`;
-  $('heroSub').textContent=`${name}님의 오늘 일진은 ${todayFlow.korean}. ${GROUP_COPY[todayFlow.group].opportunity}에 힘을 실어보세요.`;
   renderAccuracyBasis(chart);
 }
 
@@ -177,7 +199,7 @@ function renderToday(chart,todayFlow){
   $('todayQuoteBody').textContent=`${copy.opportunity}에 힘을 싣고, ${copy.caution}은 한 번 더 점검하세요.`;
 
   const overall=scores.overall;
-  $('dailyPrimary').innerHTML=`<div class="daily-primary-score"><span class="section-kicker">TODAY'S INDEX</span><strong>${overall.score}</strong><small>/100 · ${overall.label}</small></div><p id="todaySummary" class="daily-summary">오늘은 ${copy.opportunity}에 힘을 싣는 편이 좋습니다. 반대로 ${copy.caution}은 한 번 더 점검하세요. 이 수치는 원국과 오늘 일진의 관계를 0–100으로 정리한 ‘오늘의 흐름 지수’이며 확률이나 객관적 예측값이 아닙니다.</p><div id="todayLucky" class="lucky-strip"></div>`;
+  $('dailyPrimary').innerHTML=`<div class="daily-primary-score"><span class="section-kicker">TODAY'S INDEX</span><strong>${overall.score}</strong><small>/100 · ${overall.label}</small></div>`;
 
   const metrics=[
     ['money','02','재물',copy.money,'icon-coin'],
@@ -187,11 +209,9 @@ function renderToday(chart,todayFlow){
   ];
   $('dailyMetrics').innerHTML=metrics.map(([key,index,title,body,icon])=>{
     const flow=scores[key];
-    return `<article class="metric-row"><span class="daily-index" aria-hidden="true">${index}</span><div class="metric-name"><svg class="ui-icon metric-icon" aria-hidden="true"><use href="#${icon}"/></svg><div><strong class="metric-label">${title}</strong><div class="metric-score">${flow.score}<small>/100</small></div></div></div><div class="metric-copy"><p>${body}</p><small>${flow.label} · ${flow.reason}</small><div class="metric-track" aria-label="${title} 오늘의 흐름 지수 ${flow.score}점"><span style="width:${flow.score}%"></span></div></div></article>`;
+    return `<article class="metric-row"><span class="daily-index" aria-hidden="true">${index}</span><div class="metric-name"><svg class="ui-icon metric-icon" aria-hidden="true"><use href="#${icon}"/></svg><div><strong class="metric-label">${title}</strong><div class="metric-score">${flow.score}<small>/100</small></div></div></div><div class="metric-copy"><div class="metric-track" role="img" aria-label="${title} 오늘의 흐름 지수 ${flow.score}점 · ${flow.label}"><span style="width:${flow.score}%"></span></div></div></article>`;
   }).join('');
 
-  const strong=dominantElement(chart), weak=weakestElement(chart), hint=ELEMENT_HINT[strong];
-  $('todayLucky').innerHTML=`<p class="section-kicker">PRACTICAL GUIDE</p><dl class="lucky-list"><div><dt>오늘의 행동</dt><dd>${hint.action}</dd></div><div><dt>어울리는 공간</dt><dd>${hint.place}</dd></div><div><dt>상징 컬러</dt><dd>${hint.color}</dd></div><div><dt>균형 포인트</dt><dd>${weak}(${ELEMENT_LABELS[weak].label}) 기운을 보완하는 휴식과 정리를 의식해 보세요.</dd></div></dl>`;
 }
 
 function dominantGroup(flows){
@@ -213,7 +233,7 @@ function renderYear(yearFlow,monthFlows){
     const slice=monthFlows.slice(start,start+3);
     const group=dominantGroup(slice); const c=GROUP_COPY[group];
     const from=kstMonthNumber(slice[0].start), to=kstMonthNumber(slice.at(-1).start);
-    return `<article class="quarter-card"><span>${String(index+1).padStart(2,'0')}</span><div><h3>${from}월~${to}월 · 절기 기준</h3><strong>${c.summary}</strong><p>${c.opportunity}을 생활에서 실제로 실행해 보고, ${c.caution}이 반복되면 우선순위를 줄여보세요. 여기의 월 구간은 양력 1일이 아니라 각 절입 시각부터 시작합니다.</p></div></article>`;
+    return `<article class="quarter-card"><span>${String(index+1).padStart(2,'0')}</span><div><h3>${from}월~${to}월 · 절기 기준</h3><strong>${c.summary}</strong><p>${c.opportunity}에 힘을 싣고, ${c.caution}은 분기 내내 한 번 더 점검하세요.</p></div></article>`;
   }).join('');
   $('monthForecast').innerHTML=monthFlows.map((item)=>{const c=GROUP_COPY[item.group];const month=kstMonthNumber(item.start);return `<article class="month-card"><div class="month-card-head"><span class="month-number">${month}</span><strong>${month}월 절기운 · ${ROLE_LABELS[item.group]}</strong></div><p>${c.summary}. ${c.opportunity}을 우선하고 ${c.caution}은 줄여보세요. 이 월운은 양력 월초가 아니라 아래 절입 시각부터 다음 절입 직전까지의 흐름입니다. 반복해서 같은 문제가 생길 때 이 문장을 행동 기준으로 활용해 보세요.</p><small>절입 기준 ${formatKstBoundary(item.start)} ~ ${formatKstBoundary(item.end)} · ${item.korean} · ${item.tenGod}</small></article>`;}).join('');
 }
@@ -294,6 +314,10 @@ function renderExpert(chart,mbti){
 
 function renderAll(){
   errorBox.textContent='';
+  form.querySelectorAll('[aria-invalid="true"]').forEach((field)=>{
+    field.removeAttribute('aria-invalid');
+    field.removeAttribute('aria-errormessage');
+  });
   try{
     const input=collectInput();
     const chart=calculateSaju(input);
@@ -314,6 +338,12 @@ function renderAll(){
   }catch(error){
     results.hidden=true;
     errorBox.textContent=error?.message||'입력값을 확인해 주세요.';
+    const field=error?.fieldId ? $(error.fieldId) : null;
+    if(field){
+      field.setAttribute('aria-invalid','true');
+      field.setAttribute('aria-errormessage','formError');
+      field.focus();
+    }
   }
 }
 
@@ -562,6 +592,22 @@ function setupSectionSpy(){
 
 form.elements.calendar.forEach((radio)=>radio.addEventListener('change',syncCalendarUi));
 $('precisionToggle').addEventListener('change',syncPrecisionUi);
+form.addEventListener('input',(event)=>{
+  const field=event.target;
+  if(field?.matches?.('input,select,textarea')){
+    field.removeAttribute('aria-invalid');
+    field.removeAttribute('aria-errormessage');
+    errorBox.textContent='';
+  }
+});
+form.addEventListener('change',(event)=>{
+  const field=event.target;
+  if(field?.matches?.('input,select,textarea')){
+    field.removeAttribute('aria-invalid');
+    field.removeAttribute('aria-errormessage');
+    errorBox.textContent='';
+  }
+});
 form.addEventListener('submit',(event)=>{
   event.preventDefault();
   results.dataset.mode=event.isTrusted?'personal':'demo';
