@@ -119,13 +119,57 @@ test('calculation renderers still populate all retained data targets', async ({ 
   await assertNoHorizontalOverflow(page);
 });
 
-test('tarot starts as the reference three-card showcase and expands to direct-choice fan', async ({ page }) => {
+test('tarot exposes all 78 cards in an accessible rolling selector', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   await expect(page.locator('.tarot-preview-card')).toHaveCount(3);
   await page.locator('#drawTarot').click();
-  await expect(page.locator('.tarot-pick')).toHaveCount(12);
+  await expect(page.locator('.tarot-pick')).toHaveCount(78);
+  await expect(page.locator('.tarot-roller-viewport')).toBeVisible();
+  const geometry = await page.locator('.tarot-roller-viewport').evaluate((el) => ({
+    scrollWidth:el.scrollWidth,
+    clientWidth:el.clientWidth
+  }));
+  expect(geometry.scrollWidth).toBeGreaterThan(geometry.clientWidth * 5);
   const first = page.locator('.tarot-pick').first();
   await first.click();
   await expect(first).toHaveClass(/selected/);
+  await assertNoHorizontalOverflow(page);
+});
+
+
+test('final-build typography and section geometry do not clip or overlap', async ({ page }, testInfo) => {
+  await page.goto('/');
+  await expect(page.locator('#results')).toBeVisible();
+
+  const audit = await page.evaluate(() => {
+    const viewportWidth=document.documentElement.clientWidth;
+    const selector='h1,h2,h3,h4,p,span,b,strong,small,label,summary,button,a';
+    const nodes=[...document.querySelectorAll(selector)].filter((el)=>{
+      if(el.closest('.tarot-roller-viewport')) return false;
+      const style=getComputedStyle(el);
+      const rect=el.getBoundingClientRect();
+      return style.display!=='none' && style.visibility!=='hidden' && rect.width>0 && rect.height>0;
+    });
+    const outOfViewport=nodes.filter((el)=>{
+      const rect=el.getBoundingClientRect();
+      return rect.left < -2 || rect.right > viewportWidth + 2;
+    }).map((el)=>({tag:el.tagName,cls:el.className,text:(el.textContent||'').trim().slice(0,60),left:el.getBoundingClientRect().left,right:el.getBoundingClientRect().right}));
+    const clipped=nodes.filter((el)=>{
+      const style=getComputedStyle(el);
+      const clippedX=['hidden','clip'].includes(style.overflowX);
+      return clippedX && el.scrollWidth > el.clientWidth + 2;
+    }).map((el)=>({tag:el.tagName,cls:el.className,text:(el.textContent||'').trim().slice(0,60),scrollWidth:el.scrollWidth,clientWidth:el.clientWidth}));
+    const sections=[...document.querySelectorAll('.hero-primary,#input,.feature-orbit-nav,.visual-keyword-showcase,.quote-band,#today,#year,#tarot,#reviews,#faq,#full-report,.closing-cta')];
+    const badSections=sections.filter((el)=>{
+      const r=el.getBoundingClientRect();
+      return r.width<=0 || r.height<=0 || r.right>viewportWidth+2 || r.left<-2;
+    }).map((el)=>({id:el.id,cls:el.className}));
+    return {outOfViewport,clipped,badSections};
+  });
+
+  expect(audit.outOfViewport, JSON.stringify(audit.outOfViewport)).toEqual([]);
+  expect(audit.clipped, JSON.stringify(audit.clipped)).toEqual([]);
+  expect(audit.badSections, JSON.stringify(audit.badSections)).toEqual([]);
   await assertNoHorizontalOverflow(page);
 });
