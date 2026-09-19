@@ -325,7 +325,6 @@ function renderTarot(mode,draw,reading,question){
   const questionLine=question?`<p class="tarot-question-line">질문 · ${escapeHtml(question)}</p>`:'';
   $('tarotResult').innerHTML=questionLine+reading.map((item)=>`<article class="tarot-reading"><div class="tarot-reading-head"><span>${item.position}</span><div><h3>${item.card.name} · ${item.orientation}</h3><p class="tarot-keywords">${item.card.keywords}</p></div></div><div class="tarot-reading-grid"><div><strong>카드의 뜻</strong><p>${item.meaning}</p></div><div><strong>그림이 말하는 상징</strong><p>${item.symbolism}</p></div><div><strong>지금 적용할 조언</strong><p>${item.advice}</p></div></div><p class="tarot-reading-note">타로는 미래를 확정하는 예언이 아니라 현재 질문을 다른 각도에서 살펴보기 위한 상징적 참고 도구입니다.</p></article>`).join('');
   $('tarotHelp').textContent='선택한 카드를 펼쳤습니다. 같은 질문으로 다시 보고 싶다면 카드를 다시 섞어 직접 선택하세요.';
-  $('drawTarot').querySelector('span')?.replaceChildren(document.createTextNode(''));
 }
 
 function renderTarotFan(){
@@ -348,13 +347,23 @@ function renderTarotFan(){
 function selectTarotCard(index){
   if(!tarotSession || tarotSession.selected.includes(index) || tarotSession.selected.length>=tarotSession.count) return;
   tarotSession.selected.push(index);
-  renderTarotFan();
+  const button=$('tarotDeck').querySelector(`[data-pick="${index}"]`);
+  if(button){
+    button.classList.add('selected');
+    button.setAttribute('aria-pressed','true');
+    button.disabled=true;
+  }
+  const status=$('tarotResult').querySelector('.tarot-pick-status');
+  if(status){
+    status.innerHTML=`<strong>${tarotSession.count}장 중 ${tarotSession.selected.length}장 선택</strong><span>${tarotSession.selected.length<tarotSession.count?'끌리는 카드를 계속 골라주세요.':'선택한 카드를 펼치는 중입니다.'}</span>`;
+  }
   if(tarotSession.selected.length===tarotSession.count){
     const chosen=tarotSession.selected.map((i)=>tarotSession.fan[i]);
-    const reading=interpretSpread(tarotSession.mode,chosen);
+    const mode=tarotSession.mode;
+    const reading=interpretSpread(mode,chosen);
     const question=tarotSession.question;
-    const delay=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches?0:280;
-    setTimeout(()=>renderTarot(tarotSession.mode,chosen,reading,question),delay);
+    const delay=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches?0:320;
+    setTimeout(()=>renderTarot(mode,chosen,reading,question),delay);
   }
 }
 
