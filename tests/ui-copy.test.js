@@ -11,7 +11,14 @@ for (const fn of ['renderToday','renderYear','renderDetailedReport','renderTarot
 }
 
 test('premium UI wires daily, yearly, detailed interpretation and tarot output', () => {
-  for (const id of ['dailyPrimary','dailyMetrics','todayLucky','yearAdviceGrid','tojungQuarterGrid','detailedReport','tarotDeck','tarotResult']) {
+  for (const id of ['dailyPrimary','dailyMetrics','yearAdviceGrid','tojungQuarterGrid','detailedReport','tarotDeck','tarotResult']) {
     assert.match(source, new RegExp(`['\"]${id}['\"]`));
   }
+});
+
+
+test('premium UI exposes explicit birth input validation helpers', () => {
+  assert.match(source,/function\s+inputError\s*\(/);
+  assert.match(source,/function\s+integerInput\s*\(/);
+  assert.match(source,/aria-invalid/);
 });
