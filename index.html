@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="정밀 만세력과 생활 언어 사주 해설, Rider–Waite–Smith 78장 타로를 제공하는 내사주">
   <title>내사주 · Saju & Tarot</title>
-  <link rel="stylesheet" href="/site-v9.css">
+  <link rel="stylesheet" href="/site-v11.css">
 </head>
 <body data-theme="modern-oracle">
   <svg id="oracleIconSprite" class="svg-sprite" aria-hidden="true">
@@ -24,95 +24,55 @@
 
   <header class="topbar">
     <a class="brand" href="#home" aria-label="내사주 홈">
-      <span class="seal brand-oracle-mark" aria-hidden="true"><img src="/oracle/logo-mark.svg" alt=""></span>
+      <span class="brand-oracle-mark" aria-hidden="true"><img src="/oracle/logo-mark.svg" alt=""></span>
       <span class="brand-word"><strong>내사주</strong><small>SAJU · TAROT</small></span>
     </a>
     <nav class="topnav" aria-label="주요 메뉴">
-      <a href="#reading">사주 리포트</a>
-      <a href="#today">오늘</a>
-      <a href="#year">올해</a>
-      <a href="#luck">대운</a>
-      <a href="#expert">원국</a>
+      <a href="#input">사주리포트</a>
+      <a href="#today">오늘의운세</a>
+      <a href="#year">올해의흐름</a>
       <a href="#tarot">타로</a>
+      <a href="#reviews">이용후기</a>
+      <a href="#faq">자주 묻는 질문</a>
     </nav>
-    <div class="topbar-actions"><span class="privacy-note">브라우저 안에서만 계산</span><a class="premium-link" href="#input">프리미엄 리포트</a></div>
+    <div class="topbar-actions">
+      <span class="privacy-note">브라우저 안에서만 계산</span>
+      <a class="premium-link" href="#input">프리미엄 리포트</a>
+    </div>
   </header>
 
   <main id="main-content">
     <div id="home"></div>
 
-    <section class="hero hero-primary agency-shell">
+    <section class="hero-primary agency-shell" aria-labelledby="heroTitle">
       <div class="hero-copy">
         <p class="section-kicker">KNOW YOURSELF, A BRIGHTER TOMORROW</p>
-        <h1>흐르는 운명 속에서,<br><em>지금의 나를 만나다.</em></h1>
-        <p class="hero-lead">사주와 타로가 전하는 더 깊은 나의 이야기. 지금, 당신의 인생 지도를 열어보세요.</p>
-        <a class="hero-cta" href="#input">정밀 리포트 시작하기 <span aria-hidden="true">→</span></a>
+        <h1 id="heroTitle">흐르는 운명 속에서,<em>지금의 나를 만나다.</em></h1>
+        <p class="hero-lead">사주와 타로가 전하는 더 깊은 나의 이야기.<br>지금, 당신의 인생 지도를 열어보세요.</p>
+        <a class="hero-cta" href="#input">정밀 사주 리포트 시작하기 <span aria-hidden="true">→</span></a>
         <div class="hero-proof-oracles" aria-label="서비스 특징">
-          <div><svg class="ui-icon"><use href="#icon-calendar"/></svg><span><b>정확한 인사이트</b><small>신뢰할 수 있는 정밀 달력 기반</small></span></div>
-          <div><svg class="ui-icon"><use href="#icon-orbit"/></svg><span><b>사주 + 타로</b><small>동양의 사주와 서양의 타로를 함께</small></span></div>
-          <div><svg class="ui-icon"><use href="#icon-health"/></svg><span><b>프라이버시 보호</b><small>모든 데이터는 내 PC에서만 처리</small></span></div>
+          <div><svg class="ui-icon"><use href="#icon-calendar"/></svg><span><b>정밀 만세력</b><small>절기와 시간 보정 기반</small></span></div>
+          <div><svg class="ui-icon"><use href="#icon-orbit"/></svg><span><b>사주 + 타로</b><small>동양과 서양의 상징을 함께</small></span></div>
+          <div><svg class="ui-icon"><use href="#icon-health"/></svg><span><b>개인정보 보호</b><small>입력 정보는 브라우저에서 처리</small></span></div>
         </div>
       </div>
-      <div class="hero-visual" aria-label="오늘의 메시지">
-        <div class="hero-visual-top"><span>今日</span><small>TODAY'S NOTE</small></div>
-<div class="oracle-stars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="hero-visual" aria-label="달빛 아래 산수 풍경">
+        <div class="hero-visual-top"><span>命看運</span><small>SAJU · TAROT</small></div>
         <blockquote id="heroMessage">“결과보다 먼저, 지금의 방향을 읽어보세요.”</blockquote>
         <p id="heroSub">생년월일을 입력하면 오늘의 흐름과 타고난 성향을 함께 보여드립니다.</p>
-        <div class="oracle-portal" aria-hidden="true">
-  <svg class="constellation-geometry" viewBox="0 0 420 520" role="presentation">
-    <defs>
-      <linearGradient id="oracleGold" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#e9cf95" stop-opacity=".95"/>
-        <stop offset="1" stop-color="#8b6f3d" stop-opacity=".35"/>
-      </linearGradient>
-    </defs>
-    <circle class="oracle-orbit" cx="210" cy="226" r="136"/>
-    <circle class="oracle-orbit orbit-b" cx="210" cy="226" r="103"/>
-    <circle class="oracle-orbit orbit-c" cx="210" cy="226" r="72"/>
-    <path class="oracle-arch" d="M94 350V188c0-91 52-145 116-145s116 54 116 145v162"/>
-    <path class="oracle-arch" d="M120 350V196c0-70 41-118 90-118s90 48 90 118v154"/>
-    <path class="oracle-line" d="M210 44V12M210 440v56M52 226H14M406 226h-38"/>
-    <path class="oracle-line" d="M86 103 58 74M334 103l28-29M85 350l-28 31M335 350l28 31"/>
-    <circle class="oracle-star" cx="210" cy="12" r="3"/>
-    <circle class="oracle-star" cx="406" cy="226" r="3"/>
-    <circle class="oracle-star" cx="58" cy="74" r="2.5"/>
-    <circle class="oracle-star" cx="363" cy="381" r="2.5"/>
-    <g class="oracle-moon">
-      <circle cx="210" cy="226" r="41" fill="url(#oracleGold)"/>
-      <circle cx="226" cy="214" r="41" fill="#101a2e"/>
-    </g>
-    <path class="oracle-mountain" d="M74 374 145 308l42 40 54-62 99 88Z"/>
-    <path class="oracle-water" d="M112 397c47-18 143-18 196 0M132 416c38-12 118-12 156 0"/>
-  </svg>
-  <div class="oracle-portal-caption"><span>SAJU · TAROT</span><b>A BRIGHTER TOMORROW</b></div>
-</div>
       </div>
     </section>
 
-
-
-    <section id="input" class="input-panel oracle-panel editorial-section agency-shell">
+    <section id="input" class="input-panel oracle-panel agency-shell" aria-labelledby="birthHeading">
       <header class="section-heading">
-        <div><span class="section-no">01</span><p class="section-kicker">BIRTH DATA</p></div>
-        <div><h2>출생정보를<br>입력해주세요.</h2><p class="section-lead">정확한 사주 분석을 위해 아래 정보를 입력해주세요. 입력값은 서버로 전송하거나 저장하지 않습니다.</p></div>
+        <div><span class="section-no">01</span><p class="section-kicker">사주 정보</p></div>
+        <div>
+          <h2 id="birthHeading">사주정보 입력</h2>
+          <p class="section-lead">정확한 사주 분석을 위해 아래 정보를 입력해주세요. 입력값은 서버로 전송하거나 저장하지 않습니다.</p>
+        </div>
       </header>
 
-
-      <div class="five-elements-orbit" aria-hidden="true">
-        <svg viewBox="0 0 320 320">
-          <circle cx="160" cy="160" r="104" class="orbit-ring"/>
-          <circle cx="160" cy="160" r="72" class="orbit-ring faint"/>
-          <path d="M160 46 267 123 226 250 94 250 53 123Z" class="element-pentagon"/>
-          <g class="element-node"><circle cx="160" cy="46" r="22"/><text x="160" y="52">木</text></g>
-          <g class="element-node"><circle cx="267" cy="123" r="22"/><text x="267" y="129">火</text></g>
-          <g class="element-node"><circle cx="226" cy="250" r="22"/><text x="226" y="256">土</text></g>
-          <g class="element-node"><circle cx="94" cy="250" r="22"/><text x="94" y="256">金</text></g>
-          <g class="element-node"><circle cx="53" cy="123" r="22"/><text x="53" y="129">水</text></g>
-          <circle cx="160" cy="160" r="7" class="orbit-core"/>
-          <path d="M160 84v152M84 160h152" class="orbit-axis"/>
-        </svg>
-        <p>FIVE ELEMENTS<br><b>木 火 土 金 水</b></p>
-      </div>
+      <div class="five-elements-orbit" aria-hidden="true"></div>
 
       <form id="birthForm" novalidate>
         <div class="form-modes">
@@ -124,12 +84,12 @@
         </div>
 
         <div class="form-grid">
-          <label class="field-name"><span>이름/호칭</span><input id="name" type="text" placeholder="예: 나" autocomplete="off"></label>
-          <label><span>연도</span><input id="birthYear" type="number" min="1900" max="2100" value="1990" inputmode="numeric"></label>
+          <label class="field-name"><span>이름</span><input id="name" type="text" placeholder="이름을 입력하세요" autocomplete="off"></label>
+          <label><span>출생연도</span><input id="birthYear" type="number" min="1900" max="2100" value="1990" inputmode="numeric"></label>
           <label><span>월</span><input id="birthMonth" type="number" min="1" max="12" value="1" inputmode="numeric"></label>
           <label><span>일</span><input id="birthDay" type="number" min="1" max="31" value="1" inputmode="numeric"></label>
-          <label><span>출생 시간</span><input id="birthTime" type="time" value="12:00"></label>
-          <label><span>성별</span><select id="gender"><option value="male">남성</option><option value="female">여성</option></select></label>
+          <label><span>출생시간</span><input id="birthTime" type="time" value="12:00"></label>
+          <label><span>성별</span><select id="gender"><option value="male">남자</option><option value="female">여자</option></select></label>
           <label id="leapField" class="leap-field"><span>윤달</span><span class="inline-check"><input id="isLeap" type="checkbox"> 윤달로 입력</span></label>
         </div>
 
@@ -138,199 +98,172 @@
           <div class="precision-grid">
             <label><span>출생 지역</span><select id="birthLocation"><option value="korea" selected>대한민국 평균</option><option value="seoul">서울</option><option value="busan">부산</option><option value="daegu">대구</option><option value="incheon">인천</option><option value="gwangju">광주</option><option value="daejeon">대전</option><option value="ulsan">울산</option><option value="jeju">제주</option><option value="sejong">세종</option></select></label>
             <label><span>자시 관법</span><select id="dayBoundary"><option value="midnight">자정(00:00) 기준</option><option value="jasi">자시 환일</option><option value="splitJasi">분할자시</option></select></label>
-            <div class="precision-explain"><strong>왜 시간 보정을 쓰나요?</strong><p>출생지 경도와 균시차, 당시 한국 표준시·서머타임을 반영해 시각 경계의 오차를 줄입니다. 자시 관법은 이 보정과 별도로 선택할 수 있습니다.</p></div>
+            <div class="precision-explain"><strong>정밀 시간 보정</strong><p>출생지 경도와 균시차, 당시 한국 표준시를 반영해 경계 오차를 줄입니다.</p></div>
           </div>
         </details>
 
         <div class="form-submit-row">
           <p id="formError" class="form-error" role="alert"></p>
-          <button class="cta" type="submit"><span>정밀 리포트 생성</span><b aria-hidden="true">→</b></button>
+          <button class="cta" type="submit"><span>사주 리포트 보기</span><b aria-hidden="true">→</b></button>
         </div>
       </form>
+
       <aside class="birth-side-copy">
-        <p>당신의 이야기는<br>이미 특별합니다.<br>이제, 그 흐름을<br>함께 읽어보겠습니다.</p>
+        <p>당신의 이야기는<br>이미 이 안에 있습니다.<br>이제, 그 흐름을<br>함께 읽어볼게요.</p>
         <img src="/oracle/tassel.svg" alt="" aria-hidden="true">
-        <a href="#reading">사주 리포트 보기 <span aria-hidden="true">→</span></a>
+        <a href="#results">사주 리포트 보기 <span aria-hidden="true">→</span></a>
       </aside>
     </section>
-    <nav class="feature-orbit-nav agency-shell" aria-label="주요 리포트 영역">
-      <a href="#reading"><svg class="ui-icon"><use href="#icon-orbit"/></svg><span><b>사주 리포트</b><small>나를 깊이 이해하는 시간</small></span></a>
-      <a href="#today"><svg class="ui-icon"><use href="#icon-sun"/></svg><span><b>오늘의 운세</b><small>오늘의 흐름과 리듬</small></span></a>
-      <a href="#year"><svg class="ui-icon"><use href="#icon-calendar"/></svg><span><b>올해의 흐름</b><small>한 해의 큰 그림</small></span></a>
-      <a href="#luck"><svg class="ui-icon"><use href="#icon-chart"/></svg><span><b>대운</b><small>인생의 10년 주기</small></span></a>
-      <a href="#expert"><svg class="ui-icon"><use href="#icon-orbit"/></svg><span><b>원국</b><small>나의 타고난 구조</small></span></a>
-      <a href="#tarot"><svg class="ui-icon"><use href="#icon-tarot"/></svg><span><b>타로</b><small>지금 필요한 메시지</small></span></a>
+
+    <nav class="feature-orbit-nav agency-shell" aria-label="주요 서비스">
+      <a href="#results"><svg class="ui-icon"><use href="#icon-orbit"/></svg><span><b>사주리포트</b><small>나를 깊이 이해하는 시간</small></span></a>
+      <a href="#today"><svg class="ui-icon"><use href="#icon-sun"/></svg><span><b>오늘의운세</b><small>오늘의 흐름을 확인하세요</small></span></a>
+      <a href="#year"><svg class="ui-icon"><use href="#icon-calendar"/></svg><span><b>올해의흐름</b><small>한 해의 큰 그림을 읽다</small></span></a>
+      <a href="#tarot"><svg class="ui-icon"><use href="#icon-tarot"/></svg><span><b>타로리딩</b><small>지금, 필요한 메시지</small></span></a>
+      <a href="#reviews"><svg class="ui-icon"><use href="#icon-heart"/></svg><span><b>전문가 상담</b><small>더 깊은 해석을 만나다</small></span></a>
+      <a href="#faq"><svg class="ui-icon"><use href="#icon-briefcase"/></svg><span><b>운세 아카이브</b><small>지식과 이야기가 있는 공간</small></span></a>
     </nav>
 
     <section id="results" hidden>
-      <section id="reading" class="reading-opening oracle-panel editorial-section agency-shell">
-        <div class="reading-aside">
-          <span class="section-no">02</span>
-          <p class="section-kicker">YOUR SAJU READING</p>
-          <p id="profileBirth" class="reading-basis"></p>
-        </div>
-        <div class="reading-main">
-          <div class="reading-head">
-            <div>
-              <h2 id="reportTitle">당신의 구조를 읽는 중입니다.</h2>
-              <p id="reportLead" class="reading-lead"></p>
-              <div id="profileTags" class="tag-row"></div>
-            </div>
-            <aside class="mbti-type-panel">
-              <span>SAJU MBTI</span><strong id="mbtiType">—</strong><small id="mbtiLabel"></small>
-            </aside>
-          </div>
-          <div id="accuracyBasis" class="accuracy-basis"></div>
-        </div>
-      </section>
+      <div class="engine-only" aria-hidden="true">
+        <section id="reading" class="reading-opening">
+          <p id="profileBirth"></p><h2 id="reportTitle"></h2><p id="reportLead"></p><div id="profileTags"></div>
+          <strong id="mbtiType"></strong><small id="mbtiLabel"></small><div id="accuracyBasis"></div>
+        </section>
+        <section id="detailedReport" class="detailed-report"></section>
+      </div>
 
       <section class="visual-keyword-showcase agency-shell" aria-label="리포트 핵심 키워드">
         <div class="visual-keyword-intro">
           <span class="section-no">02</span>
-          <p class="section-kicker">REPORT</p>
+          <p class="section-kicker">리포트 미리보기</p>
           <h2>나를 이해하는<br>6가지 키워드</h2>
           <p>사주가 알려주는 타고난 흐름과 지금의 선택이 만드는 더 나은 내일.</p>
-          <a href="#detailedReport">리포트 미리보기 <span aria-hidden="true">→</span></a>
+          <a href="#today">전체 리포트 보기 <span aria-hidden="true">→</span></a>
         </div>
-        <article class="visual-keyword-card"><div class="atlas-card atlas-card-1" role="img" aria-label="달빛 산수와 소나무가 어우러진 성격 키워드 이미지"></div><div><strong>성격</strong><small>내 안의 본질</small></div></article>
-        <article class="visual-keyword-card"><div class="atlas-card atlas-card-2" role="img" aria-label="책과 등불이 놓인 작업실의 일 키워드 이미지"></div><div><strong>일</strong><small>일과 적성의 흐름</small></div></article>
-        <article class="visual-keyword-card"><div class="atlas-card atlas-card-3" role="img" aria-label="금빛 보물함과 재물이 놓인 돈 키워드 이미지"></div><div><strong>돈</strong><small>재물의 흐름</small></div></article>
-        <article class="visual-keyword-card"><div class="atlas-card atlas-card-4" role="img" aria-label="매화와 다리와 물길이 있는 관계 키워드 이미지"></div><div><strong>관계</strong><small>사람과 인연</small></div></article>
-        <article class="visual-keyword-card"><div class="atlas-card atlas-card-5" role="img" aria-label="달빛 아래 물이 흐르는 돌 제단의 건강 키워드 이미지"></div><div><strong>건강</strong><small>몸과 에너지</small></div></article>
-        <article class="visual-keyword-card"><div class="atlas-card atlas-card-6" role="img" aria-label="산길 끝 정자로 이어지는 조언 키워드 이미지"></div><div><strong>조언</strong><small>지금 필요한 한마디</small></div></article>
+        <article class="visual-keyword-card"><div class="atlas-card atlas-card-1" role="img" aria-label="성격 키워드 이미지"></div><div><strong>성격</strong><small>내 안의 본질</small></div></article>
+        <article class="visual-keyword-card"><div class="atlas-card atlas-card-2" role="img" aria-label="일 키워드 이미지"></div><div><strong>일</strong><small>일과 적성의 흐름</small></div></article>
+        <article class="visual-keyword-card"><div class="atlas-card atlas-card-3" role="img" aria-label="돈 키워드 이미지"></div><div><strong>돈</strong><small>재물의 흐름</small></div></article>
+        <article class="visual-keyword-card"><div class="atlas-card atlas-card-4" role="img" aria-label="관계 키워드 이미지"></div><div><strong>관계</strong><small>사람과 인연</small></div></article>
+        <article class="visual-keyword-card"><div class="atlas-card atlas-card-5" role="img" aria-label="건강 키워드 이미지"></div><div><strong>건강</strong><small>몸과 에너지</small></div></article>
+        <article class="visual-keyword-card"><div class="atlas-card atlas-card-6" role="img" aria-label="조언 키워드 이미지"></div><div><strong>조언</strong><small>지금 필요한 한마디</small></div></article>
       </section>
 
-      <nav id="reportNav" class="report-nav agency-shell" aria-label="리포트 바로가기">
-        <a href="#detailedReport">성향</a><a href="#today">오늘</a><a href="#year">올해</a><a href="#luck">대운</a><a href="#expert">원국</a><a href="#tarot">타로</a>
-      </nav>
+      <section class="quote-band agency-shell" aria-label="브랜드 메시지">
+        <div>
+          <blockquote>당신의 이야기는,<br>더 깊은 곳에서 빛납니다.</blockquote>
+          <p>사주와 타로가 전하는 통찰로, 오늘과 내일이 더 나은 내일이 됩니다.</p>
+        </div>
+      </section>
 
-      <section id="detailedReport" class="detailed-report agency-shell"></section>
-
-      <section id="today" class="editorial-section agency-shell">
+      <section id="today" class="landing-section oracle-panel agency-shell">
         <header class="section-heading">
-          <div><span class="section-no">03</span><p class="section-kicker">DAILY FLOW</p><p id="todayDate" class="section-date"></p></div>
-          <div><h2>오늘의 흐름</h2><blockquote id="todayHeadline"></blockquote></div>
+          <div><span class="section-no">03</span><p class="section-kicker">오늘의 운세</p><p id="todayDate" class="section-date"></p></div>
+          <div><h2>오늘의 운세</h2><blockquote id="todayHeadline"></blockquote></div>
         </header>
-        <div id="dailyFortuneGrid" class="daily-layout">
+        <div class="daily-layout">
           <article id="dailyPrimary" class="daily-primary"><p id="todaySummary" class="daily-summary"></p><div id="todayLucky" class="lucky-strip"></div></article>
           <div id="dailyMetrics" class="daily-metrics"></div>
           <aside class="today-quote-panel"><span>“</span><blockquote>새로운 기회가<br>다가오는 날입니다.</blockquote><p>평소보다 열린 마음으로 소통하면 좋은 인연과 기회를 만날 수 있어요.</p><i aria-hidden="true">→</i></aside>
         </div>
       </section>
 
-      <section id="year" class="year-panel annual-layout oracle-panel editorial-section agency-shell">
+      <section id="year" class="year-panel landing-section oracle-panel agency-shell">
         <header class="section-heading">
-          <div><span class="section-no">04</span><p class="section-kicker">ANNUAL FLOW</p></div>
+          <div><span class="section-no">04</span><p class="section-kicker">올해의 흐름</p></div>
           <div><h2 id="yearTitle">올해의 핵심 흐름</h2><p id="yearSummary" class="section-lead"></p></div>
         </header>
-
         <div class="annual-visual-copy">
           <div class="annual-scene" aria-hidden="true"></div>
           <div class="annual-copy">
             <span class="annual-quote-mark">“</span>
             <blockquote>변화는 언제나,<br>더 나은 나를 위한 과정입니다.</blockquote>
-            <p>올해는 새로운 가능성이 열리는 확장의 시기입니다. 흐름을 이해하고, 기회를 준비하세요.</p>
+            <p>올해는 새로운 가능성이 열리는 확장의 시기입니다. 흐름을 이해하고 기회를 준비하세요.</p>
           </div>
         </div>
-
-        <div id="yearDeepDive" class="year-deep-dive"></div>
-        <div id="yearAdviceGrid" class="advice-grid"></div>
+        <div id="yearDeepDive"></div>
+        <div id="yearAdviceGrid"></div>
         <div class="content-rule"></div>
         <header class="block-head"><span>QUARTERLY ACTION PLAN</span><h3>분기별 행동 계획</h3></header>
         <div id="tojungQuarterGrid" class="quarter-grid"></div>
-        <div class="month-block month-flow-shell">
-          <header class="block-head"><span>MONTHLY RHYTHM</span><h3>12개월 흐름</h3><p>월운은 절기 기반 월주와 일간의 관계를 생활 언어로 풀어냅니다.</p></header>
-          <div id="monthForecast" class="month-grid"></div>
-        </div>
-      </section>
-
-      <section id="luck" class="luck-panel luck-layout oracle-panel editorial-section agency-shell">
-        <header class="section-heading">
-          <div><span class="section-no">05</span><p class="section-kicker">DECADE LUCK</p></div>
-          <div><h2>인생의 큰 계절</h2><p id="luckMeta" class="section-lead"></p></div>
-        </header>
-
-        <div class="decade-celestial-track" aria-hidden="true">
-          <svg viewBox="0 0 1200 180">
-            <path d="M52 94H1148" class="decade-line"/>
-            <circle cx="130" cy="94" r="6"/><circle cx="270" cy="94" r="6"/><circle cx="410" cy="94" r="6"/><circle cx="550" cy="94" r="6"/><circle cx="690" cy="94" r="10" class="current-node"/><circle cx="830" cy="94" r="6"/><circle cx="970" cy="94" r="6"/><circle cx="1110" cy="94" r="6"/>
-            <path d="M690 30v128M652 56h76M664 132h52" class="current-axis"/>
-            <circle cx="690" cy="94" r="43" class="current-orbit"/>
-            <path d="M82 44 106 63M224 42l18 18M362 49l16 15M1034 48l21 17" class="decade-stars"/>
-          </svg>
-          <span>LIFE CYCLE · 10 YEAR RHYTHM</span>
-        </div>
-
-        <div id="luckOverview" class="luck-overview"></div>
-        <div id="luckTimeline" class="luck-timeline"></div>
-      </section>
-
-      <section id="expert" class="expert-panel expert-layout oracle-panel editorial-section agency-shell">
-        <header class="section-heading">
-          <div><span class="section-no">06</span><p class="section-kicker">NATAL CHART, SIMPLIFIED</p></div>
-          <div><h2>한자보다 먼저,<br>내 이야기로 읽습니다.</h2><p class="section-lead">성격·일·돈·관계·회복을 생활 언어로 먼저 이해하고, 계산 근거가 궁금할 때만 원자료를 펼쳐보세요.</p></div>
-        </header>
-        
-          <div class="natal-orbit-graphic" aria-hidden="true">
-            <svg viewBox="0 0 460 260">
-              <circle cx="230" cy="130" r="96" class="natal-ring"/>
-              <circle cx="230" cy="130" r="66" class="natal-ring faint"/>
-              <path d="M230 32 315 179 145 179Z" class="natal-triangle"/>
-              <path d="M132 130h196M230 32v196" class="natal-axis"/>
-              <text x="230" y="140">命</text>
-              <circle cx="230" cy="32" r="4"/><circle cx="315" cy="179" r="4"/><circle cx="145" cy="179" r="4"/>
-            </svg>
-            <div><span>YEAR</span><span>MONTH</span><span>DAY</span><span>HOUR</span></div>
-          </div>
-
-        <div class="expert-content-shell">
-          <div id="expertGuide" class="expert-guide" aria-live="polite"></div>
-          <div class="raw-data-group">
-            <p class="raw-data-label">CALCULATION EVIDENCE</p>
-            <details><summary>사주 네 기둥</summary><div id="pillarGrid" class="pillar-grid"></div></details>
-            <details><summary>오행과 십성 분포</summary><div class="expert-grid"><div><h3>오행</h3><div id="elementChart" class="bar-list"></div></div><div><h3>십성</h3><div id="roleChart" class="bar-list"></div></div></div></details>
-            <details><summary>합·충·형·파·해</summary><div id="relationGrid" class="relation-grid"></div></details>
-            <details><summary>사주 기반 MBTI 4축</summary><div id="mbtiAxes" class="axis-list"></div></details>
-          </div>
-        </div>
+        <div class="month-block"><div id="monthForecast"></div></div>
       </section>
 
       <section id="tarot" class="tarot-stage">
         <div class="tarot-stage-inner">
           <div class="tarot-copy">
-            <span class="section-no">07</span>
-            <p class="section-kicker">RIDER–WAITE–SMITH · 78 CARDS</p>
-            <h2>지금 마음에 걸리는 질문을<br>카드에게 건네보세요.</h2>
-            <p id="tarotHelp">Rider–Waite–Smith 78장 전체 덱을 브라우저 안에서 섞은 뒤 여러 장을 펼쳐 보여드립니다. 끌리는 카드를 직접 선택하며, 정·역방향은 의미로만 구분하고 그림은 항상 정상 방향으로 보여줍니다.</p>
+            <span class="section-no">05</span>
+            <p class="section-kicker">타로 리딩</p>
+            <h2>지금 당신에게 필요한<br>메시지는 무엇일까요?</h2>
+            <p id="tarotHelp">카드를 섞은 뒤 펼쳐진 카드 중 마음이 가는 카드를 직접 선택합니다.</p>
           </div>
 
-          <div class="tarot-ornament" aria-hidden="true">
-            <svg viewBox="0 0 340 440">
-              <rect x="60" y="34" width="220" height="346" rx="2" class="tarot-frame"/>
-              <rect x="78" y="52" width="184" height="310" rx="92" class="tarot-arch-frame"/>
-              <circle cx="170" cy="158" r="54" class="tarot-orbit"/>
-              <path d="M170 92v132M104 158h132M122 110l96 96M218 110l-96 96" class="tarot-lines"/>
-              <path d="M170 104a54 54 0 1 0 0 108 42 42 0 1 1 0-108Z" class="tarot-crescent"/>
-              <circle cx="170" cy="74" r="3"/><circle cx="112" cy="98" r="2"/><circle cx="228" cy="98" r="2"/><circle cx="244" cy="258" r="2"/><circle cx="96" cy="258" r="2"/>
-              <path d="M114 312 170 278l56 34-56 34Z" class="tarot-diamond"/>
-            </svg>
+          <div class="tarot-preview" aria-label="타로 카드 예시">
+            <article class="tarot-preview-card"><img src="/tarot-rws/m17.jpg" alt="별 타로 카드"><strong>오늘의 타로</strong></article>
+            <article class="tarot-preview-card"><img src="/tarot-rws/m06.jpg" alt="연인 타로 카드"><strong>연애 타로</strong></article>
+            <article class="tarot-preview-card"><img src="/tarot-rws/m01.jpg" alt="마법사 타로 카드"><strong>진로 타로</strong></article>
           </div>
+
+          <aside class="tarot-quote"><span>“</span><blockquote>때로는,<br>카드가 먼저 알고 있습니다.</blockquote><p>지금, 당신에게 필요한 메시지를 만나보세요.</p></aside>
 
           <div class="tarot-controls">
             <label><span>리딩 방식</span><select id="tarotMode"><option value="today">오늘의 카드 · 1장</option><option value="question">질문 타로 · 3장</option><option value="love">연애 타로 · 3장</option><option value="money">재물 타로 · 3장</option><option value="career">직업·커리어 타로 · 3장</option></select></label>
-            <label><span>질문 <small>(저장되지 않음)</small></span><textarea id="tarotQuestion" rows="3" placeholder="예: 지금 이 선택에서 무엇을 먼저 봐야 할까?"></textarea></label>
-            <button id="drawTarot" class="tarot-button" type="button" aria-describedby="tarotHelp">카드 섞어 펼치기 <b aria-hidden="true">✦</b></button>
+            <label><span>질문 <small>(저장되지 않음)</small></span><textarea id="tarotQuestion" rows="2" placeholder="예: 지금 이 선택에서 무엇을 먼저 봐야 할까?"></textarea></label>
+            <button id="drawTarot" class="tarot-button" type="button" aria-describedby="tarotHelp">타로 리딩 시작하기 <b aria-hidden="true">✦</b></button>
           </div>
           <div id="tarotDeck" class="tarot-deck" aria-live="polite"></div>
           <div id="tarotResult" class="tarot-result"></div>
         </div>
       </section>
+
+      <section id="reviews" class="reviews-section oracle-panel agency-shell" aria-labelledby="reviewsHeading">
+        <header class="reviews-head">
+          <div><span class="section-no">06</span><p class="section-kicker">이용후기</p></div>
+          <div><h2 id="reviewsHeading">먼저 경험한 사람들의 이야기</h2></div>
+        </header>
+        <div class="review-grid">
+          <article class="review-card"><span class="quote">“</span><p>제 자신을 더 깊이 이해할 수 있었어요. 막연했던 고민이 정리되는 느낌입니다.</p><div class="stars">★★★★★</div><footer><strong>김○○ 님</strong><br>30대 · 직장인</footer></article>
+          <article class="review-card"><span class="quote">“</span><p>연애운 리포트가 정말 현실적이라 소름이 돋았어요. 제 관계 패턴을 다시 보게 됐습니다.</p><div class="stars">★★★★★</div><footer><strong>이○○ 님</strong><br>20대 · 대학생</footer></article>
+          <article class="review-card"><span class="quote">“</span><p>한해의 방향을 다시 생각하게 되었어요. 막연하지 않고 차분하게 읽혀서 좋았습니다.</p><div class="stars">★★★★★</div><footer><strong>박○○ 님</strong><br>40대 · 자영업</footer></article>
+        </div>
+      </section>
+
+      <section id="faq" class="faq-section oracle-panel agency-shell" aria-labelledby="faqHeading">
+        <div class="faq-intro">
+          <span class="section-no">07</span>
+          <p class="section-kicker">자주 묻는 질문</p>
+          <h2 id="faqHeading">자주 묻는 질문</h2>
+          <p>궁금한 점이 있으신가요?<br>많이 묻는 질문을 모아보았습니다.</p>
+        </div>
+        <div class="faq-list">
+          <details><summary>사주 리포트는 얼마나 정확한가요?</summary><p>만세력 계산은 입력한 생년월일·시간·지역과 설정값을 기준으로 처리하며, 해석 문장은 그 계산값을 생활 언어로 풀어낸 참고 정보입니다.</p></details>
+          <details><summary>출생시간을 모를 경우에도 이용할 수 있나요?</summary><p>가능하지만 시주가 달라질 수 있어 결과의 일부가 달라질 수 있습니다. 가능한 범위에서 실제 출생시간을 확인하는 편이 좋습니다.</p></details>
+          <details><summary>타로 리딩은 어떻게 진행되나요?</summary><p>카드를 섞어 펼친 뒤 직접 카드를 선택합니다. 질문 유형에 따라 1장 또는 3장 리딩을 제공합니다.</p></details>
+          <details><summary>결제 후 바로 리포트를 볼 수 있나요?</summary><p>현재 버전은 로컬 브라우저에서 계산하는 형태로 구성되어 있으며 결제 기능은 연결하지 않았습니다.</p></details>
+          <details><summary>환불 규정은 어떻게 되나요?</summary><p>현재 결제 기능이 없는 버전입니다. 유료 기능을 도입할 경우 별도 이용약관과 환불 정책을 명확하게 안내해야 합니다.</p></details>
+        </div>
+        <div class="faq-art" aria-hidden="true"></div>
+      </section>
+
+      <section class="closing-cta agency-shell" aria-labelledby="closingHeading">
+        <h2 id="closingHeading">지금, 당신의 이야기를 시작하세요.</h2>
+        <p>사주와 타로가 함께하는 더 깊은 내일. 내사주가 늘 함께하겠습니다.</p>
+        <a href="#input">무료 사주 시작하기 <span aria-hidden="true">→</span></a>
+      </section>
+
+      <div class="engine-only" aria-hidden="true">
+        <section id="luck"><p id="luckMeta"></p><div id="luckOverview"></div><div id="luckTimeline"></div></section>
+        <section id="expert">
+          <div id="expertGuide"></div><div id="pillarGrid"></div><div id="elementChart"></div><div id="roleChart"></div><div id="relationGrid"></div><div id="mbtiAxes"></div>
+        </section>
+      </div>
     </section>
   </main>
 
   <footer class="site-footer agency-shell">
     <div><span class="seal" aria-hidden="true">命</span><strong>내사주</strong></div>
     <p>계산은 브라우저 안에서만 수행됩니다. 사주와 타로는 자기이해를 위한 참고 정보이며 중요한 판단은 현실 정보와 전문가 의견을 우선하세요.</p>
+    <span class="footer-copy">© 2026 Naesaju. All rights reserved.</span>
   </footer>
 
   <script type="module" src="/src/premium-ui.js"></script>
