@@ -323,7 +323,7 @@ let tarotDealTimer=null;
 
 function tarotPickCount(mode){ return mode==='today'?1:3; }
 
-function cancelTarotRoll(){
+function cancelTarotDeal(){
   if(tarotDealTimer){
     clearTimeout(tarotDealTimer);
     tarotDealTimer=null;
@@ -340,7 +340,7 @@ function setTarotFanActive(index){
   tarotSession.activeIndex=next;
   deck?.querySelectorAll('.tarot-pick').forEach((card,cardIndex)=>{
     card.classList.toggle('is-active',cardIndex===next);
-    card.setAttribute('aria-selected',cardIndex===next?'true':'false');
+    card.setAttribute('aria-selected',tarotSession.selected.includes(cardIndex)?'true':'false');
   });
   const activeLabel=$('tarotFanActive');
   if(activeLabel) activeLabel.textContent=`카드 ${String(next+1).padStart(2,'0')} / ${tarotSession.fan.length}`;
@@ -357,10 +357,10 @@ function tarotFanIndexFromPoint(stage,clientX){
   return Math.round(ratio*(tarotSession.fan.length-1));
 }
 
-function runTarotRoll(){
+function runTarotDeal(){
   const deck=$('tarotDeck');
   if(!deck) return;
-  cancelTarotRoll();
+  cancelTarotDeal();
   const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   deck.classList.remove('is-spread');
   if(reduced){
@@ -393,7 +393,7 @@ function renderTarotFan(){
         <small>드래그 · 탭 · ← →</small>
       </div>
     </div>
-    <div class="tarot-fan-stage" tabindex="0" role="listbox" aria-label="78장 타로 카드 펼침 선택 영역">
+    <div class="tarot-fan-stage" tabindex="0" role="listbox" aria-multiselectable="${count>1?'true':'false'}" aria-label="78장 타로 카드 펼침 선택 영역">
       <div class="tarot-fan-table" aria-hidden="true"></div>
       <div class="tarot-fan-track">
         ${fan.map((item,index)=>{
@@ -406,7 +406,7 @@ function renderTarotFan(){
           const delay=Math.min(620,index*8);
           return `<button id="tarot-pick-${index}" type="button" tabindex="-1" role="option"
             class="tarot-pick${picked?' selected':''}" data-pick="${index}"
-            aria-pressed="${picked}" aria-selected="false"
+            aria-selected="${picked}"
             aria-label="섞인 타로 카드 ${index+1}번"
             style="--x:${x}%;--shift:${shift}%;--rot:${rotation}deg;--drop:${drop}px;--delay:${delay}ms;--z:${index+1}">
             <span class="tarot-pick-back" aria-hidden="true"><i></i></span>
@@ -460,12 +460,12 @@ function renderTarotFan(){
 
   requestAnimationFrame(()=>{
     setTarotFanActive(tarotSession.activeIndex);
-    runTarotRoll();
+    runTarotDeal();
   });
 }
 
 function renderTarot(mode,draw,reading,question){
-  cancelTarotRoll();
+  cancelTarotDeal();
   const deck=$('tarotDeck');
   deck.className=`tarot-deck tarot-reveal-deck${draw.length===1?' one-card':''}`;
   deck.innerHTML=draw.map((item,index)=>`<article class="tarot-card" data-card="${index}">
@@ -490,12 +490,13 @@ function renderTarot(mode,draw,reading,question){
 
 function selectTarotCard(index){
   if(!tarotSession || tarotSession.selected.includes(index) || tarotSession.selected.length>=tarotSession.count) return;
-  cancelTarotRoll();
+  cancelTarotDeal();
   tarotSession.selected.push(index);
   const button=$('tarotDeck').querySelector(`[data-pick="${index}"]`);
   if(button){
     button.classList.add('selected');
-    button.setAttribute('aria-pressed','true');
+    button.setAttribute('aria-selected','true');
+    button.setAttribute('aria-disabled','true');
     button.disabled=true;
   }
   const status=$('tarotResult').querySelector('.tarot-pick-status');
@@ -517,7 +518,7 @@ function handleTarot(){
     clearTimeout(tarotRevealTimer);
     tarotRevealTimer=null;
   }
-  cancelTarotRoll();
+  cancelTarotDeal();
   const mode=$('tarotMode').value;
   $('tarot').classList.add('is-drawing');
   tarotSession={
