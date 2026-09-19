@@ -67,3 +67,30 @@ test('solar-term month flow remains calculation-backed', () => {
   assert.match(ui, /월 절기운/);
   assert.match(ui, /양력 월초가 아니라/);
 });
+
+
+test('all internal navigation anchors resolve to real targets', () => {
+  const ids=new Set([...html.matchAll(/\sid=["']([^"']+)["']/g)].map((match)=>match[1]));
+  const anchors=[...html.matchAll(/href=["']#([^"']+)["']/g)].map((match)=>match[1]);
+  for(const target of anchors) assert.ok(ids.has(target), `missing anchor target #${target}`);
+});
+
+test('final markup does not retain hidden dead result placeholders', () => {
+  assert.doesNotMatch(html,/id=["'](?:heroMessage|heroSub|todaySummary|todayLucky)["']/);
+  assert.doesNotMatch(css,/\.daily-summary,\.lucky-strip\{display:none\}/);
+  assert.match(html,/class="premium-link" href="#full-report"/);
+});
+
+test('input validation is explicit, accessible and uses safe HTML escaping', () => {
+  assert.match(ui,/function inputError/);
+  assert.match(ui,/function integerInput/);
+  assert.match(ui,/aria-invalid/);
+  assert.match(ui,/aria-errormessage/);
+  assert.match(ui,/&quot;/);
+});
+
+test('static images all declare alt text', () => {
+  const images=[...html.matchAll(/<img\b[^>]*>/g)].map((match)=>match[0]);
+  assert.ok(images.length>0);
+  for(const image of images) assert.match(image,/\balt=["'][^"']*["']/);
+});
