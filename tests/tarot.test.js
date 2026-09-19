@@ -9,9 +9,9 @@ test('major arcana contains 22 unique cards', () => {
 
 
 test('selection fan prepares unique hidden choices', () => {
-  const fan = prepareTarotFan(18, ()=>0.37);
-  assert.equal(fan.length, 18);
-  assert.equal(new Set(fan.map((item)=>item.card.id)).size, 18);
+  const fan = prepareTarotFan(78, ()=>0.37);
+  assert.equal(fan.length, 78);
+  assert.equal(new Set(fan.map((item)=>item.card.id)).size, 78);
   assert.ok(fan.every((item)=>typeof item.reversed === 'boolean'));
 });
 
