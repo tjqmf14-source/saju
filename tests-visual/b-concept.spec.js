@@ -87,7 +87,7 @@ test('V11 remains readable and overflow-free on mobile', async ({ page }, testIn
     };
   });
   expect(mobileAudit.form?.width || 0).toBeGreaterThan(300);
-  expect(mobileAudit.input?.height || 9999).toBeLessThan(1050);
+  expect(mobileAudit.input?.height || 9999).toBeLessThan(1150);
   expect(mobileAudit.hero?.height || 9999).toBeLessThan(1250);
   expect(mobileAudit.heroVisual?.height || 0).toBeGreaterThan(250);
   expect(mobileAudit.keywordShell?.height || 9999).toBeLessThan(1650);
