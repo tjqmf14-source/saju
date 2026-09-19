@@ -1008,3 +1008,225 @@ body[data-theme="modern-oracle"] .tarot-stage .section-no{color:#c8aa73}
 /* Precision controls: location correction can be disabled independently of day-boundary convention. */
 .field-disabled{opacity:.5}
 .field-disabled select{cursor:not-allowed}
+
+/* === REFERENCE ALIGNMENT PATCH V10 === */
+/*
+  2026-09-19 target: supplied cinematic navy/gold reference.
+  This stays inside the single active stylesheet so no legacy cascade is reintroduced.
+*/
+@media (min-width:761px){
+  .topbar{
+    min-height:70px;
+    border-bottom:1px solid rgba(216,173,102,.12);
+    background:linear-gradient(180deg,rgba(3,11,20,.97),rgba(4,14,24,.91));
+  }
+
+  .hero-primary{
+    position:relative;
+    display:block;
+    width:100%;
+    max-width:none;
+    min-height:640px;
+    margin:0 0 18px;
+    padding:0;
+    overflow:hidden;
+    isolation:isolate;
+    background:#061321;
+  }
+  .hero-primary::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:2;
+    pointer-events:none;
+    background:
+      linear-gradient(90deg,#061321 0%,rgba(6,19,33,.97) 24%,rgba(6,19,33,.80) 37%,rgba(6,19,33,.25) 55%,rgba(6,19,33,0) 72%),
+      linear-gradient(180deg,rgba(4,13,23,.04) 64%,rgba(4,13,23,.68) 100%);
+  }
+  .hero-primary::after{
+    content:"";
+    position:absolute;
+    left:42px;
+    top:0;
+    bottom:0;
+    width:1px;
+    z-index:3;
+    pointer-events:none;
+    background:
+      linear-gradient(180deg,transparent 0 5%,rgba(239,204,134,.75) 5% 5.4%,transparent 5.4% 16%,rgba(239,204,134,.55) 16% 16.4%,transparent 16.4% 48%,rgba(239,204,134,.62) 48% 48.4%,transparent 48.4% 100%);
+    box-shadow:0 0 18px rgba(239,204,134,.14);
+  }
+
+  .hero-copy{
+    position:relative;
+    z-index:4;
+    width:min(50%,690px);
+    padding:74px 24px 44px max(6vw,72px);
+  }
+  .hero-copy::before{display:none}
+  .hero-copy .section-kicker{
+    margin:0 0 24px;
+    color:var(--gold-bright);
+    font-size:10px;
+    letter-spacing:.23em;
+  }
+  .hero-copy h1{
+    max-width:650px;
+    margin:0 0 22px;
+    font-size:clamp(48px,4.2vw,66px);
+    line-height:1.2;
+    letter-spacing:-.055em;
+    text-shadow:0 4px 24px rgba(0,0,0,.34);
+  }
+  .hero-lead{
+    max-width:530px;
+    margin:0;
+    color:#d5d9df;
+    font-size:17px;
+    line-height:1.82;
+    text-shadow:0 2px 15px rgba(0,0,0,.3);
+  }
+  .hero-cta{
+    min-width:240px;
+    min-height:60px;
+    margin:28px 0 0;
+    border-color:#f2cf8b;
+    background:linear-gradient(100deg,#f0cf92 0%,#d8a75e 100%);
+    box-shadow:0 12px 36px rgba(216,173,102,.24),0 0 0 1px rgba(255,255,255,.05) inset;
+  }
+  .hero-proof-oracles{
+    max-width:610px;
+    margin:36px 0 0;
+    gap:24px;
+  }
+  .hero-proof-oracles .ui-icon{
+    width:42px;
+    height:42px;
+    padding:9px;
+    background:rgba(3,13,23,.36);
+  }
+  .hero-proof-oracles b{font-size:12px}
+  .hero-proof-oracles small{color:#9aa7b5;font-size:10px}
+
+  .hero-visual{
+    position:absolute;
+    z-index:1;
+    top:0;
+    right:0;
+    width:72%;
+    height:100%;
+    aspect-ratio:auto;
+    background:
+      linear-gradient(90deg,rgba(6,19,33,.86) 0%,rgba(6,19,33,.18) 18%,rgba(6,19,33,0) 36%),
+      linear-gradient(180deg,rgba(4,13,23,.02) 70%,rgba(4,13,23,.30) 100%),
+      url('/oracle/b-visual-atlas.webp') top right/100% auto no-repeat;
+    box-shadow:none;
+    animation:none!important;
+  }
+  .hero-visual::before{
+    background:radial-gradient(circle at 58% 34%,rgba(240,204,134,.13),transparent 27%);
+  }
+  .hero-visual-top{
+    top:35px;
+    right:28px;
+    color:#edc87f;
+    opacity:.92;
+  }
+
+  .input-panel{
+    grid-template-columns:240px minmax(430px,1fr) 290px;
+    gap:34px;
+    min-height:320px;
+    padding:30px 34px;
+    background:
+      radial-gradient(circle at 20% 50%,rgba(216,173,102,.055),transparent 24%),
+      radial-gradient(circle at 83% 48%,rgba(216,173,102,.045),transparent 28%),
+      linear-gradient(145deg,rgba(9,25,39,.985),rgba(5,16,28,.99));
+  }
+  .input-panel::before{
+    content:"";
+    position:absolute;
+    left:146px;
+    top:24px;
+    width:126px;
+    height:126px;
+    border:1px solid rgba(216,173,102,.12);
+    border-radius:50%;
+    box-shadow:
+      0 0 0 22px rgba(216,173,102,.025),
+      0 0 0 44px rgba(216,173,102,.018);
+    pointer-events:none;
+  }
+  .input-panel .section-heading{position:relative;z-index:2}
+  .input-panel form{position:relative;z-index:2}
+  .birth-side-copy{position:relative;z-index:2}
+  .input-panel .section-heading h2{font-size:34px}
+  .input-panel form{
+    padding:15px 18px 13px;
+    background:rgba(2,11,19,.42);
+    border-color:rgba(216,173,102,.24);
+    box-shadow:0 10px 34px rgba(0,0,0,.12);
+  }
+  .birth-side-copy p{
+    font-size:18px;
+    line-height:1.72;
+  }
+  .birth-side-copy a{
+    max-width:190px;
+    margin-top:26px;
+  }
+
+  .feature-orbit-nav{
+    margin-bottom:24px;
+    background:rgba(4,15,26,.76);
+  }
+  .feature-orbit-nav a{
+    min-height:78px;
+    padding:14px 12px;
+  }
+  .feature-orbit-nav .ui-icon{
+    width:32px;
+    height:32px;
+  }
+
+  .visual-keyword-showcase{
+    padding:16px 18px;
+    gap:10px;
+    background:
+      radial-gradient(circle at 14% 54%,rgba(216,173,102,.04),transparent 24%),
+      linear-gradient(145deg,#091a2a,#071521);
+  }
+  .visual-keyword-card{
+    min-height:246px;
+    box-shadow:0 14px 34px rgba(0,0,0,.12);
+  }
+
+  #today,.year-panel{
+    box-shadow:0 14px 42px rgba(0,0,0,.12);
+  }
+  #today{padding:28px 30px}
+  .daily-primary-score{
+    width:205px;
+    height:205px;
+  }
+  .annual-visual-copy{
+    background:linear-gradient(145deg,rgba(5,17,29,.86),rgba(4,14,24,.44));
+  }
+}
+
+@media (min-width:1280px){
+  .hero-primary{min-height:660px}
+  .hero-copy{padding-left:max(6vw,86px);padding-top:82px}
+  .hero-visual{width:71%}
+}
+
+@media (max-width:760px){
+  .hero-copy .section-kicker{color:var(--gold-bright)}
+  .hero-copy h1{font-size:clamp(38px,11vw,48px)}
+  .hero-visual{
+    border:1px solid rgba(216,173,102,.14);
+    border-radius:8px;
+    overflow:hidden;
+  }
+}
+/* === END REFERENCE ALIGNMENT PATCH V10 === */
