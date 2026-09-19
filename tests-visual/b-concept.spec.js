@@ -14,7 +14,7 @@ test('V11 desktop follows the supplied landing-page composition', async ({ page 
   await expect(page.locator('#results')).toBeVisible();
 
   const order = await page.evaluate(() => {
-    const selectors = ['#input','.visual-keyword-showcase','.quote-band','#today','#year','#tarot','#reviews','#faq','.closing-cta'];
+    const selectors = ['#input','.visual-keyword-showcase','.quote-band','#today','#year','#tarot','#standards','#faq','.closing-cta'];
     return selectors.map((selector) => ({ selector, top: document.querySelector(selector)?.getBoundingClientRect().top ?? -1 }));
   });
   for (let i = 1; i < order.length; i += 1) expect(order[i].top, order[i].selector).toBeGreaterThan(order[i - 1].top);
@@ -193,7 +193,7 @@ test('final-build typography and section geometry do not clip or overlap', async
       const clippedX=['hidden','clip'].includes(style.overflowX);
       return clippedX && el.scrollWidth > el.clientWidth + 2;
     }).map((el)=>({tag:el.tagName,cls:el.className,text:(el.textContent||'').trim().slice(0,60),scrollWidth:el.scrollWidth,clientWidth:el.clientWidth}));
-    const sections=[...document.querySelectorAll('.hero-primary,#input,.feature-orbit-nav,.visual-keyword-showcase,.quote-band,#today,#year,#tarot,#reviews,#faq,#full-report,.closing-cta')];
+    const sections=[...document.querySelectorAll('.hero-primary,#input,.feature-orbit-nav,.visual-keyword-showcase,.quote-band,#today,#year,#tarot,#standards,#faq,#full-report,.closing-cta')];
     const badSections=sections.filter((el)=>{
       const r=el.getBoundingClientRect();
       return r.width<=0 || r.height<=0 || r.right>viewportWidth+2 || r.left<-2;
