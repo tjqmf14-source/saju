@@ -475,56 +475,6 @@ function renderTarot(mode,draw,reading,question){
   $('tarotHelp').textContent='선택한 카드를 펼쳤습니다. 같은 질문으로 다시 보고 싶다면 78장을 다시 섞어 직접 선택하세요.';
 }
 
-function renderTarotFan(){
-  if(!tarotSession) return;
-  const {fan,selected,count}=tarotSession;
-  const deck=$('tarotDeck');
-  deck.className='tarot-deck tarot-roller-deck';
-  deck.innerHTML=`
-    <div class="tarot-roller-head">
-      <div class="tarot-roller-copy">
-        <span class="section-kicker">FULL 78-CARD DECK</span>
-        <strong>78장의 카드를 모두 펼쳤습니다.</strong>
-        <small>롤 애니메이션으로 78장을 훑습니다. 언제든 직접 멈추고 좌우로 밀거나 화살표·키보드로 이동해 카드를 선택하세요.</small>
-      </div>
-      <div class="tarot-roller-actions" aria-label="타로 카드 이동">
-        <button id="tarotRollPrev" type="button" aria-label="이전 카드 묶음 보기">←</button>
-        <span id="tarotRollPosition" aria-live="polite">01–01 / ${fan.length}</span>
-        <button id="tarotRollNext" type="button" aria-label="다음 카드 묶음 보기">→</button>
-      </div>
-    </div>
-    <div class="tarot-roller-viewport" tabindex="0" aria-label="78장 타로 카드 선택 영역">
-      <div class="tarot-roller-track">
-        ${fan.map((item,index)=>{
-          const picked=selected.includes(index);
-          return `<button type="button" class="tarot-pick${picked?' selected':''}" data-pick="${index}" aria-pressed="${picked}" aria-label="섞인 타로 카드 ${index+1}번 선택">
-            <span class="tarot-pick-back" aria-hidden="true"><i></i></span>
-            <span class="tarot-pick-number">${String(index+1).padStart(2,'0')}</span>
-          </button>`;
-        }).join('')}
-      </div>
-    </div>`;
-  $('tarotResult').innerHTML=`<div class="tarot-pick-status"><strong>${count}장 중 ${selected.length}장 선택</strong><span>${selected.length<count?'78장 전체에서 끌리는 카드를 직접 골라주세요.':'선택한 카드를 펼치는 중입니다.'}</span></div>`;
-
-  const viewport=deck.querySelector('.tarot-roller-viewport');
-  const stopRoll=()=>cancelTarotRoll();
-  viewport.addEventListener('scroll',()=>tarotRollStatus(viewport),{passive:true});
-  viewport.addEventListener('pointerdown',stopRoll,{passive:true});
-  viewport.addEventListener('wheel',stopRoll,{passive:true});
-  viewport.addEventListener('keydown',(event)=>{
-    if(event.key==='ArrowLeft'){event.preventDefault();scrollTarotRoll(-1);}
-    if(event.key==='ArrowRight'){event.preventDefault();scrollTarotRoll(1);}
-    if(event.key==='PageUp'){event.preventDefault();scrollTarotRoll(-1);}
-    if(event.key==='PageDown'){event.preventDefault();scrollTarotRoll(1);}
-    if(event.key==='Home'){event.preventDefault();cancelTarotRoll();viewport.scrollTo({left:0,behavior:'smooth'});}
-    if(event.key==='End'){event.preventDefault();cancelTarotRoll();viewport.scrollTo({left:viewport.scrollWidth,behavior:'smooth'});}
-  });
-  $('tarotRollPrev')?.addEventListener('click',()=>scrollTarotRoll(-1));
-  $('tarotRollNext')?.addEventListener('click',()=>scrollTarotRoll(1));
-  deck.querySelectorAll('.tarot-pick').forEach((button)=>button.addEventListener('click',()=>selectTarotCard(Number(button.dataset.pick))));
-  requestAnimationFrame(()=>{tarotRollStatus(viewport);runTarotRoll();});
-}
-
 function selectTarotCard(index){
   if(!tarotSession || tarotSession.selected.includes(index) || tarotSession.selected.length>=tarotSession.count) return;
   cancelTarotRoll();
