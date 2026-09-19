@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="정밀 만세력과 생활 언어 사주 해설, Rider–Waite–Smith 78장 타로를 제공하는 내사주">\n  <meta name="theme-color" content="#03111d">
+  <meta name="description" content="정밀 만세력과 생활 언어 사주 해설, Rider–Waite–Smith 78장 타로를 제공하는 내사주">
+  <meta name="theme-color" content="#03111d">
   <title>내사주 · Saju & Tarot</title>
   <link rel="stylesheet" href="/site-v12.css">
 </head>
@@ -48,7 +49,7 @@
         <p class="section-kicker">KNOW YOURSELF, A BRIGHTER TOMORROW</p>
         <h1 id="heroTitle">흐르는 운명 속에서,<em>지금의 나를 만나다.</em></h1>
         <p class="hero-lead">사주와 타로가 전하는 더 깊은 나의 이야기.<br>지금, 당신의 인생 지도를 열어보세요.</p>
-        <a class="hero-cta" href="#input">정밀 사주 리포트 시작하기 <span aria-hidden="true">→</span></a>
+      <a class="hero-cta" href="#input">정밀 리포트 시작하기 <span aria-hidden="true">→</span></a>
         <div class="hero-proof-oracles" aria-label="서비스 특징">
           <div><svg class="ui-icon"><use href="#icon-calendar"/></svg><span><b>정밀 만세력</b><small>절기와 시간 보정 기반</small></span></div>
           <div><svg class="ui-icon"><use href="#icon-orbit"/></svg><span><b>사주 + 타로</b><small>동양과 서양의 상징을 함께</small></span></div>
@@ -64,7 +65,7 @@
       <header class="section-heading">
         <div><span class="section-no">01</span><p class="section-kicker">사주 정보</p></div>
         <div>
-          <h2 id="birthHeading">사주정보 입력</h2>
+          <h2 id="birthHeading">출생정보를<br>입력해주세요.</h2>
           <p class="section-lead">정확한 사주 분석을 위해 아래 정보를 입력해주세요. 입력값은 서버로 전송하거나 저장하지 않습니다.</p>
         </div>
       </header>
@@ -79,7 +80,9 @@
           <label class="precision-switch"><input id="precisionToggle" type="checkbox" checked><span aria-hidden="true"></span><b>진태양시 보정</b></label>
         </div>
 
-        <p class="form-demo-note">현재 입력값은 화면 확인용 예시입니다. 본인의 출생정보로 변경한 뒤 리포트를 생성하세요.</p>\n\n        <div class="form-grid">
+        <p class="form-demo-note">예시 입력값입니다. 본인의 출생정보로 변경한 뒤 리포트를 생성하세요.</p>
+
+        <div class="form-grid">
           <label class="field-name"><span>이름 <small>(선택)</small></span><input id="name" type="text" placeholder="이름을 입력하세요" autocomplete="off"></label>
           <label><span>출생연도</span><input id="birthYear" type="number" min="1900" max="2100" value="1990" inputmode="numeric"></label>
           <label><span>월</span><input id="birthMonth" type="number" min="1" max="12" value="1" inputmode="numeric"></label>
@@ -144,10 +147,10 @@
         </div>
       </section>
 
-      <section id="today" class="landing-section oracle-panel agency-shell">
+      <section id="today" class="landing-section oracle-panel agency-shell today-panel">
         <header class="section-heading">
-          <div><span class="section-no">03</span><p class="section-kicker">오늘의 운세</p><p id="todayDate" class="section-date"></p></div>
-          <div><h2>오늘의 운세</h2><blockquote id="todayHeadline"></blockquote></div>
+          <div><span class="section-no">03</span><p class="section-kicker">TODAY</p></div>
+          <div><h2>오늘의 운세</h2><p>오늘 하루, 어떤 흐름이<br>당신을 기다리고 있을까요?</p><p id="todayDate" class="section-date"></p><blockquote id="todayHeadline"></blockquote></div>
         </header>
         <div class="daily-layout">
           <article id="dailyPrimary" class="daily-primary"></article>
@@ -158,19 +161,21 @@
 
       <section id="year" class="year-panel landing-section oracle-panel agency-shell">
         <header class="section-heading">
-          <div><span class="section-no">04</span><p class="section-kicker">올해의 흐름</p></div>
-          <div><h2 id="yearTitle">올해의 핵심 흐름</h2><p id="yearSummary" class="section-lead"></p></div>
+          <div><span class="section-no">04</span><p class="section-kicker">ANNUAL</p></div>
+          <div><h2>올해의 흐름</h2><p>한 해의 큰 흐름과<br>준비할 시점을 읽어보세요.</p><a href="#full-report">자세히 보기 <span aria-hidden="true">→</span></a></div>
         </header>
-        <div class="annual-visual-copy">
-          <div class="annual-scene" aria-hidden="true"></div>
+        <div class="annual-scene" aria-hidden="true"></div>
+        <div class="annual-content annual-visual-copy">
           <div class="annual-copy">
             <span class="annual-quote-mark">“</span>
             <blockquote id="annualQuote">올해의 큰 흐름을 읽는 중입니다.</blockquote>
+            <h3 id="yearTitle">올해의 핵심 흐름</h3>
+            <p id="yearSummary" class="section-lead"></p>
             <p id="annualGuide">연운과 원국의 관계를 바탕으로 기회와 주의점을 정리합니다.</p>
           </div>
+          <header class="block-head"><span>QUARTERLY FLOW</span><h3>분기별 흐름</h3></header>
+          <div id="tojungQuarterGrid" class="quarter-grid"></div>
         </div>
-        <header class="block-head"><span>QUARTERLY ACTION PLAN</span><h3>분기별 행동 계획</h3></header>
-        <div id="tojungQuarterGrid" class="quarter-grid"></div>
       </section>
 
       <section id="tarot" class="tarot-stage">

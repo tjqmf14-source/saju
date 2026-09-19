@@ -44,5 +44,5 @@ test('B concept report preview exposes six illustrated keyword cards', () => {
 test('B concept keeps the reference-like composition blocks', () => {
   assert.match(html, /class="hero-proof-oracles"/);
   assert.match(html, /class="today-quote-panel"/);
-  assert.match(html, /class="annual-visual-copy"/);
+  assert.match(html, /class="[^"]*\bannual-visual-copy\b[^"]*"/);
 });

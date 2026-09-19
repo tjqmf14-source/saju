@@ -55,7 +55,7 @@ test('V11 desktop follows the supplied landing-page composition', async ({ page 
 });
 
 test('V11 remains readable and overflow-free on mobile', async ({ page }, testInfo) => {
-  test.skip(!['mobile','mobile-small'].includes(testInfo.project.name), 'mobile-only contract');
+  test.skip(!['mobile','mobile-wide','mobile-small'].includes(testInfo.project.name), 'mobile-only contract');
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
 
@@ -206,6 +206,33 @@ test('final-build typography and section geometry do not clip or overlap', async
   expect(audit.outOfViewport, JSON.stringify(audit.outOfViewport)).toEqual([]);
   expect(audit.clipped, JSON.stringify(audit.clipped)).toEqual([]);
   expect(audit.badSections, JSON.stringify(audit.badSections)).toEqual([]);
+  await assertNoHorizontalOverflow(page);
+  await page.evaluate(() => scrollTo(0,0));
+  await page.screenshot({ path: `test-results/v12-fullpage-${testInfo.project.name}.png`, fullPage: true });
+});
+
+test('reference-density sections stay compact on desktop and primary disclosure works', async ({ page }, testInfo) => {
+  await page.goto('/');
+  await expect(page.locator('#results')).toBeVisible();
+
+  if (testInfo.project.name === 'desktop') {
+    const geometry = await page.evaluate(() => Object.fromEntries(
+      ['#input', '#today', '#year'].map((selector) => [selector, document.querySelector(selector).getBoundingClientRect().height])
+    ));
+    expect(geometry['#input']).toBeLessThan(520);
+    expect(geometry['#today']).toBeLessThan(370);
+    expect(geometry['#year']).toBeLessThan(370);
+  }
+
+  const firstFaq = page.locator('.faq-list details').first();
+  await expect(firstFaq).not.toHaveAttribute('open', '');
+  await firstFaq.locator('summary').focus();
+  await page.keyboard.press('Enter');
+  await expect(firstFaq).toHaveAttribute('open', '');
+  await expect(firstFaq.locator('p')).toBeVisible();
+
+  await page.locator('.closing-cta a[href="#input"]').click();
+  await expect(page.locator('#input')).toBeInViewport();
   await assertNoHorizontalOverflow(page);
 });
 
