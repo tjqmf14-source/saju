@@ -319,69 +319,149 @@ function renderAll(){
 
 let tarotSession=null;
 let tarotRevealTimer=null;
-let tarotRollFrame=null;
+let tarotDealTimer=null;
 
 function tarotPickCount(mode){ return mode==='today'?1:3; }
 
 function cancelTarotRoll(){
-  if(tarotRollFrame){
-    cancelAnimationFrame(tarotRollFrame);
-    tarotRollFrame=null;
+  if(tarotDealTimer){
+    clearTimeout(tarotDealTimer);
+    tarotDealTimer=null;
   }
   const deck=$('tarotDeck');
-  deck?.classList.remove('is-rolling');
+  deck?.classList.remove('is-dealing');
 }
 
-function tarotRollStatus(viewport){
-  if(!viewport || !tarotSession) return;
-  const cards=[...viewport.querySelectorAll('.tarot-pick')];
-  if(!cards.length) return;
-  const viewLeft=viewport.scrollLeft;
-  const viewRight=viewLeft+viewport.clientWidth;
-  const visible=cards.map((card,index)=>({index,left:card.offsetLeft,right:card.offsetLeft+card.offsetWidth}))
-    .filter((card)=>card.right>viewLeft+2 && card.left<viewRight-2);
-  const first=(visible[0]?.index ?? 0)+1;
-  const last=(visible.at(-1)?.index ?? Math.min(cards.length-1,first+4))+1;
-  const label=$('tarotRollPosition');
-  if(label) label.textContent=`${String(first).padStart(2,'0')}–${String(last).padStart(2,'0')} / ${cards.length}`;
+function setTarotFanActive(index){
+  if(!tarotSession) return;
+  const deck=$('tarotDeck');
+  const max=tarotSession.fan.length-1;
+  const next=Math.max(0,Math.min(max,index));
+  tarotSession.activeIndex=next;
+  deck?.querySelectorAll('.tarot-pick').forEach((card,cardIndex)=>{
+    card.classList.toggle('is-active',cardIndex===next);
+    card.setAttribute('aria-selected',cardIndex===next?'true':'false');
+  });
+  const activeLabel=$('tarotFanActive');
+  if(activeLabel) activeLabel.textContent=`카드 ${String(next+1).padStart(2,'0')} / ${tarotSession.fan.length}`;
+  const stage=deck?.querySelector('.tarot-fan-stage');
+  if(stage) stage.setAttribute('aria-activedescendant',`tarot-pick-${next}`);
 }
 
-function scrollTarotRoll(direction){
-  const viewport=$('tarotDeck')?.querySelector('.tarot-roller-viewport');
-  if(!viewport) return;
-  cancelTarotRoll();
-  viewport.scrollBy({left:direction*viewport.clientWidth*.78,behavior:'smooth'});
+function tarotFanIndexFromPoint(stage,clientX){
+  if(!tarotSession || !stage) return 0;
+  const rect=stage.getBoundingClientRect();
+  const inset=Math.min(44,Math.max(18,rect.width*.07));
+  const usable=Math.max(1,rect.width-inset*2);
+  const ratio=Math.max(0,Math.min(1,(clientX-rect.left-inset)/usable));
+  return Math.round(ratio*(tarotSession.fan.length-1));
 }
 
 function runTarotRoll(){
   const deck=$('tarotDeck');
-  const viewport=deck?.querySelector('.tarot-roller-viewport');
-  if(!deck || !viewport) return;
+  if(!deck) return;
   cancelTarotRoll();
-  const max=Math.max(0,viewport.scrollWidth-viewport.clientWidth);
-  if(!max) return;
   const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  deck.classList.remove('is-spread');
   if(reduced){
-    viewport.scrollLeft=Math.min(max,max*.34);
-    tarotRollStatus(viewport);
+    deck.classList.add('is-spread');
     return;
   }
-  deck.classList.add('is-rolling');
-  const duration=5200;
-  const started=performance.now();
-  const ease=(t)=>1-Math.pow(1-t,3);
-  const step=(now)=>{
-    const progress=Math.min(1,(now-started)/duration);
-    viewport.scrollLeft=max*ease(progress);
-    tarotRollStatus(viewport);
-    if(progress<1){
-      tarotRollFrame=requestAnimationFrame(step);
-    }else{
-      tarotRollFrame=null;
-      deck.classList.remove('is-rolling');
-    }
+  deck.classList.add('is-dealing');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>deck.classList.add('is-spread')));
+  tarotDealTimer=setTimeout(()=>{
+    tarotDealTimer=null;
+    deck.classList.remove('is-dealing');
+  },1450);
+}
+
+function renderTarotFan(){
+  if(!tarotSession) return;
+  const {fan,selected,count}=tarotSession;
+  const deck=$('tarotDeck');
+  tarotSession.activeIndex=Math.min(tarotSession.activeIndex ?? Math.floor(fan.length/2),fan.length-1);
+  deck.className='tarot-deck tarot-fan-deck';
+  deck.innerHTML=`
+    <div class="tarot-fan-head">
+      <div class="tarot-fan-copy">
+        <span class="section-kicker">FULL 78-CARD DECK</span>
+        <strong>78장의 카드를 한 번에 펼칩니다.</strong>
+        <small>카드 위를 천천히 훑고, 마음이 멈추는 지점에서 선택하세요. 스크롤바 없이 전체 덱을 한 장면에서 보여줍니다.</small>
+      </div>
+      <div class="tarot-fan-meta">
+        <span id="tarotFanActive">카드 40 / ${fan.length}</span>
+        <small>드래그 · 탭 · ← →</small>
+      </div>
+    </div>
+    <div class="tarot-fan-stage" tabindex="0" role="listbox" aria-label="78장 타로 카드 펼침 선택 영역">
+      <div class="tarot-fan-table" aria-hidden="true"></div>
+      <div class="tarot-fan-track">
+        ${fan.map((item,index)=>{
+          const picked=selected.includes(index);
+          const p=index/(fan.length-1);
+          const x=(p*100).toFixed(4);
+          const shift=(-p*100).toFixed(4);
+          const rotation=((p-.5)*12).toFixed(3);
+          const drop=(Math.pow((p-.5)*2,2)*20).toFixed(2);
+          const delay=Math.min(620,index*8);
+          return `<button id="tarot-pick-${index}" type="button" tabindex="-1" role="option"
+            class="tarot-pick${picked?' selected':''}" data-pick="${index}"
+            aria-pressed="${picked}" aria-selected="false"
+            aria-label="섞인 타로 카드 ${index+1}번"
+            style="--x:${x}%;--shift:${shift}%;--rot:${rotation}deg;--drop:${drop}px;--delay:${delay}ms;--z:${index+1}">
+            <span class="tarot-pick-back" aria-hidden="true"><i></i></span>
+          </button>`;
+        }).join('')}
+      </div>
+      <div class="tarot-fan-glow" aria-hidden="true"></div>
+    </div>`;
+  $('tarotResult').innerHTML=`<div class="tarot-pick-status"><strong>${count}장 중 ${selected.length}장 선택</strong><span>${selected.length<count?'카드 위를 훑다가 끌리는 지점에서 손을 떼거나 클릭하세요.':'선택한 카드를 펼치는 중입니다.'}</span></div>`;
+
+  const stage=deck.querySelector('.tarot-fan-stage');
+  let pointerDown=false;
+  let pointerId=null;
+
+  const updateFromPointer=(event)=>{
+    const index=tarotFanIndexFromPoint(stage,event.clientX);
+    setTarotFanActive(index);
   };
-  tarotRollFrame=requestAnimationFrame(step);
+
+  stage.addEventListener('pointerdown',(event)=>{
+    if(event.button!==undefined && event.button!==0) return;
+    pointerDown=true;
+    pointerId=event.pointerId;
+    stage.setPointerCapture?.(event.pointerId);
+    updateFromPointer(event);
+  });
+  stage.addEventListener('pointermove',(event)=>{
+    if(event.pointerType==='mouse' || pointerDown) updateFromPointer(event);
+  });
+  stage.addEventListener('pointerup',(event)=>{
+    if(pointerId!==null && event.pointerId!==pointerId) return;
+    updateFromPointer(event);
+    pointerDown=false;
+    pointerId=null;
+    selectTarotCard(tarotSession.activeIndex);
+  });
+  stage.addEventListener('pointercancel',()=>{
+    pointerDown=false;
+    pointerId=null;
+  });
+  stage.addEventListener('keydown',(event)=>{
+    const current=tarotSession?.activeIndex ?? Math.floor(fan.length/2);
+    if(event.key==='ArrowLeft'){event.preventDefault();setTarotFanActive(current-1);}
+    if(event.key==='ArrowRight'){event.preventDefault();setTarotFanActive(current+1);}
+    if(event.key==='PageUp'){event.preventDefault();setTarotFanActive(current-7);}
+    if(event.key==='PageDown'){event.preventDefault();setTarotFanActive(current+7);}
+    if(event.key==='Home'){event.preventDefault();setTarotFanActive(0);}
+    if(event.key==='End'){event.preventDefault();setTarotFanActive(fan.length-1);}
+    if(event.key==='Enter' || event.key===' '){event.preventDefault();selectTarotCard(tarotSession.activeIndex);}
+  });
+
+  requestAnimationFrame(()=>{
+    setTarotFanActive(tarotSession.activeIndex);
+    runTarotRoll();
+  });
 }
 
 function renderTarot(mode,draw,reading,question){
@@ -454,7 +534,6 @@ function selectTarotCard(index){
     button.classList.add('selected');
     button.setAttribute('aria-pressed','true');
     button.disabled=true;
-    button.scrollIntoView({behavior:globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest',inline:'center'});
   }
   const status=$('tarotResult').querySelector('.tarot-pick-status');
   if(status){
@@ -484,8 +563,8 @@ function handleTarot(){
     selected:[],
     question:$('tarotQuestion').value.trim()
   };
-  $('tarotHelp').textContent=`78장의 전체 타로 덱을 섞었습니다. 롤 애니메이션으로 전체 덱을 훑은 뒤 ${tarotSession.count}장을 직접 선택하세요. 카드의 정·역방향은 섞는 순간 정해지며 그림은 읽기 쉽게 정상 방향으로 표시합니다.`;
-  $('drawTarot').innerHTML='78장 다시 섞기 <b aria-hidden="true">↻</b>';
+  $('tarotHelp').textContent=`78장의 전체 타로 덱을 섞어 한 번에 펼칩니다. 카드 위를 훑고 마음이 멈추는 지점에서 ${tarotSession.count}장을 직접 선택하세요. 정·역방향은 섞는 순간 정해집니다.`;
+  $('drawTarot').innerHTML='78장 다시 펼치기 <b aria-hidden="true">↻</b>';
   renderTarotFan();
 }
 
