@@ -6,11 +6,12 @@ const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const css = await readFile(new URL('../site-v9.css', import.meta.url), 'utf8');
 const ui = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
 
-test('production saju theme is light editorial while tarot remains dark', () => {
-  assert.match(css, /FINAL EDITORIAL LIGHT/);
-  assert.match(css, /--paper:#f2efe7/);
-  assert.match(css, /body\[data-theme="modern-oracle"\]\{[\s\S]*background:var\(--paper\)/);
-  assert.match(css, /tarot-stage[\s\S]*background:[\s\S]*var\(--tarot\)/);
+test('production saju theme is cinematic dark while tarot remains dark', () => {
+  assert.doesNotMatch(css, /FINAL EDITORIAL LIGHT/);
+  assert.match(css, /--bg:#061321/);
+  assert.match(css, /REFERENCE ALIGNMENT PATCH V10/);
+  assert.match(css, /\.hero-visual\{[\s\S]*b-visual-atlas\.webp/);
+  assert.match(css, /\.tarot-stage\{[\s\S]*background:/);
 });
 
 test('tarot starts with an explicit fan-and-pick interaction', () => {
