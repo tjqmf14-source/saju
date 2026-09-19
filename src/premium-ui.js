@@ -563,6 +563,7 @@ form.elements.calendar.forEach((radio)=>radio.addEventListener('change',syncCale
 $('precisionToggle').addEventListener('change',syncPrecisionUi);
 form.addEventListener('submit',(event)=>{
   event.preventDefault();
+  results.dataset.mode=event.isTrusted?'personal':'demo';
   renderAll();
   if(event.isTrusted){
     const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
