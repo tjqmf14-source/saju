@@ -817,3 +817,11 @@ summary::-webkit-details-marker{display:none}
 @media(max-width:520px){
   .hero-visual{height:280px;background-position:65% 50%;background-size:cover}
 }
+
+
+/* V11.6 mobile hero overlay correction — keep the artwork visible below the copy */
+@media(max-width:820px){
+  .hero-primary::before{
+    background:linear-gradient(180deg,rgba(4,21,34,.04) 0%,rgba(4,21,34,.06) 58%,rgba(4,21,34,.14) 78%,rgba(4,21,34,.08) 100%);
+  }
+}
