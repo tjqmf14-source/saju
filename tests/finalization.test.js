@@ -31,13 +31,14 @@ test('landing page follows the supplied section order', () => {
   }
 });
 
-test('tarot retains explicit fan-and-pick interaction', () => {
+test('tarot exposes the complete 78-card rolling picker', () => {
   assert.match(html, /타로 리딩 시작하기/);
-  assert.match(html, /마음이 가는 카드를 직접 선택/);
-  assert.match(ui, /prepareTarotFan/);
-  assert.match(ui, /class="tarot-pick/);
+  assert.match(ui, /prepareTarotFan\(78\)/);
+  assert.match(ui, /FULL 78-CARD DECK/);
+  assert.match(ui, /function runTarotRoll/);
   assert.match(ui, /function selectTarotCard/);
-  assert.ok(css.includes('.tarot-pick-deck{'));
+  assert.ok(css.includes('.tarot-roller-viewport{'));
+  assert.ok(css.includes('.tarot-roller-track{'));
 });
 
 test('solar-term month flow remains calculation-backed', () => {
