@@ -314,3 +314,24 @@ test('core form and tarot controls retain touch-friendly targets', async ({ page
   });
   expect(audit,JSON.stringify(audit)).toEqual([]);
 });
+
+
+test('invalid birth date is explained, focused, and recoverable', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'validation behavior is viewport-independent');
+  await page.goto('/');
+  await page.locator('#birthYear').fill('2025');
+  await page.locator('#birthMonth').fill('2');
+  await page.locator('#birthDay').fill('31');
+  await page.locator('#birthForm .cta').click();
+
+  await expect(page.locator('#formError')).toContainText('2025년 2월에는 31일이 없습니다.');
+  await expect(page.locator('#birthDay')).toHaveAttribute('aria-invalid','true');
+  await expect(page.locator('#birthDay')).toBeFocused();
+  await expect(page.locator('#results')).toBeHidden();
+
+  await page.locator('#birthDay').fill('28');
+  await expect(page.locator('#birthDay')).not.toHaveAttribute('aria-invalid','true');
+  await page.locator('#birthForm .cta').click();
+  await expect(page.locator('#results')).toBeVisible();
+  await expect(page.locator('#formError')).toHaveText('');
+});
