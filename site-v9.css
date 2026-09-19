@@ -994,3 +994,12 @@ body[data-theme="modern-oracle"] .tarot-stage .section-no{color:#c8aa73}
 @media(prefers-reduced-motion:reduce){
   .tarot-pick,.tarot-card-inner{animation:none!important;transition:none!important}
 }
+
+
+/* Final readability corrections */
+#today .lucky-strip{display:block}
+.metric-copy p{display:block}
+.metric-label strong,.metric-name{color:var(--ink)}
+@media(max-width:760px){
+  #today .lucky-strip{display:block}
+}
