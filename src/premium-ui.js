@@ -315,56 +315,149 @@ function renderAll(){
 
 let tarotSession=null;
 let tarotRevealTimer=null;
+let tarotRollFrame=null;
 
 function tarotPickCount(mode){ return mode==='today'?1:3; }
-function tarotFanSize(mode){ return mode==='today'?12:18; }
+
+function cancelTarotRoll(){
+  if(tarotRollFrame){
+    cancelAnimationFrame(tarotRollFrame);
+    tarotRollFrame=null;
+  }
+  const deck=$('tarotDeck');
+  deck?.classList.remove('is-rolling');
+}
+
+function tarotRollStatus(viewport){
+  if(!viewport || !tarotSession) return;
+  const cards=[...viewport.querySelectorAll('.tarot-pick')];
+  if(!cards.length) return;
+  const viewLeft=viewport.scrollLeft;
+  const viewRight=viewLeft+viewport.clientWidth;
+  const visible=cards.map((card,index)=>({index,left:card.offsetLeft,right:card.offsetLeft+card.offsetWidth}))
+    .filter((card)=>card.right>viewLeft+2 && card.left<viewRight-2);
+  const first=(visible[0]?.index ?? 0)+1;
+  const last=(visible.at(-1)?.index ?? Math.min(cards.length-1,first+4))+1;
+  const label=$('tarotRollPosition');
+  if(label) label.textContent=`${String(first).padStart(2,'0')}–${String(last).padStart(2,'0')} / ${cards.length}`;
+}
+
+function scrollTarotRoll(direction){
+  const viewport=$('tarotDeck')?.querySelector('.tarot-roller-viewport');
+  if(!viewport) return;
+  cancelTarotRoll();
+  viewport.scrollBy({left:direction*viewport.clientWidth*.78,behavior:'smooth'});
+}
+
+function runTarotRoll(){
+  const deck=$('tarotDeck');
+  const viewport=deck?.querySelector('.tarot-roller-viewport');
+  if(!deck || !viewport) return;
+  cancelTarotRoll();
+  const max=Math.max(0,viewport.scrollWidth-viewport.clientWidth);
+  if(!max) return;
+  const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  if(reduced){
+    viewport.scrollLeft=Math.min(max,max*.34);
+    tarotRollStatus(viewport);
+    return;
+  }
+  deck.classList.add('is-rolling');
+  const duration=3200;
+  const started=performance.now();
+  const ease=(t)=>1-Math.pow(1-t,3);
+  const step=(now)=>{
+    const progress=Math.min(1,(now-started)/duration);
+    viewport.scrollLeft=max*ease(progress);
+    tarotRollStatus(viewport);
+    if(progress<1){
+      tarotRollFrame=requestAnimationFrame(step);
+    }else{
+      tarotRollFrame=null;
+      deck.classList.remove('is-rolling');
+    }
+  };
+  tarotRollFrame=requestAnimationFrame(step);
+}
 
 function renderTarot(mode,draw,reading,question){
+  cancelTarotRoll();
   const deck=$('tarotDeck');
   deck.className=`tarot-deck tarot-reveal-deck${draw.length===1?' one-card':''}`;
   deck.innerHTML=draw.map((item,index)=>`<article class="tarot-card" data-card="${index}"><div class="tarot-card-inner"><div class="tarot-face tarot-back"></div><div class="tarot-face tarot-front"><div><span class="arcana-no">${item.card.arcana==='major'?String(item.card.rank).padStart(2,'0'):item.card.en}</span><div class="tarot-illustration"><img class="tarot-card-image" src="${item.card.image}" alt="${item.card.en} Rider-Waite-Smith 카드" loading="eager"></div><strong>${item.card.name}</strong><small>${item.card.en}<br>${item.reversed?'REVERSED · 역방향':'UPRIGHT · 정방향'}</small></div></div></div></article>`).join('');
   requestAnimationFrame(()=>setTimeout(()=>deck.querySelectorAll('.tarot-card').forEach((card)=>card.classList.add('revealed')),60));
   const questionLine=question?`<p class="tarot-question-line">질문 · ${escapeHtml(question)}</p>`:'';
   $('tarotResult').innerHTML=questionLine+reading.map((item)=>`<article class="tarot-reading"><div class="tarot-reading-head"><span>${item.position}</span><div><h3>${item.card.name} · ${item.orientation}</h3><p class="tarot-keywords">${item.card.keywords}</p></div></div><div class="tarot-reading-grid"><div><strong>카드의 뜻</strong><p>${item.meaning}</p></div><div><strong>그림이 말하는 상징</strong><p>${item.symbolism}</p></div><div><strong>지금 적용할 조언</strong><p>${item.advice}</p></div></div><p class="tarot-reading-note">타로는 미래를 확정하는 예언이 아니라 현재 질문을 다른 각도에서 살펴보기 위한 상징적 참고 도구입니다.</p></article>`).join('');
-  $('tarotHelp').textContent='선택한 카드를 펼쳤습니다. 같은 질문으로 다시 보고 싶다면 카드를 다시 섞어 직접 선택하세요.';
+  $('tarotHelp').textContent='선택한 카드를 펼쳤습니다. 같은 질문으로 다시 보고 싶다면 78장을 다시 섞어 직접 선택하세요.';
 }
 
 function renderTarotFan(){
   if(!tarotSession) return;
   const {fan,selected,count}=tarotSession;
   const deck=$('tarotDeck');
-  deck.className='tarot-deck tarot-pick-deck';
-  const mid=(fan.length-1)/2;
-  deck.innerHTML=fan.map((item,index)=>{
-    const distance=index-mid;
-    const drop=Math.round(Math.abs(distance)*Math.abs(distance)*0.55);
-    const rotation=(distance*1.45).toFixed(2);
-    const picked=selected.includes(index);
-    return `<button type="button" class="tarot-pick${picked?' selected':''}" data-pick="${index}" aria-pressed="${picked}" aria-label="타로 카드 ${index+1} 선택" style="--rot:${rotation}deg;--drop:${drop}px;--z:${index+1}"><span class="tarot-pick-back" aria-hidden="true"><i></i></span><span class="tarot-pick-number">${String(index+1).padStart(2,'0')}</span></button>`;
-  }).join('');
-  $('tarotResult').innerHTML=`<div class="tarot-pick-status"><strong>${count}장 중 ${selected.length}장 선택</strong><span>${selected.length<count?'끌리는 카드를 직접 골라주세요.':'선택한 카드를 펼치는 중입니다.'}</span></div>`;
+  deck.className='tarot-deck tarot-roller-deck';
+  deck.innerHTML=`
+    <div class="tarot-roller-head">
+      <div class="tarot-roller-copy">
+        <span class="section-kicker">FULL 78-CARD DECK</span>
+        <strong>78장의 카드를 모두 펼쳤습니다.</strong>
+        <small>자동 롤이 끝난 뒤 좌우로 밀거나 화살표 버튼으로 이동해 마음이 가는 카드를 선택하세요.</small>
+      </div>
+      <div class="tarot-roller-actions" aria-label="타로 카드 이동">
+        <button id="tarotRollPrev" type="button" aria-label="이전 카드 묶음 보기">←</button>
+        <span id="tarotRollPosition" aria-live="polite">01–01 / ${fan.length}</span>
+        <button id="tarotRollNext" type="button" aria-label="다음 카드 묶음 보기">→</button>
+      </div>
+    </div>
+    <div class="tarot-roller-viewport" tabindex="0" aria-label="78장 타로 카드 선택 영역">
+      <div class="tarot-roller-track">
+        ${fan.map((item,index)=>{
+          const picked=selected.includes(index);
+          return `<button type="button" class="tarot-pick${picked?' selected':''}" data-pick="${index}" aria-pressed="${picked}" aria-label="섞인 타로 카드 ${index+1}번 선택">
+            <span class="tarot-pick-back" aria-hidden="true"><i></i></span>
+            <span class="tarot-pick-number">${String(index+1).padStart(2,'0')}</span>
+          </button>`;
+        }).join('')}
+      </div>
+    </div>`;
+  $('tarotResult').innerHTML=`<div class="tarot-pick-status"><strong>${count}장 중 ${selected.length}장 선택</strong><span>${selected.length<count?'78장 전체에서 끌리는 카드를 직접 골라주세요.':'선택한 카드를 펼치는 중입니다.'}</span></div>`;
+
+  const viewport=deck.querySelector('.tarot-roller-viewport');
+  const stopRoll=()=>cancelTarotRoll();
+  viewport.addEventListener('scroll',()=>tarotRollStatus(viewport),{passive:true});
+  viewport.addEventListener('pointerdown',stopRoll,{passive:true});
+  viewport.addEventListener('wheel',stopRoll,{passive:true});
+  viewport.addEventListener('keydown',(event)=>{
+    if(event.key==='ArrowLeft'){event.preventDefault();scrollTarotRoll(-1);}
+    if(event.key==='ArrowRight'){event.preventDefault();scrollTarotRoll(1);}
+  });
+  $('tarotRollPrev')?.addEventListener('click',()=>scrollTarotRoll(-1));
+  $('tarotRollNext')?.addEventListener('click',()=>scrollTarotRoll(1));
   deck.querySelectorAll('.tarot-pick').forEach((button)=>button.addEventListener('click',()=>selectTarotCard(Number(button.dataset.pick))));
+  requestAnimationFrame(()=>{tarotRollStatus(viewport);runTarotRoll();});
 }
 
 function selectTarotCard(index){
   if(!tarotSession || tarotSession.selected.includes(index) || tarotSession.selected.length>=tarotSession.count) return;
+  cancelTarotRoll();
   tarotSession.selected.push(index);
   const button=$('tarotDeck').querySelector(`[data-pick="${index}"]`);
   if(button){
     button.classList.add('selected');
     button.setAttribute('aria-pressed','true');
     button.disabled=true;
+    button.scrollIntoView({behavior:globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest',inline:'center'});
   }
   const status=$('tarotResult').querySelector('.tarot-pick-status');
   if(status){
-    status.innerHTML=`<strong>${tarotSession.count}장 중 ${tarotSession.selected.length}장 선택</strong><span>${tarotSession.selected.length<tarotSession.count?'끌리는 카드를 계속 골라주세요.':'선택한 카드를 펼치는 중입니다.'}</span>`;
+    status.innerHTML=`<strong>${tarotSession.count}장 중 ${tarotSession.selected.length}장 선택</strong><span>${tarotSession.selected.length<tarotSession.count?'78장 전체 덱에서 카드를 계속 골라주세요.':'선택한 카드를 펼치는 중입니다.'}</span>`;
   }
   if(tarotSession.selected.length===tarotSession.count){
     const chosen=tarotSession.selected.map((i)=>tarotSession.fan[i]);
     const mode=tarotSession.mode;
     const reading=interpretSpread(mode,chosen);
     const question=tarotSession.question;
-    const delay=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches?0:320;
+    const delay=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches?0:360;
     tarotRevealTimer=setTimeout(()=>{ tarotRevealTimer=null; renderTarot(mode,chosen,reading,question); },delay);
   }
 }
@@ -374,16 +467,17 @@ function handleTarot(){
     clearTimeout(tarotRevealTimer);
     tarotRevealTimer=null;
   }
+  cancelTarotRoll();
   const mode=$('tarotMode').value;
   tarotSession={
     mode,
     count:tarotPickCount(mode),
-    fan:prepareTarotFan(tarotFanSize(mode)),
+    fan:prepareTarotFan(78),
     selected:[],
     question:$('tarotQuestion').value.trim()
   };
-  $('tarotHelp').textContent=`${tarotSession.fan.length}장의 카드를 섞어 펼쳤습니다. ${tarotSession.count}장을 직접 선택하세요. 카드의 정·역방향은 선택 순간 이미 정해져 있지만 그림은 읽기 쉽게 항상 정상 방향으로 표시합니다.`;
-  $('drawTarot').innerHTML='다시 섞기 <b aria-hidden="true">↻</b>';
+  $('tarotHelp').textContent=`78장의 전체 타로 덱을 섞었습니다. 롤 애니메이션으로 전체 덱을 훑은 뒤 ${tarotSession.count}장을 직접 선택하세요. 카드의 정·역방향은 섞는 순간 정해지며 그림은 읽기 쉽게 정상 방향으로 표시합니다.`;
+  $('drawTarot').innerHTML='78장 다시 섞기 <b aria-hidden="true">↻</b>';
   renderTarotFan();
 }
 
