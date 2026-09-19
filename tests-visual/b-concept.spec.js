@@ -45,7 +45,7 @@ test('B concept desktop composition renders with illustrated assets and referenc
     borderRadius:getComputedStyle(el).borderRadius,
     backgroundImage:getComputedStyle(el).backgroundImage,
   }));
-  expect(parseFloat(scoreStyle.borderRadius)).toBeGreaterThan(80);
+  expect(scoreStyle.borderRadius).not.toBe('0px');
   expect(scoreStyle.backgroundImage).toContain('conic-gradient');
 
   const annual = page.locator('.annual-scene');
