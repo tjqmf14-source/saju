@@ -83,6 +83,9 @@ test('V11 remains readable and overflow-free on mobile', async ({ page }, testIn
       hero:rect('.hero-primary'),
       heroVisual:rect('.hero-visual'),
       keywordShell:rect('.visual-keyword-showcase'),
+      faq:rect('#faq'),
+      faqList:rect('.faq-list'),
+      heroBackground:getComputedStyle(document.querySelector('.hero-visual')).backgroundImage,
       cards,
     };
   });
@@ -91,6 +94,9 @@ test('V11 remains readable and overflow-free on mobile', async ({ page }, testIn
   expect(mobileAudit.hero?.height || 9999).toBeLessThan(1250);
   expect(mobileAudit.heroVisual?.height || 0).toBeGreaterThan(250);
   expect(mobileAudit.keywordShell?.height || 9999).toBeLessThan(1650);
+  expect(mobileAudit.faq?.width || 0).toBeGreaterThan(340);
+  expect(mobileAudit.faqList?.width || 0).toBeGreaterThan(300);
+  expect(mobileAudit.heroBackground).toContain('/oracle/hero-scene.svg');
   expect(mobileAudit.cards).toHaveLength(6);
   for (const card of mobileAudit.cards) {
     expect(card.width).toBeGreaterThan(140);
