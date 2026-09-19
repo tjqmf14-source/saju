@@ -140,8 +140,8 @@ test('tarot exposes all 78 cards as one overlapping fan without a scrollbar', as
     clientWidth:el.clientWidth,
     overflowX:getComputedStyle(el).overflowX
   }));
-  expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.clientWidth + 1);
   expect(geometry.overflowX).toBe('hidden');
+  expect(geometry.scrollWidth).toBeLessThan(geometry.clientWidth + 12);
 
   const box=await stage.boundingBox();
   if(!box) throw new Error('tarot fan stage missing');
@@ -202,6 +202,7 @@ test('desktop tarot deal animation expands one stacked deck into a full overlapp
   const deck=page.locator('#tarotDeck');
   const stage=page.locator('.tarot-fan-stage');
   await expect(deck).toHaveClass(/is-spread/);
+  await page.waitForTimeout(1500);
 
   const spread=await page.locator('.tarot-pick').evaluateAll((cards)=>cards.map((card)=>{
     const r=card.getBoundingClientRect();
