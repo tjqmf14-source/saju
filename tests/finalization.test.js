@@ -3,13 +3,13 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-const css = await readFile(new URL('../site-v11.css', import.meta.url), 'utf8');
+const css = await readFile(new URL('../site-v12.css', import.meta.url), 'utf8');
 const ui = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
 
-test('V11 is the only active frontend stylesheet and follows the reference palette', () => {
-  assert.ok(html.includes('site-v11.css'));
-  assert.ok(!html.includes('site-v9.css'));
-  assert.ok(css.includes('NAESAJU FRONTEND V11'));
+test('V12 is the only active frontend stylesheet and follows the reference palette', () => {
+  assert.ok(html.includes('site-v12.css'));
+  assert.ok(!html.includes('site-v11.css'));
+  assert.ok(css.includes('NAESAJU V12'));
   assert.ok(css.includes('--bg:#03111d'));
   assert.ok(css.includes('--gold:#d8a75f'));
   assert.ok(css.includes("url('/oracle/b-visual-atlas.webp')"));
@@ -39,6 +39,14 @@ test('tarot exposes the complete 78-card rolling picker', () => {
   assert.match(ui, /function selectTarotCard/);
   assert.ok(css.includes('.tarot-roller-viewport{'));
   assert.ok(css.includes('.tarot-roller-track{'));
+});
+
+test('final information architecture keeps detailed year data inside precision report', () => {
+  assert.ok(html.indexOf('id="annualDetailReport"') > html.indexOf('id="full-report"'));
+  assert.ok(html.indexOf('id="yearDeepDive"') > html.indexOf('id="annualDetailReport"'));
+  assert.ok(html.indexOf('id="monthForecast"') > html.indexOf('id="annualDetailReport"'));
+  assert.match(html, /id="todayQuoteTitle"/);
+  assert.match(html, /id="annualQuote"/);
 });
 
 test('solar-term month flow remains calculation-backed', () => {
