@@ -387,6 +387,15 @@ function handleTarot(){
   renderTarotFan();
 }
 
+function setupFullReportAccess(){
+  const report=$('full-report');
+  if(!report) return;
+  document.querySelectorAll('a[href="#full-report"]').forEach((link)=>{
+    link.addEventListener('click',()=>{ report.open=true; });
+  });
+  if(location.hash==='#full-report') report.open=true;
+}
+
 function setupSectionSpy(){
   const links=[...document.querySelectorAll('.topnav a[href^="#"], .report-nav a[href^="#"]')];
   const targets=[...new Set(links.map((link)=>document.querySelector(link.getAttribute('href'))).filter(Boolean))];
@@ -412,4 +421,5 @@ $('drawTarot').addEventListener('click',handleTarot);
 syncCalendarUi();
 syncPrecisionUi();
 setupSectionSpy();
+setupFullReportAccess();
 requestAnimationFrame(()=>form.requestSubmit());
