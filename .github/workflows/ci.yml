@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - feature/offline-saju-v2
+      - 'gpt/**'
   pull_request:
     branches:
       - main
