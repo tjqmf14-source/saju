@@ -13,12 +13,12 @@ const files=[
 
 if(files.length!==78) throw new Error(`RWS asset list must contain 78 files, got ${files.length}`);
 
-function download(url,destination,redirects=0){
+function downloadOnce(url,destination,redirects=0){
   return new Promise((resolve,reject)=>{
     const request=https.get(url,{headers:{'User-Agent':'saju-offline-v2-rws-sync'}},(response)=>{
       if(response.statusCode>=300&&response.statusCode<400&&response.headers.location&&redirects<5){
         response.resume();
-        return resolve(download(new URL(response.headers.location,url).href,destination,redirects+1));
+        return resolve(downloadOnce(new URL(response.headers.location,url).href,destination,redirects+1));
       }
       if(response.statusCode!==200){
         response.resume();
@@ -35,6 +35,23 @@ function download(url,destination,redirects=0){
   });
 }
 
+const wait=(ms)=>new Promise((resolve)=>setTimeout(resolve,ms));
+
+async function download(url,destination){
+  let lastError=null;
+  for(let attempt=1;attempt<=4;attempt+=1){
+    try{
+      await downloadOnce(url,destination);
+      return;
+    }catch(error){
+      lastError=error;
+      if(attempt===4) break;
+      await wait(350*Math.pow(2,attempt-1));
+    }
+  }
+  throw lastError;
+}
+
 await fs.mkdir(DEST,{recursive:true});
 let downloaded=0;
 const queue=[];
@@ -47,7 +64,7 @@ for(const file of files){
   queue.push(file);
 }
 
-const workers=Array.from({length:Math.min(6,queue.length)},async()=>{
+const workers=Array.from({length:Math.min(4,queue.length)},async()=>{
   while(queue.length){
     const file=queue.shift();
     await download(`${BASE}/${file}`,path.join(DEST,file));
