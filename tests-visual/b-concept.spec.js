@@ -23,7 +23,7 @@ test('B concept desktop composition renders with illustrated assets and referenc
   expect(heroBox?.width || 0).toBeGreaterThan(560);
   expect(heroBox?.height || 0).toBeGreaterThan(500);
   const heroBg = await heroVisual.evaluate((el) => getComputedStyle(el).backgroundImage);
-  expect(heroBg).toContain('/oracle/b-visual-atlas.webp');
+  expect(heroBg).toContain('/oracle/hero-scene.svg');
 
   const input = page.locator('#input');
   const featureNav = page.locator('.feature-orbit-nav');
@@ -35,22 +35,22 @@ test('B concept desktop composition renders with illustrated assets and referenc
   await expect(cards).toHaveCount(6);
   const cardBackgrounds = await cards.locator('.atlas-card').evaluateAll((items) => items.map((el) => getComputedStyle(el).backgroundImage));
   expect(cardBackgrounds).toHaveLength(6);
-  expect(cardBackgrounds.every((value) => value.includes('/oracle/b-visual-atlas.webp'))).toBeTruthy();
+  expect(cardBackgrounds.every((value) => value.includes('/oracle/keyword-'))).toBeTruthy();
 
   const score = page.locator('.daily-primary-score');
   const scoreBox = await score.boundingBox();
   expect(scoreBox?.width || 0).toBeGreaterThan(180);
-  expect(scoreBox?.width || 0).toBeGreaterThan((scoreBox?.height || 0) * 2);
+  expect(Math.abs((scoreBox?.width || 0) - (scoreBox?.height || 0))).toBeLessThan(3);
   const scoreStyle = await score.evaluate((el) => ({
     borderRadius:getComputedStyle(el).borderRadius,
     backgroundImage:getComputedStyle(el).backgroundImage,
   }));
-  expect(scoreStyle.borderRadius).toBe('0px');
-  expect(scoreStyle.backgroundImage).toBe('none');
+  expect(scoreStyle.borderRadius).toContain('50%');
+  expect(scoreStyle.backgroundImage).toContain('conic-gradient');
 
   const annual = page.locator('.annual-scene');
   const annualBg = await annual.evaluate((el) => getComputedStyle(el).backgroundImage);
-  expect(annualBg).toContain('/oracle/b-visual-atlas.webp');
+  expect(annualBg).toContain('/oracle/annual-scene.svg');
 
   await assertNoHorizontalOverflow(page);
   await page.screenshot({ path: `test-results/b-concept-${testInfo.project.name}.png`, fullPage: true });
