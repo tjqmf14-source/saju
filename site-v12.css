@@ -24,7 +24,7 @@
   --section-gap:22px;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;background:var(--bg-deep);font-size:16px}
+html{scroll-behavior:smooth;background:var(--bg-deep);font-size:16px;color-scheme:dark}
 body{
   margin:0;color:var(--ink);
   background:
@@ -117,7 +117,6 @@ section[id],details[id]{scroll-margin-top:96px}
 .topnav a::after{content:"";position:absolute;left:50%;right:50%;bottom:2px;height:1px;background:var(--gold);transition:.18s}
 .topnav a:hover::after,.topnav a[aria-current="true"]::after{left:0;right:0}
 .topbar-actions{display:flex;justify-content:flex-end;align-items:center}
-.privacy-note{display:none}
 .premium-link{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 20px;border:1px solid var(--gold);border-radius:999px;color:var(--gold-bright);font-size:15px}
 
 /* Hero */
@@ -159,7 +158,6 @@ section[id],details[id]{scroll-margin-top:96px}
 .hero-visual-top{position:absolute;top:34px;right:26px;z-index:3;display:grid;gap:8px;color:var(--gold-bright);writing-mode:vertical-rl}
 .hero-visual-top span{font-family:var(--serif);font-size:20px}
 .hero-visual-top small{font-size:15px;letter-spacing:.12em}
-.hero-visual>blockquote,.hero-visual>p{display:none}
 
 /* Birth input */
 .input-panel{
@@ -173,7 +171,6 @@ section[id],details[id]{scroll-margin-top:96px}
 .input-panel .section-heading{position:relative;z-index:2;min-width:0}
 .input-panel .section-heading>div:first-child{display:flex;align-items:center;gap:12px;margin-bottom:16px}
 .input-panel .section-heading h2{margin:0 0 14px;font-size:34px;line-height:1.27}
-.five-elements-orbit{display:none}
 .input-panel form{position:relative;z-index:2;min-width:0;padding:19px 20px 18px;border:1px solid var(--line-soft);border-radius:7px;background:rgba(1,10,18,.36)}
 .form-demo-note{
   margin:0 0 14px;padding:10px 12px;border-left:2px solid var(--gold);
@@ -198,6 +195,9 @@ section[id],details[id]{scroll-margin-top:96px}
 .form-grid label{display:grid;gap:6px;min-width:0;color:#bdc6ce;font-size:15px}
 .form-grid input,.form-grid select{width:100%;height:46px;padding:0 10px;border:1px solid rgba(216,167,95,.19);border-radius:4px;background:#071827;color:var(--ink);outline:none;font-size:15px}
 .form-grid input:focus,.form-grid select:focus{border-color:var(--gold)}
+.form-grid input[aria-invalid="true"],.form-grid select[aria-invalid="true"],#birthTime[aria-invalid="true"]{
+  border-color:#e48f8f;box-shadow:0 0 0 1px rgba(228,143,143,.22)
+}
 .leap-field{display:none}
 .leap-field.active{display:grid}
 .inline-check{display:flex;align-items:center;gap:8px;height:46px}
@@ -209,7 +209,7 @@ section[id],details[id]{scroll-margin-top:96px}
 .precision-grid>*{min-width:0}
 .precision-grid label{display:grid;gap:6px;min-width:0;color:var(--muted)}
 .precision-grid select{width:100%;min-width:0;height:46px;padding:0 10px;border:1px solid var(--line-soft);border-radius:4px;background:#071827;color:var(--ink)}
-.precision-explain{display:none}
+.precision-explain{grid-column:1/-1;padding:12px 13px;border:1px solid var(--line-soft);background:rgba(216,167,95,.04);color:var(--muted)}\n.precision-explain strong{display:block;margin-bottom:4px;color:var(--gold-bright);font-size:15px}\n.precision-explain p{margin:0;font-size:15px;line-height:1.65}
 .form-submit-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:15px}
 .form-error{margin:0;color:#f0a0a0;font-size:15px}
 .cta{border:0;min-width:190px}
@@ -285,7 +285,6 @@ section[id],details[id]{scroll-margin-top:96px}
 .daily-primary-score .section-kicker{letter-spacing:.08em}
 .daily-primary-score strong{font-family:var(--serif);font-size:58px;font-weight:500;line-height:1}
 .daily-primary-score small{color:var(--muted);font-size:15px}
-.daily-summary,.lucky-strip{display:none}
 .daily-metrics{display:grid;align-content:center}
 .metric-row{display:grid;grid-template-columns:42px 124px 1fr;gap:12px;align-items:center;min-height:61px;border-bottom:1px solid var(--line-soft)}
 .metric-row:last-child{border-bottom:0}
@@ -295,7 +294,6 @@ section[id],details[id]{scroll-margin-top:96px}
 .metric-name strong,.metric-score,.metric-score small{font-size:15px}
 .metric-score{color:var(--gold-bright)}
 .metric-copy{min-width:0}
-.metric-copy p,.metric-copy small{display:none}
 .metric-track{height:6px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.08)}
 .metric-track span{display:block;height:100%;background:linear-gradient(90deg,#f0cf8e,#bc8540)}
 .today-quote-panel{position:relative;display:flex;flex-direction:column;justify-content:center;padding:30px 28px;border:1px solid var(--line);border-radius:7px;background:rgba(5,18,29,.58)}
@@ -326,7 +324,7 @@ section[id],details[id]{scroll-margin-top:96px}
 .quarter-card>span{color:var(--gold);font-size:15px}
 .quarter-card h3{margin:4px 0 5px;font-family:var(--sans);font-size:16px}
 .quarter-card strong{color:#dce3e8;font-size:15px}
-.quarter-card p{display:none}
+.quarter-card p{margin:8px 0 0;color:var(--muted);font-size:15px;line-height:1.6}
 
 /* Tarot overview + controls */
 .tarot-stage{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:10px;background:radial-gradient(circle at 88% 18%,rgba(216,167,95,.08),transparent 24%),linear-gradient(145deg,#071a2a,#04131f)}
