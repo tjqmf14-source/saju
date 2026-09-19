@@ -506,6 +506,7 @@ function handleTarot(){
   }
   cancelTarotRoll();
   const mode=$('tarotMode').value;
+  $('tarot').classList.add('is-drawing');
   tarotSession={
     mode,
     count:tarotPickCount(mode),
