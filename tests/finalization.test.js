@@ -9,6 +9,7 @@ const ui = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf
 test('V12 is the only active frontend stylesheet and follows the reference palette', () => {
   assert.ok(html.includes('site-v12.css'));
   assert.ok(!html.includes('site-v11.css'));
+  assert.equal((html.match(/<link rel="stylesheet"/g) || []).length, 1);
   assert.ok(css.includes('NAESAJU V12'));
   assert.ok(css.includes('--bg:#03111d'));
   assert.ok(css.includes('--gold:#d8a75f'));
@@ -31,6 +32,13 @@ test('landing page follows the supplied section order', () => {
   }
 });
 
+test('document IDs are unique and primary recalculation CTA submits the live form', () => {
+  const ids=[...html.matchAll(/\sid=["']([^"']+)["']/g)].map((match)=>match[1]);
+  assert.equal(new Set(ids).size,ids.length);
+  assert.match(html,/class="birth-side-submit"[^>]+type="submit"[^>]+form="birthForm"/);
+  assert.match(ui,/event\.isTrusted/);
+});
+
 test('tarot exposes the complete 78-card rolling picker', () => {
   assert.match(html, /타로 리딩 시작하기/);
   assert.match(ui, /prepareTarotFan\(78\)/);
@@ -47,6 +55,8 @@ test('final information architecture keeps detailed year data inside precision r
   assert.ok(html.indexOf('id="monthForecast"') > html.indexOf('id="annualDetailReport"'));
   assert.match(html, /id="todayQuoteTitle"/);
   assert.match(html, /id="annualQuote"/);
+  assert.match(ui,/todayQuoteTitle/);
+  assert.match(ui,/annualQuote/);
 });
 
 test('solar-term month flow remains calculation-backed', () => {
