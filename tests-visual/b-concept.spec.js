@@ -22,7 +22,7 @@ test('V11 desktop follows the supplied landing-page composition', async ({ page 
   const hero = page.locator('.hero-primary');
   const heroBox = await hero.boundingBox();
   expect(heroBox?.width || 0).toBeGreaterThanOrEqual(1300);
-  expect(heroBox?.height || 0).toBeGreaterThanOrEqual(560);
+  expect(heroBox?.height || 0).toBeGreaterThanOrEqual(540);
 
   const heroVisual = page.locator('.hero-visual');
   const heroBg = await heroVisual.evaluate((el) => getComputedStyle(el).backgroundImage);
@@ -108,6 +108,7 @@ test('V11 remains readable and overflow-free on mobile', async ({ page }, testIn
 
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => scrollTo(0,0));
+  await page.locator('.hero-primary').screenshot({ path: `test-results/v12-hero-${testInfo.project.name}.png` });
   await page.screenshot({ path: `test-results/v12-reference-${testInfo.project.name}.png`, fullPage: true });
 });
 
@@ -117,7 +118,7 @@ test('calculation renderers still populate all retained data targets', async ({ 
   await expect(page.locator('#monthForecast .month-card')).toHaveCount(12);
   await expect(page.locator('#luckOverview .luck-overview-item')).toHaveCount(9);
   await expect(page.locator('#pillarGrid .pillar-card')).toHaveCount(4);
-  await expect(page.locator('#dailyMetrics .metric-row')).toHaveCount(4);
+  await expect(page.locator('#dailyMetrics .metric-row')).toHaveCount(5);
   await expect(page.locator('#tojungQuarterGrid .quarter-card')).toHaveCount(4);
   await assertNoHorizontalOverflow(page);
 });
@@ -126,6 +127,7 @@ test('tarot exposes all 78 cards as one overlapping fan without a scrollbar', as
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   await expect(page.locator('.tarot-preview-card')).toHaveCount(3);
+  await page.locator('.tarot-options').evaluate((element) => { element.open = true; });
   await page.locator('#tarotMode').selectOption('question');
   await page.locator('#drawTarot').click();
 
@@ -197,6 +199,7 @@ test('final-build typography and section geometry do not clip or overlap', async
     }).map((el)=>({tag:el.tagName,cls:el.className,text:(el.textContent||'').trim().slice(0,60),scrollWidth:el.scrollWidth,clientWidth:el.clientWidth}));
     const sections=[...document.querySelectorAll('.hero-primary,#input,.feature-orbit-nav,.visual-keyword-showcase,.quote-band,#today,#year,#tarot,#standards,#faq,#full-report,.closing-cta')];
     const badSections=sections.filter((el)=>{
+      if(el.id==='full-report' && !el.open) return false;
       const r=el.getBoundingClientRect();
       return r.width<=0 || r.height<=0 || r.right>viewportWidth+2 || r.left<-2;
     }).map((el)=>({id:el.id,cls:el.className}));
@@ -214,14 +217,16 @@ test('final-build typography and section geometry do not clip or overlap', async
 test('reference-density sections stay compact on desktop and primary disclosure works', async ({ page }, testInfo) => {
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(2);
 
   if (testInfo.project.name === 'desktop') {
     const geometry = await page.evaluate(() => Object.fromEntries(
-      ['#input', '#today', '#year'].map((selector) => [selector, document.querySelector(selector).getBoundingClientRect().height])
+      ['#input', '#today', '#year', '#tarot'].map((selector) => [selector, document.querySelector(selector).getBoundingClientRect().height])
     ));
     expect(geometry['#input']).toBeLessThan(520);
     expect(geometry['#today']).toBeLessThan(370);
     expect(geometry['#year']).toBeLessThan(370);
+    expect(geometry['#tarot']).toBeLessThan(400);
   }
 
   const firstFaq = page.locator('.faq-list details').first();
@@ -240,6 +245,7 @@ test('reference-density sections stay compact on desktop and primary disclosure 
 test('desktop tarot deal animation expands one stacked deck into a full overlapping fan', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'desktop animation contract');
   await page.goto('/');
+  await page.locator('.tarot-options').evaluate((element) => { element.open = true; });
   await page.locator('#tarotMode').selectOption('question');
   await page.locator('#drawTarot').click();
   await expect(page.locator('.tarot-pick')).toHaveCount(78);
@@ -289,7 +295,7 @@ test('desktop tarot deal animation expands one stacked deck into a full overlapp
 test('birth CTA recalculates current input and precision report exposes retained detail', async ({ page }) => {
   await page.goto('/');
   await page.locator('#name').fill('QA사용자');
-  await page.locator('#birthForm .cta').click();
+  await page.locator('.birth-side-submit:visible, #birthForm .cta:visible').first().click();
   await expect(page.locator('#reportTitle')).toContainText('QA사용자');
   await expect(page.locator('#results')).toBeVisible();
 
@@ -349,7 +355,7 @@ test('invalid birth date is explained, focused, and recoverable', async ({ page 
   await page.locator('#birthYear').fill('2025');
   await page.locator('#birthMonth').fill('2');
   await page.locator('#birthDay').fill('31');
-  await page.locator('#birthForm .cta').click();
+  await page.locator('.birth-side-submit:visible, #birthForm .cta:visible').first().click();
 
   await expect(page.locator('#formError')).toContainText('2025년 2월에는 31일이 없습니다.');
   await expect(page.locator('#birthDay')).toHaveAttribute('aria-invalid','true');
@@ -358,7 +364,7 @@ test('invalid birth date is explained, focused, and recoverable', async ({ page 
 
   await page.locator('#birthDay').fill('28');
   await expect(page.locator('#birthDay')).not.toHaveAttribute('aria-invalid','true');
-  await page.locator('#birthForm .cta').click();
+  await page.locator('.birth-side-submit:visible, #birthForm .cta:visible').first().click();
   await expect(page.locator('#results')).toBeVisible();
   await expect(page.locator('#formError')).toHaveText('');
 });

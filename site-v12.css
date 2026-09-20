@@ -17,7 +17,8 @@
   --line:rgba(216,167,95,.32);
   --line-soft:rgba(216,167,95,.14);
   --shadow:0 22px 70px rgba(0,0,0,.24);
-  --shell:min(1432px,calc(100vw - 64px));
+  --shell:min(1440px,calc(100vw - 96px));
+  --shell-edge:max(48px,calc((100vw - 1440px)/2));
   --serif:"Nanum Myeongjo","Noto Serif KR","Batang",Georgia,serif;
   --sans:"Pretendard","Noto Sans KR","Malgun Gothic",Arial,sans-serif;
   --min-type:15px;
@@ -97,9 +98,9 @@ section[id],details[id]{scroll-margin-top:96px}
 
 /* Header */
 .topbar{
-  position:sticky;top:0;z-index:90;width:100%;height:78px;
-  display:grid;grid-template-columns:230px 1fr 230px;align-items:center;gap:24px;
-  padding:0 max(24px,calc((100vw - 1432px)/2));
+  position:sticky;top:0;z-index:90;width:100%;height:74px;
+  display:grid;grid-template-columns:210px 1fr 210px;align-items:center;gap:20px;
+  padding:0 var(--shell-edge);
   border-bottom:1px solid var(--line-soft);
   background:rgba(3,17,29,.93);backdrop-filter:blur(16px);
 }
@@ -109,7 +110,7 @@ section[id],details[id]{scroll-margin-top:96px}
 .brand-word{display:grid;line-height:1.05}
 .brand-word strong{font-family:var(--serif);font-size:24px;font-weight:600;letter-spacing:.06em}
 .brand-word small{margin-top:7px;color:var(--gold);font-size:15px;letter-spacing:.13em}
-.topnav{display:flex;justify-content:center;align-items:center;gap:25px;min-width:0}
+.topnav{display:flex;justify-content:center;align-items:center;gap:23px;min-width:0}
 .topnav a{position:relative;display:flex;align-items:center;min-height:44px;color:#d9dde2;font-size:15px;font-weight:600;white-space:nowrap}
 .topnav a::after{content:"";position:absolute;left:50%;right:50%;bottom:2px;height:1px;background:var(--gold);transition:.18s}
 .topnav a:hover::after,.topnav a[aria-current="true"]::after{left:0;right:0}
@@ -118,7 +119,7 @@ section[id],details[id]{scroll-margin-top:96px}
 
 /* Hero */
 .hero-primary{
-  position:relative;isolation:isolate;overflow:hidden;width:100%;min-height:625px;
+  position:relative;isolation:isolate;overflow:hidden;width:100%;min-height:546px;
   border-bottom:1px solid var(--line-soft);background:#061522
 }
 .hero-primary::before{
@@ -132,13 +133,13 @@ section[id],details[id]{scroll-margin-top:96px}
   background:linear-gradient(180deg,transparent 0 7%,var(--gold) 7% 8%,transparent 8% 54%,var(--gold) 54% 55%,transparent 55% 100%);
   box-shadow:0 0 22px rgba(240,207,142,.32)
 }
-.hero-copy{position:relative;z-index:4;width:51%;padding:80px 0 44px 66px}
+.hero-copy{position:relative;z-index:4;width:53%;padding:64px 0 34px calc(var(--shell-edge) + 62px)}
 .hero-copy .section-kicker{margin-bottom:20px}
-.hero-copy h1{max-width:650px;margin-bottom:20px;font-size:clamp(54px,4.4vw,70px);line-height:1.16;text-shadow:0 4px 26px rgba(0,0,0,.36)}
+.hero-copy h1{max-width:650px;margin-bottom:18px;font-size:clamp(50px,4vw,64px);line-height:1.15;text-shadow:0 4px 26px rgba(0,0,0,.36)}
 .hero-copy h1 em{display:block;color:#fff;font-style:normal}
 .hero-lead{max-width:590px;margin-bottom:0;color:#d2d8df;font-size:17px;line-height:1.8}
-.hero-cta{margin-top:28px;min-width:250px;height:56px}
-.hero-proof-oracles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;max-width:700px;margin-top:34px}
+.hero-cta{margin-top:24px;min-width:250px;height:54px}
+.hero-proof-oracles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;max-width:650px;margin-top:28px}
 .hero-proof-oracles>div{display:grid;grid-template-columns:42px 1fr;align-items:center;gap:10px;min-width:0}
 .hero-proof-oracles .ui-icon{width:40px;height:40px;padding:9px;border:1px solid var(--line);border-radius:50%;color:var(--gold)}
 .hero-proof-oracles span{display:grid;gap:1px;min-width:0;line-height:1.45}
@@ -158,8 +159,8 @@ section[id],details[id]{scroll-margin-top:96px}
 
 /* Birth input */
 .input-panel{
-  position:relative;overflow:hidden;display:grid;grid-template-columns:255px minmax(650px,1fr) 275px;gap:30px;
-  padding:28px 30px
+  position:relative;overflow:hidden;display:grid;grid-template-columns:245px minmax(560px,1fr) 250px;gap:28px;
+  min-height:322px;padding:24px 28px
 }
 .input-panel::after{
   content:"";position:absolute;right:-45px;top:-65px;width:240px;height:240px;border:1px solid rgba(216,167,95,.12);border-radius:50%;
@@ -167,11 +168,10 @@ section[id],details[id]{scroll-margin-top:96px}
 }
 .input-panel .section-heading{position:relative;z-index:2;min-width:0}
 .input-panel .section-heading>div:first-child{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.input-panel .section-heading h2{margin:0 0 14px;font-size:36px;line-height:1.28}
+.input-panel .section-heading h2{margin:0 0 14px;font-size:34px;line-height:1.28}
 .input-panel form{position:relative;z-index:2;min-width:0;padding:14px 16px;border:1px solid var(--line-soft);border-radius:7px;background:rgba(1,10,18,.36)}
 .form-demo-note{
-  margin:0 0 10px;padding:7px 10px;border-left:2px solid var(--gold);
-  background:rgba(216,167,95,.05);color:var(--muted);font-size:15px;line-height:1.55
+  display:none
 }
 .field-name>span small{color:var(--muted-2);font-size:15px;font-weight:400}
 .form-modes{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:10px}
@@ -213,6 +213,8 @@ section[id],details[id]{scroll-margin-top:96px}
 .form-submit-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:9px}
 .form-error{margin:0;color:#f0a0a0;font-size:15px}
 .cta{border:0;min-width:190px}
+.form-submit-row .cta{display:none}
+.form-submit-row:has(.form-error:empty){min-height:0;margin-top:0}
 .birth-side-copy{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;min-width:0;padding-left:24px;border-left:1px solid var(--line-soft)}
 .birth-side-copy p{margin:0 0 14px;color:#dfe4e8;font-family:var(--serif);font-size:21px;line-height:1.6}
 .birth-side-copy img{position:absolute;right:0;top:0;width:40px;opacity:.7}
@@ -220,7 +222,7 @@ section[id],details[id]{scroll-margin-top:96px}
 
 /* Service rail */
 .feature-orbit-nav{display:grid;grid-template-columns:repeat(6,1fr);border:1px solid var(--line-soft);background:#061827}
-.feature-orbit-nav a{display:flex;align-items:center;justify-content:center;gap:12px;min-height:96px;padding:15px 14px;border-right:1px solid var(--line-soft)}
+.feature-orbit-nav a{display:flex;align-items:center;justify-content:center;gap:12px;min-height:142px;padding:17px 14px;border-right:1px solid var(--line-soft)}
 .feature-orbit-nav a:last-child{border-right:0}
 .feature-orbit-nav .ui-icon{width:34px;height:34px;color:var(--gold);flex:0 0 auto}
 .feature-orbit-nav span{display:grid;gap:3px;min-width:0;line-height:1.45}
@@ -237,8 +239,8 @@ section[id],details[id]{scroll-margin-top:96px}
 .visual-keyword-intro h2{margin:6px 0 10px;font-size:31px;line-height:1.25}
 .visual-keyword-intro p{margin:0;color:var(--muted);font-size:15px;line-height:1.65}
 .visual-keyword-intro a{align-self:flex-start;margin-top:18px}
-.visual-keyword-card{position:relative;min-width:0;aspect-ratio:150/226;overflow:hidden;border:1px solid rgba(216,167,95,.35);border-radius:7px;background:#081522}
-.atlas-card{position:absolute;inset:0;background-image:url('/oracle/b-visual-atlas.webp');background-repeat:no-repeat;background-size:600% auto;background-position-y:60.1%;filter:saturate(.92) contrast(1.04) brightness(.94);transition:.32s}
+.visual-keyword-card{position:relative;min-width:0;aspect-ratio:150/306;overflow:hidden;border:1px solid rgba(216,167,95,.35);border-radius:7px;background:#081522}
+.atlas-card{position:absolute;inset:0;background-image:url('/oracle/b-visual-atlas.webp');background-repeat:no-repeat;background-size:600% 575%;background-position-y:100%;filter:saturate(.92) contrast(1.04) brightness(.94);transition:.32s}
 .atlas-card-1{background-position-x:0}.atlas-card-2{background-position-x:20%}.atlas-card-3{background-position-x:40%}.atlas-card-4{background-position-x:60%}.atlas-card-5{background-position-x:80%}.atlas-card-6{background-position-x:100%}
 .visual-keyword-card:hover .atlas-card{transform:scale(1.04);filter:saturate(1.02) contrast(1.04) brightness(1.03)}
 .visual-keyword-card>div:not(.atlas-card){position:absolute;left:0;right:0;bottom:0;z-index:2;padding:62px 13px 14px;background:linear-gradient(transparent,rgba(2,10,18,.97))}
@@ -247,14 +249,14 @@ section[id],details[id]{scroll-margin-top:96px}
 
 /* Quote divider */
 .quote-band{
-  position:relative;overflow:hidden;min-height:205px;
+  position:relative;overflow:hidden;min-height:222px;
   border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);
   background:
     linear-gradient(90deg,rgba(4,19,31,.98) 0%,rgba(4,19,31,.90) 31%,rgba(4,19,31,.28) 64%,rgba(4,19,31,.02)),
-    url('/oracle/b-visual-atlas.webp') center 4%/100% auto no-repeat
+    url('/oracle/b-visual-atlas.webp') center 43%/100% auto no-repeat
 }
 .quote-band::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent 0 55%,rgba(240,207,142,.035))}
-.quote-band>div{position:relative;z-index:2;padding:48px 56px}
+.quote-band>div{position:relative;z-index:2;padding:54px 42px}
 .quote-band blockquote{max-width:560px;margin:0;color:#f4ead7;font-family:var(--serif);font-size:31px;line-height:1.45}
 .quote-band blockquote::before{content:"“";display:block;color:var(--gold);font-size:42px;line-height:.7}
 .quote-band p{max-width:600px;margin:10px 0 0;color:var(--muted);font-size:15px}
@@ -276,6 +278,7 @@ section[id],details[id]{scroll-margin-top:96px}
 #today>.section-heading>div:nth-child(2){display:block}
 #today>.section-heading h2{margin:0 0 13px;font-size:36px}
 #today>.section-heading p:not(.section-kicker):not(.section-date){margin:0 0 14px;color:var(--muted);line-height:1.7}
+#today>.section-heading a,.year-panel>.section-heading a,.reviews-head a{display:inline-flex;gap:10px;margin-top:16px;padding-bottom:3px;border-bottom:1px solid var(--gold);color:var(--gold-bright);font-weight:700}
 #today #todayHeadline{display:none}
 .daily-layout{display:grid;grid-template-columns:240px minmax(360px,1fr) 300px;gap:24px;align-items:stretch;min-width:0}
 .daily-primary{display:flex;align-items:center;justify-content:center}
@@ -309,14 +312,14 @@ section[id],details[id]{scroll-margin-top:96px}
 .today-quote-panel i{position:absolute;right:20px;bottom:16px;color:var(--gold);font-style:normal;font-size:24px}
 
 /* Annual */
-.year-panel{display:grid;grid-template-columns:250px 390px minmax(0,1fr);gap:0;min-height:315px;padding:0;background:linear-gradient(145deg,rgba(7,25,39,.98),rgba(4,16,27,.98))}
+.year-panel{display:grid;grid-template-columns:250px 390px minmax(0,1fr);gap:0;min-height:334px;padding:0;background:linear-gradient(145deg,rgba(7,25,39,.98),rgba(4,16,27,.98))}
 .year-panel>.section-heading{display:block;margin:0;padding:28px 28px;border:0;border-right:1px solid var(--line-soft)}
 .year-panel>.section-heading>div:first-child{display:flex;align-items:center;gap:12px;margin-bottom:18px}
 .year-panel>.section-heading h2{margin:0 0 14px;font-size:35px}
 .year-panel>.section-heading p:not(.section-kicker){margin:0 0 16px;color:var(--muted);line-height:1.7}
 .year-panel>.section-heading a{display:inline-flex;gap:10px;padding-bottom:3px;border-bottom:1px solid var(--gold);color:var(--gold-bright);font-weight:700}
 .annual-scene{
-  min-height:315px;border-right:1px solid var(--line-soft);
+  min-height:334px;border-right:1px solid var(--line-soft);
   background:
     linear-gradient(90deg,rgba(4,18,30,.04),rgba(4,18,30,.20)),
     url('/oracle/b-visual-atlas.webp') 70% 0/650px auto no-repeat
@@ -341,22 +344,30 @@ section[id],details[id]{scroll-margin-top:96px}
 
 /* Tarot overview + controls */
 .tarot-stage{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:10px;background:radial-gradient(circle at 88% 18%,rgba(216,167,95,.08),transparent 24%),linear-gradient(145deg,#071a2a,#04131f)}
-.tarot-stage-inner{display:grid;grid-template-columns:250px minmax(0,1fr) 285px;gap:28px;padding:28px 30px}
+.tarot-stage-inner{display:grid;grid-template-columns:245px minmax(0,1fr) 250px;gap:18px 22px;min-height:300px;padding:14px 22px}
 .tarot-copy{display:flex;flex-direction:column;justify-content:center;min-width:0}
-.tarot-copy h2{margin:9px 0 10px;font-size:32px;line-height:1.27}
+.tarot-copy h2{margin:9px 0 10px;font-size:34px;line-height:1.27}
 .tarot-copy>p:not(.section-kicker){color:var(--muted);font-size:15px}
-.tarot-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:center;min-width:0}
-.tarot-preview-card{position:relative;min-width:0;padding:9px;border:1px solid var(--line);border-radius:6px;background:linear-gradient(145deg,#0b2132,#071522);box-shadow:0 18px 36px rgba(0,0,0,.24)}
+.tarot-copy .tarot-button{align-self:flex-start;margin-top:14px;min-width:180px;background:linear-gradient(105deg,#f2d397,#d6a45c);color:#17202a}
+.tarot-preview{display:grid;grid-template-columns:repeat(3,minmax(0,190px));justify-content:center;gap:14px;align-items:center;min-width:0}
+.tarot-preview-card{position:relative;min-width:0;padding:8px;border:1px solid var(--line);border-radius:6px;background-color:#071522;background-image:linear-gradient(180deg,rgba(7,21,34,.12),rgba(4,14,24,.88)),url('/oracle/b-visual-atlas.webp');background-repeat:no-repeat;background-size:100% 100%,600% 575%;background-position:center,20% 100%;box-shadow:0 18px 36px rgba(0,0,0,.24)}
+.tarot-preview-card:nth-child(2){background-position:center,40% 100%}
+.tarot-preview-card:nth-child(3){background-position:center,100% 100%}
 .tarot-preview-card:nth-child(2){transform:translateY(-9px)}
-.tarot-preview-card::before{content:"";position:absolute;inset:14px;z-index:2;pointer-events:none;border:1px solid rgba(240,207,142,.28);box-shadow:0 0 0 5px rgba(2,10,18,.16) inset}
-.tarot-preview-card img{width:100%;aspect-ratio:2/3;object-fit:cover;border:1px solid rgba(240,207,142,.22);filter:grayscale(.88) sepia(.62) saturate(.56) brightness(.48) contrast(1.16);transition:.25s}
-.tarot-preview-card:hover img{filter:grayscale(.62) sepia(.55) saturate(.7) brightness(.62) contrast(1.12);transform:scale(1.01)}
+.tarot-preview-card::before{content:"";position:absolute;inset:14px 14px 52px;z-index:2;pointer-events:none;border:1px solid rgba(240,207,142,.28);box-shadow:0 0 0 5px rgba(2,10,18,.16) inset}
+.tarot-preview-card img{width:100%;aspect-ratio:4/5;object-fit:cover;border:1px solid rgba(240,207,142,.22);filter:saturate(.92) brightness(.82);transition:.25s}
+.tarot-preview-card:hover img{filter:saturate(1.02) brightness(1);transform:scale(1.01)}
 .tarot-preview-card strong{display:block;margin-top:8px;text-align:center;font-family:var(--serif);font-size:16px}
+.tarot-preview-card small{display:block;color:var(--muted-2);text-align:center;font-size:15px}
 .tarot-quote{display:flex;flex-direction:column;justify-content:center;min-width:0;padding:22px 20px 22px 24px;border-left:1px solid var(--line-soft)}
 .tarot-quote span{color:var(--gold);font-family:var(--serif);font-size:42px;line-height:.7}
 .tarot-quote blockquote{margin:10px 0 12px;font-family:var(--serif);font-size:21px;line-height:1.55}
 .tarot-quote p{margin:0;color:var(--muted);font-size:15px}
-.tarot-controls{grid-column:1/-1;display:grid;grid-template-columns:1fr 1.4fr auto;gap:14px;align-items:end;padding-top:18px;border-top:1px solid var(--line-soft)}
+.tarot-options{grid-column:1/-1;border-top:1px solid var(--line-soft)}
+.tarot-options>summary{display:flex;align-items:center;justify-content:space-between;min-height:38px;color:var(--muted);cursor:pointer}
+.tarot-options>summary span{color:var(--gold);font-size:22px}
+.tarot-options[open]>summary span{transform:rotate(45deg)}
+.tarot-controls{display:grid;grid-template-columns:1fr 1.8fr;gap:14px;align-items:end;padding:6px 0 16px}
 .tarot-controls label{display:grid;gap:6px;min-width:0;color:var(--muted)}
 .tarot-controls select,.tarot-controls textarea{width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--line-soft);border-radius:4px;background:#061522;color:var(--ink);font-size:15px}
 .tarot-controls textarea{min-height:72px;resize:vertical}
@@ -367,7 +378,7 @@ section[id],details[id]{scroll-margin-top:96px}
 #tarot.is-drawing .tarot-preview,#tarot.is-drawing .tarot-quote{display:none}
 #tarot.is-drawing .tarot-stage-inner{grid-template-columns:minmax(240px,300px) minmax(0,1fr)}
 #tarot.is-drawing .tarot-copy{grid-column:1}
-#tarot.is-drawing .tarot-controls{grid-column:2;padding-top:0;border-top:0;align-self:end}
+#tarot.is-drawing .tarot-options{grid-column:2;padding-top:0;border-top:0;align-self:end}
 
 /* Full 78-card fan spread — Tarotap-like overlap without a scrollbar */
 .tarot-fan-deck{
@@ -508,39 +519,45 @@ section[id],details[id]{scroll-margin-top:96px}
 .tarot-reading-grid strong{color:var(--gold-bright)}
 .tarot-reading-grid p,.tarot-reading-note{color:var(--muted);overflow-wrap:break-word}
 
-/* Trust / interpretation criteria */
-.reviews-section{padding:24px 28px}
-.reviews-head{display:grid;grid-template-columns:230px 1fr;gap:26px;align-items:end;padding-bottom:14px;border-bottom:1px solid var(--line-soft)}
-.reviews-head h2{margin:6px 0 0;font-size:34px}
-.reviews-head .section-lead{margin:6px 0 0}
-.review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
-.review-card{position:relative;display:flex;flex-direction:column;min-height:205px;padding:24px;border:1px solid var(--line-soft);border-radius:7px;background:rgba(6,23,37,.66)}
+/* Reviews */
+.reviews-section{display:grid;grid-template-columns:250px minmax(0,1fr);gap:22px;padding:22px 26px}
+.reviews-head{display:block;padding-right:20px;border-right:1px solid var(--line-soft)}
+.reviews-head>div:first-child{display:flex;align-items:center;gap:12px;margin-bottom:15px}
+.reviews-head h2{margin:6px 0 0;font-size:32px;line-height:1.3}
+.reviews-head .section-lead{margin:10px 0 0}
+.review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:0}
+.review-card{position:relative;display:flex;flex-direction:column;min-height:240px;padding:21px;border:1px solid var(--line-soft);border-radius:7px;background:rgba(6,23,37,.66)}
 .review-card::after{content:"";position:absolute;right:14px;bottom:12px;width:72px;height:72px;border:1px solid rgba(216,167,95,.10);border-radius:50%}
-.review-card .quote{display:block;color:var(--gold);font-family:var(--serif);font-size:24px;font-weight:600;letter-spacing:.08em}
-.review-card h3{margin:14px 0 10px;font-family:var(--serif);font-size:23px}
-.review-card p{margin:0 0 18px;color:#d8dfe4;font-size:15px;line-height:1.75}
-.review-card footer{margin-top:auto;padding-top:12px;border-top:1px solid var(--line-soft);color:var(--muted);font-size:15px}
+.review-card .quote{display:block;color:var(--gold);font-family:var(--serif);font-size:34px;font-weight:600;line-height:.8}
+.review-card p{margin:13px 0 12px;color:#d8dfe4;font-size:15px;line-height:1.75}
+.review-stars{color:var(--gold-bright);font-size:16px;letter-spacing:.12em}
+.review-card footer{display:grid;margin-top:auto;padding-top:12px;border-top:1px solid var(--line-soft);color:var(--muted);font-size:15px}
+.review-card footer strong{color:#e8edf0}
+.review-card footer span{color:var(--muted-2)}
 
 /* FAQ */
-.faq-section{display:grid;grid-template-columns:260px minmax(0,1fr) 285px;gap:28px;padding:26px 30px}
+.faq-section{display:grid;grid-template-columns:260px minmax(0,1fr) 285px;gap:24px;padding:16px 26px}
 .faq-intro h2{margin:8px 0;font-size:33px}
 .faq-intro p{color:var(--muted);font-size:15px}
 .faq-list{border-top:1px solid var(--line-soft)}
 .faq-list details{border-bottom:1px solid var(--line-soft)}
-.faq-list summary{display:flex;justify-content:space-between;gap:16px;padding:17px 4px;cursor:pointer;font-weight:700;font-size:15px}
+.faq-list summary{display:flex;justify-content:space-between;gap:16px;padding:11px 4px;cursor:pointer;font-weight:700;font-size:15px}
 .faq-list summary::after{content:"+";flex:0 0 auto;color:var(--gold);font-size:22px}
 .faq-list details[open] summary::after{content:"−"}
 .faq-list p{padding:0 4px 18px;margin:0;color:var(--muted);font-size:15px;line-height:1.8}
 .faq-art{
-  position:relative;min-height:290px;overflow:hidden;border-left:1px solid var(--line-soft);
+  position:relative;min-height:225px;overflow:hidden;border-left:1px solid var(--line-soft);
   background:
     linear-gradient(180deg,rgba(3,15,25,.10),rgba(3,15,25,.48)),
-    url('/oracle/b-visual-atlas.webp') 76% 0/185% auto no-repeat
+    url('/oracle/b-visual-atlas.webp') 72% 74%/225% auto no-repeat
 }
-.faq-art::after{content:"“ 좋은 운은,\A 언제나 준비된 마음으로\A 다가옵니다. ”";white-space:pre;position:absolute;left:28px;top:42px;color:#ead9b9;font-family:var(--serif);font-size:19px;line-height:1.65;text-shadow:0 2px 18px rgba(0,0,0,.75)}
+.faq-art blockquote{position:absolute;left:28px;top:42px;margin:0;color:#ead9b9;font-family:var(--serif);font-size:19px;line-height:1.65;text-shadow:0 2px 18px rgba(0,0,0,.75)}
+.faq-art blockquote::before{content:"“";display:block;color:var(--gold);font-size:36px;line-height:.65}
 
 /* Precision report */
 .full-report-shell{overflow:hidden}
+.full-report-shell:not([open]){height:0;margin:0;border:0;box-shadow:none}
+.full-report-shell:not([open])>summary{display:none}
 .full-report-shell>summary{display:flex;align-items:center;justify-content:space-between;gap:30px;min-height:88px;padding:18px 26px;cursor:pointer;background:linear-gradient(90deg,rgba(216,167,95,.06),transparent 46%)}
 .full-report-shell>summary span{display:grid;gap:4px;min-width:0}
 .full-report-shell>summary b{font-family:var(--serif);font-size:25px;font-weight:500}
@@ -664,16 +681,16 @@ section[id],details[id]{scroll-margin-top:96px}
 
 /* Closing CTA + footer */
 .closing-cta{
-  position:relative;overflow:hidden;min-height:235px;padding:46px 56px;border:1px solid var(--line);border-radius:10px;
+  position:relative;overflow:hidden;min-height:245px;padding:52px 58px;border:1px solid var(--line);border-radius:10px;
   background:
     linear-gradient(90deg,rgba(4,18,30,.98) 0%,rgba(4,18,30,.86) 42%,rgba(4,18,30,.18) 78%),
-    url('/oracle/b-visual-atlas.webp') center 4%/100% auto no-repeat
+    url('/oracle/b-visual-atlas.webp') center 61%/100% auto no-repeat
 }
 .closing-cta h2{max-width:620px;margin:0 0 8px;font-size:34px}
 .closing-cta p{max-width:650px;margin:0 0 20px;color:var(--muted);font-size:15px}
 .site-footer{
-  display:grid;grid-template-columns:260px 1fr auto;gap:30px;align-items:center;min-height:140px;padding:26px 12px;border-top:1px solid var(--line-soft);
-  background:linear-gradient(90deg,rgba(2,11,19,.96),rgba(2,11,19,.82)),url('/oracle/hero-scene.svg') center/cover no-repeat
+  display:grid;grid-template-columns:260px 1fr auto;gap:30px;align-items:center;min-height:180px;padding:32px 12px;border-top:1px solid var(--line-soft);
+  background:linear-gradient(90deg,rgba(2,11,19,.92),rgba(2,11,19,.62)),url('/oracle/hero-scene.svg') center 62%/cover no-repeat
 }
 .site-footer>div{display:flex;align-items:center;gap:12px}
 .site-footer .seal{display:grid;place-items:center;width:42px;height:42px;border:1px solid var(--line);border-radius:50%;color:var(--gold);font-family:var(--serif);font-size:20px}
@@ -686,7 +703,7 @@ section[id],details[id]{scroll-margin-top:96px}
 @media(max-width:1100px){
   :root{--shell:min(980px,calc(100vw - 32px))}
   .topbar{grid-template-columns:190px 1fr auto;padding:0 16px}
-  .topnav{gap:16px}.topnav a:nth-child(5),.topnav a:nth-child(6){display:none}
+  .topnav{gap:16px}.topnav a:nth-child(5),.topnav a:nth-child(6),.topnav a:nth-child(7){display:none}
   .hero-primary{min-height:570px}.hero-copy{width:58%;padding-left:44px}.hero-visual{width:77%}
   .input-panel{grid-template-columns:220px 1fr;gap:22px}
   .birth-side-copy{grid-column:1/-1;padding:20px 0 0;border-left:0;border-top:1px solid var(--line-soft)}
@@ -703,6 +720,7 @@ section[id],details[id]{scroll-margin-top:96px}
   .annual-copy h3{display:none}
   .quarter-card{padding-inline:8px}
   .tarot-stage-inner{grid-template-columns:220px 1fr}.tarot-quote{grid-column:1/-1;border-left:0;border-top:1px solid var(--line-soft)}
+  .tarot-options{grid-column:1/-1}
   .faq-section{grid-template-columns:220px 1fr}.faq-art{display:none}
   .accuracy-basis{grid-template-columns:repeat(2,1fr)}
   .detailed-report{grid-template-columns:1fr}
@@ -718,16 +736,18 @@ section[id],details[id]{scroll-margin-top:96px}
   .topbar{height:66px;grid-template-columns:1fr auto;padding:0 12px}
   .brand-word strong{font-size:21px}.topnav{display:none}.premium-link{padding:0 14px}
   .hero-primary{min-height:auto}
-  .hero-primary::before{background:linear-gradient(180deg,rgba(4,21,34,.05) 0%,rgba(4,21,34,.18) 58%,#041522 75%,#041522 100%)}
+  .hero-primary::before{background:linear-gradient(180deg,rgba(4,21,34,.22) 0%,rgba(4,21,34,.08) 54%,rgba(4,21,34,0) 70%)}
   .hero-copy{width:100%;padding:44px 24px 28px}
   .hero-copy h1{font-size:44px}
   .hero-lead{font-size:16px}
   .hero-proof-oracles{grid-template-columns:1fr}
-  .hero-visual{position:relative;width:100%;height:305px;margin-top:-18px;background:linear-gradient(180deg,rgba(4,21,34,.02),rgba(4,21,34,.10) 70%,#041522 100%),url('/oracle/b-visual-atlas.webp') 69% 0/auto max(620px,150vw) no-repeat,url('/oracle/hero-scene.svg') 63% 50%/cover no-repeat}
+  .hero-visual{position:relative;width:100%;height:305px;margin-top:-18px;background:linear-gradient(180deg,rgba(4,21,34,.02),rgba(4,21,34,.10) 70%,#041522 100%),url('/oracle/b-visual-atlas.webp') 50% 0/100% auto no-repeat,url('/oracle/hero-scene.svg') 63% 50%/cover no-repeat}
   .hero-visual-top{right:16px;top:18px}
   .input-panel{grid-template-columns:1fr;gap:18px;padding:24px 18px}
   .input-panel .section-heading,.input-panel form,.birth-side-copy{grid-column:1;min-width:0}
   .birth-side-copy{display:none}
+  .form-submit-row .cta{display:inline-flex}
+  .form-submit-row:has(.form-error:empty){margin-top:9px}
   .form-grid{grid-template-columns:1fr 1fr}
   .precision-grid{grid-template-columns:1fr}
   .block-head{grid-template-columns:1fr;gap:4px;align-items:start}
@@ -737,6 +757,7 @@ section[id],details[id]{scroll-margin-top:96px}
   .visual-keyword-showcase{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px}
   .visual-keyword-intro{grid-column:1/-1;grid-row:auto;padding:14px 10px 18px}
   .visual-keyword-card{aspect-ratio:4/5}
+  .quote-band{background:linear-gradient(90deg,rgba(4,19,31,.96),rgba(4,19,31,.40)),url('/oracle/b-visual-atlas.webp') center 32%/200% auto no-repeat}
   .quote-band>div{padding:34px 24px}.quote-band blockquote{font-size:25px}
   .landing-section{padding:20px 18px}.landing-section>.section-heading{grid-template-columns:1fr;gap:8px}.landing-section>.section-heading h2{font-size:30px}
   #today{grid-template-columns:1fr;gap:18px}
@@ -752,12 +773,12 @@ section[id],details[id]{scroll-margin-top:96px}
   .annual-copy h3{display:block}
   .quarter-grid{grid-template-columns:1fr 1fr}.quarter-card:nth-child(2n){border-right:0}.quarter-card:nth-child(-n+2){border-bottom:1px solid var(--line-soft)}
   .tarot-stage-inner{grid-template-columns:1fr;padding:22px 18px}
-  .tarot-copy,.tarot-preview,.tarot-quote,.tarot-controls,.tarot-deck,.tarot-result{grid-column:1}
+  .tarot-copy,.tarot-preview,.tarot-quote,.tarot-options,.tarot-deck,.tarot-result{grid-column:1}
   .tarot-preview{gap:10px}.tarot-quote{border-left:0;border-top:1px solid var(--line-soft)}
   .tarot-controls{grid-template-columns:1fr}
   #tarot.is-drawing .tarot-stage-inner{grid-template-columns:1fr}
-  #tarot.is-drawing .tarot-copy,#tarot.is-drawing .tarot-controls{grid-column:1}
-  #tarot.is-drawing .tarot-controls{padding-top:16px;border-top:1px solid var(--line-soft)}
+  #tarot.is-drawing .tarot-copy,#tarot.is-drawing .tarot-options{grid-column:1}
+  #tarot.is-drawing .tarot-options{padding-top:16px;border-top:1px solid var(--line-soft)}
   .tarot-fan-head{align-items:flex-start;flex-direction:column;gap:10px}
   .tarot-fan-meta{justify-items:start}
   .tarot-fan-stage{height:270px}
@@ -768,7 +789,7 @@ section[id],details[id]{scroll-margin-top:96px}
   .tarot-pick-status{align-items:flex-start;flex-direction:column;gap:4px}
   .tarot-pick-status span{text-align:left}
   .tarot-reading-grid{grid-template-columns:1fr}
-  .reviews-section{padding:20px 18px}.reviews-head{grid-template-columns:1fr}.review-grid{grid-template-columns:1fr}
+  .reviews-section{grid-template-columns:1fr;padding:20px 18px}.reviews-head{padding:0 0 18px;border-right:0;border-bottom:1px solid var(--line-soft)}.review-grid{grid-template-columns:1fr}
   .faq-section{grid-template-columns:1fr;gap:18px;padding:22px 18px}.faq-art{display:none}
   .full-report-shell>summary{padding:17px 18px}.full-report-body{padding:0 18px 22px}
   .accuracy-basis{grid-template-columns:1fr 1fr}
@@ -781,14 +802,16 @@ section[id],details[id]{scroll-margin-top:96px}
   .expert-guide-head,.expert-glossary{grid-template-columns:1fr}
   .expert-story-grid{grid-template-columns:1fr}
   .pillar-grid{grid-template-columns:repeat(2,1fr)}
-  .closing-cta{padding:34px 24px;min-height:210px}.closing-cta h2{font-size:30px}
+  .closing-cta{padding:34px 24px;min-height:210px;background:linear-gradient(90deg,rgba(4,18,30,.96),rgba(4,18,30,.28)),url('/oracle/b-visual-atlas.webp') center 71%/200% auto no-repeat}.closing-cta h2{font-size:30px}
   .site-footer{grid-template-columns:1fr;gap:12px;padding:24px 0}.footer-copy{white-space:normal}
 }
 
 /* Compact mobile */
 @media(max-width:520px){
   .hero-copy h1{font-size:39px}
-  .hero-visual{height:280px;background-position:65% 50%;background-size:cover}
+  .hero-visual{height:280px}
+  .tarot-preview-card strong{font-size:15px}
+  .tarot-preview-card small{display:none}
   .input-panel{padding:22px 16px}
   .form-modes{align-items:flex-start;flex-direction:column}
   .form-grid{grid-template-columns:1fr 1fr;gap:11px 9px}

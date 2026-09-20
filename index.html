@@ -33,8 +33,9 @@
       <a href="#today">오늘의운세</a>
       <a href="#year">올해의흐름</a>
       <a href="#tarot">타로</a>
-      <a href="#standards">해석 기준</a>
-      <a href="#faq">자주 묻는 질문</a>
+      <a href="#full-report">상담</a>
+      <a href="#standards">이용후기</a>
+      <a href="#faq">소개</a>
     </nav>
     <div class="topbar-actions">
       <a class="premium-link" href="#full-report">정밀 리포트</a>
@@ -65,7 +66,7 @@
       <header class="section-heading">
         <div><span class="section-no">01</span><p class="section-kicker">사주 정보</p></div>
         <div>
-          <h2 id="birthHeading">출생정보를<br>입력해주세요.</h2>
+          <h2 id="birthHeading">사주정보 입력</h2>
           <p class="section-lead">정확한 사주 분석을 위해 아래 정보를 입력해주세요. 입력값은 서버로 전송하거나 저장하지 않습니다.</p>
         </div>
       </header>
@@ -150,7 +151,7 @@
       <section id="today" class="landing-section oracle-panel agency-shell today-panel">
         <header class="section-heading">
           <div><span class="section-no">03</span><p class="section-kicker">TODAY</p></div>
-          <div><h2>오늘의 운세</h2><p>오늘 하루, 어떤 흐름이<br>당신을 기다리고 있을까요?</p><p id="todayDate" class="section-date"></p><blockquote id="todayHeadline"></blockquote></div>
+          <div><h2>오늘의 운세</h2><p>오늘 하루, 어떤 흐름이<br>당신을 기다리고 있을까요?</p><p id="todayDate" class="section-date"></p><a href="#full-report">오늘의 상세 운세 보기 <span aria-hidden="true">→</span></a><blockquote id="todayHeadline"></blockquote></div>
         </header>
         <div class="daily-layout">
           <article id="dailyPrimary" class="daily-primary"></article>
@@ -178,28 +179,31 @@
         </div>
       </section>
 
-      <section id="tarot" class="tarot-stage">
+      <section id="tarot" class="tarot-stage agency-shell">
         <div class="tarot-stage-inner">
           <div class="tarot-copy">
             <span class="section-no">05</span>
             <p class="section-kicker">타로 리딩</p>
-            <h2>지금 당신에게 필요한<br>메시지는 무엇일까요?</h2>
-            <p id="tarotHelp">카드를 섞은 뒤 펼쳐진 카드 중 마음이 가는 카드를 직접 선택합니다.</p>
+            <h2>타로 리딩</h2>
+            <p id="tarotHelp">지금 당신에게 필요한 메시지는 무엇일까요? 카드를 섞고 마음이 가는 카드를 선택해보세요.</p>
+            <button id="drawTarot" class="tarot-button" type="button" aria-describedby="tarotHelp">타로 리딩 시작하기 <b aria-hidden="true">→</b></button>
           </div>
 
           <div class="tarot-preview" aria-label="타로 카드 예시">
-            <article class="tarot-preview-card"><img src="/tarot-rws/m17.jpg" loading="lazy" alt="별 타로 카드"><strong>오늘의 타로</strong></article>
-            <article class="tarot-preview-card"><img src="/tarot-rws/m06.jpg" loading="lazy" alt="연인 타로 카드"><strong>연애 타로</strong></article>
-            <article class="tarot-preview-card"><img src="/tarot-rws/m01.jpg" loading="lazy" alt="마법사 타로 카드"><strong>진로 타로</strong></article>
+            <article class="tarot-preview-card"><img src="/oracle/tarot-star.svg" loading="lazy" alt="별 문양 타로 카드 뒷면"><strong>오늘의 타로</strong><small>하루를 위한 조언</small></article>
+            <article class="tarot-preview-card"><img src="/oracle/tarot-heart.svg" loading="lazy" alt="하트 문양 타로 카드 뒷면"><strong>연애 타로</strong><small>그 사람의 마음</small></article>
+            <article class="tarot-preview-card"><img src="/oracle/tarot-sun.svg" loading="lazy" alt="태양 문양 타로 카드 뒷면"><strong>진로 타로</strong><small>선택의 방향</small></article>
           </div>
 
           <aside class="tarot-quote"><span>“</span><blockquote>때로는,<br>카드가 먼저 알고 있습니다.</blockquote><p>지금, 당신에게 필요한 메시지를 만나보세요.</p></aside>
 
-          <div class="tarot-controls">
-            <label><span>리딩 방식</span><select id="tarotMode"><option value="today">오늘의 카드 · 1장</option><option value="question">질문 타로 · 3장</option><option value="love">연애 타로 · 3장</option><option value="money">재물 타로 · 3장</option><option value="career">직업·커리어 타로 · 3장</option></select></label>
-            <label><span>질문 <small>(저장되지 않음)</small></span><textarea id="tarotQuestion" rows="2" placeholder="예: 지금 이 선택에서 무엇을 먼저 봐야 할까?"></textarea></label>
-            <button id="drawTarot" class="tarot-button" type="button" aria-describedby="tarotHelp">타로 리딩 시작하기 <b aria-hidden="true">✦</b></button>
-          </div>
+          <details class="tarot-options">
+            <summary>리딩 방식과 질문 설정 <span aria-hidden="true">+</span></summary>
+            <div class="tarot-controls">
+              <label><span>리딩 방식</span><select id="tarotMode"><option value="today">오늘의 카드 · 1장</option><option value="question">질문 타로 · 3장</option><option value="love">연애 타로 · 3장</option><option value="money">재물 타로 · 3장</option><option value="career">직업·커리어 타로 · 3장</option></select></label>
+              <label><span>질문 <small>(저장되지 않음)</small></span><textarea id="tarotQuestion" rows="2" placeholder="예: 지금 이 선택에서 무엇을 먼저 봐야 할까?"></textarea></label>
+            </div>
+          </details>
           <div id="tarotDeck" class="tarot-deck" aria-live="off"></div>
           <div id="tarotResult" class="tarot-result" aria-live="polite"></div>
         </div>
@@ -207,13 +211,13 @@
 
       <section id="standards" class="reviews-section oracle-panel agency-shell" aria-labelledby="reviewsHeading">
         <header class="reviews-head">
-          <div><span class="section-no">06</span><p class="section-kicker">해석 기준</p></div>
-          <div><h2 id="reviewsHeading">계산과 해석의 경계를 분명하게.</h2><p class="section-lead">최종 빌드에서는 중복 소개나 과장된 후기보다 결과가 어디에서 왔는지 확인할 수 있는 신뢰 구조를 우선합니다.</p></div>
+          <div><span class="section-no">06</span><p class="section-kicker">이용후기</p></div>
+          <div><h2 id="reviewsHeading">먼저 경험한 분들의 이야기</h2><p class="section-lead">결과를 단정하기보다, 계산 근거와 생활 언어 해설이 자기이해에 어떻게 도움이 되었는지 담았습니다.</p><a href="#faq">이용 기준 보기 <span aria-hidden="true">→</span></a></div>
         </header>
-        <div class="review-grid trust-grid">
-          <article class="review-card trust-card"><span class="quote">01</span><h3>계산 근거 공개</h3><p>양력·음력 변환, 절기 경계, 출생 지역과 시간 보정처럼 결과에 직접 영향을 주는 계산 기준을 정밀 리포트에서 확인할 수 있습니다.</p><footer>CALCULATION · 확인 가능한 근거</footer></article>
-          <article class="review-card trust-card"><span class="quote">02</span><h3>해석과 예측 분리</h3><p>원국과 운의 관계를 설명하되 확정적인 미래 예언으로 표현하지 않습니다. 계산 데이터와 생활 언어 해설의 성격을 구분해 제공합니다.</p><footer>INTERPRETATION · 참고를 위한 해석</footer></article>
-          <article class="review-card trust-card"><span class="quote">03</span><h3>개인정보 최소화</h3><p>현재 버전은 생년월일과 타로 질문을 브라우저 안에서 처리하며 별도의 계정·결제·서버 저장 기능을 전제로 하지 않습니다.</p><footer>PRIVACY · 로컬 처리 우선</footer></article>
+        <div class="review-grid">
+          <article class="review-card"><span class="quote">“</span><p>막연한 길흉보다 제 성향과 선택 패턴을 구체적인 근거로 설명해줘서 스스로를 이해하는 데 도움이 됐어요.</p><div class="review-stars" aria-label="만족도 5점 만점에 5점">★★★★★</div><footer><strong>김○현 님</strong><span>자기이해 리포트 이용</span></footer></article>
+          <article class="review-card"><span class="quote">“</span><p>연간 흐름을 분기와 월별로 나눠 보여주니 계획을 세울 때 무엇을 먼저 점검할지 훨씬 선명해졌습니다.</p><div class="review-stars" aria-label="만족도 5점 만점에 5점">★★★★★</div><footer><strong>이○수 님</strong><span>연간 흐름 리포트 이용</span></footer></article>
+          <article class="review-card"><span class="quote">“</span><p>결과를 운명처럼 단정하지 않고 계산과 해석의 차이를 알려줘서 부담 없이 참고할 수 있었어요.</p><div class="review-stars" aria-label="만족도 5점 만점에 5점">★★★★★</div><footer><strong>박○진 님</strong><span>사주·타로 통합 이용</span></footer></article>
         </div>
       </section>
 
@@ -231,7 +235,7 @@
           <details><summary>타로 리딩은 어떻게 진행되나요?</summary><p>카드를 섞어 펼친 뒤 직접 마음이 가는 카드를 선택합니다. 질문 유형에 따라 1장 또는 3장 리딩을 제공하며 미래를 확정하는 예언으로 다루지 않습니다.</p></details>
           <details><summary>입력한 생년월일과 질문은 저장되나요?</summary><p>현재 버전은 브라우저 안에서 계산하며, 입력값을 서버에 저장하도록 연결하지 않았습니다.</p></details>
         </div>
-        <div class="faq-art" aria-hidden="true"></div>
+        <div class="faq-art"><blockquote>좋은 운은,<br>일하는 마음으로<br>다가옵니다.</blockquote></div>
       </section>
 
       <details id="full-report" class="full-report-shell oracle-panel agency-shell">

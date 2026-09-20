@@ -205,7 +205,8 @@ function renderToday(chart,todayFlow){
     ['money','02','재물',copy.money,'icon-coin'],
     ['love','03','연애',copy.love,'icon-heart'],
     ['work','04','직업',copy.work,'icon-briefcase'],
-    ['condition','05','컨디션',copy.health,'icon-health']
+    ['condition','05','건강',copy.health,'icon-health'],
+    ['study','06','학업',copy.summary,'icon-chart']
   ];
   $('dailyMetrics').innerHTML=metrics.map(([key,index,title,body,icon])=>{
     const flow=scores[key];
@@ -610,9 +611,9 @@ form.addEventListener('change',(event)=>{
 });
 form.addEventListener('submit',(event)=>{
   event.preventDefault();
-  results.dataset.mode=event.isTrusted?'personal':'demo';
+  results.dataset.mode='personal';
   renderAll();
-  if(event.isTrusted){
+  if(!results.hidden){
     const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     requestAnimationFrame(()=>document.querySelector('.visual-keyword-showcase')?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'}));
   }
@@ -622,4 +623,5 @@ syncCalendarUi();
 syncPrecisionUi();
 setupSectionSpy();
 setupFullReportAccess();
-requestAnimationFrame(()=>form.requestSubmit());
+results.dataset.mode='demo';
+requestAnimationFrame(()=>renderAll());

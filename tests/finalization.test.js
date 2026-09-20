@@ -36,7 +36,9 @@ test('document IDs are unique and primary recalculation CTA submits the live for
   const ids=[...html.matchAll(/\sid=["']([^"']+)["']/g)].map((match)=>match[1]);
   assert.equal(new Set(ids).size,ids.length);
   assert.match(html,/class="birth-side-submit"[^>]+type="submit"[^>]+form="birthForm"/);
-  assert.match(ui,/event\.isTrusted/);
+  assert.match(ui,/results\.dataset\.mode='personal'/);
+  assert.match(ui,/results\.dataset\.mode='demo'/);
+  assert.doesNotMatch(ui,/form\.requestSubmit\(\)/);
 });
 
 test('tarot exposes the complete 78-card overlapping fan picker', () => {
