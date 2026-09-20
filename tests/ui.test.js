@@ -4,8 +4,8 @@ import { readFile } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 
-for (const id of ['input','dailyPrimary','dailyMetrics','tojungQuarterGrid','yearAdviceGrid','tarot','standards','faq']) {
-  test(`V11 UI contains #${id}`, () => {
+for (const id of ['input','dailyPrimary','dailyMetrics','tojungQuarterGrid','yearAdviceGrid','tarot','full-report','keywordInsight']) {
+  test(`V12 UI contains #${id}`, () => {
     assert.match(html, new RegExp(`id=["']${id}["']`));
   });
 }

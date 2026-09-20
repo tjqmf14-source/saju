@@ -11,11 +11,14 @@ import { calculateDailyScores } from './daily-score.js';
 import { buildPlainChartGuide } from './plain-chart.js';
 import { ROLE_LABELS, ELEMENT_LABELS, stemByName, branchByName } from './data.js';
 import { buildLuckNarrativeCopy } from './luck-copy.js';
+import { solarToLunar, lunarToSolar, isLeapMonth } from './calendar.js';
 
 const $ = (id) => document.getElementById(id);
 const form = $('birthForm');
 const results = $('results');
 const errorBox = $('formError');
+let currentReport = null;
+let calendarUiMode = form.elements.calendar.value;
 
 const GROUP_COPY = {
   비겁: {
@@ -99,15 +102,36 @@ function integerInput(fieldId,label,min,max){
   return value;
 }
 
+function solarDateInput(){
+  const field=$('birthDate');
+  const match=field.value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!match) inputError('birthDate','양력 생년월일을 달력에서 선택해 주세요.');
+  const [,yearText,monthText,dayText]=match;
+  const year=Number(yearText),month=Number(monthText),day=Number(dayText);
+  const date=new Date(Date.UTC(year,month-1,day));
+  if(year<1900 || year>2100 || date.getUTCFullYear()!==year || date.getUTCMonth()!==month-1 || date.getUTCDate()!==day){
+    inputError('birthDate','1900년부터 2100년 사이의 올바른 생년월일을 선택해 주세요.');
+  }
+  return {year,month,day};
+}
+
 function collectInput(){
   const calendar=selectedCalendar();
-  const year=integerInput('birthYear','출생연도',1900,2100);
-  const month=integerInput('birthMonth','출생월',1,12);
-  const day=integerInput('birthDay','출생일',1,calendar==='lunar'?30:31);
+  const solar=calendar==='solar' ? solarDateInput() : null;
+  const year=solar?.year ?? integerInput('birthYear','출생연도',1900,2100);
+  const month=solar?.month ?? integerInput('birthMonth','출생월',1,12);
+  const day=solar?.day ?? integerInput('birthDay','출생일',1,30);
+  const isLeap=calendar==='lunar' && $('isLeap').checked;
 
-  if(calendar==='solar'){
-    const maxDay=new Date(Date.UTC(year,month,0)).getUTCDate();
-    if(day>maxDay) inputError('birthDay',`${year}년 ${month}월에는 ${day}일이 없습니다.`);
+  if(calendar==='lunar'){
+    if(isLeap && !isLeapMonth(year,month)){
+      inputError('isLeap',`${year}년 음력 ${month}월에는 윤달이 없습니다.`);
+    }
+    try{
+      lunarToSolar(year,month,day,isLeap);
+    }catch(error){
+      inputError(isLeap?'isLeap':'birthDay',error?.message?.includes('윤달')?error.message:'존재하지 않는 음력 생년월일입니다. 날짜를 다시 확인해 주세요.');
+    }
   }
 
   const time=$('birthTime').value.trim();
@@ -120,18 +144,82 @@ function collectInput(){
   return {
     calendar,year,month,day,hour,minute,
     gender:$('gender').value,
-    isLeap:$('isLeap').checked,
+    isLeap,
     precision:$('precisionToggle').checked,
     location:$('birthLocation').value,
     dayBoundary:$('dayBoundary').value
   };
 }
 
-function syncCalendarUi(){
-  const lunar=selectedCalendar()==='lunar';
+function setCalendarRadio(value){
+  const radio=form.querySelector(`input[name="calendar"][value="${value}"]`);
+  if(radio) radio.checked=true;
+}
+
+function syncLeapAvailability(){
+  const checkbox=$('isLeap');
+  const hint=$('leapHint');
+  const year=Number($('birthYear').value);
+  const month=Number($('birthMonth').value);
+  const available=calendarUiMode==='lunar' && Number.isInteger(year) && year>=1900 && year<=2100 && Number.isInteger(month) && month>=1 && month<=12 && isLeapMonth(year,month);
+  checkbox.disabled=!available;
+  if(!available) checkbox.checked=false;
+  if(hint) hint.textContent=available?'윤달로 입력':'이 달은 윤달 없음';
+}
+
+function applyCalendarUi(mode){
+  const lunar=mode==='lunar';
+  const dateField=document.querySelector('.birth-date-field');
+  dateField?.classList.toggle('is-lunar',lunar);
   $('leapField').classList.toggle('active',lunar);
-  if(!lunar) $('isLeap').checked=false;
-  $('birthDay').max=lunar?'30':'31';
+  $('birthDay').max='30';
+  syncLeapAvailability();
+}
+
+function syncCalendarUi(){
+  const targetMode=selectedCalendar();
+  if(targetMode===calendarUiMode){
+    applyCalendarUi(targetMode);
+    return;
+  }
+
+  try{
+    if(targetMode==='lunar'){
+      const lunar=solarToLunar(solarDateInput());
+      if(lunar.year<1900 || lunar.year>2100){
+        inputError('birthDate','음력 전환은 1900년 1월 31일 이후 날짜부터 지원합니다.');
+      }
+      $('birthYear').value=String(lunar.year);
+      $('birthMonth').value=String(lunar.month);
+      $('birthDay').value=String(lunar.day);
+      $('isLeap').checked=lunar.isLeap;
+    }else{
+      const year=integerInput('birthYear','출생연도',1900,2100);
+      const month=integerInput('birthMonth','출생월',1,12);
+      const day=integerInput('birthDay','출생일',1,30);
+      const isLeap=$('isLeap').checked;
+      if(isLeap && !isLeapMonth(year,month)){
+        inputError('isLeap',`${year}년 음력 ${month}월에는 윤달이 없습니다.`);
+      }
+      const solar=lunarToSolar(year,month,day,isLeap);
+      $('birthDate').value=`${solar.year}-${String(solar.month).padStart(2,'0')}-${String(solar.day).padStart(2,'0')}`;
+    }
+
+    calendarUiMode=targetMode;
+    applyCalendarUi(calendarUiMode);
+    errorBox.textContent='';
+  }catch(error){
+    setCalendarRadio(calendarUiMode);
+    applyCalendarUi(calendarUiMode);
+    errorBox.textContent=error?.message||'달력 전환을 위해 생년월일을 다시 확인해 주세요.';
+    const fallbackId=calendarUiMode==='solar'?'birthDate':'birthDay';
+    const field=$(error?.fieldId||fallbackId);
+    if(field){
+      field.setAttribute('aria-invalid','true');
+      field.setAttribute('aria-errormessage','formError');
+      field.focus();
+    }
+  }
 }
 
 function syncPrecisionUi(){
@@ -175,9 +263,8 @@ function renderDetailedReport(report){
   const ordered=['overview','temperament','innerOuter','strengths','balance','career','money','love','relationships','recovery','year','luck','technical'];
   $('detailedReport').innerHTML=ordered.map((key,index)=>{
     const item=report[key];
-    const open=index<2?' open':'';
-    return `<article class="detail-chapter detail-chapter-${String(index+1).padStart(2,'0')}">
-      <div class="detail-visual" aria-hidden="true"></div>
+    const open=index<3?' open':'';
+    return `<article id="report-${key}" class="detail-chapter detail-chapter-${String(index+1).padStart(2,'0')}" data-report-key="${key}">
       <details class="detail-disclosure"${open}>
         <summary>
           <span>${String(index+1).padStart(2,'0')}</span>
@@ -190,6 +277,30 @@ function renderDetailedReport(report){
   }).join('');
 }
 
+function renderKeywordInsight(report,key='temperament'){
+  const item=report?.[key] || report?.temperament;
+  const panel=$('keywordInsight');
+  if(!item || !panel) return;
+  document.querySelectorAll('.visual-keyword-card[data-report-key]').forEach((button)=>{
+    const active=button.dataset.reportKey===key;
+    button.classList.toggle('is-active',active);
+    button.setAttribute('aria-pressed',active?'true':'false');
+  });
+  panel.dataset.reportKey=key;
+  panel.innerHTML=`<div><span class="section-kicker">SELECTED INSIGHT</span><h3>${item.title}</h3></div><p>${item.lead} ${item.paragraphs[0]}</p><a href="#report-${key}">정밀 해설 이어 읽기 <span aria-hidden="true">→</span></a>`;
+}
+
+function setupKeywordCards(){
+  document.querySelectorAll('.visual-keyword-card[data-report-key]').forEach((button)=>{
+    button.addEventListener('click',()=>{
+      if(!currentReport) return;
+      renderKeywordInsight(currentReport,button.dataset.reportKey);
+      const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      requestAnimationFrame(()=>$('keywordInsight')?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'nearest'}));
+    });
+  });
+}
+
 function renderToday(chart,todayFlow){
   const copy=GROUP_COPY[todayFlow.group];
   const scores=calculateDailyScores(chart,todayFlow);
@@ -199,7 +310,7 @@ function renderToday(chart,todayFlow){
   $('todayQuoteBody').textContent=`${copy.opportunity}에 힘을 싣고, ${copy.caution}은 한 번 더 점검하세요.`;
 
   const overall=scores.overall;
-  $('dailyPrimary').innerHTML=`<div class="daily-primary-score"><span class="section-kicker">TODAY'S INDEX</span><strong>${overall.score}</strong><small>/100 · ${overall.label}</small></div>`;
+  $('dailyPrimary').innerHTML=`<div class="daily-primary-score" style="--score:${overall.score}" role="img" aria-label="오늘의 종합 운세 ${overall.score}점, 원형 그래프 ${overall.score}% 채움"><span class="section-kicker">TODAY'S INDEX</span><strong>${overall.score}</strong><small>/100 · ${overall.label}</small></div>`;
 
   const metrics=[
     ['money','02','재물',copy.money,'icon-coin'],
@@ -224,19 +335,19 @@ function dominantGroup(flows){
 function renderYear(yearFlow,monthFlows){
   const copy=GROUP_COPY[yearFlow.group];
   $('yearTitle').textContent=`${yearFlow.year} · ${ROLE_LABELS[yearFlow.group]}의 해`;
-  $('yearSummary').textContent=`${copy.summary}입니다. ${copy.opportunity}에 집중하면 흐름을 활용하기 좋고, ${copy.caution}은 올해 반복해서 점검할 주제입니다. 원국과의 관계 신호는 ${relationLabel(yearFlow.relations)}입니다.`;
+  $('yearSummary').textContent=`올해는 ${copy.summary}이 평소보다 선명하게 드러납니다. ${copy.opportunity}에 힘을 싣되, ${copy.caution}이 나타날 때는 속도를 늦추고 조건을 다시 확인해 보세요. 원국과 올해 기운의 관계에서는 ${relationLabel(yearFlow.relations)}의 흐름이 읽힙니다.`;
   $('annualQuote').textContent=copy.summary;
-  $('annualGuide').textContent=`${copy.opportunity}에 집중하고, ${copy.caution}은 올해의 반복 체크포인트로 두세요.`;
-  $('yearDeepDive').innerHTML=`<article class="year-essay"><span class="micro">YEAR IN DEPTH</span><h3>올해 전체 흐름</h3><p>${copy.summary}이라는 말은 단순히 좋은 일이 생긴다는 뜻이 아니라, 올해 여러 선택에서 ${copy.label}의 주제가 반복해서 나타날 가능성이 높다는 뜻입니다. ${copy.opportunity}을 실제 행동으로 연결할수록 체감이 좋아질 수 있고, 반대로 ${copy.caution}이 반복될 때는 속도를 늦추고 방향을 다시 확인하는 편이 좋습니다.</p><p><strong>현실적인 조언.</strong> ${copy.work} 중요한 선택을 한 번에 크게 벌이기보다 지금 가진 시간·돈·관계 자원을 점검한 뒤, 성과가 확인되는 영역부터 단계적으로 넓혀가세요.</p><p><strong>주의할 점.</strong> ${copy.caution}은 불안해하라는 경고가 아니라 올해의 체크리스트에 가깝습니다. 계약·지출·관계 결정은 감정이 가장 큰 순간보다 자료와 조건을 다시 본 뒤 결정하는 편이 안전합니다.</p></article>`;
+  $('annualGuide').textContent=`운이 좋고 나쁨을 단정하기보다, 올해의 기회는 ${copy.opportunity} 쪽에서 찾고 ${copy.caution}은 결정 전에 확인할 체크포인트로 활용해 보세요.`;
+  $('yearDeepDive').innerHTML=`<article class="year-essay"><span class="micro">YEAR IN DEPTH</span><h3>올해 전체 흐름</h3><p>${copy.summary}이라는 말은 단순히 좋은 일이 생긴다는 뜻이 아니라, 올해 여러 선택에서 ${copy.label}의 주제가 반복해서 나타날 가능성이 높다는 뜻입니다. 올해 눈여겨볼 기회는 ${copy.opportunity}입니다. 이를 실제 행동으로 연결할수록 체감이 선명해질 수 있고, ${copy.caution}이 반복될 때는 속도를 늦추고 방향을 다시 확인하는 편이 좋습니다.</p><p><strong>현실적인 조언.</strong> ${copy.work} 중요한 선택을 한 번에 크게 벌이기보다 지금 가진 시간·돈·관계 자원을 점검한 뒤, 성과가 확인되는 영역부터 단계적으로 넓혀가세요.</p><p><strong>주의할 점.</strong> ${copy.caution}은 불안해하라는 경고가 아니라 올해의 체크리스트에 가깝습니다. 계약·지출·관계 결정은 감정이 가장 큰 순간보다 자료와 조건을 다시 본 뒤 결정하는 편이 안전합니다.</p></article>`;
   $('yearAdviceGrid').innerHTML=[['올해의 기회',copy.opportunity],['주의할 패턴',copy.caution],['돈의 포인트',copy.money],['관계의 포인트',copy.love]].map(([title,body])=>`<article class="advice-card"><span>${title}</span><p>${body}</p></article>`).join('');
   const quarterStarts=[0,3,6,9];
   $('tojungQuarterGrid').innerHTML=quarterStarts.map((start,index)=>{
     const slice=monthFlows.slice(start,start+3);
     const group=dominantGroup(slice); const c=GROUP_COPY[group];
     const from=kstMonthNumber(slice[0].start), to=kstMonthNumber(slice.at(-1).start);
-    return `<article class="quarter-card"><span>${String(index+1).padStart(2,'0')}</span><div><h3>${from}월~${to}월 · 절기 기준</h3><strong>${c.summary}</strong><p>${c.opportunity}에 힘을 싣고, ${c.caution}은 분기 내내 한 번 더 점검하세요.</p></div></article>`;
+    return `<article class="quarter-card"><span>${String(index+1).padStart(2,'0')}</span><div><h3>${from}월~${to}월 · 절기 기준</h3><strong>${c.summary}</strong><p>기회는 ${c.opportunity} 쪽에서 찾고, ${c.caution}이 반복되는지 살펴보세요.</p></div></article>`;
   }).join('');
-  $('monthForecast').innerHTML=monthFlows.map((item)=>{const c=GROUP_COPY[item.group];const month=kstMonthNumber(item.start);return `<article class="month-card"><div class="month-card-head"><span class="month-number">${month}</span><strong>${month}월 절기운 · ${ROLE_LABELS[item.group]}</strong></div><p>${c.summary}. ${c.opportunity}을 우선하고 ${c.caution}은 줄여보세요. 이 월운은 양력 월초가 아니라 아래 절입 시각부터 다음 절입 직전까지의 흐름입니다. 반복해서 같은 문제가 생길 때 이 문장을 행동 기준으로 활용해 보세요.</p><small>절입 기준 ${formatKstBoundary(item.start)} ~ ${formatKstBoundary(item.end)} · ${item.korean} · ${item.tenGod}</small></article>`;}).join('');
+  $('monthForecast').innerHTML=monthFlows.map((item)=>{const c=GROUP_COPY[item.group];const month=kstMonthNumber(item.start);return `<article class="month-card"><div class="month-card-head"><span class="month-number">${month}</span><strong>${month}월 절기운 · ${ROLE_LABELS[item.group]}</strong></div><p>${c.summary}입니다. 이달에는 ${c.opportunity} 쪽에 먼저 힘을 싣고, ${c.caution}이 반복되는지 점검해 보세요. 이 월운은 양력 월초가 아니라 아래 절입 시각부터 다음 절입 직전까지의 흐름입니다.</p><small>절입 기준 ${formatKstBoundary(item.start)} ~ ${formatKstBoundary(item.end)} · ${item.korean} · ${item.tenGod}</small></article>`;}).join('');
 }
 
 function luckGroup(chart,item,index){
@@ -328,9 +439,11 @@ function renderAll(){
     const yearFlow=calculateYearFlows(chart,year,1)[0];
     const monthFlows=calculateMonthFlows(chart,year);
     const report=buildDetailedInterpretation(chart,mbti,yearFlow,monthFlows);
+    currentReport=report;
     const name=$('name').value.trim()||'당신';
     renderProfile(chart,mbti,report,name,todayFlow);
     renderDetailedReport(report);
+    renderKeywordInsight(report,document.querySelector('.visual-keyword-card.is-active')?.dataset.reportKey || 'temperament');
     renderToday(chart,todayFlow);
     renderYear(yearFlow,monthFlows);
     renderLuck(chart);
@@ -567,10 +680,18 @@ function handleTarot(){
 function setupFullReportAccess(){
   const report=$('full-report');
   if(!report) return;
-  document.querySelectorAll('a[href="#full-report"]').forEach((link)=>{
-    link.addEventListener('click',()=>{ report.open=true; });
+  document.addEventListener('click',(event)=>{
+    const link=event.target.closest?.('a[href="#full-report"], a[href^="#report-"], a[href="#annualDetailReport"], a[href="#luck"], a[href="#expert"]');
+    if(!link) return;
+    report.open=true;
+    const selector=link.getAttribute('href');
+    if(selector?.startsWith('#report-')){
+      const chapter=document.querySelector(selector);
+      const disclosure=chapter?.querySelector('details');
+      if(disclosure) disclosure.open=true;
+    }
   });
-  if(location.hash==='#full-report') report.open=true;
+  if(['#full-report','#annualDetailReport','#luck','#expert'].includes(location.hash) || location.hash.startsWith('#report-')) report.open=true;
 }
 
 function setupSectionSpy(){
@@ -592,6 +713,8 @@ function setupSectionSpy(){
 }
 
 form.elements.calendar.forEach((radio)=>radio.addEventListener('change',syncCalendarUi));
+$('birthYear').addEventListener('input',syncLeapAvailability);
+$('birthMonth').addEventListener('input',syncLeapAvailability);
 $('precisionToggle').addEventListener('change',syncPrecisionUi);
 form.addEventListener('input',(event)=>{
   const field=event.target;
@@ -603,6 +726,7 @@ form.addEventListener('input',(event)=>{
 });
 form.addEventListener('change',(event)=>{
   const field=event.target;
+  if(field?.matches?.('input[name="calendar"]')) return;
   if(field?.matches?.('input,select,textarea')){
     field.removeAttribute('aria-invalid');
     field.removeAttribute('aria-errormessage');
@@ -623,5 +747,6 @@ syncCalendarUi();
 syncPrecisionUi();
 setupSectionSpy();
 setupFullReportAccess();
+setupKeywordCards();
 results.dataset.mode='demo';
 requestAnimationFrame(()=>renderAll());

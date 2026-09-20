@@ -42,3 +42,12 @@ test('technical section explains exact month-flow solar-term boundaries', () => 
   assert.match(text, /절입|절기/);
   assert.match(text, /입춘/);
 });
+
+test('reader-facing interpretation avoids unresolved data and mechanical particle joins', () => {
+  const text = Object.values(report)
+    .flatMap((item) => [item.title, item.lead, ...item.paragraphs])
+    .join(' ');
+  assert.doesNotMatch(text, /undefined|NaN|null/);
+  assert.doesNotMatch(text, /구조를 삶의 방식|구조가 먼저 보이|관리이 |관계이 |방식이 기본적인/);
+  assert.match(text, /실제 생활|현실|행동|점검/);
+});

@@ -33,9 +33,7 @@
       <a href="#today">오늘의운세</a>
       <a href="#year">올해의흐름</a>
       <a href="#tarot">타로</a>
-      <a href="#full-report">상담</a>
-      <a href="#standards">이용후기</a>
-      <a href="#faq">소개</a>
+      <a href="#full-report">정밀리포트</a>
     </nav>
     <div class="topbar-actions">
       <a class="premium-link" href="#full-report">정밀 리포트</a>
@@ -83,14 +81,20 @@
 
         <p class="form-demo-note">예시 입력값입니다. 본인의 출생정보로 변경한 뒤 리포트를 생성하세요.</p>
 
-        <div class="form-grid">
+        <div class="form-grid compact-birth-grid">
           <label class="field-name"><span>이름 <small>(선택)</small></span><input id="name" type="text" placeholder="이름을 입력하세요" autocomplete="off"></label>
-          <label><span>출생연도</span><input id="birthYear" type="number" min="1900" max="2100" value="1990" inputmode="numeric"></label>
-          <label><span>월</span><input id="birthMonth" type="number" min="1" max="12" value="1" inputmode="numeric"></label>
-          <label><span>일</span><input id="birthDay" type="number" min="1" max="31" value="1" inputmode="numeric"></label>
-          <label><span>출생시간</span><input id="birthTime" type="time" value="12:00"></label>
-          <label><span>성별</span><select id="gender"><option value="male">남자</option><option value="female">여자</option></select></label>
-          <label id="leapField" class="leap-field"><span>윤달</span><span class="inline-check"><input id="isLeap" type="checkbox"> 윤달로 입력</span></label>
+          <fieldset class="birth-date-field">
+            <legend>생년월일</legend>
+            <label class="solar-date-picker"><span class="sr-only">양력 생년월일</span><input id="birthDate" type="date" min="1900-01-01" max="2100-12-31" value="1990-01-01" aria-label="양력 생년월일"></label>
+            <div class="birth-date-inputs" aria-label="음력 생년월일">
+              <label><span>년</span><input id="birthYear" type="number" min="1900" max="2100" value="1990" inputmode="numeric" aria-label="출생연도"></label>
+              <label><span>월</span><input id="birthMonth" type="number" min="1" max="12" value="1" inputmode="numeric" aria-label="출생월"></label>
+              <label><span>일</span><input id="birthDay" type="number" min="1" max="30" value="1" inputmode="numeric" aria-label="출생일"></label>
+            </div>
+          </fieldset>
+          <label class="field-time"><span>출생시간</span><input id="birthTime" type="time" value="12:00"></label>
+          <label class="field-gender"><span>성별</span><select id="gender"><option value="male">남자</option><option value="female">여자</option></select></label>
+          <label id="leapField" class="leap-field"><span>윤달</span><span class="inline-check"><input id="isLeap" type="checkbox"><span id="leapHint">윤달로 입력</span></span></label>
         </div>
 
         <details id="precisionSettings" class="precision-settings">
@@ -120,8 +124,7 @@
       <a href="#today"><svg class="ui-icon"><use href="#icon-sun"/></svg><span><b>오늘의운세</b><small>오늘의 흐름을 확인하세요</small></span></a>
       <a href="#year"><svg class="ui-icon"><use href="#icon-calendar"/></svg><span><b>올해의흐름</b><small>한 해의 큰 그림을 읽다</small></span></a>
       <a href="#tarot"><svg class="ui-icon"><use href="#icon-tarot"/></svg><span><b>타로리딩</b><small>지금, 필요한 메시지</small></span></a>
-      <a href="#full-report"><svg class="ui-icon"><use href="#icon-chart"/></svg><span><b>정밀 원국</b><small>계산 근거와 심화 해석</small></span></a>
-      <a href="#faq"><svg class="ui-icon"><use href="#icon-briefcase"/></svg><span><b>이용 가이드</b><small>해석 기준과 사용 방법</small></span></a>
+      <a href="#full-report"><svg class="ui-icon"><use href="#icon-chart"/></svg><span><b>정밀 리포트</b><small>계산 근거와 심화 해석</small></span></a>
     </nav>
 
     <section id="results" hidden>
@@ -133,12 +136,13 @@
           <p>사주가 알려주는 타고난 흐름과 지금의 선택이 만드는 더 나은 내일.</p>
           <a href="#full-report">전체 리포트 보기 <span aria-hidden="true">→</span></a>
         </div>
-        <article class="visual-keyword-card"><div class="atlas-card atlas-card-1" role="img" aria-label="성격 키워드 이미지"></div><div><strong>성격</strong><small>내 안의 본질</small></div></article>
-        <article class="visual-keyword-card"><div class="atlas-card atlas-card-2" role="img" aria-label="일 키워드 이미지"></div><div><strong>일</strong><small>일과 적성의 흐름</small></div></article>
-        <article class="visual-keyword-card"><div class="atlas-card atlas-card-3" role="img" aria-label="돈 키워드 이미지"></div><div><strong>돈</strong><small>재물의 흐름</small></div></article>
-        <article class="visual-keyword-card"><div class="atlas-card atlas-card-4" role="img" aria-label="관계 키워드 이미지"></div><div><strong>관계</strong><small>사람과 인연</small></div></article>
-        <article class="visual-keyword-card"><div class="atlas-card atlas-card-5" role="img" aria-label="건강 키워드 이미지"></div><div><strong>건강</strong><small>몸과 에너지</small></div></article>
-        <article class="visual-keyword-card"><div class="atlas-card atlas-card-6" role="img" aria-label="조언 키워드 이미지"></div><div><strong>조언</strong><small>지금 필요한 한마디</small></div></article>
+        <button class="visual-keyword-card is-active" type="button" data-report-key="temperament" aria-controls="keywordInsight" aria-pressed="true"><span class="atlas-card atlas-card-1" aria-hidden="true"></span><span class="keyword-card-copy"><strong>성격</strong><small>내 안의 본질</small><i aria-hidden="true">열어보기 →</i></span></button>
+        <button class="visual-keyword-card" type="button" data-report-key="career" aria-controls="keywordInsight" aria-pressed="false"><span class="atlas-card atlas-card-2" aria-hidden="true"></span><span class="keyword-card-copy"><strong>일</strong><small>일과 적성의 흐름</small><i aria-hidden="true">열어보기 →</i></span></button>
+        <button class="visual-keyword-card" type="button" data-report-key="money" aria-controls="keywordInsight" aria-pressed="false"><span class="atlas-card atlas-card-3" aria-hidden="true"></span><span class="keyword-card-copy"><strong>돈</strong><small>재물의 흐름</small><i aria-hidden="true">열어보기 →</i></span></button>
+        <button class="visual-keyword-card" type="button" data-report-key="relationships" aria-controls="keywordInsight" aria-pressed="false"><span class="atlas-card atlas-card-4" aria-hidden="true"></span><span class="keyword-card-copy"><strong>관계</strong><small>사람과 인연</small><i aria-hidden="true">열어보기 →</i></span></button>
+        <button class="visual-keyword-card" type="button" data-report-key="recovery" aria-controls="keywordInsight" aria-pressed="false"><span class="atlas-card atlas-card-5" aria-hidden="true"></span><span class="keyword-card-copy"><strong>건강</strong><small>몸과 에너지</small><i aria-hidden="true">열어보기 →</i></span></button>
+        <button class="visual-keyword-card" type="button" data-report-key="balance" aria-controls="keywordInsight" aria-pressed="false"><span class="atlas-card atlas-card-6" aria-hidden="true"></span><span class="keyword-card-copy"><strong>조언</strong><small>지금 필요한 균형</small><i aria-hidden="true">열어보기 →</i></span></button>
+        <article id="keywordInsight" class="keyword-insight" role="region" aria-label="선택한 키워드 해설" aria-live="polite" aria-atomic="true"></article>
       </section>
 
       <section class="quote-band agency-shell" aria-label="브랜드 메시지">
@@ -165,7 +169,6 @@
           <div><span class="section-no">04</span><p class="section-kicker">ANNUAL</p></div>
           <div><h2>올해의 흐름</h2><p>한 해의 큰 흐름과<br>준비할 시점을 읽어보세요.</p><a href="#full-report">자세히 보기 <span aria-hidden="true">→</span></a></div>
         </header>
-        <div class="annual-scene" aria-hidden="true"></div>
         <div class="annual-content annual-visual-copy">
           <div class="annual-copy">
             <span class="annual-quote-mark">“</span>
@@ -209,38 +212,9 @@
         </div>
       </section>
 
-      <section id="standards" class="reviews-section oracle-panel agency-shell" aria-labelledby="reviewsHeading">
-        <header class="reviews-head">
-          <div><span class="section-no">06</span><p class="section-kicker">이용후기</p></div>
-          <div><h2 id="reviewsHeading">먼저 경험한 분들의 이야기</h2><p class="section-lead">결과를 단정하기보다, 계산 근거와 생활 언어 해설이 자기이해에 어떻게 도움이 되었는지 담았습니다.</p><a href="#faq">이용 기준 보기 <span aria-hidden="true">→</span></a></div>
-        </header>
-        <div class="review-grid">
-          <article class="review-card"><span class="quote">“</span><p>막연한 길흉보다 제 성향과 선택 패턴을 구체적인 근거로 설명해줘서 스스로를 이해하는 데 도움이 됐어요.</p><div class="review-stars" aria-label="만족도 5점 만점에 5점">★★★★★</div><footer><strong>김○현 님</strong><span>자기이해 리포트 이용</span></footer></article>
-          <article class="review-card"><span class="quote">“</span><p>연간 흐름을 분기와 월별로 나눠 보여주니 계획을 세울 때 무엇을 먼저 점검할지 훨씬 선명해졌습니다.</p><div class="review-stars" aria-label="만족도 5점 만점에 5점">★★★★★</div><footer><strong>이○수 님</strong><span>연간 흐름 리포트 이용</span></footer></article>
-          <article class="review-card"><span class="quote">“</span><p>결과를 운명처럼 단정하지 않고 계산과 해석의 차이를 알려줘서 부담 없이 참고할 수 있었어요.</p><div class="review-stars" aria-label="만족도 5점 만점에 5점">★★★★★</div><footer><strong>박○진 님</strong><span>사주·타로 통합 이용</span></footer></article>
-        </div>
-      </section>
-
-      <section id="faq" class="faq-section oracle-panel agency-shell" aria-labelledby="faqHeading">
-        <div class="faq-intro">
-          <span class="section-no">07</span>
-          <p class="section-kicker">자주 묻는 질문</p>
-          <h2 id="faqHeading">자주 묻는 질문</h2>
-          <p>궁금한 점이 있으신가요?<br>많이 묻는 질문을 모아보았습니다.</p>
-        </div>
-        <div class="faq-list">
-          <details><summary>사주 리포트의 ‘정확도’는 무엇을 의미하나요?</summary><p>생년월일·시간·지역을 바탕으로 만세력을 계산하는 부분과, 그 계산값을 해석하는 부분은 구분됩니다. 계산 근거는 확인할 수 있게 제공하고, 해석은 자기이해를 돕는 참고 정보로 제시합니다.</p></details>
-          <details><summary>출생시간을 모를 경우에도 이용할 수 있나요?</summary><p>이용은 가능하지만 시주가 달라질 수 있어 일부 해석이 달라질 수 있습니다. 출생시간을 확인할 수 있다면 실제 시각을 입력하는 편이 좋습니다.</p></details>
-          <details><summary>진태양시 보정은 언제 필요한가요?</summary><p>출생 지역의 경도와 시간 경계를 더 엄밀하게 반영하고 싶을 때 사용할 수 있습니다. 자시 관법은 시간 보정과 별개의 해석 설정입니다.</p></details>
-          <details><summary>타로 리딩은 어떻게 진행되나요?</summary><p>카드를 섞어 펼친 뒤 직접 마음이 가는 카드를 선택합니다. 질문 유형에 따라 1장 또는 3장 리딩을 제공하며 미래를 확정하는 예언으로 다루지 않습니다.</p></details>
-          <details><summary>입력한 생년월일과 질문은 저장되나요?</summary><p>현재 버전은 브라우저 안에서 계산하며, 입력값을 서버에 저장하도록 연결하지 않았습니다.</p></details>
-        </div>
-        <div class="faq-art"><blockquote>좋은 운은,<br>일하는 마음으로<br>다가옵니다.</blockquote></div>
-      </section>
-
       <details id="full-report" class="full-report-shell oracle-panel agency-shell">
         <summary>
-          <span><b>정밀 리포트 열기</b><small>원국 · 성향 · 대운 · 계산 근거를 한 번에 확인합니다.</small></span>
+          <span class="full-report-label"><i class="section-no">06</i><span><em class="section-kicker">PRECISION REPORT</em><b>정밀 리포트 열기</b><small>성향부터 대운과 계산 근거까지, 읽기 쉬운 순서로 확인합니다.</small></span></span>
           <strong aria-hidden="true">+</strong>
         </summary>
         <div class="full-report-body">
@@ -252,6 +226,12 @@
             <div class="report-mini-meta"><strong id="mbtiType"></strong><small id="mbtiLabel"></small></div>
             <div id="accuracyBasis" class="accuracy-basis"></div>
           </section>
+          <nav class="report-nav" aria-label="정밀 리포트 목차">
+            <a href="#detailedReport">핵심 해석</a>
+            <a href="#annualDetailReport">올해·월별 흐름</a>
+            <a href="#luck">대운</a>
+            <a href="#expert">계산 근거</a>
+          </nav>
           <section id="detailedReport" class="detailed-report"></section>
           <section id="annualDetailReport" class="deep-report-block">
             <header><p class="section-kicker">YEAR IN DEPTH</p><h2>올해의 상세 흐름</h2><p class="section-lead">연간 전체 해설과 월별 절기 흐름을 정밀 리포트 안에서 확인할 수 있습니다.</p></header>

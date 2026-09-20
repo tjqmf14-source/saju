@@ -23,13 +23,15 @@ test('minimum readable UI type is 11pt-equivalent or larger', () => {
 });
 
 test('landing page follows the supplied section order', () => {
-  const order = ['id="input"','visual-keyword-showcase','quote-band','id="today"','id="year"','id="tarot"','id="standards"','id="faq"','closing-cta'];
+  const order = ['id="input"','visual-keyword-showcase','quote-band','id="today"','id="year"','id="tarot"','id="full-report"','closing-cta'];
   let cursor = -1;
   for (const token of order) {
     const next = html.indexOf(token);
     assert.ok(next > cursor, token + ' should appear after the previous reference section');
     cursor = next;
   }
+  assert.doesNotMatch(html,/id=["'](?:standards|faq)["']/);
+  assert.doesNotMatch(html,/class=["'][^"']*annual-scene/);
 });
 
 test('document IDs are unique and primary recalculation CTA submits the live form', () => {

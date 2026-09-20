@@ -56,7 +56,7 @@ export function buildPlainChartGuide(chart){
       },
       relationships:{
         title:'사람과 관계에서는',
-        summary:`${role.relation} 관계 구조에서는 ${relationSentence} 이런 표시는 사건을 예언한다기보다, 사람과 부딪히거나 연결될 때 어떤 패턴이 반복되기 쉬운지 살펴보는 참고 자료로 보는 편이 좋습니다.`,
+        summary:`${role.relation} 원국의 관계 표시는 다음처럼 읽을 수 있습니다. ${relationSentence}. 이는 사건을 예언하는 문장이 아니라, 사람과 부딪히거나 연결될 때 어떤 반응이 반복되기 쉬운지 살펴보는 참고 자료입니다.`,
         lifeExample:`실제 관계에서는 상대가 내 기대를 알고 있다고 가정하기보다 기준과 감정을 말로 확인하는 것이 좋습니다. 특히 갈등이 생겼을 때 즉시 결론을 내리기보다 사실과 감정을 분리해 대화하면 같은 패턴의 반복을 줄일 수 있습니다.`,
         evidence:`지지 관계에서 확인된 표시는 ${(chart.relations||[]).length?relationTypes.join('·'):'뚜렷한 관계 신호 없음'}이며, 각각은 합·충·형·파·해의 전통적 관계 규칙을 기준으로 계산했습니다.`
       },

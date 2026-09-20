@@ -8,7 +8,7 @@ const css = await readFile(new URL('../site-v12.css', import.meta.url), 'utf8');
 const EXPECTED_ATLAS_BYTES = 79548;
 const EXPECTED_ATLAS_SHA256 = '9ab3f1366bf1ed44b937d8abc7fcdedbf03bcc8272711ab77ea664faf11d5bb2';
 
-test('B concept uses the verified local visual atlas for hero and annual imagery', async () => {
+test('B concept uses the verified local visual atlas for hero and keyword imagery', async () => {
   assert.match(css, /url\(['"]?\/oracle\/b-visual-atlas\.webp/);
   const atlas = await readFile(new URL('../public/oracle/b-visual-atlas.webp', import.meta.url));
   assert.equal(atlas.byteLength, EXPECTED_ATLAS_BYTES);
@@ -31,13 +31,18 @@ test('checked-in oracle atlas chunks reconstruct the exact production WebP', asy
   assert.equal(createHash('sha256').update(decoded).digest('hex'), EXPECTED_ATLAS_SHA256);
 });
 
-test('B concept report preview exposes six illustrated keyword cards', () => {
+test('B concept report preview exposes six interactive illustrated keyword cards', () => {
   assert.match(html, /class="[^"]*visual-keyword-showcase[^"]*"/);
-  const cards = html.match(/class="visual-keyword-card"/g) || [];
+  const cards = html.match(/class="[^"]*visual-keyword-card[^"]*"/g) || [];
   assert.equal(cards.length, 6);
   for (let index = 1; index <= 6; index += 1) {
     assert.match(html, new RegExp('atlas-card atlas-card-' + index));
   }
+  assert.equal((html.match(/data-report-key=/g) || []).length, 6);
+  assert.match(html, /id="keywordInsight"/);
+  assert.equal((html.match(/aria-pressed=/g) || []).length, 6);
+  assert.doesNotMatch(html, /visual-keyword-card[^>]+aria-expanded=/);
+  assert.match(html, /id="keywordInsight"[^>]+role="region"/);
   assert.doesNotMatch(html, /keyword-(character|work|money|relation|health|advice)\.svg/);
 });
 
