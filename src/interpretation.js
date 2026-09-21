@@ -54,7 +54,7 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   const monthsRole=ROLE_TEXT[monthsTop];
   const relation=relationNames(chart);
   const balance=balanceIndex(chart);
-  const profile=buildInterpretiveProfile(chart);
+  const profile=buildInterpretiveProfile(chart,yearFlow,monthFlows);
   const precisionText=chart.basis?.trueSolarTime==='적용'
     ? `${chart.basis.location} 경도 ${chart.basis.longitude}°를 반영한 진태양시 정밀 보정이 적용되었습니다.`
     : '입력된 한국 표준시를 그대로 사용한 간편 계산 기준입니다.';
@@ -236,6 +236,27 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   ];
   report.love.evidence=profile.relations.items.slice(0,5).map((item)=>`${item.type} · ${item.pillarLabels.join('↔') || item.members.join('·')} · ${item.contexts.join(' / ')}`);
 
+  if(profile.flow){
+    report.year.lead=profile.flow.headline+` 쉽게 말하면, 올해는 ${profile.flow.annualGod} 주제가 평소보다 더 자주 드러나는 해입니다.`;
+    report.year.quick=[
+      `한 줄 요약: ${profile.flow.easy[0]}`,
+      `왜 그런가요? ${profile.flow.easy[1]}`,
+      `생활에서는: ${profile.flow.easy[2]}`
+    ];
+    report.year.evidence=[
+      ...profile.flow.layers.map((item)=>`${item.label}: ${item.value}`),
+      `원국×세운 관계: ${profile.flow.relationSummary}`
+    ];
+    report.year.paragraphs.unshift(
+      `올해 흐름은 세운 하나만 떼어 보지 않고 원국, 현재 대운, 12개월 월운을 겹쳐서 읽었습니다. ${profile.flow.headline} 대운은 약 10년짜리 배경, 세운은 올해의 주제, 월운은 그 주제가 실제 생활에서 강해졌다 약해지는 타이밍에 가깝습니다. 그래서 같은 ${profile.flow.annualGod} 해라도 원국과 대운 조합에 따라 체감은 달라질 수 있습니다.`
+    );
+    report.luck.quick=[
+      profile.flow.activeLuck?`한 줄 요약: ${profile.flow.activeLuck.korean} 대운이 현재 큰 배경입니다.`:'한 줄 요약: 현재 대운 정보보다 원국과 세운을 중심으로 읽습니다.',
+      `왜 그런가요? 올해 ${profile.flow.annualGod} 세운과 월별 ${profile.flow.dominantMonthGroup} 반복을 함께 비교했습니다.`,
+      '생활에서는: 대운을 사건 예언보다 몇 년 동안 반복되는 과제와 선택 기준으로 보는 편이 더 실용적입니다.'
+    ];
+    report.luck.evidence=profile.flow.layers.map((item)=>`${item.label}: ${item.value}`);
+  }
   report.technical.quick=[
     '계산 가능한 달력·절기 값과 해석 규칙을 분리해 보여줍니다.',
     `신강·신약 참고: ${profile.strength.band} ${profile.strength.score}점 · 신뢰도 ${profile.strength.confidence}`,
