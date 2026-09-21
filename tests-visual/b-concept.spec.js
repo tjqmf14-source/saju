@@ -547,6 +547,19 @@ test('commercial UX interactions work without a backend', async ({ page }, testI
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
 
+  const compatibilityGeometry = await page.evaluate(() => {
+    const rect=(selector)=>{ const el=document.querySelector(selector); const r=el?.getBoundingClientRect(); return r?{width:r.width,height:r.height,right:r.right,left:r.left}:null; };
+    return {
+      heading:rect('#compatibility > .section-heading'),
+      form:rect('#compatibilityForm'),
+      submit:rect('#compatibilityForm button[type="submit"]'),
+      panel:rect('#compatibility')
+    };
+  });
+  expect(compatibilityGeometry.heading?.width || 0).toBeGreaterThan(180);
+  expect(compatibilityGeometry.submit?.height || 999).toBeLessThan(70);
+  expect(compatibilityGeometry.form?.height || 999).toBeLessThan(390);
+
   // Local-only profile save/load.
   await page.locator('#name').fill('테스트');
   await page.locator('#birthDate').fill('1988-05-03');
