@@ -781,7 +781,7 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
   :root{--shell:calc(100vw - 24px);--section-gap:16px}
   input,select,textarea{font-size:16px}
   section[id],details[id]{scroll-margin-top:78px}
-  .topbar{height:66px;grid-template-columns:1fr auto;padding:0 12px}
+  .topbar{position:relative;top:auto;height:66px;grid-template-columns:1fr auto;padding:0 12px}
   .brand-word strong{font-size:21px}.topnav{display:none}.premium-link{padding:0 14px}
   body{padding-bottom:72px}
   #home{scroll-margin-top:66px}
