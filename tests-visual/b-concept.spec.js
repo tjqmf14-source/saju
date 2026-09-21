@@ -93,7 +93,7 @@ test('V12 desktop follows the supplied landing-page composition', async ({ page 
     });
     return Math.min(...items.map((el) => parseFloat(getComputedStyle(el).fontSize)).filter(Number.isFinite));
   });
-  expect(minFont).toBeGreaterThanOrEqual(15);
+  expect(minFont).toBeGreaterThanOrEqual(16);
 
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => scrollTo(0,0));
@@ -483,11 +483,19 @@ test('solar calendar picker and lunar compact fields both drive the retained cal
   test.skip(testInfo.project.name !== 'desktop', 'calculation behavior is viewport-independent');
   await page.goto('/');
 
+  await expect(page.locator('#birthYearQuick')).toBeVisible();
   await page.locator('#birthDate').fill('1990-01-01');
+  await page.locator('#birthYearQuick').fill('1987');
+  await expect(page.locator('#birthDate')).toHaveValue('1987-01-01');
+  await page.locator('[data-year-shift="10"]').click();
+  await expect(page.locator('#birthDate')).toHaveValue('1997-01-01');
+  await page.locator('#birthYearQuick').fill('1990');
+  await expect(page.locator('#birthDate')).toHaveValue('1990-01-01');
   await page.locator('.birth-side-submit:visible').click();
   await expect(page.locator('#profileBirth')).toContainText('양력 1990.01.01');
 
   await page.locator('input[name="calendar"][value="lunar"]').check();
+  await expect(page.locator('#birthYearQuick')).toBeHidden();
   await page.locator('#birthYear').fill('1989');
   await page.locator('#birthMonth').fill('12');
   await page.locator('#birthDay').fill('5');
