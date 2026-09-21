@@ -1,16 +1,20 @@
-# 내사주 Android 앱
+# 내사주 모바일 앱
 
-이 저장소의 웹 기능을 그대로 사용하는 Android 앱입니다. 데이터는 기본적으로 기기 안에서 계산되며 별도 서버 API를 사용하지 않습니다.
+모바일 앱은 별도의 Capacitor 프로젝트가 아니라 저장소의 `android/` 네이티브 WebView 앱입니다. 이 구조가 웹 최신 빌드(`dist/`)를 APK 안에 직접 포함하므로 웹과 Android 앱의 기능 차이를 최소화합니다.
 
-## Windows 로컬 빌드
+## Windows에서 APK 만들기
 
-1. `npm install`
-2. 최초 1회 `npm run mobile:init`
-3. `npm run mobile:build`
-4. APK: `android\app\build\outputs\apk\debug\app-debug.apk`
+```powershell
+cd C:\Users\tjqmf\saju
+git pull
+npm install
+npm run mobile:build
+```
 
-웹 코드가 바뀐 뒤에는 `npm run mobile:sync`으로 Android 앱에 최신 빌드를 반영할 수 있습니다.
+완료 후 APK:
 
-## GitHub 자동 빌드
+```text
+android\app\build\outputs\apk\debug\app-debug.apk
+```
 
-`.github/workflows/android-apk.yml`이 Android APK를 자동 생성합니다. 생성물 이름은 `Naesaju-Android-Debug`이며 개인 테스트용으로 바로 설치 가능한 debug APK입니다.
+현재 앱 버전은 **2.1.0**이며 프로필 저장, 궁합, 날짜별 운세 탐색, 리포트 공유/복사, 모바일 하단 메뉴와 기존 사주·타로 기능이 포함됩니다.
