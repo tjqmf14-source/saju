@@ -157,6 +157,15 @@ test('V12 remains readable and overflow-free on mobile', async ({ page }, testIn
   expect(mobileAudit.keywordShell?.height || 9999).toBeLessThan(1650);
   expect(mobileAudit.fullReport?.width || 0).toBeGreaterThan(viewportWidth - 40);
   expect(mobileAudit.heroBackground).toContain('/oracle/hero-scene.svg');
+  const mobileMinFont=await page.evaluate(()=>{
+    const items=[...document.querySelectorAll('body *')].filter((el)=>{
+      const s=getComputedStyle(el);
+      if(s.display==='none'||s.visibility==='hidden'||['SVG','SYMBOL','PATH','USE'].includes(el.tagName)) return false;
+      return [...el.childNodes].some((node)=>node.nodeType===Node.TEXT_NODE && node.textContent.trim());
+    });
+    return Math.min(...items.map((el)=>parseFloat(getComputedStyle(el).fontSize)).filter(Number.isFinite));
+  });
+  expect(mobileMinFont).toBeGreaterThanOrEqual(16.3);
   expect(mobileAudit.cards).toHaveLength(6);
   for (const card of mobileAudit.cards) {
     expect(card.width).toBeGreaterThan(120);
@@ -180,6 +189,8 @@ test('calculation renderers still populate all retained data targets', async ({ 
   await expect(page.locator('#luckOverview .luck-overview-item')).toHaveCount(9);
   await expect(page.locator('#pillarGrid .pillar-card')).toHaveCount(4);
   await expect(page.locator('#dailyMetrics .metric-row')).toHaveCount(5);
+  await expect(page.locator('#dailyActionGuide article')).toHaveCount(3);
+  await expect(page.locator('#dailyTimeFlow article')).toHaveCount(6);
   await expect(page.locator('#tojungQuarterGrid .quarter-card')).toHaveCount(4);
   await assertNoHorizontalOverflow(page);
 });
@@ -285,7 +296,7 @@ test('reference-density sections stay compact on desktop and primary disclosure 
       ['#input', '#today', '#year', '#tarot'].map((selector) => [selector, document.querySelector(selector).getBoundingClientRect().height])
     ));
     expect(geometry['#input']).toBeLessThan(520);
-    expect(geometry['#today']).toBeLessThan(370);
+    expect(geometry['#today']).toBeLessThan(720);
     expect(geometry['#year']).toBeLessThan(540);
     expect(geometry['#tarot']).toBeLessThan(400);
   }
@@ -396,6 +407,8 @@ test('birth CTA recalculates current input and precision report exposes retained
   await expect(page.locator('#yearDeepDive .year-essay')).toHaveCount(1);
   await expect(page.locator('#monthForecast .month-card')).toHaveCount(12);
   await expect(page.locator('#detailedReport .detail-chapter')).toHaveCount(13);
+  await expect(page.locator('#detailedReport .easy-reading-label')).toHaveCount(13);
+  await expect(page.locator('#report-balance')).toContainText('신강');
   await expect(page.locator('#detailedReport .detail-visual')).toHaveCount(0);
   await assertNoHorizontalOverflow(page);
 });
@@ -565,7 +578,7 @@ test('commercial UX interactions work without a backend', async ({ page }, testI
     expect(compatibilityGeometry.form?.height || 999).toBeLessThan(390);
     expect(compatibilityGeometry.panel?.height || 999).toBeLessThan(520);
   }else{
-    expect(compatibilityGeometry.form?.height || 999).toBeLessThan(480);
+    expect(compatibilityGeometry.form?.height || 999).toBeLessThan(560);
   }
 
   // Local-only profile save/load.
@@ -574,6 +587,7 @@ test('commercial UX interactions work without a backend', async ({ page }, testI
   await page.locator('#saveProfile').click();
   await expect(page.locator('#profileStatus')).toContainText('이 기기에 프로필을 저장했습니다');
   await expect(page.locator('#profileSelect option')).toHaveCount(2);
+  await expect(page.locator('#partnerProfileSelect option')).toHaveCount(2);
   const savedId = await page.locator('#profileSelect option').nth(1).getAttribute('value');
   await page.locator('#name').fill('변경');
   await page.locator('#profileSelect').selectOption(savedId);
@@ -586,6 +600,15 @@ test('commercial UX interactions work without a backend', async ({ page }, testI
   await expect(page.locator('#todayDate')).not.toHaveText(initialDate || '');
   await page.locator('#todayReset').click();
   await expect(page.locator('#todayDate')).toHaveText(initialDate || '');
+  await page.locator('#fortuneDate').fill('2026-12-25');
+  await page.locator('#fortuneDate').dispatchEvent('change');
+  await expect(page.locator('#todayDate')).toContainText('2026');
+  await expect(page.locator('#dailyTimeFlow article')).toHaveCount(6);
+
+  // Saved people can be loaded directly into compatibility.
+  await page.locator('#partnerProfileSelect').selectOption(savedId);
+  await expect(page.locator('#partnerName')).toHaveValue('테스트');
+  await expect(page.locator('#partnerDate')).toHaveValue('1988-05-03');
 
   // Compatibility renders a deterministic relationship map from a second chart.
   await page.locator('#partnerDate').fill('1991-07-11');
