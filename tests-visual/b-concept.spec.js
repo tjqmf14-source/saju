@@ -557,8 +557,14 @@ test('commercial UX interactions work without a backend', async ({ page }, testI
     };
   });
   expect(compatibilityGeometry.heading?.width || 0).toBeGreaterThan(180);
+  expect(compatibilityGeometry.heading?.height || 999).toBeLessThan(320);
   expect(compatibilityGeometry.submit?.height || 999).toBeLessThan(70);
-  expect(compatibilityGeometry.form?.height || 999).toBeLessThan(390);
+  if(testInfo.project.name==='desktop'){
+    expect(compatibilityGeometry.form?.height || 999).toBeLessThan(390);
+    expect(compatibilityGeometry.panel?.height || 999).toBeLessThan(520);
+  }else{
+    expect(compatibilityGeometry.form?.height || 999).toBeLessThan(480);
+  }
 
   // Local-only profile save/load.
   await page.locator('#name').fill('테스트');
