@@ -258,6 +258,32 @@ function kstParts(date) {
   return { year:Number(value.year), month:Number(value.month), day:Number(value.day) };
 }
 
+export function calculateTodayTimeFlows(chart, now = new Date()) {
+  const date = kstParts(now);
+  const slots=[
+    {hour:1,label:'새벽',range:'00~04시'},
+    {hour:5,label:'아침',range:'04~08시'},
+    {hour:9,label:'오전',range:'08~12시'},
+    {hour:13,label:'오후',range:'12~16시'},
+    {hour:17,label:'저녁',range:'16~20시'},
+    {hour:21,label:'밤',range:'20~24시'}
+  ];
+  return slots.map((slot)=>{
+    const detail=calculateFourPillars({
+      year:date.year,month:date.month,day:date.day,
+      hour:slot.hour,minute:0,gender:chart.input.gender,dayBoundary:'midnight'
+    });
+    const pillar=detail.hour;
+    const tenGod=getTenGod(chart.dayMaster,pillar.heavenlyStem);
+    const group=TEN_GOD_GROUP[tenGod];
+    const relations=detectBranchRelations([
+      ...PILLAR_KEYS.map((key)=>chart.pillars[key].earthlyBranch),
+      pillar.earthlyBranch
+    ]).filter((relation)=>relation.members.includes(pillar.earthlyBranch));
+    return {...slot,pillar,korean:pillarString(pillar),tenGod,group,relations};
+  });
+}
+
 export function calculateTodayFlow(chart, now = new Date()) {
   const date = kstParts(now);
   const detail = calculateFourPillars({
