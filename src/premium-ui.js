@@ -832,7 +832,7 @@ form.addEventListener('submit',(event)=>{
   renderAll();
   if(!results.hidden){
     const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    requestAnimationFrame(()=>document.querySelector('.visual-keyword-showcase')?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'}));
+    requestAnimationFrame(()=>(document.querySelector('#resultHome')||document.querySelector('.visual-keyword-showcase'))?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'}));
   }
 });
 $('drawTarot').addEventListener('click',handleTarot);
