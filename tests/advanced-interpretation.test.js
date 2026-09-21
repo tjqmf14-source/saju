@@ -18,12 +18,13 @@ test('advanced myeongri exposes month structure and ten individual ten-gods',()=
   assert.ok(['높음','중간'].includes(advanced.structure.confidence));
 });
 
-test('advanced strength explains season, roots and support rather than element count only',()=>{
+test('advanced report reuses one canonical strength engine and adds deeper evidence',()=>{
   const advanced=analyzeAdvancedMyeongri(chart);
-  assert.ok(advanced.strength.score>=15 && advanced.strength.score<=85);
-  assert.equal(advanced.strength.evidence.length,3);
-  assert.match(advanced.meta.method,/월령·통근/);
-  assert.match(advanced.meta.caution,/학파 차이/);
+  assert.ok(advanced.strength.score>=0 && advanced.strength.score<=100);
+  assert.ok(typeof advanced.strength.month.text==='string' && advanced.strength.month.text.length>10);
+  assert.ok(Array.isArray(advanced.strength.rootReasons));
+  assert.match(advanced.meta.method,/신강·신약/);
+  assert.match(advanced.meta.caution,/학파/);
 });
 
 test('daily report includes an explainable emotion metric',()=>{
