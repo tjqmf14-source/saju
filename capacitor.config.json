@@ -1,0 +1,8 @@
+{
+  "appId": "com.naesaju.app",
+  "appName": "내사주",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
