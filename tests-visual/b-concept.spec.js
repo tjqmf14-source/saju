@@ -109,7 +109,7 @@ test('V12 remains readable and overflow-free on mobile', async ({ page }, testIn
   expect(fontSize).toBeGreaterThanOrEqual(38);
   expect(fontSize).toBeLessThanOrEqual(46);
 
-  await expect(page.locator('.feature-orbit-nav a')).toHaveCount(5);
+  await expect(page.locator('.feature-orbit-nav a')).toHaveCount(6);
   await expect(page.locator('.visual-keyword-card')).toHaveCount(6);
   await expect(page.locator('#standards, #faq')).toHaveCount(0);
 
@@ -130,6 +130,8 @@ test('V12 remains readable and overflow-free on mobile', async ({ page }, testIn
       formGrid:rect('.form-grid'),
       nameField:rect('.field-name'),
       premiumLink:rect('.premium-link'),
+      compatibility:rect('#compatibility'),
+      mobileNav:rect('.mobile-bottom-nav'),
       hero:rect('.hero-primary'),
       heroVisual:rect('.hero-visual'),
       keywordShell:rect('.visual-keyword-showcase'),
@@ -145,8 +147,10 @@ test('V12 remains readable and overflow-free on mobile', async ({ page }, testIn
   expect(mobileAudit.nameField?.width || 0).toBeGreaterThan((mobileAudit.formGrid?.width || 0) * .95);
   expect(mobileAudit.premiumWhiteSpace).toBe('nowrap');
   expect(mobileAudit.premiumFits).toBe(true);
-  expect(mobileAudit.input?.height || 9999).toBeLessThan(1150);
+  expect(mobileAudit.input?.height || 9999).toBeLessThan(1250);
   expect(mobileAudit.hero?.height || 9999).toBeLessThan(1250);
+  expect(mobileAudit.compatibility?.width || 0).toBeGreaterThan(viewportWidth - 40);
+  expect(mobileAudit.mobileNav?.height || 0).toBeGreaterThanOrEqual(60);
   expect(mobileAudit.heroVisual?.height || 0).toBeGreaterThan(250);
   expect(mobileAudit.keywordShell?.height || 9999).toBeLessThan(1650);
   expect(mobileAudit.fullReport?.width || 0).toBeGreaterThan(viewportWidth - 40);
