@@ -536,3 +536,43 @@ test('calendar mode converts and preserves the same birth date across month-end 
   await page.locator('input[name="calendar"][value="solar"]').check();
   await expect(page.locator('#birthDate')).toHaveValue('2023-03-22');
 });
+
+
+test('commercial UX saves local profiles and produces a compatibility reading', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'commercial interaction behavior is viewport-independent');
+  await page.goto('/');
+  await page.locator('#name').fill('프로필QA');
+  await page.locator('#birthDate').fill('1990-05-10');
+  await page.locator('#saveProfile').click();
+  await expect(page.locator('#profileSelect option')).toHaveCount(2);
+  await expect(page.locator('#profileSelect')).toHaveValue('0');
+
+  await page.locator('.birth-side-submit:visible').click();
+  await expect(page.locator('#results')).toBeVisible();
+  await page.locator('#partnerName').fill('상대QA');
+  await page.locator('#partnerDate').fill('1992-08-21');
+  await page.locator('#compatibilityForm .cta').click();
+  await expect(page.locator('#compatibilityResult article')).toHaveCount(3);
+  await expect(page.locator('#compatibilityResult')).toContainText('잘 맞는 지점');
+  await expect(page.locator('#todayExplorer .seven-day-strip article')).toHaveCount(7);
+  await assertNoHorizontalOverflow(page);
+});
+
+test('mobile app navigation stays visible without covering section starts', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-small', 'small-mobile layout contract');
+  await page.goto('/');
+  await expect(page.locator('.mobile-bottom-nav')).toBeVisible();
+  await expect(page.locator('.topnav')).toBeHidden();
+  const audit=await page.evaluate(()=>{
+    const nav=document.querySelector('.mobile-bottom-nav').getBoundingClientRect();
+    const bar=document.querySelector('.topbar').getBoundingClientRect();
+    const input=document.querySelector('#input').getBoundingClientRect();
+    return {
+      navInside:nav.left>=0&&nav.right<=innerWidth&&nav.bottom<=innerHeight,
+      headerOverlap:bar.bottom-input.top
+    };
+  });
+  expect(audit.navInside).toBe(true);
+  expect(audit.headerOverlap).toBeLessThanOrEqual(2);
+  await assertNoHorizontalOverflow(page);
+});
