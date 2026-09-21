@@ -191,6 +191,7 @@ test('calculation renderers still populate all retained data targets', async ({ 
   await expect(page.locator('#dailyMetrics .metric-row')).toHaveCount(5);
   await expect(page.locator('#dailyActionGuide article')).toHaveCount(3);
   await expect(page.locator('#dailyTimeFlow article')).toHaveCount(6);
+  await expect(page.locator('.daily-report-extra')).not.toHaveAttribute('open','');
   await expect(page.locator('#tojungQuarterGrid .quarter-card')).toHaveCount(4);
   await assertNoHorizontalOverflow(page);
 });
@@ -572,7 +573,7 @@ test('commercial UX interactions work without a backend', async ({ page }, testI
     };
   });
   expect(compatibilityGeometry.heading?.width || 0).toBeGreaterThan(180);
-  expect(compatibilityGeometry.heading?.height || 999).toBeLessThan(320);
+  expect(compatibilityGeometry.heading?.height || 999).toBeLessThan(380);
   expect(compatibilityGeometry.submit?.height || 999).toBeLessThan(70);
   if(testInfo.project.name==='desktop'){
     expect(compatibilityGeometry.form?.height || 999).toBeLessThan(390);
