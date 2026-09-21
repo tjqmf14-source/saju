@@ -70,3 +70,19 @@ test('reader report separates plain-language summary from calculation evidence',
   assert.ok(report.balance.evidence.length>=4);
   assert.match(report.balance.paragraphs.join(' '),/월령|통근|지장간/);
 });
+
+
+test('year report layers natal chart, active decade, annual and monthly flow',()=>{
+  const yearFlow=calculateYearFlows(chart,2026,1)[0];
+  const months=calculateMonthFlows(chart,2026);
+  const profile=buildInterpretiveProfile(chart,yearFlow,months);
+  assert.ok(profile.flow);
+  assert.equal(profile.flow.annualGod,yearFlow.tenGod);
+  assert.ok(profile.flow.layers.length>=2);
+  assert.ok(profile.flow.easy.length>=3);
+  const mbti=calculateSajuMbti(chart);
+  const report=buildDetailedInterpretation(chart,mbti,yearFlow,months);
+  assert.ok(report.year.quick.length>=3);
+  assert.ok(report.year.evidence.length>=2);
+  assert.match(report.year.paragraphs.join(' '),/원국.*대운.*세운.*월운/);
+});
