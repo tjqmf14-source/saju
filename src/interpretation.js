@@ -1,4 +1,5 @@
 import { ELEMENT_LABELS, ROLE_LABELS, stemByName } from './data.js';
+import { buildInterpretiveProfile } from './interpretive-profile.js';
 
 const ELEMENT_TEXT = {
   목:{gift:'새로운 방향을 만들고 사람과 아이디어를 연결하는 힘',risk:'관심사가 늘어나면 에너지가 여러 갈래로 흩어질 수 있는 점',use:'시작할 일을 한두 개로 줄이고, 성장 과정을 기록으로 남기는 방식'},
@@ -53,6 +54,7 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   const monthsRole=ROLE_TEXT[monthsTop];
   const relation=relationNames(chart);
   const balance=balanceIndex(chart);
+  const profile=buildInterpretiveProfile(chart);
   const precisionText=chart.basis?.trueSolarTime==='적용'
     ? `${chart.basis.location} 경도 ${chart.basis.longitude}°를 반영한 진태양시 정밀 보정이 적용되었습니다.`
     : '입력된 한국 표준시를 그대로 사용한 간편 계산 기준입니다.';
@@ -60,7 +62,7 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
     ? `${chart.luck.forward?'순행':'역행'} 대운으로, 첫 대운은 약 ${chart.luck.startYears}년 ${chart.luck.startMonths}개월 뒤 시작하는 흐름입니다.`
     : '대운 정보는 현재 입력 조건에서 별도로 표시되지 않았습니다.';
 
-  return {
+  const report = {
     overview: section(
       '전체 성향 요약',
       `${dayStem.yinYang} ${dayStem.element} 일간을 중심으로 ${ELEMENT_LABELS[strongElement].label} 기운과 ${ROLE_LABELS[strongRole]} 성향이 함께 중심을 잡는 구조입니다.`,
@@ -175,6 +177,59 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
       ]
     )
   };
+
+  const topGods=profile.tenGods.ranking.slice(0,3);
+  const rootText=profile.strength.rootReasons.length
+    ? profile.strength.rootReasons.join(' · ')
+    : '원국에서 일간과 같은 오행의 뚜렷한 통근 신호가 적습니다.';
+
+  report.overview.quick=[
+    ...profile.easyFacts,
+    `쉽게 말하면, 지금 원국을 읽을 때 가장 먼저 볼 것은 ${topGods[0]?.tenGod || '십신'}의 쓰임과 ${profile.strength.band} 쪽으로 기운 균형이 기우는 이유입니다.`
+  ];
+
+  report.temperament.quick=[
+    `겉으로 가장 자주 드러나는 십신은 ${topGods[0]?.tenGod || '비견'} · ${topGods[0]?.simple || '자기 기준'}입니다.`,
+    `그 다음은 ${topGods[1]?.tenGod || topGods[0]?.tenGod || '비견'} · ${topGods[1]?.simple || topGods[0]?.simple || '자기 기준'}로, 한 가지 성향만으로 설명되지 않습니다.`,
+    `월령과 통근까지 함께 보면 단순한 오행 개수보다 실제로 어떤 기운을 쓰기 쉬운지가 더 선명해집니다.`
+  ];
+
+  report.balance.title='기운의 중심과 신강·신약';
+  report.balance.lead=`월령·통근·생조·극설을 함께 본 참고 지표는 ${profile.strength.band} ${profile.strength.score}점이며 판정 신뢰도는 ${profile.strength.confidence}입니다.`;
+  report.balance.quick=[
+    profile.strength.month.text,
+    rootText,
+    profile.balanceHint
+  ];
+  report.balance.paragraphs.unshift(
+    `기존처럼 오행 개수만 세지 않고 월지의 계절 힘, 일간이 지지에 뿌리를 두는지, 천간에서 같은 기운이나 인성의 도움을 받는지, 반대로 식상·재성·관성 쪽으로 힘이 빠지는지를 함께 계산했습니다. 현재 참고 점수는 ${profile.strength.score}점으로 ${profile.strength.band} 구간입니다. ${profile.strength.disclaimer}`
+  );
+
+  report.career.quick=[
+    `직업 해석은 ${topGods[0]?.tenGod || '십신'}만 보지 않고 월주·시주에 어떤 십신이 드러났는지도 함께 확인합니다.`,
+    `두드러진 십신 3개는 ${topGods.map((item)=>item.tenGod).join(' · ')}입니다.`,
+    '직업명 하나를 찍기보다 자율성·책임·표현·관리 중 어떤 조건에서 성과가 나는지 설명합니다.'
+  ];
+
+  report.money.quick=[
+    '재물운은 “큰돈이 온다”가 아니라 재성의 배치와 현재 세운이 돈을 다루는 방식에 어떤 압력을 주는지로 읽습니다.',
+    `원국에서 재성 점수는 ${((profile.tenGods.score.편재||0)+(profile.tenGods.score.정재||0)).toFixed(2)}입니다.`,
+    '실제 투자·대출·소비 판단은 운세보다 현금흐름과 손실 가능성을 우선합니다.'
+  ];
+
+  report.love.quick=[
+    '관계 해석은 상대의 마음을 맞히는 방식이 아니라 내가 친밀한 관계에서 반복하는 반응 패턴을 설명합니다.',
+    `관계에서 함께 봐야 할 원국 신호는 ${relation}입니다.`,
+    '궁합에서는 두 사람의 원국을 별도로 계산해 공통점과 긴장 지점을 비교합니다.'
+  ];
+
+  report.technical.quick=[
+    '계산 가능한 달력·절기 값과 해석 규칙을 분리합니다.',
+    `신강·신약 참고: ${profile.strength.band} ${profile.strength.score}점 · 신뢰도 ${profile.strength.confidence}`,
+    `주요 십신: ${topGods.map((item)=>`${item.tenGod} ${item.score}`).join(' · ')}`
+  ];
+
+  return report;
 }
 
 export function buildInterpretation(chart, mbti) {
