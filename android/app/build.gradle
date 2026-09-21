@@ -1,0 +1,48 @@
+plugins {
+    id 'com.android.application'
+}
+android {
+    namespace 'kr.naesaju.personal'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'kr.naesaju.personal'
+        minSdk 24
+        targetSdk 35
+        versionCode 1
+        versionName '1.0'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    sourceSets {
+        main.assets.srcDir(layout.buildDirectory.dir('generated/assets'))
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+def webDist = rootProject.file('../dist')
+def syncWebAssets = tasks.register('syncWebAssets', Sync) {
+    from(webDist)
+    into(layout.buildDirectory.dir('generated/assets/site'))
+    includeEmptyDirs = false
+    doFirst {
+        if (!new File(webDist, 'index.html').isFile()) {
+            throw new GradleException('Vite dist/index.html is missing. Build the website first.')
+        }
+    }
+}
+
+tasks.configureEach { task ->
+    if (task.name.startsWith('merge') && task.name.endsWith('Assets')) {
+        task.dependsOn(syncWebAssets)
+    }
+}
