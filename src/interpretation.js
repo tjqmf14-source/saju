@@ -1,5 +1,6 @@
 import { ELEMENT_LABELS, ROLE_LABELS, stemByName } from './data.js';
 import { buildInterpretiveProfile } from './interpretive-profile.js';
+import { analyzeAdvancedMyeongri } from './advanced-myeongri.js';
 
 const ELEMENT_TEXT = {
   목:{gift:'새로운 방향을 만들고 사람과 아이디어를 연결하는 힘',risk:'관심사가 늘어나면 에너지가 여러 갈래로 흩어질 수 있는 점',use:'시작할 일을 한두 개로 줄이고, 성장 과정을 기록으로 남기는 방식'},
@@ -55,6 +56,7 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   const relation=relationNames(chart);
   const balance=balanceIndex(chart);
   const profile=buildInterpretiveProfile(chart);
+  const advanced=analyzeAdvancedMyeongri(chart);
   const precisionText=chart.basis?.trueSolarTime==='적용'
     ? `${chart.basis.location} 경도 ${chart.basis.longitude}°를 반영한 진태양시 정밀 보정이 적용되었습니다.`
     : '입력된 한국 표준시를 그대로 사용한 간편 계산 기준입니다.';
@@ -105,6 +107,17 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
         `화면의 오행 수치는 천간과 지지의 지장간을 일정한 가중치로 합산해 ‘구성 비중’을 비교하기 위한 지표입니다. 이 숫자는 원국을 빠르게 이해하기에는 유용하지만, 전통 명리에서 말하는 신강·신약이나 용신을 그대로 계산한 절대 점수는 아닙니다. 실제 신강·신약 판단에는 월령, 통근, 투간, 계절의 왕쇠와 생극제화 등 여러 층을 함께 살피며 학파에 따라 판단 기준도 달라질 수 있습니다.`,
         `따라서 ${strongElement}이 높다는 이유만으로 그 기운이 무조건 과다하거나 나쁘다고 보지 않습니다. 현실적으로는 ${element.gift}이 자주 사용되는 장점으로 나타날 수 있고, 반대로 피로가 쌓였을 때는 ${element.risk}이 함께 나타나는지를 확인하는 방식이 더 유용합니다. 숫자를 운세의 좋고 나쁨으로 읽기보다 자신의 행동 패턴을 관찰하는 기준으로 사용하는 것이 안전합니다.`,
         `${weakElement} 쪽은 ${weak.use}처럼 생활 속 행동으로 보완해 볼 수 있습니다. 이것은 전통적인 개운법을 사실처럼 제시하는 처방이 아니라, 한쪽으로 치우치기 쉬운 행동 습관에 다른 선택지를 추가하는 실용적 제안입니다. 실제 삶에서 이미 잘하고 있는 부분이 있다면 수치보다 그 경험을 우선해 해석하세요.`
+      ]
+    ),
+    structure: section(
+      '사주의 중심 구조',
+      `월지 ${advanced.structure.monthBranch}의 중심 기운은 ${advanced.structure.tenGod}으로, 이 원국은 ${advanced.structure.label}로 읽을 근거가 있습니다.`,
+      [
+        `${advanced.structure.explanation} 쉽게 말하면, 이 십신은 삶의 바탕에서 반복해서 중요하게 작동하는 주제에 가깝습니다. 같은 십신이 많다고 해서 성격이 하나로 고정되는 것은 아니며, 월령과 천간 노출 여부를 함께 볼 때 실제 체감 차이가 생깁니다.`,
+        `십신은 5개 그룹으로만 묶지 않고 비견·겁재·식신·상관·편재·정재·편관·정관·편인·정인을 따로 봅니다. 현재 상위 십신은 ${advanced.tenGodDetail.top.slice(0,3).map((item)=>`${item.name}(${item.easy})`).join(' · ')}입니다. 이 조합은 한 가지 키워드보다 여러 행동 패턴이 겹쳐 나타나는 이유를 설명하는 데 더 유용합니다.`,
+        advanced.stemRelations.length
+          ? `천간에서는 ${advanced.stemRelations.map((item)=>`${item.members.join('·')} ${item.type}`).join(', ')}이 확인됩니다. 천간합은 관계나 선택에서 두 성향이 서로 묶여 작동할 수 있다는 참고 신호이며, 합 하나만으로 사건을 단정하지 않습니다.`
+          : '천간에서는 뚜렷한 합 신호가 많지 않습니다. 이 경우에는 지지 관계와 월령, 십신 배치가 해석의 중심이 됩니다.'
       ]
     ),
     career: section(
@@ -206,6 +219,14 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
     `기존처럼 오행 개수만 세지 않고 월지의 계절 힘, 일간이 지지에 뿌리를 두는지, 천간에서 같은 기운이나 인성의 도움을 받는지, 반대로 식상·재성·관성 쪽으로 힘이 빠지는지를 함께 계산했습니다. 현재 참고 점수는 ${profile.strength.score}점으로 ${profile.strength.band} 구간입니다. ${profile.strength.disclaimer}`
   );
 
+  report.structure.quick=[
+    `가장 먼저 볼 중심은 월령의 ${advanced.structure.tenGod}입니다.`,
+    `두드러진 십신은 ${advanced.tenGodDetail.top.slice(0,3).map((item)=>item.name).join(' · ')} 순입니다.`,
+    advanced.stemRelations.length
+      ? `천간합은 ${advanced.stemRelations.map((item)=>item.members.join('·')).join(' · ')}이 확인됩니다.`
+      : '천간합보다 지지 관계와 월령의 영향이 더 중심에 놓입니다.'
+  ];
+
   report.career.quick=[
     `직업 해석은 ${topGods[0]?.tenGod || '십신'}만 보지 않고 월주·시주에 어떤 십신이 드러났는지도 함께 확인합니다.`,
     `두드러진 십신 3개는 ${topGods.map((item)=>item.tenGod).join(' · ')}입니다.`,
@@ -227,7 +248,8 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   report.technical.quick=[
     '계산 가능한 달력·절기 값과 해석 규칙을 분리합니다.',
     `신강·신약 참고: ${profile.strength.band} ${profile.strength.score}점 · 신뢰도 ${profile.strength.confidence}`,
-    `주요 십신: ${topGods.map((item)=>`${item.tenGod} ${item.score}`).join(' · ')}`
+    `주요 십신: ${topGods.map((item)=>`${item.tenGod} ${item.score}`).join(' · ')}`,
+    `월령 중심: ${advanced.structure.monthBranch} · ${advanced.structure.tenGod} · 후보 신뢰도 ${advanced.structure.confidence}`
   ];
   report.technical.paragraphs.push(
     `십신은 비견·겁재·식신·상관·편재·정재·편관·정관·편인·정인을 하나로 뭉개지 않고 천간과 지장간의 위치를 따로 기록합니다. 현재 상위 십신의 대표 위치는 ${topGodPlacementText}입니다. 위치와 가중치를 함께 보는 이유는 같은 십신이라도 겉으로 드러난 천간인지, 지지 안에 잠재된 지장간인지에 따라 해석 비중을 다르게 보기 위해서입니다.`
