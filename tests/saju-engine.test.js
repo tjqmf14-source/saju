@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { getSolarTerm } from 'manseryeok';
-import { calculateSaju, calculateMonthFlows, detectBranchRelations } from '../src/saju-engine.js';
+import { calculateSaju, calculateMonthFlows, calculateTodayTimeFlows, detectBranchRelations } from '../src/saju-engine.js';
 
 test('1987-06-14 11:45 KST 원국을 검증된 간지로 계산한다', () => {
   const chart = calculateSaju({calendar:'solar',year:1987,month:6,day:14,hour:11,minute:45,gender:'male',precision:false});
@@ -48,4 +48,14 @@ test('월운은 양력 15일이 아니라 실제 12개 절입 순간을 경계�
   assert.equal(flows[11].start.toISOString(),getSolarTerm(2027,0).date.toISOString());
   assert.equal(flows[11].end.toISOString(),getSolarTerm(2027,2).date.toISOString());
   for (const flow of flows) assert.ok(flow.end > flow.start);
+});
+
+
+test('지정일 시간대별 흐름은 6개 생활 시간대로 계산한다', () => {
+  const chart = calculateSaju({calendar:'solar',year:1987,month:6,day:14,hour:11,minute:45,gender:'male'});
+  const flows = calculateTodayTimeFlows(chart,new Date('2026-09-21T03:00:00Z'));
+  assert.equal(flows.length,6);
+  assert.deepEqual(flows.map((flow)=>flow.label),['새벽','아침','오전','오후','저녁','밤']);
+  assert.ok(flows.every((flow)=>typeof flow.tenGod==='string' && typeof flow.group==='string'));
+  assert.ok(flows.every((flow)=>typeof flow.korean==='string' && flow.korean.length===2));
 });
