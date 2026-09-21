@@ -595,7 +595,7 @@ function renderToday(chart,todayFlow){
   $('todayDate').textContent=currentKstDate(flowDate);
   $('todayHeadline').textContent=`“${copy.summary}”`;
   $('todayQuoteTitle').textContent=copy.summary;
-  $('todayQuoteBody').textContent=`${copy.opportunity}에 힘을 싣고, ${copy.caution}은 한 번 더 점검하세요.`;
+  $('todayQuoteBody').textContent=`${copy.opportunity} ${copy.caution}`;
 
   const overall=scores.overall;
   $('dailyPrimary').innerHTML=`<div class="daily-primary-score" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${overall.score}" aria-label="오늘의 종합 운세">
@@ -670,7 +670,7 @@ function renderYear(yearFlow,monthFlows){
   $('yearTitle').textContent=`${yearFlow.year} · ${yearFlow.tenGod}의 해`;
   $('annualQuote').textContent=YEAR_HEADLINE[yearFlow.group];
   $('yearSummary').innerHTML=`<strong>기회</strong> ${escapeHtml(copy.work)}`;
-  $('annualGuide').innerHTML=`<strong>주의</strong> ${escapeHtml(copy.caution)}이 보이면 잠시 속도를 낮춰 보세요.`;
+  $('annualGuide').innerHTML=`<strong>주의</strong> ${escapeHtml(copy.caution)}`;
   $('yearDeepDive').innerHTML=`<article class="year-essay"><span class="micro">YEAR IN DEPTH</span><h3>올해, 무엇을 살펴볼까요?</h3><div class="year-essay-points"><p><strong>중심</strong> <mark>${escapeHtml(YEAR_HEADLINE[yearFlow.group])}</mark></p><p><strong>생활에 적용</strong> ${escapeHtml(copy.work)}</p><p><strong>계산 근거</strong> ${yearFlow.year}년 ${escapeHtml(yearFlow.korean)} · ${escapeHtml(yearFlow.tenGod)}. 원국과의 관계는 ${escapeHtml(relationLabel(yearFlow.relations))}입니다.</p></div></article>`;
   const firstMonthFor=(groups)=>monthFlows.find((flow)=>groups.includes(flow.group));
   const monthBasis=(flow)=>flow?`${kstMonthNumber(flow.start)}월 ${flow.tenGod} 월운 · ${flow.korean}`:`${yearFlow.tenGod} 세운 · ${yearFlow.korean}`;
