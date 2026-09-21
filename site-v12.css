@@ -813,7 +813,7 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
 
 /* Mobile */
 @media(max-width:820px){
-  :root{--shell:calc(100vw - 24px);--section-gap:16px;--mobile-font-bump:1.333px}
+  :root{--shell:calc(100vw - 24px);--section-gap:16px;--mobile-font-bump:2.666px}
   input,select,textarea{font-size:calc(16px + var(--mobile-font-bump))}
   section[id],details[id]{scroll-margin-top:78px}
   .topbar{position:relative;top:auto;height:66px;grid-template-columns:1fr auto;padding:0 12px}
