@@ -2,7 +2,8 @@ import {
   calculateSaju,
   calculateYearFlows,
   calculateMonthFlows,
-  calculateTodayFlow
+  calculateTodayFlow,
+  calculateTodayTimeFlows
 } from './saju-engine.js';
 import { calculateSajuMbti } from './mbti.js';
 import { buildDetailedInterpretation } from './interpretation.js';
@@ -84,7 +85,23 @@ const ROLE_BY_ELEMENT = {
 function selectedCalendar(){ return form.elements.calendar.value; }
 function currentKstYear(){ return Number(new Intl.DateTimeFormat('en',{timeZone:'Asia/Seoul',year:'numeric'}).format(new Date())); }
 function currentKstDate(date=new Date()){ return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric',weekday:'short'}).format(date); }
+function kstIsoDate(date=new Date()){
+  const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);
+  const value=Object.fromEntries(parts.map((part)=>[part.type,part.value]));
+  return `${value.year}-${value.month}-${value.day}`;
+}
 function dailyDate(offset=dailyOffset){ const date=new Date(); date.setUTCDate(date.getUTCDate()+offset); return date; }
+function syncFortuneDate(){ const field=$('fortuneDate'); if(field) field.value=kstIsoDate(dailyDate()); }
+function setDailyOffsetFromIso(value){
+  const match=value?.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!match) return false;
+  const today=kstIsoDate(new Date()).split('-').map(Number);
+  const target=match.slice(1).map(Number);
+  const baseUtc=Date.UTC(today[0],today[1]-1,today[2]);
+  const targetUtc=Date.UTC(target[0],target[1]-1,target[2]);
+  dailyOffset=Math.round((targetUtc-baseUtc)/86400000);
+  return true;
+}
 function sorted(object){ return Object.entries(object).sort((a,b)=>b[1]-a[1]); }
 function dominantElement(chart){ return sorted(chart.elements)[0]?.[0] || '토'; }
 function dominantRole(chart){ return sorted(chart.roles)[0]?.[0] || '인성'; }
@@ -333,9 +350,16 @@ function renderProfileSelect(selectedId=''){
   const select=$('profileSelect');
   if(!select) return;
   const profiles=safeProfiles();
-  select.innerHTML='<option value="">현재 입력</option>'+profiles.map((p)=>`<option value="${escapeHtml(p.id)}">${escapeHtml(p.label)}</option>`).join('');
+  const options=profiles.map((p)=>`<option value="${escapeHtml(p.id)}">${escapeHtml(p.label)}</option>`).join('');
+  select.innerHTML='<option value="">현재 입력</option>'+options;
   select.value=profiles.some((p)=>p.id===selectedId)?selectedId:'';
   $('deleteProfile').disabled=!select.value;
+  const partnerSelect=$('partnerProfileSelect');
+  if(partnerSelect){
+    const previous=partnerSelect.value;
+    partnerSelect.innerHTML='<option value="">직접 입력</option>'+options;
+    if(profiles.some((p)=>p.id===previous)) partnerSelect.value=previous;
+  }
 }
 
 function loadProfile(id){
@@ -359,6 +383,22 @@ function loadProfile(id){
   syncQuickYearFromActive();
   dailyOffset=0;
   renderAll();
+}
+
+function loadPartnerProfile(id){
+  const profile=safeProfiles().find((item)=>item.id===id);
+  if(!profile) return;
+  let date=profile.birthDate||'1990-01-01';
+  if(profile.calendar==='lunar'){
+    try{
+      const solar=lunarToSolar(Number(profile.birthYear),Number(profile.birthMonth),Number(profile.birthDay),Boolean(profile.isLeap));
+      date=`${solar.year}-${String(solar.month).padStart(2,'0')}-${String(solar.day).padStart(2,'0')}`;
+    }catch{}
+  }
+  $('partnerName').value=profile.name||profile.label||'';
+  $('partnerDate').value=date;
+  $('partnerTime').value=profile.birthTime||'12:00';
+  $('partnerGender').value=profile.gender||'female';
 }
 
 function saveCurrentProfile(){
@@ -503,6 +543,7 @@ function renderDetailedReport(report){
     const item=report[key];
     const open=index===0?' open':'';
     const labels=['핵심','살펴볼 점','실천'];
+    const quick=(item.quick?.length?item.quick:item.paragraphs.map(firstSentence).slice(0,3));
     return `<article id="report-${key}" class="detail-chapter detail-chapter-${String(index+1).padStart(2,'0')}" data-report-key="${key}">
       <details class="detail-disclosure"${open}>
         <summary>
@@ -512,8 +553,9 @@ function renderDetailedReport(report){
         </summary>
         <div class="detail-chapter-body">
           <p class="chapter-takeaway"><mark>${escapeHtml(item.lead)}</mark></p>
-          <ul class="chapter-quick-list">${item.paragraphs.map((p,i)=>`<li><strong>${labels[i]||'참고'}</strong><span>${escapeHtml(firstSentence(p))}</span></li>`).join('')}</ul>
-          <details class="chapter-full-analysis"><summary>전체 해석과 계산 맥락 읽기</summary>${item.paragraphs.map((p)=>`<p>${escapeHtml(p)}</p>`).join('')}</details>
+          <div class="easy-reading-label"><span>먼저 이것만 보세요</span><small>쉬운 해설</small></div>
+          <ul class="chapter-quick-list">${quick.map((p,i)=>`<li><strong>${labels[i]||'근거'}</strong><span>${escapeHtml(p)}</span></li>`).join('')}</ul>
+          <details class="chapter-full-analysis"><summary>왜 이렇게 해석했는지 자세히 보기</summary>${item.paragraphs.map((p)=>`<p>${escapeHtml(p)}</p>`).join('')}</details>
         </div>
       </details>
     </article>`;
@@ -530,7 +572,8 @@ function renderKeywordInsight(report,key='temperament'){
     button.setAttribute('aria-pressed',active?'true':'false');
   });
   panel.dataset.reportKey=key;
-  panel.innerHTML=`<div><span class="section-kicker">SELECTED INSIGHT</span><h3>${escapeHtml(item.title)}</h3></div><p><mark>${escapeHtml(item.lead)}</mark><br>${escapeHtml(firstSentence(item.paragraphs[0]))}</p><a href="#report-${key}">정밀 해설 이어 읽기 <span aria-hidden="true">→</span></a>`;
+  const easy=item.quick?.[0] || firstSentence(item.paragraphs[0]);
+  panel.innerHTML=`<div><span class="section-kicker">SELECTED INSIGHT</span><h3>${escapeHtml(item.title)}</h3></div><p><mark>${escapeHtml(item.lead)}</mark><br>${escapeHtml(easy)}</p><a href="#report-${key}">정밀 해설 이어 읽기 <span aria-hidden="true">→</span></a>`;
 }
 
 function setupKeywordCards(){
@@ -574,6 +617,19 @@ function renderToday(chart,todayFlow){
     return `<article class="metric-row"><span class="daily-index" aria-hidden="true">${index}</span><div class="metric-name"><svg class="ui-icon metric-icon" aria-hidden="true"><use href="#${icon}"/></svg><div><strong class="metric-label">${title}</strong><div class="metric-score">${flow.score}<small>/100</small></div></div></div><div class="metric-copy"><div class="metric-track" role="img" aria-label="${title} 오늘의 흐름 지수 ${flow.score}점 · ${flow.label}"><span style="width:${flow.score}%"></span></div></div></article>`;
   }).join('');
 
+  $('dailyActionGuide').innerHTML=[
+    ['힘을 쓸 곳',copy.opportunity],
+    ['속도를 낮출 때',copy.caution],
+    ['회복 포인트',copy.health]
+  ].map(([title,body],index)=>`<article><span>0${index+1}</span><strong>${escapeHtml(title)}</strong><p>${escapeHtml(body)}</p></article>`).join('');
+
+  const timeFlows=calculateTodayTimeFlows(chart,dailyDate());
+  $('dailyTimeFlow').innerHTML=timeFlows.map((slot)=>{
+    const slotCopy=GROUP_COPY[slot.group]||GROUP_COPY.인성;
+    const signal=slot.relations?.length?` · ${relationLabel(slot.relations)}`:'';
+    return `<article><span>${escapeHtml(slot.label)}</span><small>${escapeHtml(slot.range)}</small><strong>${escapeHtml(slot.tenGod)} · ${escapeHtml(slotCopy.label)}</strong><p>${escapeHtml(slotCopy.summary)}${escapeHtml(signal)}</p></article>`;
+  }).join('');
+  syncFortuneDate();
 }
 
 function renderYear(yearFlow,monthFlows){
@@ -1002,12 +1058,19 @@ $('deleteProfile').addEventListener('click',deleteSelectedProfile);
 $('shareReport').addEventListener('click',shareReport);
 $('copyReport').addEventListener('click',copyReportSummary);
 document.querySelectorAll('[data-day-shift]').forEach((button)=>button.addEventListener('click',()=>{
-  dailyOffset=Math.max(-30,Math.min(180,dailyOffset+Number(button.dataset.dayShift||0)));
+  dailyOffset=Math.max(-3650,Math.min(3650,dailyOffset+Number(button.dataset.dayShift||0)));
   if(currentChart) renderToday(currentChart,calculateTodayFlow(currentChart,dailyDate()));
 }));
 $('todayReset').addEventListener('click',()=>{
   dailyOffset=0;
   if(currentChart) renderToday(currentChart,calculateTodayFlow(currentChart,dailyDate()));
+});
+$('fortuneDate').addEventListener('change',(event)=>{
+  if(!setDailyOffsetFromIso(event.target.value)) return;
+  if(currentChart) renderToday(currentChart,calculateTodayFlow(currentChart,dailyDate()));
+});
+$('partnerProfileSelect').addEventListener('change',(event)=>{
+  if(event.target.value) loadPartnerProfile(event.target.value);
 });
 $('compatibilityForm').addEventListener('submit',(event)=>{ event.preventDefault(); renderCompatibility(); });
 $('precisionToggle').addEventListener('change',syncPrecisionUi);
