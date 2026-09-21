@@ -1,56 +1,71 @@
 // Interpretation copy is deliberately separate from the deterministic calendar engine.
-// These are reflective prompts, not claims that a particular event will occur.
+// These are concise reflective prompts, not claims that a particular event will occur.
+
 const TEN_GOD_COPY = {
-  비견:{focus:'내 기준을 확인하기',action:'혼자 결정할 일과 함께 의논할 일을 나눠 보세요.'},
-  겁재:{focus:'협업의 경계 세우기',action:'공동 비용과 책임 범위를 시작 전에 합의해 보세요.'},
-  식신:{focus:'꾸준한 결과 쌓기',action:'매일 이어갈 수 있는 작은 결과물 하나를 정해 보세요.'},
-  상관:{focus:'표현 방식 다듬기',action:'전달할 메시지를 한 문장으로 줄여 보세요.'},
-  편재:{focus:'새 제안의 조건 살피기',action:'제안의 비용·시간·회수 조건을 숫자로 확인해 보세요.'},
-  정재:{focus:'반복 수입과 지출 정리하기',action:'고정비와 저축 계획을 실제 금액으로 적어 보세요.'},
-  편관:{focus:'압박과 우선순위 조정하기',action:'급한 요구와 꼭 지켜야 할 일의 경계를 정해 보세요.'},
-  정관:{focus:'약속과 신뢰 쌓기',action:'마감과 담당 범위를 문서로 확정해 보세요.'},
-  편인:{focus:'익숙한 틀 다시 보기',action:'새 정보 하나를 기존 계획과 비교해 보세요.'},
-  정인:{focus:'배운 것을 생활에 쓰기',action:'정리한 내용을 실제 행동 하나로 연결해 보세요.'}
+  비견:{focus:'내 기준',check:'혼자 결정하지 마세요.'},
+  겁재:{focus:'협업·경쟁',check:'비용과 책임을 먼저 나누세요.'},
+  식신:{focus:'꾸준한 생산',check:'한 번에 너무 많이 벌이지 마세요.'},
+  상관:{focus:'표현·개선',check:'말보다 전달 방식을 다듬으세요.'},
+  편재:{focus:'기회·유동자원',check:'조건을 숫자로 확인하세요.'},
+  정재:{focus:'안정·관리',check:'고정비를 놓치지 마세요.'},
+  편관:{focus:'압박·도전',check:'급한 일과 중요한 일을 나누세요.'},
+  정관:{focus:'책임·신뢰',check:'약속 범위를 분명히 하세요.'},
+  편인:{focus:'직관·탐색',check:'새 정보만 쫓지 마세요.'},
+  정인:{focus:'학습·정리',check:'배운 것을 행동으로 옮기세요.'}
 };
 
-const BRANCH_CHECK = {
-  자:'들어오는 정보가 많다면 중요한 것 두 가지만 남겨 보세요.',
-  축:'미뤄 둔 정리와 유지 비용을 먼저 확인해 보세요.',
-  인:'새로 시작할 일의 범위를 작게 잡아 보세요.',
-  묘:'사람과 아이디어를 연결할 때 기대를 말로 확인해 보세요.',
-  진:'흩어진 계획을 일정표 하나로 묶어 보세요.',
-  사:'속도가 붙을수록 휴식 시간을 먼저 확보해 보세요.',
-  오:'결과를 보여주고 실제 반응을 기록해 보세요.',
-  미:'일과 생활의 부담이 한쪽에 몰리지 않는지 살펴보세요.',
-  신:'불필요한 일을 하나 덜어 내고 기준을 선명히 해 보세요.',
-  유:'마무리 단계의 작은 조건과 품질을 점검해 보세요.',
-  술:'끝낼 일과 다음으로 넘길 일을 분명히 나눠 보세요.',
-  해:'다음 선택을 서두르기보다 회복과 정보 정리에 시간을 써 보세요.'
+const BRANCH_GUIDE = {
+  인:{focus:'시작 범위',action:'새 일은 한 가지로 좁혀 시작하세요.',guard:'준비만 길어지지 않는지 보세요.'},
+  묘:{focus:'관계 조율',action:'협업 전 기대와 역할을 먼저 맞추세요.',guard:'상대 의도를 혼자 추측하지 마세요.'},
+  진:{focus:'계획 정리',action:'흩어진 일정을 한 장에 묶어보세요.',guard:'계획만 늘고 실행이 밀리지 않게 하세요.'},
+  사:{focus:'속도 조절',action:'속도가 붙어도 휴식 시간을 고정하세요.',guard:'과열되면 한 템포 늦추세요.'},
+  오:{focus:'반응 확인',action:'결과를 보여주고 반응 하나를 기록하세요.',guard:'반응에 과민하게 흔들리지 마세요.'},
+  미:{focus:'부담 분산',action:'책임이 몰리면 한 가지를 나눠 맡기세요.',guard:'부담을 혼자 떠안지 마세요.'},
+  신:{focus:'선택 정리',action:'성과가 낮은 일 하나를 덜어내세요.',guard:'기준을 높여 기회를 닫지 마세요.'},
+  유:{focus:'마감 점검',action:'마감 전 조건·수치·품질을 확인하세요.',guard:'사소한 완벽주의에 시간을 쓰지 마세요.'},
+  술:{focus:'종료 판단',action:'끝낼 일과 넘길 일을 선명히 나누세요.',guard:'끝난 문제를 다시 끌고 오지 마세요.'},
+  해:{focus:'회복·정리',action:'새 결정 전 잠깐 멈추고 자료를 정리하세요.',guard:'피로한 상태에서 결론내리지 마세요.'},
+  자:{focus:'정보 선별',action:'들어오는 정보 중 핵심 두 가지만 남기세요.',guard:'정보량보다 신뢰도를 먼저 보세요.'},
+  축:{focus:'기반 정비',action:'고정비나 미룬 일 하나부터 정리하세요.',guard:'익숙함 때문에 변화가 늦지 않게 하세요.'}
 };
 
-const BRANCH_FOCUS = {
-  자:'정보 추리기',축:'밀린 일 정리',인:'시작 범위 정하기',묘:'기대 확인하기',
-  진:'계획 묶기',사:'속도 조절',오:'반응 기록',미:'부담 나누기',
-  신:'불필요한 일 덜기',유:'조건 점검',술:'마무리 구분',해:'회복 시간 확보'
+const RELATION_LABEL = {
+  합:'연결',
+  삼합:'강한 연결',
+  충:'변화·충돌',
+  형:'긴장',
+  파:'재조정',
+  해:'숨은 마찰'
 };
+
+function relationSignal(flow){
+  const labels=[...new Set((flow.relations||[]).map((item)=>RELATION_LABEL[item.type]||item.type))];
+  return labels.length?labels.join('·'):'큰 충돌 신호 없음';
+}
 
 export function monthFlowCopy(flow){
   const role=TEN_GOD_COPY[flow.tenGod] || TEN_GOD_COPY.정인;
-  const branch=flow.branch;
+  const guide=BRANCH_GUIDE[flow.branch] || {
+    focus:'상황 점검',
+    action:'이번 달 일정과 조건을 다시 확인하세요.',
+    guard:'한 번에 너무 많은 결정을 내리지 마세요.'
+  };
+
   return {
-    focus:`${role.focus} · ${BRANCH_FOCUS[branch] || '상황 살피기'}`,
-    action:BRANCH_CHECK[branch] || '그달의 실제 일정과 조건을 함께 확인해 보세요.',
-    check:role.action
+    focus:`${role.focus} · ${guide.focus}`,
+    action:guide.action,
+    check:`${guide.guard} ${role.check}`,
+    signal:relationSignal(flow)
   };
 }
 
 export function quarterFlowCopy(flows){
   if(flows.length!==3) throw new RangeError('분기 해설에는 절기 월운 3개가 필요합니다.');
+  const first=monthFlowCopy(flows[0]);
   const last=monthFlowCopy(flows[2]);
-  const opening=TEN_GOD_COPY[flows[0].tenGod] || TEN_GOD_COPY.정인;
   return {
     steps:flows.map((flow)=>({tenGod:flow.tenGod,focus:monthFlowCopy(flow).focus})),
-    summary:opening.action,
+    summary:first.action,
     action:last.action
   };
 }
