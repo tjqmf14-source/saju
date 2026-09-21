@@ -230,9 +230,7 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
 
   report.career.quick=[
     `일에서는 ${topGods[0]?.tenGod || strongRole}의 ‘${topGods[0]?.plain?.easy || topGods[0]?.simple || role.career}’ 성향을 먼저 봅니다.`,
-    placementLead?.locations?.some?.(()=>false)
-      ? ''
-      : `특히 ${topGods[0]?.locations?.slice(0,2).join('·') || '원국의 주요 위치'}에서 이 십신이 확인됩니다.`,
+    `특히 ${topGods[0]?.locations?.slice(0,2).join('·') || '원국의 주요 위치'}에서 이 십신이 확인됩니다.`,
     `${topGods[1]?.tenGod || secondRole}도 함께 강해 한 가지 직무명보다 자율성·책임·표현·관리 중 어떤 조건을 함께 쓰는지가 중요합니다.`
   ];
   report.career.paragraphs.unshift(
