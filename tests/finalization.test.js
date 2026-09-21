@@ -56,12 +56,14 @@ test('commercial UX adds local profiles, sharing, compatibility and mobile navig
   assert.match(html,/id="fortuneDate"/);
   assert.match(html,/id="dailyTimeFlow"/);
   assert.match(html,/id="dailyActionGuide"/);
+  assert.match(html,/id="dailyTrend"/);
   assert.match(html,/id="partnerProfileSelect"/);
   assert.match(ui,/PROFILE_STORAGE_KEY/);
   assert.match(ui,/localStorage\.setItem/);
   assert.match(ui,/function renderCompatibility/);
   assert.match(ui,/navigator\.share/);
   assert.match(ui,/calculateTodayTimeFlows/);
+  assert.match(ui,/trendOffsets=\[-2,-1,0,1,2\]/);
   assert.match(ui,/먼저 이것만 보세요/);
 });
 
