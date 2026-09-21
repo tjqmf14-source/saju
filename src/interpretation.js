@@ -200,7 +200,7 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   ];
 
   report.balance.title='내 기운은 강한 편일까, 약한 편일까?';
-  report.balance.lead=`월령·통근·천간의 도움과 소모를 함께 본 결과, 현재 참고 구간은 ${profile.strength.band}입니다.`;
+  report.balance.lead=`월령·통근·천간의 도움과 소모를 함께 본 결과, 현재 참고 구간은 ${profile.strength.band} ${profile.strength.score}점입니다.`;
   report.balance.quick=[
     `한 줄 요약: ${profile.strength.band} ${profile.strength.score}점으로, 숫자보다 월령과 통근 이유를 함께 보는 것이 중요합니다.`,
     `왜 그런가요? ${profile.strength.month.text} ${profile.strength.rootCount? `통근 신호가 ${profile.strength.rootCount}곳 있습니다.`:'통근 신호는 적은 편입니다.'}`,
