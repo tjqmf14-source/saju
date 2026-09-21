@@ -179,6 +179,7 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   };
 
   const topGods=profile.tenGods.ranking.slice(0,3);
+  const topGodPlacementText=topGods.map((item)=>`${item.tenGod}: ${item.locations.slice(0,3).join('·') || '원국 내부'}`).join(' / ');
   const rootText=profile.strength.rootReasons.length
     ? profile.strength.rootReasons.join(' · ')
     : '원국에서 일간과 같은 오행의 뚜렷한 통근 신호가 적습니다.';
@@ -228,6 +229,9 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
     `신강·신약 참고: ${profile.strength.band} ${profile.strength.score}점 · 신뢰도 ${profile.strength.confidence}`,
     `주요 십신: ${topGods.map((item)=>`${item.tenGod} ${item.score}`).join(' · ')}`
   ];
+  report.technical.paragraphs.push(
+    `십신은 비견·겁재·식신·상관·편재·정재·편관·정관·편인·정인을 하나로 뭉개지 않고 천간과 지장간의 위치를 따로 기록합니다. 현재 상위 십신의 대표 위치는 ${topGodPlacementText}입니다. 위치와 가중치를 함께 보는 이유는 같은 십신이라도 겉으로 드러난 천간인지, 지지 안에 잠재된 지장간인지에 따라 해석 비중을 다르게 보기 위해서입니다.`
+  );
 
   return report;
 }
