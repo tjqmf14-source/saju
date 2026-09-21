@@ -200,14 +200,19 @@ export function buildInterpretiveProfile(chart){
   const top=tenGods.ranking.slice(0,3);
   const placements=top.map(placementInsight);
   const structure=structureProfile(tenGods);
+  const stemSignals=(chart.stemRelations||[]);
   const easyFacts=[
     `나는 ${chart.dayMaster} 일간이며, 쉽게 말하면 ${stemByName(chart.dayMaster).yinYang} ${strength.dayElement}의 방식으로 상황을 받아들이는 사람으로 봅니다.`,
     `기운의 버팀 정도는 ${strength.band} 쪽입니다. 이유는 월령·통근·생조 비중을 함께 봤기 때문이며, 참고 점수는 ${strength.score}점입니다.`,
-    `성향은 한 가지가 아니라 ${top.map((item)=>`${item.tenGod}(${item.simple})`).join(' · ')} 순으로 겹쳐 있습니다.`
+    `성향은 한 가지가 아니라 ${top.map((item)=>`${item.tenGod}(${item.simple})`).join(' · ')} 순으로 겹쳐 있습니다.`,
+    stemSignals.length
+      ? `천간에서는 ${stemSignals.map((item)=>item.text).join(' · ')} 신호가 있으며, 합화가 실제 성립한다고 단정하지 않고 원국의 연결 포인트로만 봅니다.`
+      : '천간에서 두드러진 오합 신호는 확인되지 않아 십신과 지지 관계를 중심으로 읽습니다.'
   ];
   return {
     strength,
     tenGods,
+    stemSignals,
     placements,
     structure,
     easyFacts,
