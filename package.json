@@ -1,6 +1,6 @@
 {
   "name": "saju-offline-v2",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,13 +15,20 @@
     "check": "npm test && npm run check:network && npm run build",
     "visual:check": "playwright test",
     "assets:prepare": "node scripts/build-oracle-atlas.js && node scripts/sync-rws-assets.js",
-    "pretest": "node scripts/build-oracle-atlas.js"
+    "pretest": "node scripts/build-oracle-atlas.js",
+    "mobile:init": "npx cap add android",
+    "mobile:sync": "npm run build && npx cap sync android",
+    "mobile:open": "npx cap open android",
+    "mobile:build": "npm run mobile:sync && cd android && gradlew.bat assembleDebug"
   },
   "dependencies": {
-    "manseryeok": "2.0.0"
+    "manseryeok": "2.0.0",
+    "@capacitor/core": "8.5.2",
+    "@capacitor/android": "8.5.2"
   },
   "devDependencies": {
     "vite": "^7.1.0",
-    "@playwright/test": "^1.55.0"
+    "@playwright/test": "^1.55.0",
+    "@capacitor/cli": "8.5.2"
   }
 }
