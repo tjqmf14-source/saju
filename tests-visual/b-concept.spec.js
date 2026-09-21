@@ -540,3 +540,43 @@ test('calendar mode converts and preserves the same birth date across month-end 
   await page.locator('input[name="calendar"][value="solar"]').check();
   await expect(page.locator('#birthDate')).toHaveValue('2023-03-22');
 });
+
+
+test('commercial UX interactions work without a backend', async ({ page }, testInfo) => {
+  test.skip(!['desktop','mobile-small'].includes(testInfo.project.name), 'representative interaction contract');
+  await page.goto('/');
+  await expect(page.locator('#results')).toBeVisible();
+
+  // Local-only profile save/load.
+  await page.locator('#name').fill('테스트');
+  await page.locator('#birthDate').fill('1988-05-03');
+  await page.locator('#saveProfile').click();
+  await expect(page.locator('#profileStatus')).toContainText('이 기기에 프로필을 저장했습니다');
+  await expect(page.locator('#profileSelect option')).toHaveCount(2);
+  const savedId = await page.locator('#profileSelect option').nth(1).getAttribute('value');
+  await page.locator('#name').fill('변경');
+  await page.locator('#profileSelect').selectOption(savedId);
+  await expect(page.locator('#name')).toHaveValue('테스트');
+  await expect(page.locator('#birthDate')).toHaveValue('1988-05-03');
+
+  // Daily date navigation updates the visible date.
+  const initialDate = await page.locator('#todayDate').textContent();
+  await page.locator('[data-day-shift="1"]').click();
+  await expect(page.locator('#todayDate')).not.toHaveText(initialDate || '');
+  await page.locator('#todayReset').click();
+  await expect(page.locator('#todayDate')).toHaveText(initialDate || '');
+
+  // Compatibility renders a deterministic relationship map from a second chart.
+  await page.locator('#partnerDate').fill('1991-07-11');
+  await page.locator('#partnerTime').fill('09:30');
+  await page.locator('#compatibilityForm button[type="submit"]').click();
+  await expect(page.locator('#compatibilityResult .compatibility-result-head')).toBeVisible();
+  await expect(page.locator('#compatibilityResult .compatibility-card')).toHaveCount(4);
+  await expect(page.locator('#compatibilityResult')).toContainText('RELATIONSHIP MAP');
+
+  // Copy/share surface exists; clipboard API may be permission-gated in CI.
+  await expect(page.locator('#shareReport')).toBeVisible();
+  await expect(page.locator('#copyReport')).toBeVisible();
+
+  await assertNoHorizontalOverflow(page);
+});
