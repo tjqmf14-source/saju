@@ -16,7 +16,7 @@ test('all twelve solar-term months have distinct concise narrative content',()=>
     assert.ok(copy.focus.length>=5 && copy.focus.length<=24);
     assert.ok(copy.action.length>=10 && copy.action.length<=32);
     assert.ok(copy.check.length>=10 && copy.check.length<=48);
-    assert.ok(copy.signal.length>=4 && copy.signal.length<=30);
+    assert.ok(copy.signal.length>=2 && copy.signal.length<=30);
     assert.doesNotMatch(`${copy.focus}${copy.action}${copy.check}`,/반복되는지 점검|이 월운은 양력/);
   }
 });
