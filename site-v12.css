@@ -942,3 +942,6 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
   .profile-manager{width:100%;margin-inline:0}
   .form-grid{width:100%}
 }
+
+.demo-report-note{grid-column:1/-1;padding:10px 12px;border:1px dashed rgba(216,167,95,.3);background:rgba(216,167,95,.05);color:var(--gold-bright);font-weight:700}
+.result-home.is-demo .result-home-actions{opacity:.78}
