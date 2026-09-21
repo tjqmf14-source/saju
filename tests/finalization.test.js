@@ -43,6 +43,20 @@ test('document IDs are unique and primary recalculation CTA submits the live for
   assert.doesNotMatch(ui,/form\.requestSubmit\(\)/);
 });
 
+test('commercial UX adds local profiles, sharing, compatibility and mobile navigation', () => {
+  assert.match(html,/id="profileSelect"/);
+  assert.match(html,/id="saveProfile"/);
+  assert.match(html,/id="compatibility"/);
+  assert.match(html,/id="compatibilityForm"/);
+  assert.match(html,/class="mobile-bottom-nav"/);
+  assert.match(html,/id="shareReport"/);
+  assert.match(html,/data-day-shift="-1"/);
+  assert.match(ui,/PROFILE_STORAGE_KEY/);
+  assert.match(ui,/localStorage\.setItem/);
+  assert.match(ui,/function renderCompatibility/);
+  assert.match(ui,/navigator\.share/);
+});
+
 test('tarot exposes the complete 78-card overlapping fan picker', () => {
   assert.match(html, /타로 리딩 시작하기/);
   assert.match(ui, /prepareTarotFan\(78\)/);
