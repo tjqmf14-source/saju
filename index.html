@@ -35,7 +35,7 @@
       <a href="#today">오늘의운세</a>
       <a href="#year">올해의흐름</a>
       <a href="#tarot">타로</a>
-      <a href="#full-report">정밀리포트</a>
+      <a href="#compatibility">궁합</a>
     </nav>
     <div class="topbar-actions">
       <a class="premium-link" href="#full-report">정밀 리포트</a>
@@ -67,7 +67,7 @@
         <div><span class="section-no">01</span><p class="section-kicker">사주 정보</p></div>
         <div>
           <h2 id="birthHeading">사주정보 입력</h2>
-          <p class="section-lead">정확한 사주 분석을 위해 아래 정보를 입력해주세요. 입력값은 서버로 전송하거나 저장하지 않습니다.</p>
+          <p class="section-lead">정확한 사주 분석을 위해 아래 정보를 입력해주세요. 입력값은 서버로 전송하지 않습니다. 프로필 저장을 선택한 경우에만 이 브라우저에 보관합니다.</p>
         </div>
       </header>
 
@@ -99,7 +99,7 @@
               <label class="year-quick-input"><span>년</span><input id="birthYearQuick" type="number" min="1900" max="2100" value="1990" inputmode="numeric" aria-label="출생연도 빠른 입력"></label>
               <button type="button" class="year-shift" data-year-shift="10" aria-label="출생연도 10년 다음">+10년</button>
             </div>
-            <label class="solar-date-picker"><span class="sr-only">양력 생년월일</span><input id="birthDate" type="date" min="1900-01-01" max="2100-12-31" value="1990-01-01" aria-label="양력 생년월일"></label>
+            <label class="solar-date-picker"><span class="date-pick-caption">월·일은 달력에서 선택</span><input id="birthDate" type="date" min="1900-01-01" max="2100-12-31" value="1990-01-01" aria-label="양력 생년월일"></label>
             <div class="birth-date-inputs" aria-label="음력 생년월일">
               <label><span>년</span><input id="birthYear" type="number" min="1900" max="2100" value="1990" inputmode="numeric" aria-label="출생연도"></label>
               <label><span>월</span><input id="birthMonth" type="number" min="1" max="12" value="1" inputmode="numeric" aria-label="출생월"></label>
@@ -138,7 +138,7 @@
       <a href="#today"><svg class="ui-icon"><use href="#icon-sun"/></svg><span><b>오늘의운세</b><small>오늘의 흐름을 확인하세요</small></span></a>
       <a href="#year"><svg class="ui-icon"><use href="#icon-calendar"/></svg><span><b>올해의흐름</b><small>한 해의 큰 그림을 읽다</small></span></a>
       <a href="#tarot"><svg class="ui-icon"><use href="#icon-tarot"/></svg><span><b>타로리딩</b><small>지금, 필요한 메시지</small></span></a>
-      <a href="#full-report"><svg class="ui-icon"><use href="#icon-chart"/></svg><span><b>정밀 리포트</b><small>계산 근거와 심화 해석</small></span></a>
+      <a href="#compatibility"><svg class="ui-icon"><use href="#icon-heart"/></svg><span><b>궁합</b><small>두 사람의 관계 흐름</small></span></a>
     </nav>
 
     <section id="results" hidden>
@@ -214,7 +214,7 @@
       <section id="tarot" class="tarot-stage agency-shell">
         <div class="tarot-stage-inner">
           <div class="tarot-copy">
-            <span class="section-no">05</span>
+            <span class="section-no">06</span>
             <p class="section-kicker">타로 리딩</p>
             <h2>타로 리딩</h2>
             <p id="tarotHelp">지금 당신에게 필요한 메시지는 무엇일까요? 카드를 섞고 마음이 가는 카드를 선택해보세요.</p>
@@ -263,7 +263,7 @@
 
       <details id="full-report" class="full-report-shell oracle-panel agency-shell">
         <summary>
-          <span class="full-report-label"><i class="section-no">06</i><span><em class="section-kicker">PRECISION REPORT</em><b>정밀 리포트 열기</b><small>성향부터 대운과 계산 근거까지, 읽기 쉬운 순서로 확인합니다.</small></span></span>
+          <span class="full-report-label"><i class="section-no">07</i><span><em class="section-kicker">PRECISION REPORT</em><b>정밀 리포트 열기</b><small>성향부터 대운과 계산 근거까지, 읽기 쉬운 순서로 확인합니다.</small></span></span>
           <strong aria-hidden="true">+</strong>
         </summary>
         <div class="full-report-body">
