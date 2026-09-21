@@ -42,7 +42,9 @@ def syncWebAssets = tasks.register('syncWebAssets', Sync) {
 }
 
 tasks.configureEach { task ->
-    if (task.name.startsWith('merge') && task.name.endsWith('Assets')) {
+    def needsWebAssets = (task.name.startsWith('merge') && task.name.endsWith('Assets'))
+            || task.name.toLowerCase().contains('lint')
+    if (needsWebAssets) {
         task.dependsOn(syncWebAssets)
     }
 }
