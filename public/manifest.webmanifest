@@ -1,0 +1,13 @@
+{
+  "name": "내사주 · Saju & Tarot",
+  "short_name": "내사주",
+  "description": "브라우저에서 계산하는 정밀 사주·타로 리포트",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#03111d",
+  "theme_color": "#03111d",
+  "lang": "ko",
+  "icons": [
+    {"src":"/oracle/logo-mark.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
