@@ -623,6 +623,28 @@ function renderToday(chart,todayFlow){
     ['회복 포인트',copy.health]
   ].map(([title,body],index)=>`<article><span>0${index+1}</span><strong>${escapeHtml(title)}</strong><p>${escapeHtml(body)}</p></article>`).join('');
 
+  const trendOffsets=[-2,-1,0,1,2];
+  const trendLabels=['그제','어제','선택일','내일','모레'];
+  const trend=trendOffsets.map((extra,index)=>{
+    const date=dailyDate();
+    date.setUTCDate(date.getUTCDate()+extra);
+    const flow=calculateTodayFlow(chart,date);
+    const dayScore=calculateDailyScores(chart,flow).overall;
+    return {index,label:trendLabels[index],date,flow,score:dayScore.score,grade:dayScore.label};
+  });
+  const trendMin=Math.min(...trend.map((item)=>item.score));
+  const trendMax=Math.max(...trend.map((item)=>item.score));
+  const trendSpan=Math.max(12,trendMax-trendMin);
+  $('dailyTrend').innerHTML=trend.map((item,index)=>{
+    const height=34+Math.round(((item.score-trendMin)/trendSpan)*56);
+    const selected=index===2;
+    const dateLabel=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'numeric',day:'numeric'}).format(item.date);
+    return `<article class="daily-trend-item${selected?' is-selected':''}">
+      <div class="daily-trend-bar" style="--trend-height:${height}px" aria-hidden="true"><i></i></div>
+      <strong>${item.score}</strong><span>${escapeHtml(item.label)}</span><small>${escapeHtml(dateLabel)} · ${escapeHtml(item.grade)}</small>
+    </article>`;
+  }).join('');
+
   const timeFlows=calculateTodayTimeFlows(chart,dailyDate());
   $('dailyTimeFlow').innerHTML=timeFlows.map((slot)=>{
     const slotCopy=GROUP_COPY[slot.group]||GROUP_COPY.인성;
