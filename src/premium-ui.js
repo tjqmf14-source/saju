@@ -542,7 +542,7 @@ function renderDetailedReport(report){
   $('detailedReport').innerHTML=ordered.map((key,index)=>{
     const item=report[key];
     const open=index===0?' open':'';
-    const labels=['핵심','살펴볼 점','실천'];
+    const labels=['한 줄 요약','왜 그런가요?','생활에서는'];
     const quick=(item.quick?.length?item.quick:item.paragraphs.map(firstSentence).slice(0,3));
     return `<article id="report-${key}" class="detail-chapter detail-chapter-${String(index+1).padStart(2,'0')}" data-report-key="${key}">
       <details class="detail-disclosure"${open}>
@@ -555,7 +555,8 @@ function renderDetailedReport(report){
           <p class="chapter-takeaway"><mark>${escapeHtml(item.lead)}</mark></p>
           <div class="easy-reading-label"><span>먼저 이것만 보세요</span><small>쉬운 해설</small></div>
           <ul class="chapter-quick-list">${quick.map((p,i)=>`<li><strong>${labels[i]||'근거'}</strong><span>${escapeHtml(p)}</span></li>`).join('')}</ul>
-          <details class="chapter-full-analysis"><summary>왜 이렇게 해석했는지 자세히 보기</summary>${item.paragraphs.map((p)=>`<p>${escapeHtml(p)}</p>`).join('')}</details>
+          ${item.evidence?.length?`<div class="chapter-evidence"><strong>계산 근거</strong><ul>${item.evidence.map((line)=>`<li>${escapeHtml(line)}</li>`).join('')}</ul></div>`:''}
+          <details class="chapter-full-analysis"><summary>전문 해설까지 자세히 보기</summary>${item.paragraphs.map((p)=>`<p>${escapeHtml(p)}</p>`).join('')}</details>
         </div>
       </details>
     </article>`;
@@ -616,6 +617,22 @@ function renderToday(chart,todayFlow){
     const flow=scores[key];
     return `<article class="metric-row"><span class="daily-index" aria-hidden="true">${index}</span><div class="metric-name"><svg class="ui-icon metric-icon" aria-hidden="true"><use href="#${icon}"/></svg><div><strong class="metric-label">${title}</strong><div class="metric-score">${flow.score}<small>/100</small></div></div></div><div class="metric-copy"><div class="metric-track" role="img" aria-label="${title} 오늘의 흐름 지수 ${flow.score}점 · ${flow.label}"><span style="width:${flow.score}%"></span></div></div></article>`;
   }).join('');
+
+  const rankedDaily=[
+    ['재물',scores.money,copy.money],
+    ['연애',scores.love,copy.love],
+    ['직업',scores.work,copy.work],
+    ['건강',scores.condition,copy.health],
+    ['학업',scores.study,copy.summary]
+  ].sort((a,b)=>b[1].score-a[1].score);
+  const strongestDaily=rankedDaily[0];
+  const softestDaily=rankedDaily.at(-1);
+  $('dailyBriefGrid').innerHTML=[
+    ['오늘의 중심',`${strongestDaily[0]} 흐름이 ${strongestDaily[1].label} 쪽입니다.`,strongestDaily[2]],
+    ['한 번 더 확인',`${softestDaily[0]}은 속도보다 점검이 먼저입니다.`,copy.caution],
+    ['관계 한마디',`상대의 마음을 추측하기보다 반응을 확인하세요.`,copy.love],
+    ['회복 한마디',`무리해서 끌고 가기보다 리듬을 일정하게 유지하세요.`,copy.health]
+  ].map(([title,lead,body])=>`<article><span>${escapeHtml(title)}</span><strong>${escapeHtml(lead)}</strong><p>${escapeHtml(body)}</p></article>`).join('');
 
   $('dailyActionGuide').innerHTML=[
     ['힘을 쓸 곳',copy.opportunity],
