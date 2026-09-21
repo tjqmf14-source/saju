@@ -12,6 +12,7 @@ import { buildPlainChartGuide } from './plain-chart.js';
 import { ROLE_LABELS, ELEMENT_LABELS, stemByName, branchByName } from './data.js';
 import { buildLuckNarrativeCopy } from './luck-copy.js';
 import { solarToLunar, lunarToSolar, isLeapMonth } from './calendar.js';
+import { monthFlowCopy, quarterFlowCopy } from './flow-copy.js';
 
 const $ = (id) => document.getElementById(id);
 const form = $('birthForm');
@@ -84,6 +85,12 @@ function dominantElement(chart){ return sorted(chart.elements)[0]?.[0] || '토';
 function dominantRole(chart){ return sorted(chart.roles)[0]?.[0] || '인성'; }
 function relationLabel(relations){ return relations?.length ? [...new Set(relations.map((r)=>r.type))].join('·') : '큰 충돌 신호 없음'; }
 function escapeHtml(value=''){ return value.replace(/[&<>"']/g,(char)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])); }
+function firstSentence(value=''){ return value.split(/(?<=[.!?])\s+/)[0] || value; }
+
+const YEAR_HEADLINE={
+  비겁:'내 기준을 세우는 해',식상:'아이디어를 결과로 잇는 해',재성:'돈과 시간을 정리하는 해',
+  관성:'책임의 경계를 분명히 할 해',인성:'배움과 회복을 쌓는 해'
+};
 
 function inputError(fieldId,message){
   const error=new RangeError(message);
@@ -263,15 +270,20 @@ function renderDetailedReport(report){
   const ordered=['overview','temperament','innerOuter','strengths','balance','career','money','love','relationships','recovery','year','luck','technical'];
   $('detailedReport').innerHTML=ordered.map((key,index)=>{
     const item=report[key];
-    const open=index<3?' open':'';
+    const open=index===0?' open':'';
+    const labels=['핵심','살펴볼 점','실천'];
     return `<article id="report-${key}" class="detail-chapter detail-chapter-${String(index+1).padStart(2,'0')}" data-report-key="${key}">
       <details class="detail-disclosure"${open}>
         <summary>
           <span>${String(index+1).padStart(2,'0')}</span>
-          <div><h3>${item.title}</h3><p>${item.lead}</p></div>
+          <div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.lead)}</p></div>
           <b class="detail-toggle" aria-hidden="true">+</b>
         </summary>
-        <div class="detail-chapter-body">${item.paragraphs.map((p)=>`<p>${p}</p>`).join('')}</div>
+        <div class="detail-chapter-body">
+          <p class="chapter-takeaway"><mark>${escapeHtml(item.lead)}</mark></p>
+          <ul class="chapter-quick-list">${item.paragraphs.map((p,i)=>`<li><strong>${labels[i]||'참고'}</strong><span>${escapeHtml(firstSentence(p))}</span></li>`).join('')}</ul>
+          <details class="chapter-full-analysis"><summary>전체 해석과 계산 맥락 읽기</summary>${item.paragraphs.map((p)=>`<p>${escapeHtml(p)}</p>`).join('')}</details>
+        </div>
       </details>
     </article>`;
   }).join('');
@@ -287,7 +299,7 @@ function renderKeywordInsight(report,key='temperament'){
     button.setAttribute('aria-pressed',active?'true':'false');
   });
   panel.dataset.reportKey=key;
-  panel.innerHTML=`<div><span class="section-kicker">SELECTED INSIGHT</span><h3>${item.title}</h3></div><p>${item.lead} ${item.paragraphs[0]}</p><a href="#report-${key}">정밀 해설 이어 읽기 <span aria-hidden="true">→</span></a>`;
+  panel.innerHTML=`<div><span class="section-kicker">SELECTED INSIGHT</span><h3>${escapeHtml(item.title)}</h3></div><p><mark>${escapeHtml(item.lead)}</mark><br>${escapeHtml(firstSentence(item.paragraphs[0]))}</p><a href="#report-${key}">정밀 해설 이어 읽기 <span aria-hidden="true">→</span></a>`;
 }
 
 function setupKeywordCards(){
@@ -310,7 +322,13 @@ function renderToday(chart,todayFlow){
   $('todayQuoteBody').textContent=`${copy.opportunity}에 힘을 싣고, ${copy.caution}은 한 번 더 점검하세요.`;
 
   const overall=scores.overall;
-  $('dailyPrimary').innerHTML=`<div class="daily-primary-score" style="--score:${overall.score}" role="img" aria-label="오늘의 종합 운세 ${overall.score}점, 원형 그래프 ${overall.score}% 채움"><span class="section-kicker">TODAY'S INDEX</span><strong>${overall.score}</strong><small>/100 · ${overall.label}</small></div>`;
+  $('dailyPrimary').innerHTML=`<div class="daily-primary-score" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${overall.score}" aria-label="오늘의 종합 운세">
+    <svg class="daily-score-svg" viewBox="0 0 220 220" aria-hidden="true" focusable="false">
+      <circle class="daily-score-track" cx="110" cy="110" r="92" pathLength="100" />
+      <circle class="daily-score-progress" cx="110" cy="110" r="92" pathLength="100" stroke-dasharray="${overall.score} ${100-overall.score}" />
+    </svg>
+    <span class="section-kicker">TODAY'S INDEX</span><strong>${overall.score}</strong><small>/100 · ${overall.label}</small>
+  </div>`;
 
   const metrics=[
     ['money','02','재물',copy.money,'icon-coin'],
@@ -326,28 +344,30 @@ function renderToday(chart,todayFlow){
 
 }
 
-function dominantGroup(flows){
-  const count={비겁:0,식상:0,재성:0,관성:0,인성:0};
-  flows.forEach((flow)=>{count[flow.group]=(count[flow.group]||0)+1;});
-  return sorted(count)[0][0];
-}
-
 function renderYear(yearFlow,monthFlows){
   const copy=GROUP_COPY[yearFlow.group];
-  $('yearTitle').textContent=`${yearFlow.year} · ${ROLE_LABELS[yearFlow.group]}의 해`;
-  $('yearSummary').textContent=`올해는 ${copy.summary}이 평소보다 선명하게 드러납니다. ${copy.opportunity}에 힘을 싣되, ${copy.caution}이 나타날 때는 속도를 늦추고 조건을 다시 확인해 보세요. 원국과 올해 기운의 관계에서는 ${relationLabel(yearFlow.relations)}의 흐름이 읽힙니다.`;
-  $('annualQuote').textContent=copy.summary;
-  $('annualGuide').textContent=`운이 좋고 나쁨을 단정하기보다, 올해의 기회는 ${copy.opportunity} 쪽에서 찾고 ${copy.caution}은 결정 전에 확인할 체크포인트로 활용해 보세요.`;
-  $('yearDeepDive').innerHTML=`<article class="year-essay"><span class="micro">YEAR IN DEPTH</span><h3>올해 전체 흐름</h3><p>${copy.summary}이라는 말은 단순히 좋은 일이 생긴다는 뜻이 아니라, 올해 여러 선택에서 ${copy.label}의 주제가 반복해서 나타날 가능성이 높다는 뜻입니다. 올해 눈여겨볼 기회는 ${copy.opportunity}입니다. 이를 실제 행동으로 연결할수록 체감이 선명해질 수 있고, ${copy.caution}이 반복될 때는 속도를 늦추고 방향을 다시 확인하는 편이 좋습니다.</p><p><strong>현실적인 조언.</strong> ${copy.work} 중요한 선택을 한 번에 크게 벌이기보다 지금 가진 시간·돈·관계 자원을 점검한 뒤, 성과가 확인되는 영역부터 단계적으로 넓혀가세요.</p><p><strong>주의할 점.</strong> ${copy.caution}은 불안해하라는 경고가 아니라 올해의 체크리스트에 가깝습니다. 계약·지출·관계 결정은 감정이 가장 큰 순간보다 자료와 조건을 다시 본 뒤 결정하는 편이 안전합니다.</p></article>`;
-  $('yearAdviceGrid').innerHTML=[['올해의 기회',copy.opportunity],['주의할 패턴',copy.caution],['돈의 포인트',copy.money],['관계의 포인트',copy.love]].map(([title,body])=>`<article class="advice-card"><span>${title}</span><p>${body}</p></article>`).join('');
+  $('yearTitle').textContent=`${yearFlow.year} · ${yearFlow.tenGod}의 해`;
+  $('annualQuote').textContent=YEAR_HEADLINE[yearFlow.group];
+  $('yearSummary').innerHTML=`<strong>기회</strong> ${escapeHtml(copy.work)}`;
+  $('annualGuide').innerHTML=`<strong>주의</strong> ${escapeHtml(copy.caution)}이 보이면 잠시 속도를 낮춰 보세요.`;
+  $('yearDeepDive').innerHTML=`<article class="year-essay"><span class="micro">YEAR IN DEPTH</span><h3>올해, 무엇을 살펴볼까요?</h3><div class="year-essay-points"><p><strong>중심</strong> <mark>${escapeHtml(YEAR_HEADLINE[yearFlow.group])}</mark></p><p><strong>생활에 적용</strong> ${escapeHtml(copy.work)}</p><p><strong>계산 근거</strong> ${yearFlow.year}년 ${escapeHtml(yearFlow.korean)} · ${escapeHtml(yearFlow.tenGod)}. 원국과의 관계는 ${escapeHtml(relationLabel(yearFlow.relations))}입니다.</p></div></article>`;
+  const firstMonthFor=(groups)=>monthFlows.find((flow)=>groups.includes(flow.group));
+  const monthBasis=(flow)=>flow?`${kstMonthNumber(flow.start)}월 ${flow.tenGod} 월운 · ${flow.korean}`:`${yearFlow.tenGod} 세운 · ${yearFlow.korean}`;
+  const advice=[
+    ['올해의 기회',copy.opportunity,`${yearFlow.tenGod} 세운 · ${yearFlow.korean}`],
+    ['주의할 패턴',copy.caution,`원국 관계 · ${relationLabel(yearFlow.relations)}`],
+    ['돈의 포인트',copy.money,monthBasis(firstMonthFor(['재성']))],
+    ['관계의 포인트',copy.love,monthBasis(firstMonthFor(['비겁','관성']))]
+  ];
+  $('yearAdviceGrid').innerHTML=advice.map(([title,body,basis])=>`<article class="advice-card"><span>${escapeHtml(title)}</span><p>${escapeHtml(body)}</p><small>계산 참고 · ${escapeHtml(basis)}</small></article>`).join('');
   const quarterStarts=[0,3,6,9];
   $('tojungQuarterGrid').innerHTML=quarterStarts.map((start,index)=>{
     const slice=monthFlows.slice(start,start+3);
-    const group=dominantGroup(slice); const c=GROUP_COPY[group];
+    const narrative=quarterFlowCopy(slice);
     const from=kstMonthNumber(slice[0].start), to=kstMonthNumber(slice.at(-1).start);
-    return `<article class="quarter-card"><span>${String(index+1).padStart(2,'0')}</span><div><h3>${from}월~${to}월 · 절기 기준</h3><strong>${c.summary}</strong><p>기회는 ${c.opportunity} 쪽에서 찾고, ${c.caution}이 반복되는지 살펴보세요.</p></div></article>`;
+    return `<article class="quarter-card"><span>${String(index+1).padStart(2,'0')}</span><div><h3>${from}월~${to}월 · 절기 기준</h3><div class="quarter-steps">${narrative.steps.map((step,offset)=>`<span>${kstMonthNumber(slice[offset].start)}월 ${escapeHtml(step.tenGod)}</span>`).join('')}</div><p><strong>시작</strong> ${escapeHtml(narrative.summary)}</p><p><strong>마무리</strong> ${escapeHtml(narrative.action)}</p></div></article>`;
   }).join('');
-  $('monthForecast').innerHTML=monthFlows.map((item)=>{const c=GROUP_COPY[item.group];const month=kstMonthNumber(item.start);return `<article class="month-card"><div class="month-card-head"><span class="month-number">${month}</span><strong>${month}월 절기운 · ${ROLE_LABELS[item.group]}</strong></div><p>${c.summary}입니다. 이달에는 ${c.opportunity} 쪽에 먼저 힘을 싣고, ${c.caution}이 반복되는지 점검해 보세요. 이 월운은 양력 월초가 아니라 아래 절입 시각부터 다음 절입 직전까지의 흐름입니다.</p><small>절입 기준 ${formatKstBoundary(item.start)} ~ ${formatKstBoundary(item.end)} · ${item.korean} · ${item.tenGod}</small></article>`;}).join('');
+  $('monthForecast').innerHTML=monthFlows.map((item)=>{const c=monthFlowCopy(item);const month=kstMonthNumber(item.start);return `<article class="month-card" data-month-pillar="${escapeHtml(item.korean)}"><div class="month-card-head"><span class="month-number">${month}</span><strong>${month}월 · ${escapeHtml(item.tenGod)}</strong></div><p class="month-card-focus"><mark>${escapeHtml(c.focus)}</mark></p><p class="month-card-action"><strong>해볼 일</strong> ${escapeHtml(c.action)}</p><p class="month-card-check">${escapeHtml(c.check)}</p><small>절입 ${formatKstBoundary(item.start)} ~ ${formatKstBoundary(item.end)} · ${escapeHtml(item.korean)}</small></article>`;}).join('');
 }
 
 function luckGroup(chart,item,index){

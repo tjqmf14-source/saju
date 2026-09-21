@@ -35,22 +35,34 @@ test('V12 desktop follows the supplied landing-page composition', async ({ page 
   const score = page.locator('.daily-primary-score');
   const scoreBox = await score.boundingBox();
   expect(Math.abs((scoreBox?.width || 0) - (scoreBox?.height || 0))).toBeLessThan(3);
-  const scoreBg = await score.evaluate((el) => getComputedStyle(el).backgroundImage);
-  expect(scoreBg).toContain('conic-gradient');
   const scoreAudit = await score.evaluate((el) => {
     const value=Number(el.querySelector('strong')?.textContent);
-    const bound=Number(el.style.getPropertyValue('--score'));
-    el.style.setProperty('--score','50');
-    const half=getComputedStyle(el).backgroundImage;
-    el.style.setProperty('--score','100');
-    const full=getComputedStyle(el).backgroundImage;
-    el.style.setProperty('--score',String(bound));
-    return {value,bound,half,full};
+    const circle=el.querySelector('.daily-score-progress');
+    const dash=circle?.getAttribute('stroke-dasharray');
+    const pathLength=circle?.getAttribute('pathLength');
+    return {value,meter:Number(el.getAttribute('aria-valuenow')),dash,pathLength,track:!!el.querySelector('.daily-score-track')};
   });
-  expect(scoreAudit.bound).toBe(scoreAudit.value);
-  expect(scoreAudit.half).not.toBe(scoreAudit.full);
-  expect(scoreAudit.half).toContain('50%');
-  expect(scoreAudit.full).toContain('100%');
+  expect(scoreAudit.meter).toBe(scoreAudit.value);
+  expect(scoreAudit.pathLength).toBe('100');
+  expect(scoreAudit.dash).toBe(`${scoreAudit.value} ${100-scoreAudit.value}`);
+  expect(scoreAudit.track).toBe(true);
+  await score.evaluate((el)=>{
+    el.setAttribute('aria-valuenow','50');
+    el.querySelector('strong').textContent='50';
+    el.querySelector('.daily-score-progress').setAttribute('stroke-dasharray','50 50');
+  });
+  await score.screenshot({path:'test-results/v13-score-50.png'});
+  await score.evaluate((el)=>{
+    el.setAttribute('aria-valuenow','100');
+    el.querySelector('strong').textContent='100';
+    el.querySelector('.daily-score-progress').setAttribute('stroke-dasharray','100 0');
+  });
+  await score.screenshot({path:'test-results/v13-score-100.png'});
+  await score.evaluate((el,{value,dash})=>{
+    el.setAttribute('aria-valuenow',String(value));
+    el.querySelector('strong').textContent=String(value);
+    el.querySelector('.daily-score-progress').setAttribute('stroke-dasharray',dash);
+  },{value:scoreAudit.value,dash:scoreAudit.dash});
 
   const annualBackground = await page.locator('#year').evaluate((el) => getComputedStyle(el).backgroundImage);
   expect(annualBackground).not.toContain('url(');
@@ -385,6 +397,13 @@ test('expanded precision report has no clipped text or viewport escape', async (
   await page.goto('/');
   await page.locator('#full-report').evaluate((el) => { el.open=true; });
   await expect(page.locator('#monthForecast .month-card')).toHaveCount(12);
+  const monthCopy=await page.locator('#monthForecast .month-card').evaluateAll((cards)=>cards.map((card)=>({
+    role:card.querySelector('.month-card-head strong')?.textContent,
+    focus:card.querySelector('.month-card-focus')?.textContent,
+    action:card.querySelector('.month-card-action')?.textContent
+  })));
+  expect(new Set(monthCopy.map((item)=>item.focus)).size).toBe(12);
+  expect(new Set(monthCopy.map((item)=>item.action)).size).toBe(12);
 
   const audit=await page.evaluate(() => {
     const root=document.querySelector('#full-report');
@@ -409,6 +428,7 @@ test('expanded precision report has no clipped text or viewport escape', async (
   await assertNoHorizontalOverflow(page);
   await page.locator('.reading-opening').screenshot({path:`test-results/v12-report-opening-${testInfo.project.name}.png`});
   await page.locator('#detailedReport .detail-chapter').first().screenshot({path:`test-results/v12-report-chapter-${testInfo.project.name}.png`});
+  if(['desktop','mobile'].includes(testInfo.project.name)) await page.locator('#annualDetailReport').screenshot({path:`test-results/v13-month-flow-${testInfo.project.name}.png`});
 });
 
 test('core form and tarot controls retain touch-friendly targets', async ({ page }) => {

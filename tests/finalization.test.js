@@ -68,8 +68,8 @@ test('final information architecture keeps detailed year data inside precision r
 
 test('solar-term month flow remains calculation-backed', () => {
   assert.match(ui, /function kstMonthNumber/);
-  assert.match(ui, /월 절기운/);
-  assert.match(ui, /양력 월초가 아니라/);
+  assert.match(ui, /monthFlowCopy\(item\)/);
+  assert.match(ui, /절입/);
 });
 
 
