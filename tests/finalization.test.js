@@ -16,8 +16,10 @@ test('V12 is the only active frontend stylesheet and follows the reference palet
   assert.ok(css.includes("url('/oracle/b-visual-atlas.webp')"));
 });
 
-test('minimum readable UI type is 12pt-equivalent or larger', () => {
-  assert.ok(css.includes('--min-type:16px'));
+test('minimum readable UI type is 12pt-equivalent or larger and mobile adds one point', () => {
+  assert.ok(css.includes('--mobile-font-bump:0px'));
+  assert.ok(css.includes('--min-type:calc(16px + var(--mobile-font-bump))'));
+  assert.ok(css.includes('--mobile-font-bump:1.333px'));
   assert.ok(css.includes('body,button,input,select,textarea,small{font-size:var(--min-type)}'));
   assert.doesNotMatch(css, /font-size:(?:[0-9]|1[0-4])px/);
 });
@@ -51,10 +53,16 @@ test('commercial UX adds local profiles, sharing, compatibility and mobile navig
   assert.match(html,/class="mobile-bottom-nav"/);
   assert.match(html,/id="shareReport"/);
   assert.match(html,/data-day-shift="-1"/);
+  assert.match(html,/id="fortuneDate"/);
+  assert.match(html,/id="dailyTimeFlow"/);
+  assert.match(html,/id="dailyActionGuide"/);
+  assert.match(html,/id="partnerProfileSelect"/);
   assert.match(ui,/PROFILE_STORAGE_KEY/);
   assert.match(ui,/localStorage\.setItem/);
   assert.match(ui,/function renderCompatibility/);
   assert.match(ui,/navigator\.share/);
+  assert.match(ui,/calculateTodayTimeFlows/);
+  assert.match(ui,/먼저 이것만 보세요/);
 });
 
 test('tarot exposes the complete 78-card overlapping fan picker', () => {
