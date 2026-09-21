@@ -186,7 +186,7 @@ function addTodayExplorer(detail){
   ];
   explorer.innerHTML='<div class="today-explorer-head"><div><span class="section-kicker">7 DAY FLOW</span><h3>오늘부터 7일 흐름</h3></div><div class="today-return-meta"><strong>연속 '+streak+'일 확인</strong><p>일진과 원국의 관계를 날짜별로 비교합니다.</p></div></div>'+
     '<div class="seven-day-strip">'+days.join('')+'</div>'+
-    '<div class="time-flow-grid">'+periods.map(p=>'<article><span>'+p[0]+'</span><strong>'+p[1]+'</strong><p>'+escapeHtml(p[2])+'</p></article>').join('')+'</div>';
+    '<div class="time-flow-grid">'+periods.map(p=>'<article><span>'+p[0]+'</span><strong>'+p[1]+'</strong><p>'+escapeHtml(p[2])+'</p></article>').join('')+'</div><p class="time-flow-note">시간대별 카드는 당일 흐름을 생활 리듬에 적용한 행동 가이드이며, 시주 단위의 길흉을 단정하지 않습니다.</p>';
 }
 function addAnnualNavigator(){
   const year=$('year');
@@ -246,12 +246,52 @@ function setupQuestions(){
   $('askSaju')?.addEventListener('click',answerCustomQuestion);
   $('sajuQuestionInput')?.addEventListener('keydown',(event)=>{if(event.key==='Enter'){event.preventDefault();answerCustomQuestion();}});
 }
+function wrapCanvasText(ctx,text,maxWidth){
+  const words=String(text||'').split(/\s+/);
+  const lines=[];let line='';
+  for(const word of words){
+    const next=line?line+' '+word:word;
+    if(ctx.measureText(next).width>maxWidth&&line){lines.push(line);line=word;}else line=next;
+  }
+  if(line)lines.push(line);
+  return lines;
+}
+async function makeShareCard(){
+  const canvas=document.createElement('canvas');
+  canvas.width=1080;canvas.height=1350;
+  const ctx=canvas.getContext('2d');
+  if(!ctx)return null;
+  const grad=ctx.createLinearGradient(0,0,0,1350);
+  grad.addColorStop(0,'#071a29');grad.addColorStop(1,'#020b13');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,1080,1350);
+  ctx.strokeStyle='#d8a75f';ctx.lineWidth=2;ctx.strokeRect(58,58,964,1234);
+  ctx.fillStyle='#d8a75f';ctx.font='700 32px serif';ctx.fillText('내사주 · SAJU & TAROT',92,132);
+  ctx.fillStyle='#f5efe4';ctx.font='700 58px serif';
+  wrapCanvasText(ctx,(latest.name||'당신')+'님의 사주 리포트',860).slice(0,2).forEach((line,i)=>ctx.fillText(line,92,260+i*72));
+  ctx.fillStyle='#f0cf8e';ctx.font='700 34px sans-serif';ctx.fillText('오늘의 핵심',92,430);
+  ctx.fillStyle='#dfe4e8';ctx.font='400 30px sans-serif';
+  wrapCanvasText(ctx,latest.report.overview?.lead||'',860).slice(0,5).forEach((line,i)=>ctx.fillText(line,92,490+i*48));
+  ctx.fillStyle='#f0cf8e';ctx.font='700 30px sans-serif';ctx.fillText('올해의 흐름',92,790);
+  ctx.fillStyle='#c8d2dc';ctx.font='400 28px sans-serif';
+  const yearItem=latest.report.year||latest.report.overview;
+  wrapCanvasText(ctx,yearItem.lead||'',860).slice(0,4).forEach((line,i)=>ctx.fillText(line,92,846+i*45));
+  ctx.fillStyle='#8494a3';ctx.font='400 24px sans-serif';ctx.fillText('계산은 브라우저에서 수행 · 자기이해를 위한 참고 리포트',92,1220);
+  ctx.fillStyle='#d8a75f';ctx.font='700 26px sans-serif';ctx.fillText('NAESAJU',92,1268);
+  return await new Promise((resolve)=>canvas.toBlob(resolve,'image/png',.92));
+}
 async function shareReport(){
   if(!latest)return;
   const text='내사주 · '+latest.name+'님의 리포트\n'+(latest.report.overview?.lead||'')+'\n'+location.href.split('#')[0];
   try{
-    if(navigator.share)await navigator.share({title:'내사주 리포트',text,url:location.href.split('#')[0]});
-    else{await navigator.clipboard.writeText(text);flashButton($('shareReport'),'복사됨');}
+    const blob=await makeShareCard();
+    const file=blob&&typeof File!=='undefined'?new File([blob],'naesaju-report.png',{type:'image/png'}):null;
+    if(file&&navigator.canShare?.({files:[file]})&&navigator.share){
+      await navigator.share({title:'내사주 리포트',text,files:[file]});
+    }else if(navigator.share){
+      await navigator.share({title:'내사주 리포트',text,url:location.href.split('#')[0]});
+    }else{
+      await navigator.clipboard.writeText(text);flashButton($('shareReport'),'복사됨');
+    }
   }catch(error){if(error?.name!=='AbortError')flashButton($('shareReport'),'공유 실패');}
 }
 function setupReportLinks(){
