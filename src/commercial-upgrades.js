@@ -123,7 +123,7 @@ function renderCompatibility(event){
   event.preventDefault();
   const box=$('compatibilityResult');
   try{
-    if(!latest)throw new Error('먼저 내 사주 리포트를 생성해 주세요.');
+    if(!latest||!latest.isPersonal)throw new Error('먼저 본인의 출생정보로 사주 리포트를 생성해 주세요.');
     const date=dateParts($('partnerDate').value);
     if(!date)throw new Error('상대 생년월일을 확인해 주세요.');
     const time=($('partnerTime').value||'12:00').split(':').map(Number);
@@ -211,6 +211,7 @@ function renderResultHome(detail){
   const todayCopy=(DAILY_COPY[detail.todayFlow.group]||DAILY_COPY.인성)[0];
   const yearItem=detail.report.year||detail.report.overview;
   box.innerHTML=
+    (!detail.isPersonal?'<div class="demo-report-note">예시 리포트입니다. 위에서 내 출생정보를 입력하면 개인 리포트로 바뀝니다.</div>':'')+
     '<article><span>01 · 나의 핵심</span><strong>'+escapeHtml(overview.title)+'</strong><p>'+escapeHtml(overview.lead)+'</p><a href="#report-overview" data-open-report>핵심 해석 →</a></article>'+
     '<article><span>02 · 오늘</span><strong>'+escapeHtml(detail.todayFlow.tenGod)+' · '+escapeHtml(detail.todayFlow.group)+'</strong><p>'+escapeHtml(todayCopy)+'</p><a href="#today">오늘 흐름 →</a></article>'+
     '<article><span>03 · 올해</span><strong>'+escapeHtml(yearItem.title)+'</strong><p>'+escapeHtml(yearItem.lead)+'</p><a href="#year">연간 흐름 →</a></article>';
@@ -227,7 +228,7 @@ function questionKey(query){
 function answerCustomQuestion(){
   const answer=$('sajuAnswer');
   const query=$('sajuQuestionInput')?.value.trim();
-  if(!latest){answer.textContent='먼저 사주 리포트를 생성해 주세요.';return;}
+  if(!latest||!latest.isPersonal){answer.textContent='먼저 본인의 출생정보로 사주 리포트를 생성해 주세요.';return;}
   if(!query){answer.textContent='궁금한 내용을 한 문장으로 입력해 주세요.';return;}
   const key=questionKey(query);
   const item=latest.report[key]||latest.report.overview;
@@ -280,7 +281,7 @@ async function makeShareCard(){
   return await new Promise((resolve)=>canvas.toBlob(resolve,'image/png',.92));
 }
 async function shareReport(){
-  if(!latest)return;
+  if(!latest||!latest.isPersonal){flashButton($('shareReport'),'내 정보로 먼저 생성');return;}
   const text='내사주 · '+latest.name+'님의 리포트\n'+(latest.report.overview?.lead||'')+'\n'+location.href.split('#')[0];
   try{
     const blob=await makeShareCard();
@@ -354,7 +355,8 @@ setupInstall();
 addAnnualNavigator();
 
 document.addEventListener('saju:rendered',(event)=>{
-  latest=event.detail;
+  latest={...event.detail,isPersonal:$('results')?.dataset.mode==='personal'};
+  $('resultHome')?.classList.toggle('is-demo',!latest.isPersonal);
   renderResultHome(latest);
   addTodayExplorer(latest);
   enhanceTrust(latest);
