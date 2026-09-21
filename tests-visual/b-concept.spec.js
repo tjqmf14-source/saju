@@ -536,3 +536,40 @@ test('calendar mode converts and preserves the same birth date across month-end 
   await page.locator('input[name="calendar"][value="solar"]').check();
   await expect(page.locator('#birthDate')).toHaveValue('2023-03-22');
 });
+
+
+test('commercial features remain usable without crowding the primary flow', async ({ page }, testInfo) => {
+  await page.goto('/');
+  await expect(page.locator('.profile-tools')).toBeVisible();
+  await expect(page.locator('.profile-tools')).not.toHaveAttribute('open','');
+  await page.locator('.profile-tools > summary').click();
+  await expect(page.locator('#saveProfile')).toBeVisible();
+  await page.locator('#name').fill('프로필QA');
+  await page.locator('#saveProfile').click();
+  await expect(page.locator('#savedProfiles option')).toHaveCount(2);
+  await expect(page.locator('#profileStatus')).toContainText('보관');
+
+  await page.locator('#partnerDate').fill('1992-03-15');
+  await page.locator('#partnerTime').fill('09:30');
+  await page.locator('#compatibilityForm').evaluate((form)=>form.requestSubmit());
+  await expect(page.locator('#compatibilityResult .compatibility-cards article')).toHaveCount(3);
+  await expect(page.locator('#compatibilityResult')).not.toContainText('NaN');
+
+  if (['mobile','mobile-wide','mobile-small'].includes(testInfo.project.name)) {
+    await expect(page.locator('.mobile-tabbar')).toBeVisible();
+    await expect(page.locator('.mobile-tabbar a')).toHaveCount(5);
+  }
+
+  await assertNoHorizontalOverflow(page);
+});
+
+test('compatibility is descriptive rather than a fake single score', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'content contract is viewport-independent');
+  await page.goto('/');
+  await page.locator('#partnerName').fill('상대방');
+  await page.locator('#partnerDate').fill('1993-08-21');
+  await page.locator('#compatibilityForm').evaluate((form)=>form.requestSubmit());
+  await expect(page.locator('#compatibilityResult')).toContainText('점수 하나로 단정하지 않고');
+  await expect(page.locator('#compatibilityResult')).toContainText('참고 해석');
+  await expect(page.locator('#compatibilityResult .compatibility-cards article')).toHaveCount(3);
+});
