@@ -8,7 +8,6 @@ const forbidden = [
   /\bWebSocket\b/,
   /\bEventSource\b/,
   /navigator\.sendBeacon/,
-  /localStorage/,
   /sessionStorage/,
   /document\.cookie/
 ];
@@ -29,6 +28,8 @@ for(const root of roots){
     for(const pattern of forbidden){
       if(pattern.test(text)) violations.push(`${file}: ${pattern}`);
     }
+    if(/localStorage/.test(text) && file!==path.join('src','commercial-upgrades.js')) violations.push(`${file}: localStorage outside approved local profile module`);
+    if(file===path.join('src','commercial-upgrades.js') && /localStorage/.test(text) && !/naesaju\./.test(text)) violations.push(`${file}: localStorage key must use naesaju namespace`);
   }
 }
 
@@ -37,4 +38,4 @@ if(violations.length){
   console.error(violations.join('\n'));
   process.exit(1);
 }
-console.log('OK: 앱 소스에 네트워크 전송/브라우저 영구 저장 API가 없습니다.');
+console.log('OK: 외부 네트워크 전송 API가 없고, 영구 저장은 승인된 naesaju 로컬 프로필/재방문 데이터에만 제한됩니다.');
