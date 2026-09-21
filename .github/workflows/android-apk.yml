@@ -7,6 +7,7 @@ on:
       - main
       - gpt/mobile-app-v1
       - gpt/deep-interpretation-mobile-v3
+      - gpt/deep-reading-jumsin
     paths:
       - 'src/**'
       - 'public/**'
@@ -56,8 +57,8 @@ jobs:
       - name: Verify APK
         run: |
           test -f android/app/build/outputs/apk/debug/app-debug.apk
-          grep -q "versionName '2.2.0'" android/app/build.gradle
-          grep -q "versionCode 220" android/app/build.gradle
+          grep -q "versionName '2.3.0'" android/app/build.gradle
+          grep -q "versionCode 230" android/app/build.gradle
           if grep -q "android.permission.INTERNET" android/app/src/main/AndroidManifest.xml; then
             echo "Unexpected INTERNET permission"
             exit 1
@@ -66,8 +67,8 @@ jobs:
       - name: Prepare artifact
         run: |
           mkdir -p mobile/artifacts
-          cp android/app/build/outputs/apk/debug/app-debug.apk mobile/artifacts/Naesaju-2.2.0-debug.apk
-          sha256sum mobile/artifacts/Naesaju-2.2.0-debug.apk > mobile/artifacts/SHA256SUMS.txt
+          cp android/app/build/outputs/apk/debug/app-debug.apk mobile/artifacts/Naesaju-2.3.0-debug.apk
+          sha256sum mobile/artifacts/Naesaju-2.3.0-debug.apk > mobile/artifacts/SHA256SUMS.txt
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
