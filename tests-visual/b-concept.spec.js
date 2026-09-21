@@ -1,11 +1,28 @@
 import { test, expect } from '@playwright/test';
 
 async function assertNoHorizontalOverflow(page) {
-  const overflow = await page.evaluate(() => ({
-    scrollWidth: document.documentElement.scrollWidth,
-    clientWidth: document.documentElement.clientWidth,
-  }));
-  expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth + 1);
+  const overflow = await page.evaluate(() => {
+    const clientWidth = document.documentElement.clientWidth;
+    const offenders = [...document.querySelectorAll('body *')].map((el) => {
+      const rect = el.getBoundingClientRect();
+      const style = getComputedStyle(el);
+      return {
+        tag: el.tagName,
+        id: el.id || '',
+        cls: typeof el.className === 'string' ? el.className : '',
+        left: Math.round(rect.left * 10) / 10,
+        right: Math.round(rect.right * 10) / 10,
+        width: Math.round(rect.width * 10) / 10,
+        position: style.position,
+      };
+    }).filter((item) => item.width > 0 && (item.left < -1 || item.right > clientWidth + 1)).slice(0, 20);
+    return {
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth,
+      offenders,
+    };
+  });
+  expect(overflow.scrollWidth, JSON.stringify(overflow)).toBeLessThanOrEqual(overflow.clientWidth + 1);
 }
 
 test('V12 desktop follows the supplied landing-page composition', async ({ page }, testInfo) => {
