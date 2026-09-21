@@ -190,6 +190,7 @@ test('calculation renderers still populate all retained data targets', async ({ 
   await expect(page.locator('#pillarGrid .pillar-card')).toHaveCount(4);
   await expect(page.locator('#dailyMetrics .metric-row')).toHaveCount(5);
   await expect(page.locator('#dailyActionGuide article')).toHaveCount(3);
+  await expect(page.locator('#dailyTrend .daily-trend-item')).toHaveCount(5);
   await expect(page.locator('#dailyTimeFlow article')).toHaveCount(6);
   await expect(page.locator('.daily-report-extra')).not.toHaveAttribute('open','');
   await expect(page.locator('#tojungQuarterGrid .quarter-card')).toHaveCount(4);
@@ -604,6 +605,8 @@ test('commercial UX interactions work without a backend', async ({ page }, testI
   await page.locator('#fortuneDate').fill('2026-12-25');
   await page.locator('#fortuneDate').dispatchEvent('change');
   await expect(page.locator('#todayDate')).toContainText('2026');
+  await expect(page.locator('#dailyTrend .daily-trend-item')).toHaveCount(5);
+  await expect(page.locator('#dailyTrend .daily-trend-item.is-selected')).toHaveCount(1);
   await expect(page.locator('#dailyTimeFlow article')).toHaveCount(6);
 
   // Saved people can be loaded directly into compatibility.
