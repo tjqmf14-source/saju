@@ -235,6 +235,10 @@ export function calculateMonthFlows(chart, year) {
     });
     const pillar=detail.month;
     const tenGod=getTenGod(chart.dayMaster,pillar.heavenlyStem);
+    const relations=detectBranchRelations([
+      ...PILLAR_KEYS.map((key)=>chart.pillars[key].earthlyBranch),
+      pillar.earthlyBranch
+    ]).filter((relation)=>relation.members.includes(pillar.earthlyBranch));
     months.push({
       month:sajuMonth,
       sajuMonth,
@@ -244,7 +248,8 @@ export function calculateMonthFlows(chart, year) {
       pillar,
       korean:pillarString(pillar),
       tenGod,
-      group:TEN_GOD_GROUP[tenGod]
+      group:TEN_GOD_GROUP[tenGod],
+      relations
     });
   }
   return months;
