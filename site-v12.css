@@ -1,6 +1,6 @@
 /* ==========================================================================
    NAESAJU V12 — consolidated final-build design system
-   One source of truth. Desktop minimum 16px; mobile adds exactly 1pt (1.333px).
+   One source of truth. Desktop minimum 16px; mobile readability uses a calibrated +3pt bump.
    ========================================================================== */
 :root{
   --bg:#03111d;
@@ -861,10 +861,15 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
   .feature-orbit-nav a{justify-content:flex-start;padding-left:18px;border-bottom:1px solid var(--line-soft)}
   .feature-orbit-nav a:nth-child(even){border-right:0}
   .feature-orbit-nav a:nth-last-child(-n+2){border-bottom:0}
-  .visual-keyword-showcase{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px}
-  .visual-keyword-intro{grid-column:1/-1;grid-row:auto;padding:14px 10px 18px}
-  .visual-keyword-card{min-height:158px}
-  .keyword-insight{grid-template-columns:1fr;gap:12px;padding:18px}
+  .visual-keyword-showcase{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:8px}
+  .visual-keyword-intro{grid-column:1/-1;grid-row:auto;padding:8px 6px 10px}
+  .visual-keyword-intro a{margin-top:10px}
+  .visual-keyword-card{min-height:146px;padding:11px 12px}
+  .visual-keyword-card strong{margin-top:5px}
+  .visual-keyword-card small{margin-top:2px;line-height:1.32}
+  .visual-keyword-card i{margin-top:5px}
+  .keyword-insight{grid-template-columns:1fr;gap:8px;padding:12px}
+  .keyword-insight p{line-height:1.48}
   .keyword-insight a{justify-self:start}
   .quote-band{background:linear-gradient(90deg,rgba(4,19,31,.96),rgba(4,19,31,.40)),url('/oracle/b-visual-atlas.webp') center 32%/200% auto no-repeat}
   .quote-band>div{padding:34px 24px}.quote-band blockquote{font-size:calc(25px + var(--mobile-font-bump))}
@@ -944,7 +949,7 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
   .birth-date-inputs{grid-template-columns:minmax(105px,1.55fr) minmax(58px,.72fr) minmax(58px,.72fr)}
   .field-time{grid-column:1}.field-gender{grid-column:2}.form-grid .leap-field.active{grid-column:1/-1}
   .birth-side-copy{display:none}
-  .visual-keyword-card{min-height:174px;padding:14px}
+  .visual-keyword-card{min-height:150px;padding:11px 12px}
 .keyword-card-top span{font-size:calc(16px + var(--mobile-font-bump))}
   .quarter-grid{grid-template-columns:1fr}.quarter-card{border-right:0;border-bottom:1px solid var(--line-soft)}
   .tarot-fan-copy strong{font-size:calc(22px + var(--mobile-font-bump))}
@@ -999,9 +1004,9 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
 .weekly-preview{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;margin-top:12px}
 .weekly-day{min-width:0;padding:12px 9px;border:1px solid var(--line-soft);border-radius:5px;background:rgba(7,24,39,.62)}
 .weekly-day.is-selected{border-color:rgba(216,167,95,.55);background:rgba(216,167,95,.08)}
-.weekly-day>span,.weekly-day>small{display:block;color:var(--muted-2);font-size:calc(15px + var(--mobile-font-bump))}
+.weekly-day>span,.weekly-day>small{display:block;color:var(--muted-2);font-size:calc(16px + var(--mobile-font-bump))}
 .weekly-day>strong{display:block;margin:5px 0;color:var(--gold-bright);font:700 25px/1 var(--serif)}
-.weekly-day p{margin:8px 0 0;color:var(--muted);font-size:calc(15px + var(--mobile-font-bump));line-height:1.55}
+.weekly-day p{margin:8px 0 0;color:var(--muted);font-size:calc(16px + var(--mobile-font-bump));line-height:1.55}
 .weekly-day p b{color:var(--ink)}
 @media(max-width:820px){
   .weekly-preview{grid-template-columns:repeat(2,minmax(0,1fr))}
