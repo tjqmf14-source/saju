@@ -1,6 +1,10 @@
 package kr.naesaju.personal;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Insets;
 import android.net.Uri;
@@ -10,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -42,12 +47,16 @@ public final class MainActivity extends Activity {
             window.setNavigationBarContrastEnforced(false);
         }
 
+        WebView.setWebContentsDebuggingEnabled(false);
+
         webView = new WebView(this);
         webView.setBackgroundColor(Color.rgb(3, 17, 29));
         webView.setVerticalScrollBarEnabled(false);
+        webView.setHorizontalScrollBarEnabled(false);
         webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         webView.setWebViewClient(new LocalOnlyClient());
         webView.setWebChromeClient(new WebChromeClient());
+        webView.addJavascriptInterface(new NativeBridge(), "NaesajuNative");
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -55,6 +64,8 @@ public final class MainActivity extends Activity {
         settings.setDefaultTextEncodingName("UTF-8");
         settings.setAllowFileAccess(false);
         settings.setAllowContentAccess(false);
+        settings.setAllowFileAccessFromFileURLs(false);
+        settings.setAllowUniversalAccessFromFileURLs(false);
         settings.setJavaScriptCanOpenWindowsAutomatically(false);
         settings.setSupportMultipleWindows(false);
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
@@ -68,42 +79,73 @@ public final class MainActivity extends Activity {
         root.addView(webView, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        // A WebView's own padding does not move its page viewport. Keep the
-        // WebView inside a native safe-area container on edge-to-edge systems.
         root.setOnApplyWindowInsetsListener((view, insets) -> {
             if (Build.VERSION.SDK_INT < 35) {
-                return insets; // Older Android already fits content below system bars.
+                return insets;
             }
             int types = WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout();
             Insets safe = insets.getInsets(types);
             view.setPadding(safe.left, safe.top, safe.right, safe.bottom);
-            // The native container has handled these insets. Pass zero values
-            // through to WebView so it does not add a second CSS safe area,
-            // while preserving IME inset updates for the on-screen keyboard.
             return new WindowInsets.Builder(insets)
                     .setInsets(types, Insets.NONE)
                     .build();
         });
+
         setContentView(root);
         webView.loadUrl(START_URL);
     }
 
     @Override
     public void onBackPressed() {
+        handleBack();
+    }
+
+    private void handleBack() {
         if (webView != null && webView.canGoBack()) {
             webView.goBack();
         } else {
-            super.onBackPressed();
+            finish();
         }
     }
 
     @Override
     protected void onDestroy() {
         if (webView != null) {
+            webView.removeJavascriptInterface("NaesajuNative");
+            webView.stopLoading();
+            webView.loadUrl("about:blank");
+            webView.clearHistory();
             webView.destroy();
             webView = null;
         }
         super.onDestroy();
+    }
+
+    private final class NativeBridge {
+        @JavascriptInterface
+        public String platform() {
+            return "android";
+        }
+
+        @JavascriptInterface
+        public void copyText(String text) {
+            runOnUiThread(() -> {
+                ClipboardManager clipboard =
+                        (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                clipboard.setPrimaryClip(ClipData.newPlainText("내사주 리포트", text == null ? "" : text));
+            });
+        }
+
+        @JavascriptInterface
+        public void shareText(String title, String text) {
+            runOnUiThread(() -> {
+                Intent send = new Intent(Intent.ACTION_SEND);
+                send.setType("text/plain");
+                send.putExtra(Intent.EXTRA_SUBJECT, title == null ? "내사주 리포트" : title);
+                send.putExtra(Intent.EXTRA_TEXT, text == null ? "" : text);
+                startActivity(Intent.createChooser(send, "내사주 리포트 공유"));
+            });
+        }
     }
 
     private final class LocalOnlyClient extends WebViewClient {
@@ -162,6 +204,7 @@ public final class MainActivity extends Activity {
         if (lower.endsWith(".webp")) return "image/webp";
         if (lower.endsWith(".woff2")) return "font/woff2";
         if (lower.endsWith(".woff")) return "font/woff";
+        if (lower.endsWith(".webmanifest")) return "application/manifest+json";
         if (lower.endsWith(".json")) return "application/json";
         return "application/octet-stream";
     }
