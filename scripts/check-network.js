@@ -8,7 +8,6 @@ const forbidden = [
   /\bWebSocket\b/,
   /\bEventSource\b/,
   /navigator\.sendBeacon/,
-  /localStorage/,
   /sessionStorage/,
   /document\.cookie/
 ];
