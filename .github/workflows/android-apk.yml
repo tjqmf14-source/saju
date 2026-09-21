@@ -16,6 +16,7 @@ on:
       - 'package.json'
       - 'android/**'
       - 'mobile/**'
+      - 'tests/**'
       - '.github/workflows/android-apk.yml'
 
 permissions:
