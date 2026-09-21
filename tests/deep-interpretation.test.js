@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { calculateSaju } from '../src/saju-engine.js';
+import { calculateSaju, detectStemRelations } from '../src/saju-engine.js';
 import { buildInterpretiveProfile } from '../src/interpretive-profile.js';
 import { buildDetailedInterpretation } from '../src/interpretation.js';
 import { calculateSajuMbti } from '../src/mbti.js';
@@ -41,4 +41,14 @@ test('detailed interpretation starts with easy reading but keeps technical evide
   assert.match(report.balance.lead,/월령·통근·생조·극설/);
   assert.match(report.technical.paragraphs.join(' '),/비견·겁재·식신·상관·편재·정재·편관·정관·편인·정인/);
   assert.match(report.technical.paragraphs.join(' '),/절대 공식|절대적 성격 판정/);
+});
+
+
+test('heavenly-stem combinations are detected without claiming transformation',()=>{
+  const relations=detectStemRelations({
+    year:{heavenlyStem:'갑'},month:{heavenlyStem:'기'},day:{heavenlyStem:'병'},hour:{heavenlyStem:'신'}
+  });
+  assert.equal(relations.length,2);
+  assert.ok(relations.every((item)=>item.type==='천간합'));
+  assert.ok(relations.every((item)=>/합화 여부/.test(item.note)));
 });
