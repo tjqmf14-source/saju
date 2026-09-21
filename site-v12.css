@@ -790,7 +790,7 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
   .compatibility-panel>.section-heading{padding:0 0 18px;border-right:0;border-bottom:1px solid var(--line-soft)}
   .compatibility-body{grid-template-columns:1fr}
   .mobile-bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:120;display:grid;grid-template-columns:repeat(5,1fr);height:66px;padding:5px max(6px,env(safe-area-inset-left)) max(5px,env(safe-area-inset-bottom));border-top:1px solid var(--line);background:rgba(3,17,29,.97);backdrop-filter:blur(16px)}
-  .mobile-bottom-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;color:var(--muted-2);font-size:13px;font-weight:700}
+  .mobile-bottom-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;color:var(--muted-2);font-size:16px;font-weight:700}
   .mobile-bottom-nav .ui-icon{width:21px;height:21px}
   .mobile-bottom-nav a[aria-current="true"],.mobile-bottom-nav a:hover{color:var(--gold-bright)}
   .hero-primary{min-height:auto}
@@ -914,7 +914,7 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
 @media(max-width:360px){
   .premium-link{display:none}
   .topbar{grid-template-columns:1fr}
-  .mobile-bottom-nav a{font-size:12px}
+  .mobile-bottom-nav a{font-size:16px}
   .premium-link{padding-inline:9px;font-size:15px}
   .year-quick-control{grid-template-columns:58px minmax(0,1fr) 58px;gap:6px}
   .year-shift{padding-inline:6px;font-size:15px}
