@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="정밀 만세력과 생활 언어 사주 해설, Rider–Waite–Smith 78장 타로를 제공하는 내사주">
   <meta name="theme-color" content="#03111d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="/manifest.webmanifest">
   <title>내사주 · Saju & Tarot</title>
   <link rel="stylesheet" href="/site-v12.css">
 </head>
@@ -29,11 +32,11 @@
       <span class="brand-word"><strong>내사주</strong><small>SAJU · TAROT</small></span>
     </a>
     <nav class="topnav" aria-label="주요 메뉴">
-      <a href="#input">사주리포트</a>
-      <a href="#today">오늘의운세</a>
-      <a href="#year">올해의흐름</a>
+      <a href="#input">사주</a>
+      <a href="#today">오늘</a>
+      <a href="#year">올해</a>
+      <a href="#compatibility">궁합</a>
       <a href="#tarot">타로</a>
-      <a href="#full-report">정밀리포트</a>
     </nav>
     <div class="topbar-actions">
       <a class="premium-link" href="#full-report">정밀 리포트</a>
@@ -70,6 +73,20 @@
       </header>
 
 
+      <div class="profile-tools" aria-label="내 프로필 관리">
+        <div class="profile-tools-copy">
+          <strong>내 프로필</strong>
+          <small>출생정보는 이 기기에만 저장됩니다.</small>
+        </div>
+        <div class="profile-tools-actions">
+          <label class="sr-only" for="savedProfiles">저장된 프로필</label>
+          <select id="savedProfiles" aria-label="저장된 프로필"><option value="">저장된 프로필 선택</option></select>
+          <button id="saveProfile" type="button">현재 정보 저장</button>
+          <button id="deleteProfile" type="button" class="subtle-button">삭제</button>
+        </div>
+        <p id="profileStatus" class="profile-status" aria-live="polite"></p>
+      </div>
+
       <form id="birthForm" novalidate>
         <div class="form-modes">
           <fieldset class="segmented"><legend class="sr-only">달력 구분</legend>
@@ -86,9 +103,10 @@
           <fieldset class="birth-date-field">
             <legend>생년월일</legend>
             <div class="year-quick-control" aria-label="출생연도 빠른 설정">
-              <button type="button" class="year-shift" data-year-shift="-10" aria-label="출생연도 10년 이전">−10년</button>
+              <span class="year-quick-label">연도 빠른 선택</span>
+              <button type="button" class="year-shift" data-year-shift="-10" aria-label="출생연도 10년 이전">−10</button>
               <label class="year-quick-input"><span>년</span><input id="birthYearQuick" type="number" min="1900" max="2100" value="1990" inputmode="numeric" aria-label="출생연도 빠른 입력"></label>
-              <button type="button" class="year-shift" data-year-shift="10" aria-label="출생연도 10년 다음">+10년</button>
+              <button type="button" class="year-shift" data-year-shift="10" aria-label="출생연도 10년 다음">+10</button>
             </div>
             <label class="solar-date-picker"><span class="sr-only">양력 생년월일</span><input id="birthDate" type="date" min="1900-01-01" max="2100-12-31" value="1990-01-01" aria-label="양력 생년월일"></label>
             <div class="birth-date-inputs" aria-label="음력 생년월일">
@@ -187,10 +205,32 @@
         </div>
       </section>
 
+      <section id="compatibility" class="compatibility-panel oracle-panel agency-shell" aria-labelledby="compatibilityHeading">
+        <header class="section-heading">
+          <div><span class="section-no">05</span><p class="section-kicker">RELATIONSHIP</p></div>
+          <div>
+            <h2 id="compatibilityHeading">관계 궁합</h2>
+            <p class="section-lead">두 사람의 사주 구조를 비교해 관계에서 잘 맞는 지점과 조율이 필요한 지점을 확인합니다.</p>
+          </div>
+        </header>
+        <div class="compatibility-layout">
+          <form id="compatibilityForm" class="compatibility-form">
+            <label><span>상대 이름 <small>(선택)</small></span><input id="partnerName" type="text" placeholder="상대 이름" autocomplete="off"></label>
+            <label><span>생년월일</span><input id="partnerDate" type="date" min="1900-01-01" max="2100-12-31" value="1990-01-01"></label>
+            <label><span>출생시간</span><input id="partnerTime" type="time" value="12:00"></label>
+            <label><span>성별</span><select id="partnerGender"><option value="male">남자</option><option value="female">여자</option></select></label>
+            <button type="submit" class="compatibility-submit">궁합 보기 <span aria-hidden="true">→</span></button>
+          </form>
+          <div id="compatibilityResult" class="compatibility-result" aria-live="polite">
+            <div class="compatibility-empty"><strong>두 사람의 관계 흐름을 비교합니다.</strong><p>연애뿐 아니라 가족·친구·동료 관계에도 참고할 수 있습니다.</p></div>
+          </div>
+        </div>
+      </section>
+
       <section id="tarot" class="tarot-stage agency-shell">
         <div class="tarot-stage-inner">
           <div class="tarot-copy">
-            <span class="section-no">05</span>
+            <span class="section-no">06</span>
             <p class="section-kicker">타로 리딩</p>
             <h2>타로 리딩</h2>
             <p id="tarotHelp">지금 당신에게 필요한 메시지는 무엇일까요? 카드를 섞고 마음이 가는 카드를 선택해보세요.</p>
@@ -219,7 +259,7 @@
 
       <details id="full-report" class="full-report-shell oracle-panel agency-shell">
         <summary>
-          <span class="full-report-label"><i class="section-no">06</i><span><em class="section-kicker">PRECISION REPORT</em><b>정밀 리포트 열기</b><small>성향부터 대운과 계산 근거까지, 읽기 쉬운 순서로 확인합니다.</small></span></span>
+          <span class="full-report-label"><i class="section-no">07</i><span><em class="section-kicker">PRECISION REPORT</em><b>정밀 리포트 열기</b><small>성향부터 대운과 계산 근거까지, 읽기 쉬운 순서로 확인합니다.</small></span></span>
           <strong aria-hidden="true">+</strong>
         </summary>
         <div class="full-report-body">
@@ -228,6 +268,11 @@
             <h2 id="reportTitle"></h2>
             <p id="reportLead"></p>
             <div id="profileTags" class="tag-row"></div>
+            <div class="report-actions">
+              <button id="shareReport" type="button">결과 공유</button>
+              <button id="copyReport" type="button" class="subtle-button">핵심 요약 복사</button>
+              <span id="shareStatus" aria-live="polite"></span>
+            </div>
             <div class="report-mini-meta"><strong id="mbtiType"></strong><small id="mbtiLabel"></small></div>
             <div id="accuracyBasis" class="accuracy-basis"></div>
           </section>
@@ -258,6 +303,14 @@
 
     </section>
   </main>
+
+  <nav class="mobile-tabbar" aria-label="모바일 빠른 메뉴">
+    <a href="#home"><span>홈</span></a>
+    <a href="#today"><span>오늘</span></a>
+    <a href="#input"><span>사주</span></a>
+    <a href="#compatibility"><span>궁합</span></a>
+    <a href="#tarot"><span>타로</span></a>
+  </nav>
 
   <footer class="site-footer agency-shell">
     <div><span class="seal" aria-hidden="true">命</span><strong>내사주</strong></div>
