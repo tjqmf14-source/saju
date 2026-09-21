@@ -177,12 +177,17 @@
       <section id="today" class="landing-section oracle-panel agency-shell today-panel">
         <header class="section-heading">
           <div><span class="section-no">03</span><p class="section-kicker">TODAY</p></div>
-          <div><h2>오늘의 운세</h2><p>오늘 하루, 어떤 흐름이<br>당신을 기다리고 있을까요?</p><p id="todayDate" class="section-date"></p><div class="day-nav" aria-label="일진 날짜 이동"><button type="button" data-day-shift="-1" aria-label="이전 날짜">←</button><button id="todayReset" type="button">오늘</button><button type="button" data-day-shift="1" aria-label="다음 날짜">→</button></div><blockquote id="todayHeadline"></blockquote></div>
+          <div><h2>오늘의 운세</h2><p>오늘 하루, 어떤 흐름이<br>당신을 기다리고 있을까요?</p><p id="todayDate" class="section-date"></p><div class="today-date-controls"><div class="day-nav" aria-label="일진 날짜 이동"><button type="button" data-day-shift="-1" aria-label="이전 날짜">←</button><button id="todayReset" type="button">오늘</button><button type="button" data-day-shift="1" aria-label="다음 날짜">→</button></div><label class="fortune-date-picker"><span>지정일</span><input id="fortuneDate" type="date" min="1900-01-01" max="2100-12-31" aria-label="운세를 볼 날짜"></label></div><blockquote id="todayHeadline"></blockquote></div>
         </header>
         <div class="daily-layout">
           <article id="dailyPrimary" class="daily-primary"></article>
           <div id="dailyMetrics" class="daily-metrics"></div>
           <aside class="today-quote-panel"><span>“</span><blockquote id="todayQuoteTitle">오늘의 흐름을 차분히 읽어보세요.</blockquote><p id="todayQuoteBody">오늘의 원국 관계를 바탕으로 현실적인 행동 포인트를 정리합니다.</p><i aria-hidden="true">→</i></aside>
+          <section class="daily-report-extra" aria-labelledby="dailyReportHeading">
+            <header><span class="section-kicker">DAILY REPORT</span><h3 id="dailyReportHeading">오늘을 쉽게 읽는 보고서</h3><p>좋다·나쁘다보다 언제 힘을 쓰고 무엇을 조절할지 먼저 보여드립니다.</p></header>
+            <div id="dailyActionGuide" class="daily-action-guide"></div>
+            <div class="daily-time-block"><div class="block-head"><span>TIME FLOW</span><h3>시간대별 흐름</h3></div><div id="dailyTimeFlow" class="daily-time-flow"></div></div>
+          </section>
         </div>
       </section>
 
@@ -211,6 +216,7 @@
         </header>
         <div class="compatibility-body">
           <form id="compatibilityForm" class="compatibility-form">
+            <label class="partner-profile-field"><span>저장된 인맥 불러오기 <small>(선택)</small></span><select id="partnerProfileSelect"><option value="">직접 입력</option></select></label>
             <label><span>상대 이름 <small>(선택)</small></span><input id="partnerName" type="text" placeholder="상대 이름" autocomplete="off"></label>
             <label><span>상대 생년월일</span><input id="partnerDate" type="date" min="1900-01-01" max="2100-12-31" value="1990-01-01" required></label>
             <label><span>상대 출생시간</span><input id="partnerTime" type="time" value="12:00" required></label>
