@@ -19,7 +19,9 @@ const form = $('birthForm');
 const results = $('results');
 const errorBox = $('formError');
 let currentReport = null;
+let currentChart = null;
 let calendarUiMode = form.elements.calendar.value;
+const PROFILE_STORAGE_KEY='naesaju.profiles.v1';
 
 const GROUP_COPY = {
   비겁: {
@@ -295,10 +297,10 @@ function kstMonthNumber(date){
 
 function renderAccuracyBasis(chart){
   const items=[
-    ['CALENDAR',chart.basis.calendarEngine],
-    ['LOCATION',`${chart.basis.location} · ${chart.basis.longitude}°E`],
-    ['TIME CORRECTION',`${chart.basis.trueSolarTime} · ${chart.basis.historicalDst}`],
-    ['DAY BOUNDARY',chart.basis.dayBoundary]
+    ['달력 엔진',chart.basis.calendarEngine],
+    ['출생 지역',`${chart.basis.location} · 경도 ${chart.basis.longitude}°E`],
+    ['시간 보정',`진태양시 ${chart.basis.trueSolarTime} · 한국 표준시 이력 ${chart.basis.historicalDst}`],
+    ['날짜 경계',chart.basis.dayBoundary]
   ];
   $('accuracyBasis').innerHTML=items.map(([label,value])=>`<div class="basis-item"><span>${label}</span><strong>${value}</strong></div>`).join('');
 }
@@ -309,9 +311,9 @@ function renderProfile(chart,mbti,report,name,todayFlow){
   $('profileBirth').textContent=`양력 ${formatSolar(chart.solar)} · 음력 ${formatLunar(chart.lunar)} · ${chart.basis.location}`;
   $('reportTitle').textContent=`${name}님의 타고난 구조`;
   $('reportLead').textContent=report.overview.lead;
-  $('profileTags').innerHTML=[`${strongElement} · ${ELEMENT_LABELS[strongElement].label}`,ROLE_LABELS[strongRole],mbti.type,relationLabel(chart.relations)].map((v)=>`<span>${v}</span>`).join('');
-  $('mbtiType').textContent=mbti.type;
-  $('mbtiLabel').textContent='사주 기반 성향 · 비공식 참고';
+  $('profileTags').innerHTML=[`${strongElement} · ${ELEMENT_LABELS[strongElement].label}`,ROLE_LABELS[strongRole],relationLabel(chart.relations)].map((v)=>`<span>${v}</span>`).join('');
+  $('mbtiType').textContent=`재미로 보는 성향 · ${mbti.type}`;
+  $('mbtiLabel').textContent='MBTI는 사주 계산의 핵심 결과가 아닌 비공식 참고 항목입니다.';
   renderAccuracyBasis(chart);
 }
 
@@ -502,6 +504,7 @@ function renderAll(){
   try{
     const input=collectInput();
     const chart=calculateSaju(input);
+    currentChart=chart;
     const mbti=calculateSajuMbti(chart);
     const todayFlow=calculateTodayFlow(chart);
     const year=currentKstYear();
@@ -527,6 +530,230 @@ function renderAll(){
       field.setAttribute('aria-errormessage','formError');
       field.focus();
     }
+  }
+}
+
+
+function readProfiles(){
+  try{
+    const value=JSON.parse(localStorage.getItem(PROFILE_STORAGE_KEY)||'[]');
+    return Array.isArray(value)?value.slice(0,8):[];
+  }catch{
+    return [];
+  }
+}
+
+function writeProfiles(items){
+  localStorage.setItem(PROFILE_STORAGE_KEY,JSON.stringify(items.slice(0,8)));
+}
+
+function profileSnapshot(){
+  const input=collectInput();
+  return {
+    id:crypto?.randomUUID?.() || `profile-${Date.now()}`,
+    name:$('name').value.trim()||'내 프로필',
+    calendar:input.calendar,
+    year:input.year,month:input.month,day:input.day,
+    hour:input.hour,minute:input.minute,
+    gender:input.gender,isLeap:input.isLeap,
+    precision:input.precision,location:input.location,dayBoundary:input.dayBoundary
+  };
+}
+
+function refreshProfileOptions(selectedId=''){
+  const select=$('savedProfiles');
+  if(!select) return;
+  const profiles=readProfiles();
+  select.innerHTML='<option value="">저장된 프로필 선택</option>'+profiles.map((profile)=>
+    `<option value="${escapeHtml(profile.id)}">${escapeHtml(profile.name)} · ${profile.year}.${String(profile.month).padStart(2,'0')}.${String(profile.day).padStart(2,'0')}</option>`
+  ).join('');
+  if(selectedId && profiles.some((profile)=>profile.id===selectedId)) select.value=selectedId;
+}
+
+function setProfileStatus(message){
+  const status=$('profileStatus');
+  if(status) status.textContent=message;
+}
+
+function saveCurrentProfile(){
+  try{
+    const snapshot=profileSnapshot();
+    const profiles=readProfiles();
+    const sameIndex=profiles.findIndex((item)=>item.name===snapshot.name && item.year===snapshot.year && item.month===snapshot.month && item.day===snapshot.day);
+    if(sameIndex>=0){
+      snapshot.id=profiles[sameIndex].id;
+      profiles[sameIndex]=snapshot;
+    }else{
+      profiles.unshift(snapshot);
+    }
+    writeProfiles(profiles);
+    refreshProfileOptions(snapshot.id);
+    setProfileStatus(`${snapshot.name} 정보를 이 기기에 저장했습니다.`);
+  }catch(error){
+    setProfileStatus(error?.message||'프로필을 저장하지 못했습니다.');
+  }
+}
+
+function loadProfile(profile){
+  if(!profile) return;
+  $('name').value=profile.name==='내 프로필'?'':profile.name;
+  setCalendarRadio(profile.calendar||'solar');
+  if((profile.calendar||'solar')==='solar'){
+    $('birthDate').value=`${profile.year}-${String(profile.month).padStart(2,'0')}-${String(profile.day).padStart(2,'0')}`;
+  }else{
+    $('birthYear').value=String(profile.year);
+    $('birthMonth').value=String(profile.month);
+    $('birthDay').value=String(profile.day);
+    $('isLeap').checked=Boolean(profile.isLeap);
+  }
+  $('birthTime').value=`${String(profile.hour).padStart(2,'0')}:${String(profile.minute).padStart(2,'0')}`;
+  $('gender').value=profile.gender||'male';
+  $('precisionToggle').checked=profile.precision!==false;
+  $('birthLocation').value=profile.location||'korea';
+  $('dayBoundary').value=profile.dayBoundary||'midnight';
+  calendarUiMode=profile.calendar||'solar';
+  applyCalendarUi(calendarUiMode);
+  syncPrecisionUi();
+  renderAll();
+  setProfileStatus(`${profile.name} 프로필을 불러왔습니다.`);
+}
+
+function deleteSelectedProfile(){
+  const id=$('savedProfiles')?.value;
+  if(!id){ setProfileStatus('삭제할 프로필을 먼저 선택해 주세요.'); return; }
+  const profiles=readProfiles();
+  const target=profiles.find((item)=>item.id===id);
+  writeProfiles(profiles.filter((item)=>item.id!==id));
+  refreshProfileOptions();
+  setProfileStatus(target?`${target.name} 프로필을 삭제했습니다.`:'프로필을 삭제했습니다.');
+}
+
+const ELEMENT_GENERATES={목:'화',화:'토',토:'금',금:'수',수:'목'};
+const ELEMENT_CONTROLS={목:'토',토:'수',수:'화',화:'금',금:'목'};
+const BRANCH_HARMONY=[['자','축'],['인','해'],['묘','술'],['진','유'],['사','신'],['오','미']];
+const BRANCH_CLASH=[['자','오'],['축','미'],['인','신'],['묘','유'],['진','술'],['사','해']];
+
+function pairIncludes(pairs,a,b){ return pairs.some((pair)=>pair.includes(a)&&pair.includes(b)); }
+
+function compatibilityNarrative(mine,partner){
+  const mineElement=stemByName(mine.dayMaster)?.element;
+  const partnerElement=stemByName(partner.dayMaster)?.element;
+  const mineBranch=mine.pillars.day.earthlyBranch;
+  const partnerBranch=partner.pillars.day.earthlyBranch;
+  let elementTitle='서로 다른 방식의 균형';
+  let elementBody='두 사람의 중심 기운이 다르므로 같은 상황에서도 판단 속도와 표현 방식이 달라질 수 있습니다.';
+  if(mineElement===partnerElement){
+    elementTitle='비슷한 기준을 공유하는 관계';
+    elementBody='중심 오행이 같아 익숙함과 공감이 빠른 편입니다. 다만 비슷한 고집이나 약점도 동시에 커질 수 있어 역할을 나누는 것이 좋습니다.';
+  }else if(ELEMENT_GENERATES[mineElement]===partnerElement || ELEMENT_GENERATES[partnerElement]===mineElement){
+    elementTitle='서로의 흐름을 살리는 관계';
+    elementBody='오행의 생(生) 관계가 있어 한쪽의 강점이 다른 쪽의 행동과 성장을 자연스럽게 돕는 구조로 읽을 수 있습니다.';
+  }else if(ELEMENT_CONTROLS[mineElement]===partnerElement || ELEMENT_CONTROLS[partnerElement]===mineElement){
+    elementTitle='경계를 잘 맞춰야 하는 관계';
+    elementBody='오행의 극(剋) 관계가 있어 서로에게 자극과 기준을 주기 쉽습니다. 통제보다 역할·기대치를 명확히 정하는 것이 중요합니다.';
+  }
+
+  let branchTitle='생활 리듬을 맞춰가는 관계';
+  let branchBody=`${mineBranch}와 ${partnerBranch}의 일지 관계는 강한 합·충 신호보다 실제 대화 방식과 생활 습관의 영향이 더 크게 드러날 수 있습니다.`;
+  if(pairIncludes(BRANCH_HARMONY,mineBranch,partnerBranch)){
+    branchTitle='가까워지기 쉬운 생활 리듬';
+    branchBody=`${mineBranch}–${partnerBranch}는 육합 관계로 분류됩니다. 서로 다른 부분을 연결해주는 힘이 있지만, 실제 관계에서는 각자의 경계도 함께 지키는 것이 좋습니다.`;
+  }else if(pairIncludes(BRANCH_CLASH,mineBranch,partnerBranch)){
+    branchTitle='변화와 조율이 잦을 수 있는 관계';
+    branchBody=`${mineBranch}–${partnerBranch}는 충 관계로 분류됩니다. 변화의 자극이 큰 만큼 결정 속도와 생활 방식에서 충돌이 생기면 합의 규칙을 먼저 만드는 편이 좋습니다.`;
+  }
+
+  const mineDominant=dominantElement(mine);
+  const partnerDominant=dominantElement(partner);
+  const shared=mineDominant===partnerDominant;
+  return {
+    elementTitle,elementBody,branchTitle,branchBody,
+    balanceTitle:shared?'강점과 약점이 함께 증폭될 수 있음':'서로 부족한 부분을 확인하기 쉬움',
+    balanceBody:shared
+      ? `두 사람 모두 ${mineDominant} 기운의 비중이 높습니다. 익숙함은 크지만 같은 방식으로 과해지지 않는지 점검하세요.`
+      : `당신은 ${mineDominant}, 상대는 ${partnerDominant} 기운이 상대적으로 두드러집니다. 서로의 차이를 우열보다 역할 분담의 단서로 보는 편이 좋습니다.`
+  };
+}
+
+function renderCompatibility(){
+  const result=$('compatibilityResult');
+  if(!currentChart){
+    result.innerHTML='<div class="compatibility-empty"><strong>먼저 내 사주를 입력해 주세요.</strong><p>내 사주 리포트를 만든 뒤 상대 정보를 비교할 수 있습니다.</p></div>';
+    return;
+  }
+  const date=$('partnerDate').value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const time=$('partnerTime').value.match(/^(\d{2}):(\d{2})$/);
+  if(!date || !time){
+    result.innerHTML='<div class="compatibility-empty"><strong>상대 생년월일과 시간을 확인해 주세요.</strong></div>';
+    return;
+  }
+  try{
+    const partner=calculateSaju({
+      calendar:'solar',year:Number(date[1]),month:Number(date[2]),day:Number(date[3]),
+      hour:Number(time[1]),minute:Number(time[2]),gender:$('partnerGender').value,
+      precision:$('precisionToggle').checked,location:$('birthLocation').value,dayBoundary:$('dayBoundary').value
+    });
+    const copy=compatibilityNarrative(currentChart,partner);
+    const partnerName=$('partnerName').value.trim()||'상대';
+    result.innerHTML=`
+      <div class="compatibility-summary"><span class="section-kicker">STRUCTURE COMPARISON</span><h3>나와 ${escapeHtml(partnerName)}의 관계 구조</h3><p>점수 하나로 단정하지 않고 일간·일지·오행의 관계를 나눠서 봅니다.</p></div>
+      <div class="compatibility-cards">
+        <article><span>01 · 중심 기운</span><strong>${escapeHtml(copy.elementTitle)}</strong><p>${escapeHtml(copy.elementBody)}</p></article>
+        <article><span>02 · 관계 자리</span><strong>${escapeHtml(copy.branchTitle)}</strong><p>${escapeHtml(copy.branchBody)}</p></article>
+        <article><span>03 · 균형</span><strong>${escapeHtml(copy.balanceTitle)}</strong><p>${escapeHtml(copy.balanceBody)}</p></article>
+      </div>
+      <p class="compatibility-note">궁합은 관계를 결정하는 판정이 아니라 서로의 차이를 이해하기 위한 참고 해석입니다.</p>`;
+  }catch(error){
+    result.innerHTML=`<div class="compatibility-empty"><strong>궁합 계산을 확인해 주세요.</strong><p>${escapeHtml(error?.message||'입력값을 다시 확인해 주세요.')}</p></div>`;
+  }
+}
+
+function reportShareText(){
+  if(!currentChart || !currentReport) return '내사주에서 사주 리포트를 확인해 보세요.';
+  const name=$('name').value.trim()||'나';
+  const element=dominantElement(currentChart);
+  return `${name}의 내사주 핵심 요약\n· 중심 오행: ${element} · ${ELEMENT_LABELS[element].label}\n· 핵심: ${currentReport.overview.lead}\n· 개인정보는 브라우저에서 처리됩니다.`;
+}
+
+async function shareReport(){
+  const text=reportShareText();
+  try{
+    if(navigator.share){
+      await navigator.share({title:'내사주 핵심 리포트',text});
+      $('shareStatus').textContent='공유 창을 열었습니다.';
+    }else{
+      await navigator.clipboard.writeText(text);
+      $('shareStatus').textContent='핵심 요약을 복사했습니다.';
+    }
+  }catch(error){
+    if(error?.name!=='AbortError') $('shareStatus').textContent='공유하지 못했습니다.';
+  }
+}
+
+async function copyReport(){
+  try{
+    await navigator.clipboard.writeText(reportShareText());
+    $('shareStatus').textContent='핵심 요약을 복사했습니다.';
+  }catch{
+    $('shareStatus').textContent='복사하지 못했습니다.';
+  }
+}
+
+function setupMobileTabbar(){
+  const links=[...document.querySelectorAll('.mobile-tabbar a')];
+  if(!links.length || !('IntersectionObserver' in window)) return;
+  const pairs=links.map((link)=>[link,document.querySelector(link.getAttribute('href'))]).filter(([,target])=>target);
+  const observer=new IntersectionObserver((entries)=>{
+    const visible=entries.filter((entry)=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+    if(!visible) return;
+    links.forEach((link)=>link.classList.toggle('is-active',link.getAttribute('href')===`#${visible.target.id}`));
+  },{rootMargin:'-20% 0px -60% 0px',threshold:[0,.1,.35]});
+  pairs.forEach(([,target])=>observer.observe(target));
+}
+
+function setupPwa(){
+  if('serviceWorker' in navigator && location.protocol!=='file:'){
+    navigator.serviceWorker.register('/sw.js').catch(()=>{});
   }
 }
 
@@ -835,6 +1062,18 @@ form.addEventListener('submit',(event)=>{
   }
 });
 $('drawTarot').addEventListener('click',handleTarot);
+$('saveProfile')?.addEventListener('click',saveCurrentProfile);
+$('deleteProfile')?.addEventListener('click',deleteSelectedProfile);
+$('savedProfiles')?.addEventListener('change',(event)=>{
+  const profile=readProfiles().find((item)=>item.id===event.target.value);
+  if(profile) loadProfile(profile);
+});
+$('compatibilityForm')?.addEventListener('submit',(event)=>{ event.preventDefault(); renderCompatibility(); });
+$('shareReport')?.addEventListener('click',shareReport);
+$('copyReport')?.addEventListener('click',copyReport);
+refreshProfileOptions();
+setupMobileTabbar();
+setupPwa();
 syncCalendarUi();
 syncPrecisionUi();
 setupSectionSpy();
