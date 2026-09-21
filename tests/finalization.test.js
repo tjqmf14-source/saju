@@ -16,8 +16,8 @@ test('V12 is the only active frontend stylesheet and follows the reference palet
   assert.ok(css.includes("url('/oracle/b-visual-atlas.webp')"));
 });
 
-test('minimum readable UI type is 11pt-equivalent or larger', () => {
-  assert.ok(css.includes('--min-type:15px'));
+test('minimum readable UI type is 12pt-equivalent or larger', () => {
+  assert.ok(css.includes('--min-type:16px'));
   assert.ok(css.includes('body,button,input,select,textarea,small{font-size:var(--min-type)}'));
   assert.doesNotMatch(css, /font-size:(?:[0-9]|1[0-4])px/);
 });
