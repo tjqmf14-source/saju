@@ -142,6 +142,12 @@
     </nav>
 
     <section id="results" hidden>
+      <section id="resultHome" class="result-home agency-shell" aria-label="리포트 한눈에 보기">
+        <div class="result-home-head"><span class="section-kicker">MY REPORT</span><h2>내 리포트 한눈에</h2><p>가장 중요한 흐름부터 먼저 보고, 필요한 부분만 깊게 읽어보세요.</p></div>
+        <div id="resultHomeCards" class="result-home-cards"></div>
+        <div class="result-home-actions"><a href="#detailedReport" data-open-report>핵심 해석 더보기</a><a href="#compatibility">궁합 보기</a><button id="resultShare" type="button">공유</button></div>
+      </section>
+
       <section class="visual-keyword-showcase agency-shell" aria-label="리포트 핵심 키워드">
         <div class="visual-keyword-intro">
           <span class="section-no">02</span>
@@ -257,6 +263,7 @@
             <button type="button" data-saju-question="love">관계에서 필요한 태도</button>
             <button type="button" data-saju-question="recovery">회복이 필요한 신호</button>
           </div>
+          <div class="saju-custom-question"><input id="sajuQuestionInput" type="text" placeholder="예: 올해 이직을 준비할 때 무엇을 볼까?" aria-label="사주 질문"><button id="askSaju" type="button">질문하기</button></div>
           <div id="sajuAnswer" class="saju-answer">리포트를 생성하면 질문별 핵심 답변을 바로 확인할 수 있습니다.</div>
         </div>
       </section>
