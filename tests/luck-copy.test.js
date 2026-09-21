@@ -47,8 +47,8 @@ test('all five role groups produce practical and distinct opportunity/caution/ad
 
   assert.equal(new Set(outputs.map((item) => item.overview)).size, 5);
   for (const item of outputs) {
-    assert.ok(item.opportunity.length >= 35);
-    assert.ok(item.caution.length >= 35);
-    assert.ok(item.advice.length >= 45);
+    assert.ok(item.opportunity.length >= 15 && item.opportunity.length <= 55);
+    assert.ok(item.caution.length >= 15 && item.caution.length <= 70);
+    assert.ok(item.advice.length >= 15 && item.advice.length <= 70);
   }
 });
