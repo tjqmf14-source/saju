@@ -67,7 +67,7 @@ test('today flow scores are deterministic, complete and bounded', () => {
   const first=calculateDailyScores(chart,today);
   const second=calculateDailyScores(chart,today);
   assert.deepEqual(first,second);
-  assert.deepEqual(Object.keys(first),['overall','money','love','work','condition','study']);
+  assert.deepEqual(Object.keys(first),['overall','money','love','work','condition','study','emotion']);
   for (const item of Object.values(first)) {
     assert.ok(Number.isInteger(item.score));
     assert.ok(item.score >= 0 && item.score <= 100);
