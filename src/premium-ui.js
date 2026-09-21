@@ -640,6 +640,22 @@ function renderToday(chart,todayFlow){
     ['회복 포인트',copy.health]
   ].map(([title,body],index)=>`<article><span>0${index+1}</span><strong>${escapeHtml(title)}</strong><p>${escapeHtml(body)}</p></article>`).join('');
 
+  const weekBase=dailyDate();
+  const categoryLabels={money:'재물',love:'연애',work:'직업',condition:'건강',study:'학업'};
+  $('weeklyPreview').innerHTML=Array.from({length:7},(_,index)=>{
+    const date=new Date(weekBase.getTime());
+    date.setUTCDate(date.getUTCDate()+index);
+    const flow=calculateTodayFlow(chart,date);
+    const weekScores=calculateDailyScores(chart,flow);
+    const ranked=Object.entries(weekScores)
+      .filter(([key])=>key!=='overall')
+      .sort((a,b)=>b[1].score-a[1].score);
+    const top=ranked[0];
+    const low=ranked.at(-1);
+    const localDate=new Date(Date.UTC(flow.date.year,flow.date.month-1,flow.date.day,3));
+    const label=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'numeric',day:'numeric',weekday:'short'}).format(localDate);
+    return `<article class="weekly-day${index===0?' is-selected':''}"><span>${escapeHtml(label)}</span><strong>${weekScores.overall.score}</strong><small>${escapeHtml(weekScores.overall.label)}</small><p><b>${escapeHtml(categoryLabels[top[0]])}</b>이 상대적으로 강하고, <b>${escapeHtml(categoryLabels[low[0]])}</b>은 한 번 더 점검하세요.</p></article>`;
+  }).join('');
   const timeFlows=calculateTodayTimeFlows(chart,dailyDate());
   $('dailyTimeFlow').innerHTML=timeFlows.map((slot)=>{
     const slotCopy=GROUP_COPY[slot.group]||GROUP_COPY.인성;
