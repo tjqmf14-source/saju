@@ -403,14 +403,14 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
 .daily-primary-score strong{font-family:var(--serif);font-size:calc(58px + var(--mobile-font-bump));font-weight:500;line-height:1}
 .daily-primary-score small{color:var(--muted);font-size:calc(16px + var(--mobile-font-bump))}
 .daily-metrics{display:grid;align-content:center}
-.daily-brief{grid-column:1/-1;grid-row:2;padding:16px 0 0;border-top:1px solid var(--line-soft)}
-.daily-brief-head{display:flex;align-items:baseline;gap:14px;margin-bottom:10px}
+.daily-brief{grid-column:1/-1;grid-row:2;padding:10px 0 0;border-top:1px solid var(--line-soft)}
+.daily-brief-head{display:flex;align-items:baseline;gap:12px;margin-bottom:7px}
 .daily-brief-head h3{margin:0;font-size:calc(23px + var(--mobile-font-bump))}
 .daily-brief-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
-.daily-brief-grid article{min-width:0;padding:14px;border:1px solid var(--line-soft);border-radius:6px;background:rgba(216,167,95,.035)}
-.daily-brief-grid article>span{display:block;margin-bottom:7px;color:var(--gold);font-size:calc(16px + var(--mobile-font-bump));font-weight:700}
-.daily-brief-grid article>strong{display:block;margin-bottom:7px;color:var(--gold-bright);font-size:calc(16px + var(--mobile-font-bump));line-height:1.55}
-.daily-brief-grid article>p{margin:0;color:var(--muted);font-size:calc(16px + var(--mobile-font-bump));line-height:1.68}
+.daily-brief-grid article{min-width:0;padding:10px 12px;border:1px solid var(--line-soft);border-radius:6px;background:rgba(216,167,95,.035)}
+.daily-brief-grid article>span{display:block;margin-bottom:4px;color:var(--gold);font-size:calc(16px + var(--mobile-font-bump));font-weight:700}
+.daily-brief-grid article>strong{display:block;margin-bottom:4px;color:var(--gold-bright);font-size:calc(16px + var(--mobile-font-bump));line-height:1.42}
+.daily-brief-grid article>p{margin:0;color:var(--muted);font-size:calc(16px + var(--mobile-font-bump));line-height:1.5}
 .today-quote-panel{grid-column:3;grid-row:1}
 .metric-row{display:grid;grid-template-columns:36px 118px 1fr;gap:10px;align-items:center;min-height:55px;border-bottom:1px solid var(--line-soft)}
 .metric-row:last-child{border-bottom:0}
@@ -933,8 +933,10 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
   .profile-manager label{grid-column:1/-1}
   .profile-manager button{padding-inline:8px}
   .form-modes{align-items:flex-start;flex-direction:column}
-  .compatibility-form{grid-template-columns:1fr}
-  .compatibility-form button{grid-column:1}
+  .compatibility-form{grid-template-columns:1fr;gap:6px;padding:10px 12px}
+  .compatibility-form label{gap:3px;line-height:1.35}
+  .compatibility-form input,.compatibility-form select{height:44px}
+  .compatibility-form button{grid-column:1;min-height:44px}
   .compatibility-grid{grid-template-columns:1fr}
   .compatibility-result-head{flex-direction:column}
   .form-grid{grid-template-columns:minmax(0,1fr) minmax(0,.72fr);gap:11px 9px}
