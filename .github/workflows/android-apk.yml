@@ -12,7 +12,7 @@ on:
       - 'index.html'
       - 'site-v12.css'
       - 'package.json'
-      - 'capacitor.config.json'
+      - 'android/**'
       - 'mobile/**'
       - '.github/workflows/android-apk.yml'
 
@@ -33,63 +33,34 @@ jobs:
           node-version: 24
           cache: npm
 
-      - name: Setup Java 21
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: '17'
           cache: gradle
 
       - name: Install dependencies
         run: npm install
 
-      - name: Verify web app
+      - name: Verify and build web app
         run: npm run check
 
-      - name: Build web app
-        run: npm run build
-
-      - name: Generate Android project
-        run: |
-          npx cap add android
-          npx cap sync android
-
-      - name: Brand Android launcher and splash
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y librsvg2-bin
-          mkdir -p mobile/generated
-          rsvg-convert mobile/app-icon.svg -w 512 -h 512 -o mobile/generated/icon-512.png
-          rsvg-convert mobile/splash.svg -w 1080 -h 1920 -o mobile/generated/splash.png
-          declare -A sizes=( [mdpi]=48 [hdpi]=72 [xhdpi]=96 [xxhdpi]=144 [xxxhdpi]=192 )
-          for density in "${!sizes[@]}"; do
-            target="android/app/src/main/res/mipmap-${density}"
-            mkdir -p "$target"
-            rsvg-convert mobile/app-icon.svg -w "${sizes[$density]}" -h "${sizes[$density]}" -o "$target/ic_launcher.png"
-            cp "$target/ic_launcher.png" "$target/ic_launcher_round.png"
-          done
-          rm -rf android/app/src/main/res/mipmap-anydpi-v26
-          while IFS= read -r splash; do
-            cp mobile/generated/splash.png "$splash"
-          done < <(find android/app/src/main/res -type f -name 'splash.png')
-
-      - name: Set Android version
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-          path = Path('android/app/build.gradle')
-          text = path.read_text(encoding='utf-8')
-          text = re.sub(r'versionCode\s+\d+', 'versionCode 210', text)
-          text = re.sub(r'versionName\s+"[^"]+"', 'versionName "2.1.0"', text)
-          path.write_text(text, encoding='utf-8')
-          PY
-
-      - name: Build installable debug APK
+      - name: Build Android APK
         run: |
           chmod +x android/gradlew
           cd android
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew lintDebug assembleDebug --stacktrace
+
+      - name: Verify APK
+        run: |
+          test -f android/app/build/outputs/apk/debug/app-debug.apk
+          grep -q "versionName '2.1.0'" android/app/build.gradle
+          grep -q "versionCode 210" android/app/build.gradle
+          if grep -q "android.permission.INTERNET" android/app/src/main/AndroidManifest.xml; then
+            echo "Unexpected INTERNET permission"
+            exit 1
+          fi
 
       - name: Prepare artifact
         run: |
