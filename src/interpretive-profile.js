@@ -198,13 +198,64 @@ function pillarProfile(chart,tenGods){
   });
 }
 
-export function buildInterpretiveProfile(chart){
+
+function flowInteractionProfile(chart,yearFlow,monthFlows=[]){
+  const age=Math.max(0,yearFlow.year-chart.solar.year);
+  const luckItems=chart.luck?.pillars||[];
+  let activeLuck=null;
+  for(let i=0;i<luckItems.length;i+=1){
+    const item=luckItems[i];
+    const next=luckItems[i+1];
+    if(age>=item.age && (!next || age<next.age)){ activeLuck=item; break; }
+  }
+
+  const activeLuckStem=activeLuck?.korean?.[0]||'';
+  const activeLuckGod=activeLuckStem?getTenGod(chart.dayMaster,activeLuckStem):null;
+  const annualRelations=yearFlow.relations||[];
+  const monthGroupCount={비겁:0,식상:0,재성:0,관성:0,인성:0};
+  monthFlows.forEach((m)=>{monthGroupCount[m.group]=(monthGroupCount[m.group]||0)+1;});
+  const dominantMonthGroup=Object.entries(monthGroupCount).sort((a,b)=>b[1]-a[1])[0]?.[0]||yearFlow.group;
+  const relationSummary=annualRelations.length
+    ? annualRelations.map((r)=>\`\${r.type}(\${r.members.join('·')})\`).join(' · ')
+    : '원국과 세운 사이에 두드러진 합·충·형·파·해 신호가 적습니다.';
+
+  return {
+    age,
+    activeLuck,
+    activeLuckGod,
+    annualGod:yearFlow.tenGod,
+    annualGroup:yearFlow.group,
+    dominantMonthGroup,
+    monthGroupCount,
+    relationSummary,
+    layers:[
+      activeLuck?{label:'대운',value:\`\${activeLuck.korean} · \${activeLuckGod||'십신 계산'}\`}:null,
+      {label:'세운',value:\`\${yearFlow.korean} · \${yearFlow.tenGod}\`},
+      {label:'월운 반복',value:\`\${dominantMonthGroup} 주제가 12개월 중 \${monthGroupCount[dominantMonthGroup]||0}회\`}
+    ].filter(Boolean),
+    headline:activeLuck
+      ? \`지금은 \${activeLuck.korean} 대운 위에 \${yearFlow.korean} 세운이 겹치는 시기입니다.\`
+      : \`\${yearFlow.korean} 세운의 영향이 현재 해석의 중심입니다.\`,
+    easy:[
+      activeLuck
+        ? \`큰 배경은 \${activeLuck.korean} 대운이고, 올해는 \${yearFlow.tenGod} 주제가 그 위에 겹칩니다.\`
+        : \`올해는 \${yearFlow.tenGod} 주제가 평소보다 자주 체감될 수 있습니다.\`,
+      annualRelations.length
+        ? \`원국과 올해 흐름 사이에는 \${relationSummary}가 보여 변화나 조율이 필요한 장면이 생길 수 있습니다.\`
+        : '원국과 올해 흐름의 충돌 신호가 강하지 않아, 사건보다 선택 습관의 차이가 더 중요합니다.',
+      \`월별로는 \${dominantMonthGroup} 주제가 가장 자주 반복되어 한 해 안에서도 비슷한 질문이 여러 번 돌아올 수 있습니다.\`
+    ]
+  };
+}
+
+export function buildInterpretiveProfile(chart,yearFlow=null,monthFlows=[]){
   const tenGods=tenGodPlacements(chart);
   const strength=strengthProfile(chart);
   const monthCommand=monthCommandProfile(chart,tenGods);
   const relations=relationProfile(chart);
   const pillars=pillarProfile(chart,tenGods);
   const top=tenGods.ranking.slice(0,3);
+  const flow=yearFlow?flowInteractionProfile(chart,yearFlow,monthFlows):null;
   const rootEasy=strength.rootCount
     ? `일간과 같은 기운이 지지 속 ${strength.rootCount}곳에서 받쳐줘, 쉽게 흔들리기만 하는 구조는 아닙니다.`
     : '일간과 같은 기운의 뿌리가 두드러지지 않아 환경의 도움 여부에 따라 체감 차이가 커질 수 있습니다.';
@@ -229,7 +280,8 @@ export function buildInterpretiveProfile(chart){
     easyFacts,
     evidence,
     balanceHint:`균형 관점에서는 ${strength.helpfulElements.join('·')} 기운을 ‘무조건 좋은 용신’이라고 단정하지 않고, 현재 구조의 과부하를 조절할 후보로 봅니다.`,
-    structureHint:`${monthCommand.structureName}을 1차 해석 초점으로 삼되, ${monthCommand.exposed?'월령 중심 십신이 천간에도 드러나 있어 해석 우선도가 높습니다.':'월령 중심 십신이 천간에 직접 드러나지 않아 다른 십신 배치와 함께 봐야 합니다.'}`
+    structureHint:`${monthCommand.structureName}을 1차 해석 초점으로 삼되, ${monthCommand.exposed?'월령 중심 십신이 천간에도 드러나 있어 해석 우선도가 높습니다.':'월령 중심 십신이 천간에 직접 드러나지 않아 다른 십신 배치와 함께 봐야 합니다.'}`,
+    flow
   };
 }
 
