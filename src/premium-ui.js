@@ -29,48 +29,48 @@ const PROFILE_STORAGE_KEY='naesaju.profiles.v1';
 const GROUP_COPY = {
   비겁: {
     label:'자기주도', summary:'내 기준과 독립성이 강해지는 흐름',
-    opportunity:'주도권이 필요한 일, 개인 프로젝트, 결단',
-    caution:'경쟁심이 강해지거나 혼자 모든 것을 해결하려는 패턴',
-    money:'사람과 얽힌 지출보다 내 예산과 우선순위를 먼저 정리하세요.',
-    love:'내 속도만 밀기보다 상대의 반응을 확인하며 관계의 속도를 맞춰보세요.',
-    work:'독립적인 판단과 책임 범위가 분명한 일에서 힘이 실립니다.',
-    health:'긴장이 오래 쌓이지 않게 의식적으로 쉬는 시간을 확보하세요.'
+    opportunity:'주도권이 필요한 일에 집중하세요.',
+    caution:'경쟁심과 혼자 버티는 습관을 경계하세요.',
+    money:'예산과 우선순위를 먼저 정하세요.',
+    love:'상대 반응을 보며 속도를 맞추세요.',
+    work:'판단권과 책임 범위가 분명한 일에 집중하세요.',
+    health:'쉬는 시간을 일정에 먼저 넣으세요.'
   },
   식상: {
     label:'표현·창작', summary:'표현과 결과물이 살아나는 흐름',
-    opportunity:'발표, 콘텐츠, 디자인, 글쓰기, 결과물 공개',
-    caution:'말이 앞서거나 에너지를 한꺼번에 쓰는 패턴',
-    money:'아이디어와 기술을 실제 상품이나 성과로 연결하는 관점이 중요합니다.',
-    love:'마음을 표현하고 반응을 보여주는 작은 행동이 관계를 움직입니다.',
-    work:'생각을 보이는 결과물로 꺼낼수록 기회가 커지는 흐름입니다.',
-    health:'활동량과 휴식의 균형, 특히 수면 리듬을 일정하게 유지하세요.'
+    opportunity:'아이디어를 실제 결과물로 꺼내보세요.',
+    caution:'말과 에너지를 한꺼번에 쓰지 마세요.',
+    money:'기술과 아이디어를 실제 가치로 연결하세요.',
+    love:'짧게라도 마음을 표현해 보세요.',
+    work:'보이는 결과물을 하나 완성하세요.',
+    health:'활동과 수면 리듬을 일정하게 맞추세요.'
   },
   재성: {
     label:'재물·성과', summary:'돈과 현실 감각이 중요해지는 흐름',
-    opportunity:'예산 관리, 계약 확인, 일정과 성과 정리',
-    caution:'눈앞의 이익만 보고 서두르는 선택',
-    money:'수입보다 먼저 고정비와 반복 지출 구조를 확인하는 편이 좋습니다.',
-    love:'말보다 약속을 지키는 행동으로 신뢰를 쌓는 방식이 잘 맞습니다.',
-    work:'성과를 수치로 확인할 수 있는 일에서 만족도가 높아질 수 있습니다.',
-    health:'바쁜 일정 속에서도 식사와 휴식 시간을 일정하게 유지하세요.'
+    opportunity:'예산·계약·성과를 숫자로 확인하세요.',
+    caution:'눈앞의 이익만 보고 서두르지 마세요.',
+    money:'고정비와 반복 지출부터 확인하세요.',
+    love:'약속을 지키는 행동으로 신뢰를 쌓으세요.',
+    work:'성과가 보이는 일에 우선순위를 두세요.',
+    health:'식사와 휴식 시간을 지키세요.'
   },
   관성: {
     label:'책임·직업', summary:'책임과 평판, 공식적인 역할이 커지는 흐름',
-    opportunity:'공식 업무, 문서, 약속, 승진 준비, 장기 계획',
-    caution:'책임을 혼자 떠안거나 완벽하게 하려는 압박',
-    money:'규칙과 장기 계획을 지키는 방식이 재정 안정에도 도움이 됩니다.',
-    love:'상대를 평가하기보다 서로 기대하는 바를 분명히 설명해 보세요.',
-    work:'책임이 커질수록 실력을 인정받기 쉬운 흐름입니다.',
-    health:'업무 긴장을 집까지 끌고 가지 않는 회복 루틴을 만드세요.'
+    opportunity:'책임 범위와 장기 계획을 정리하세요.',
+    caution:'필요 이상으로 책임을 떠안지 마세요.',
+    money:'장기 계획과 규칙을 먼저 지키세요.',
+    love:'서로 기대하는 바를 분명히 말하세요.',
+    work:'맡을 일과 거절할 일을 나누세요.',
+    health:'업무 긴장을 집까지 끌고 가지 마세요.'
   },
   인성: {
     label:'배움·회복', summary:'배움과 관찰, 준비가 중요해지는 흐름',
-    opportunity:'공부, 리서치, 기록, 자격 준비, 재정비',
-    caution:'생각만 길어지고 실행을 미루는 패턴',
-    money:'새로운 투입보다 기존 지출과 정보를 점검하며 판단 근거를 쌓으세요.',
-    love:'상대의 이야기를 충분히 듣고 천천히 관계를 이해하는 방식이 잘 맞습니다.',
-    work:'바로 성과를 내기보다 실력을 쌓고 자료를 정리하기 좋은 흐름입니다.',
-    health:'회복을 우선순위에 두고 수면과 휴식의 질을 챙기세요.'
+    opportunity:'공부·정리·회복에 시간을 쓰세요.',
+    caution:'생각만 길어지고 실행이 늦지 않게 하세요.',
+    money:'새 지출보다 기존 정보를 먼저 점검하세요.',
+    love:'상대 이야기를 충분히 들어보세요.',
+    work:'자료를 정리하고 실력을 쌓으세요.',
+    health:'수면과 회복을 우선하세요.'
   }
 };
 
@@ -688,7 +688,7 @@ function renderYear(yearFlow,monthFlows){
     const from=kstMonthNumber(slice[0].start), to=kstMonthNumber(slice.at(-1).start);
     return `<article class="quarter-card"><span>${String(index+1).padStart(2,'0')}</span><div><h3>${from}월~${to}월 · 절기 기준</h3><div class="quarter-steps">${narrative.steps.map((step,offset)=>`<span>${kstMonthNumber(slice[offset].start)}월 ${escapeHtml(step.tenGod)}</span>`).join('')}</div><p><strong>시작</strong> ${escapeHtml(narrative.summary)}</p><p><strong>마무리</strong> ${escapeHtml(narrative.action)}</p></div></article>`;
   }).join('');
-  $('monthForecast').innerHTML=monthFlows.map((item)=>{const c=monthFlowCopy(item);const month=kstMonthNumber(item.start);return `<article class="month-card" data-month-pillar="${escapeHtml(item.korean)}"><div class="month-card-head"><span class="month-number">${month}</span><strong>${month}월 · ${escapeHtml(item.tenGod)}</strong></div><p class="month-card-focus"><mark>${escapeHtml(c.focus)}</mark></p><p class="month-card-action"><strong>해볼 일</strong> ${escapeHtml(c.action)}</p><p class="month-card-check">${escapeHtml(c.check)}</p><small>절입 ${formatKstBoundary(item.start)} ~ ${formatKstBoundary(item.end)} · ${escapeHtml(item.korean)}</small></article>`;}).join('');
+  $('monthForecast').innerHTML=monthFlows.map((item)=>{const c=monthFlowCopy(item);const month=kstMonthNumber(item.start);return `<article class="month-card" data-month-pillar="${escapeHtml(item.korean)}"><div class="month-card-head"><span class="month-number">${month}</span><strong>${month}월 · ${escapeHtml(item.tenGod)}</strong></div><p class="month-card-focus"><mark>${escapeHtml(c.focus)}</mark></p><p class="month-card-action"><strong>해볼 일</strong> ${escapeHtml(c.action)}</p><p class="month-card-check"><strong>주의</strong> ${escapeHtml(c.check)}</p><small>절입 ${formatKstBoundary(item.start)} ~ ${formatKstBoundary(item.end)} · ${escapeHtml(item.korean)} · 원국 관계 ${escapeHtml(c.signal)}</small></article>`;}).join('');
 }
 
 function luckGroup(chart,item,index){
