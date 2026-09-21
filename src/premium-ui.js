@@ -21,7 +21,7 @@ const errorBox = $('formError');
 let currentReport = null;
 let currentChart = null;
 let calendarUiMode = form.elements.calendar.value;
-const PROFILE_STORAGE_KEY='naesaju.profiles.v1';
+let sessionProfiles=[];
 
 const GROUP_COPY = {
   비겁: {
@@ -535,22 +535,17 @@ function renderAll(){
 
 
 function readProfiles(){
-  try{
-    const value=JSON.parse(localStorage.getItem(PROFILE_STORAGE_KEY)||'[]');
-    return Array.isArray(value)?value.slice(0,8):[];
-  }catch{
-    return [];
-  }
+  return sessionProfiles.slice(0,8);
 }
 
 function writeProfiles(items){
-  localStorage.setItem(PROFILE_STORAGE_KEY,JSON.stringify(items.slice(0,8)));
+  sessionProfiles=items.slice(0,8);
 }
 
 function profileSnapshot(){
   const input=collectInput();
   return {
-    id:crypto?.randomUUID?.() || `profile-${Date.now()}`,
+    id:globalThis.crypto?.randomUUID?.() || `profile-${Date.now()}`,
     name:$('name').value.trim()||'내 프로필',
     calendar:input.calendar,
     year:input.year,month:input.month,day:input.day,
@@ -564,7 +559,7 @@ function refreshProfileOptions(selectedId=''){
   const select=$('savedProfiles');
   if(!select) return;
   const profiles=readProfiles();
-  select.innerHTML='<option value="">저장된 프로필 선택</option>'+profiles.map((profile)=>
+  select.innerHTML='<option value="">보관한 프로필 선택</option>'+profiles.map((profile)=>
     `<option value="${escapeHtml(profile.id)}">${escapeHtml(profile.name)} · ${profile.year}.${String(profile.month).padStart(2,'0')}.${String(profile.day).padStart(2,'0')}</option>`
   ).join('');
   if(selectedId && profiles.some((profile)=>profile.id===selectedId)) select.value=selectedId;
@@ -588,9 +583,9 @@ function saveCurrentProfile(){
     }
     writeProfiles(profiles);
     refreshProfileOptions(snapshot.id);
-    setProfileStatus(`${snapshot.name} 정보를 이 기기에 저장했습니다.`);
+    setProfileStatus(`${snapshot.name} 정보를 이번 사용 중 보관했습니다.`);
   }catch(error){
-    setProfileStatus(error?.message||'프로필을 저장하지 못했습니다.');
+    setProfileStatus(error?.message||'프로필을 보관하지 못했습니다.');
   }
 }
 
@@ -626,6 +621,36 @@ function deleteSelectedProfile(){
   writeProfiles(profiles.filter((item)=>item.id!==id));
   refreshProfileOptions();
   setProfileStatus(target?`${target.name} 프로필을 삭제했습니다.`:'프로필을 삭제했습니다.');
+}
+
+function exportProfiles(){
+  const profiles=readProfiles();
+  if(!profiles.length){ setProfileStatus('내보낼 프로필이 없습니다.'); return; }
+  const blob=new Blob([JSON.stringify({version:1,profiles},null,2)],{type:'application/json'});
+  const href=URL.createObjectURL(blob);
+  const link=document.createElement('a');
+  link.href=href;
+  link.download='naesaju-profiles.json';
+  link.click();
+  setTimeout(()=>URL.revokeObjectURL(href),0);
+  setProfileStatus('프로필 파일을 내보냈습니다.');
+}
+
+async function importProfiles(event){
+  const file=event.target.files?.[0];
+  if(!file) return;
+  try{
+    const parsed=JSON.parse(await file.text());
+    const incoming=Array.isArray(parsed?.profiles)?parsed.profiles:[];
+    const valid=incoming.filter((item)=>item && Number.isInteger(Number(item.year)) && Number.isInteger(Number(item.month)) && Number.isInteger(Number(item.day))).slice(0,8);
+    sessionProfiles=valid.map((item,index)=>({...item,id:String(item.id||`imported-${Date.now()}-${index}`)}));
+    refreshProfileOptions();
+    setProfileStatus(`${sessionProfiles.length}개의 프로필을 가져왔습니다.`);
+  }catch{
+    setProfileStatus('프로필 파일 형식을 확인해 주세요.');
+  }finally{
+    event.target.value='';
+  }
 }
 
 const ELEMENT_GENERATES={목:'화',화:'토',토:'금',금:'수',수:'목'};
@@ -1064,6 +1089,8 @@ form.addEventListener('submit',(event)=>{
 $('drawTarot').addEventListener('click',handleTarot);
 $('saveProfile')?.addEventListener('click',saveCurrentProfile);
 $('deleteProfile')?.addEventListener('click',deleteSelectedProfile);
+$('exportProfiles')?.addEventListener('click',exportProfiles);
+$('importProfiles')?.addEventListener('change',importProfiles);
 $('savedProfiles')?.addEventListener('change',(event)=>{
   const profile=readProfiles().find((item)=>item.id===event.target.value);
   if(profile) loadProfile(profile);
