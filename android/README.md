@@ -4,7 +4,7 @@
 
 ## 현재 버전
 
-- 앱 버전: **2.1.0**
+- 앱 버전: **2.2.0**
 - applicationId: `kr.naesaju.personal`
 - minSdk: 24
 - targetSdk / compileSdk: 35
