@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="정밀 만세력과 생활 언어 사주 해설, Rider–Waite–Smith 78장 타로를 제공하는 내사주">
   <meta name="theme-color" content="#03111d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="/manifest.webmanifest">
   <title>내사주 · Saju & Tarot</title>
   <link rel="stylesheet" href="/site-v12.css">
 </head>
@@ -69,6 +71,13 @@
         </div>
       </header>
 
+
+      <div class="profile-manager" aria-label="저장된 사주 프로필">
+        <div><strong>내 프로필</strong><small>이 기기에만 저장됩니다.</small></div>
+        <select id="profileSelect" aria-label="저장된 프로필"><option value="">새 프로필</option></select>
+        <button id="saveProfile" type="button">현재 정보 저장</button>
+        <button id="deleteProfile" type="button" class="quiet-button">삭제</button>
+      </div>
 
       <form id="birthForm" novalidate>
         <div class="form-modes">
@@ -187,6 +196,21 @@
         </div>
       </section>
 
+      <section id="compatibility" class="compatibility-panel oracle-panel agency-shell">
+        <header class="section-heading">
+          <div><span class="section-no">05</span><p class="section-kicker">RELATIONSHIP</p></div>
+          <div><h2>궁합 리포트</h2><p>두 사람의 오행·일간·지지 관계를 함께 읽어봅니다.</p></div>
+        </header>
+        <form id="compatibilityForm" class="compatibility-form">
+          <label><span>상대 이름</span><input id="partnerName" type="text" placeholder="상대방 이름 (선택)"></label>
+          <label><span>생년월일</span><input id="partnerDate" type="date" min="1900-01-01" max="2100-12-31" value="1990-01-01"></label>
+          <label><span>출생시간</span><input id="partnerTime" type="time" value="12:00"></label>
+          <label><span>성별</span><select id="partnerGender"><option value="female">여자</option><option value="male">남자</option></select></label>
+          <button type="submit" class="cta">궁합 보기</button>
+        </form>
+        <div id="compatibilityResult" class="compatibility-result" aria-live="polite"><p>상대 정보를 입력하면 관계의 강점과 주의점을 정리합니다.</p></div>
+      </section>
+
       <section id="tarot" class="tarot-stage agency-shell">
         <div class="tarot-stage-inner">
           <div class="tarot-copy">
@@ -214,6 +238,26 @@
           </details>
           <div id="tarotDeck" class="tarot-deck" aria-live="off"></div>
           <div id="tarotResult" class="tarot-result" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section id="life-tools" class="life-tools agency-shell" aria-label="내 사주 활용">
+        <div class="life-tool-card">
+          <span class="section-kicker">SAVE & SHARE</span>
+          <h2>내 리포트 활용하기</h2>
+          <p>결과를 저장하거나 공유하고, 자주 묻는 질문을 빠르게 확인하세요.</p>
+          <div class="life-tool-actions"><button id="shareReport" type="button">결과 공유</button><button id="installApp" type="button" hidden>앱처럼 설치</button></div>
+        </div>
+        <div class="life-tool-card qa-tool">
+          <span class="section-kicker">ASK MY SAJU</span>
+          <h2>내 사주에게 묻기</h2>
+          <div class="quick-questions" role="group" aria-label="빠른 질문">
+            <button type="button" data-saju-question="career">지금 일에서 중요한 점</button>
+            <button type="button" data-saju-question="money">돈 관리에서 주의할 점</button>
+            <button type="button" data-saju-question="love">관계에서 필요한 태도</button>
+            <button type="button" data-saju-question="recovery">회복이 필요한 신호</button>
+          </div>
+          <div id="sajuAnswer" class="saju-answer">리포트를 생성하면 질문별 핵심 답변을 바로 확인할 수 있습니다.</div>
         </div>
       </section>
 
@@ -265,6 +309,10 @@
     <span class="footer-copy">© 2026 Naesaju. All rights reserved.</span>
   </footer>
 
+  <nav class="mobile-bottom-nav" aria-label="모바일 주요 메뉴">
+    <a href="#home">홈</a><a href="#today">오늘</a><a href="#input">사주</a><a href="#compatibility">궁합</a><a href="#tarot">타로</a>
+  </nav>
   <script type="module" src="/src/premium-ui.js"></script>
+  <script type="module" src="/src/commercial-upgrades.js"></script>
 </body>
 </html>
