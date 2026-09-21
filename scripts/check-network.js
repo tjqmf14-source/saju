@@ -37,4 +37,4 @@ if(violations.length){
   console.error(violations.join('\n'));
   process.exit(1);
 }
-console.log('OK: 앱 소스에 네트워크 전송/브라우저 영구 저장 API가 없습니다.');
+console.log('OK: 앱 소스에 네트워크 전송/쿠키 기반 추적 API가 없습니다. 선택한 프로필은 기기 로컬 저장만 허용합니다.');
