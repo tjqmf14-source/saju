@@ -1041,3 +1041,32 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
     overflow:visible;text-overflow:clip;white-space:normal;overflow-wrap:anywhere;line-height:1.35
   }
 }
+
+
+/* Seven-day preview: a compact repeat-use layer without bloating Today's panel. */
+.week-forecast{
+  display:grid;grid-template-columns:220px minmax(0,1fr);gap:20px;align-items:stretch;
+  padding:18px 20px;border:1px solid var(--line-soft);border-radius:9px;background:#051522
+}
+.week-forecast>header{display:flex;flex-direction:column;justify-content:center;min-width:0}
+.week-forecast h2{margin:5px 0 6px;font-size:25px}
+.week-forecast>header p{margin:0;color:var(--muted);font-size:16px;line-height:1.55}
+.week-forecast-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--line-soft)}
+.week-day{display:grid;align-content:start;min-width:0;padding:12px 10px;background:#061827}
+.week-day.is-today{background:linear-gradient(180deg,rgba(216,167,95,.10),#061827)}
+.week-day>span{color:var(--gold);font-size:16px}
+.week-day>strong{margin-top:5px;color:#f5ead4;font-family:var(--serif);font-size:27px;line-height:1}
+.week-day>strong small{font-family:var(--sans);font-size:16px;color:var(--muted-2)}
+.week-day>b{margin-top:7px;font-size:16px}
+.week-day>p{margin:5px 0 0;color:var(--muted);font-size:16px;line-height:1.45}
+
+/* Mobile uses the bottom app navigation, so the masthead no longer covers scrolled content. */
+@media(max-width:820px){
+  .topbar{position:relative;top:auto}
+  .report-nav{top:0}
+  section[id],details[id]{scroll-margin-top:12px}
+  .week-forecast{grid-template-columns:1fr;padding:16px}
+  .week-forecast>header{padding-bottom:12px}
+  .week-forecast-grid{grid-template-columns:repeat(7,132px);overflow-x:auto;scroll-snap-type:x proximity;background:transparent;gap:8px;padding-bottom:4px}
+  .week-day{border:1px solid var(--line-soft);border-radius:6px;scroll-snap-align:start}
+}
