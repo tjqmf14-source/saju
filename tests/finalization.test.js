@@ -98,3 +98,26 @@ test('static images all declare alt text', () => {
   assert.ok(images.length>0);
   for(const image of images) assert.match(image,/\balt=["'][^"']*["']/);
 });
+
+
+test('commercial app shell exposes profiles, compatibility, sharing and PWA metadata', () => {
+  for (const id of ['savedProfiles','saveProfile','exportProfiles','importProfiles','compatibility','compatibilityForm','compatibilityResult','shareReport','copyReport']) {
+    assert.ok(html.includes(`id="${id}"`), id);
+  }
+  assert.ok(html.includes('class="mobile-tabbar"'));
+  assert.ok(html.includes('rel="manifest"'));
+  assert.match(ui,/function renderCompatibility\(/);
+  assert.match(ui,/function exportProfiles\(/);
+  assert.match(ui,/navigator\.share/);
+});
+
+test('privacy-first profile support avoids persistent browser storage', () => {
+  assert.doesNotMatch(ui,/localStorage|sessionStorage|document\.cookie/);
+  assert.match(ui,/let sessionProfiles=\[\]/);
+  assert.match(ui,/new Blob\(/);
+});
+
+test('MBTI is demoted to an explicitly non-core reference item', () => {
+  assert.match(ui,/재미로 보는 성향/);
+  assert.match(ui,/MBTI는 사주 계산의 핵심 결과가 아닌 비공식 참고 항목/);
+});
