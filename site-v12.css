@@ -834,6 +834,11 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
   .bar-row{grid-template-columns:96px 1fr 46px}
 }
 
+/* Narrow mobile: keep the sticky header inside 320px-class viewports */
+@media(max-width:360px){
+  .premium-link{padding-inline:12px}
+}
+
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important;transition:none!important;animation:none!important}
 }
