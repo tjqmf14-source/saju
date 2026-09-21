@@ -9,11 +9,14 @@ const months=calculateMonthFlows(chart,2026);
 test('all twelve solar-term months have distinct concise narrative content',()=>{
   const narratives=months.map((flow)=>monthFlowCopy(flow));
   assert.equal(narratives.length,12);
-  assert.equal(new Set(narratives.map(({focus,action,check})=>`${focus}|${action}|${check}`)).size,12);
+  assert.equal(new Set(narratives.map(({focus})=>focus)).size,12);
+  assert.equal(new Set(narratives.map(({action})=>action)).size,12);
+  assert.equal(new Set(narratives.map(({check})=>check)).size,12);
   for(const copy of narratives){
-    assert.ok(copy.focus.length>=5 && copy.focus.length<=30);
-    assert.ok(copy.action.length>=10 && copy.action.length<=60);
-    assert.ok(copy.check.length>=10 && copy.check.length<=70);
+    assert.ok(copy.focus.length>=5 && copy.focus.length<=24);
+    assert.ok(copy.action.length>=10 && copy.action.length<=32);
+    assert.ok(copy.check.length>=10 && copy.check.length<=48);
+    assert.ok(copy.signal.length>=4 && copy.signal.length<=30);
     assert.doesNotMatch(`${copy.focus}${copy.action}${copy.check}`,/반복되는지 점검|이 월운은 양력/);
   }
 });
@@ -40,5 +43,15 @@ test('quarter copy follows the three calculated month flows',()=>{
     assert.equal(quarter.steps.length,3);
     assert.deepEqual(quarter.steps.map((step)=>step.tenGod),months.slice(index*3,index*3+3).map((month)=>month.tenGod));
     assert.doesNotMatch(quarter.summary,/기을|기으로|보기으로/);
+  }
+});
+
+
+test('monthly advice carries natal relation evidence without making it verbose',()=>{
+  for(const month of months){
+    const copy=monthFlowCopy(month);
+    assert.ok(Array.isArray(month.relations));
+    assert.equal(typeof copy.signal,'string');
+    assert.ok(copy.signal.length<=30);
   }
 });
