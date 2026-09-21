@@ -925,9 +925,9 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
 /* Compact mobile */
 @media(max-width:520px){
   .daily-action-guide{grid-template-columns:1fr}
-  .daily-trend{grid-template-columns:repeat(5,minmax(54px,1fr));overflow-x:auto;padding-bottom:5px;scrollbar-width:none}
-  .daily-trend::-webkit-scrollbar{display:none}
-  .daily-trend-item{min-width:54px}
+  .daily-trend{grid-template-columns:repeat(5,minmax(0,1fr));gap:2px}
+  .daily-trend-item{min-width:0;padding-inline:1px}
+  .daily-trend-item small{font-size:calc(15px + var(--mobile-font-bump));overflow-wrap:anywhere}
 
   .hero-copy h1{font-size:calc(39px + var(--mobile-font-bump))}
   .hero-visual{height:280px}
