@@ -518,6 +518,7 @@ function renderAll(){
     renderLuck(chart);
     renderExpert(chart,mbti);
     results.hidden=false;
+    document.dispatchEvent(new CustomEvent('saju:rendered',{detail:{input,chart,mbti,todayFlow,yearFlow,monthFlows,report,name}}));
   }catch(error){
     results.hidden=true;
     errorBox.textContent=error?.message||'입력값을 확인해 주세요.';
