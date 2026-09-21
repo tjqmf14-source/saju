@@ -183,54 +183,87 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   const rootText=profile.strength.rootReasons.length
     ? profile.strength.rootReasons.join(' · ')
     : '원국에서 일간과 같은 오행의 뚜렷한 통근 신호가 적습니다.';
+  const patternLead=profile.patterns.flags[0];
+  const patternSecond=profile.patterns.flags[1];
 
+  report.overview.lead=`${patternLead.title}. ${profile.patterns.placementStory.headline}`;
   report.overview.quick=[
-    ...profile.easyFacts,
-    `쉽게 말하면, 지금 원국을 읽을 때 가장 먼저 볼 것은 ${topGods[0]?.tenGod || '십신'}의 쓰임과 ${profile.strength.band} 쪽으로 기운 균형이 기우는 이유입니다.`
+    patternLead.plain,
+    profile.easyFacts[1],
+    profile.patterns.relations.plain
   ];
+  report.overview.paragraphs.unshift(
+    `이 원국을 한 문장으로 압축하면 “${patternLead.title}”에 가깝습니다. ${patternLead.plain} 근거는 ${patternLead.evidence}이며, 단순히 오행 하나가 많다는 이유가 아니라 월령·통근·십신 위치와 원국 관계를 함께 본 결과입니다. ${patternSecond?`또한 ${patternSecond.title}이 함께 보여 ${patternSecond.plain}`:profile.patterns.placementStory.plain}`
+  );
 
+  report.temperament.lead=`${profile.patterns.placementStory.headline} 그래서 겉으로 보이는 모습과 혼자 판단할 때의 방식이 완전히 같지 않을 수 있습니다.`;
   report.temperament.quick=[
-    `겉으로 가장 자주 드러나는 십신은 ${topGods[0]?.tenGod || '비견'} · ${topGods[0]?.simple || '자기 기준'}입니다.`,
-    `그 다음은 ${topGods[1]?.tenGod || topGods[0]?.tenGod || '비견'} · ${topGods[1]?.simple || topGods[0]?.simple || '자기 기준'}로, 한 가지 성향만으로 설명되지 않습니다.`,
-    `월령과 통근까지 함께 보면 단순한 오행 개수보다 실제로 어떤 기운을 쓰기 쉬운지가 더 선명해집니다.`
+    `겉으로 드러난 천간에서는 ${topGods.find((item)=>item.visible>0)?.tenGod || topGods[0]?.tenGod} 성향이 먼저 보입니다.`,
+    `안쪽 지장간까지 보면 ${topGods.find((item)=>item.hidden>0)?.tenGod || topGods[1]?.tenGod || topGods[0]?.tenGod}의 쓰임도 함께 반복됩니다.`,
+    profile.patterns.strengthTone
   ];
+  report.temperament.paragraphs.unshift(
+    `${profile.patterns.placementStory.plain} 쉽게 말하면 사람들 앞에서 바로 보이는 반응과, 속으로 오래 생각한 뒤 내리는 판단에 서로 다른 십신이 관여할 수 있다는 뜻입니다. 그래서 스스로 느끼는 성격과 주변이 보는 인상이 조금 다르더라도 모순으로 볼 필요는 없습니다.`
+  );
 
   report.balance.title='기운의 중심과 신강·신약';
-  report.balance.lead=`월령·통근·생조·극설을 함께 본 참고 지표는 ${profile.strength.band} ${profile.strength.score}점이며 판정 신뢰도는 ${profile.strength.confidence}입니다.`;
+  report.balance.lead=`월령·통근·생조·극설을 함께 본 참고 지표는 ${profile.strength.band} ${profile.strength.score}점입니다. 숫자보다 아래 근거를 먼저 보세요.`;
   report.balance.quick=[
     profile.strength.month.text,
     rootText,
     profile.balanceHint
   ];
   report.balance.paragraphs.unshift(
-    `기존처럼 오행 개수만 세지 않고 월지의 계절 힘, 일간이 지지에 뿌리를 두는지, 천간에서 같은 기운이나 인성의 도움을 받는지, 반대로 식상·재성·관성 쪽으로 힘이 빠지는지를 함께 계산했습니다. 현재 참고 점수는 ${profile.strength.score}점으로 ${profile.strength.band} 구간입니다. ${profile.strength.disclaimer}`
+    `기존처럼 오행 개수만 세지 않고 월지의 계절 힘, 일간이 지지에 뿌리를 두는지, 천간에서 같은 기운이나 인성의 도움을 받는지, 반대로 식상·재성·관성 쪽으로 힘이 빠지는지를 함께 계산했습니다. 현재 참고 점수는 ${profile.strength.score}점으로 ${profile.strength.band} 구간입니다. 이 값은 전통 명리의 여러 판단 요소를 설명하기 쉽게 구조화한 참고 지표이며 절대적인 용신 판정은 아닙니다.`
   );
 
+  report.career.lead=`${profile.lens.work}`;
   report.career.quick=[
-    `직업 해석은 ${topGods[0]?.tenGod || '십신'}만 보지 않고 월주·시주에 어떤 십신이 드러났는지도 함께 확인합니다.`,
-    `두드러진 십신 3개는 ${topGods.map((item)=>item.tenGod).join(' · ')}입니다.`,
-    '직업명 하나를 찍기보다 자율성·책임·표현·관리 중 어떤 조건에서 성과가 나는지 설명합니다.'
+    profile.lens.work,
+    `직업 해석에서 두드러진 십신은 ${topGods.map((item)=>item.tenGod).join(' · ')}입니다.`,
+    '직업 이름을 찍기보다 어떤 환경에서 실력이 살아나는지와 어떤 구조에서 소모되는지를 함께 봅니다.'
   ];
+  report.career.paragraphs.unshift(
+    `일에서는 십신의 종류만큼 “어디에 놓였는가”가 중요합니다. 현재 상위 십신의 대표 위치는 ${topGodPlacementText}입니다. 특히 월주는 사회생활과 직업 환경, 시주는 내면의 계획과 장기 관심사를 보는 층으로 참고하기 때문에 같은 십신이라도 위치에 따라 체감되는 장면이 달라질 수 있습니다.`
+  );
 
+  report.money.lead=`${profile.lens.money}`;
   report.money.quick=[
-    '재물운은 “큰돈이 온다”가 아니라 재성의 배치와 현재 세운이 돈을 다루는 방식에 어떤 압력을 주는지로 읽습니다.',
-    `원국에서 재성 점수는 ${((profile.tenGods.score.편재||0)+(profile.tenGods.score.정재||0)).toFixed(2)}입니다.`,
-    '실제 투자·대출·소비 판단은 운세보다 현금흐름과 손실 가능성을 우선합니다.'
+    profile.lens.money,
+    `원국의 재성 가중치는 ${((profile.tenGods.score.편재||0)+(profile.tenGods.score.정재||0)).toFixed(2)}이며 편재와 정재를 따로 구분해 봅니다.`,
+    '재물운은 큰돈 예언보다 돈을 다루는 습관·변동성·현금흐름을 읽는 쪽에 초점을 둡니다.'
   ];
+  report.money.paragraphs.unshift(
+    `편재는 유동적인 기회와 넓은 자원 활용, 정재는 반복 가능한 관리와 안정성을 보는 전통적 언어입니다. 둘을 재성 하나로 합치지 않고 따로 계산하기 때문에 “돈복이 있다/없다”보다 어떤 방식으로 돈을 다루기 쉬운지를 더 세밀하게 설명할 수 있습니다.`
+  );
 
+  report.love.lead=`${profile.lens.relation}`;
   report.love.quick=[
-    '관계 해석은 상대의 마음을 맞히는 방식이 아니라 내가 친밀한 관계에서 반복하는 반응 패턴을 설명합니다.',
-    `관계에서 함께 봐야 할 원국 신호는 ${relation}입니다.`,
-    '궁합에서는 두 사람의 원국을 별도로 계산해 공통점과 긴장 지점을 비교합니다.'
+    profile.lens.relation,
+    profile.patterns.relations.plain,
+    '상대의 마음을 단정하지 않고 내가 가까운 관계에서 반복하는 반응과 경계를 중심으로 설명합니다.'
+  ];
+  report.love.paragraphs.unshift(
+    `관계에서는 일지와 비견·겁재·관성·재성의 배치, 그리고 합·충·형·파·해를 함께 참고합니다. 현재 원국에서는 ${profile.patterns.relations.plain} 이것은 특정 사건을 예언하는 값이 아니라 가까운 관계에서 어떤 장면이 반복되기 쉬운지를 살펴보는 근거입니다.`
+  );
+
+  report.recovery.lead=`${profile.lens.recovery}`;
+  report.recovery.quick=[
+    profile.lens.recovery,
+    `${profile.strength.band} 구조에서는 ${profile.patterns.strengthTone}`,
+    '몸의 증상이나 질병을 사주로 진단하지 않고, 과부하를 만드는 행동 패턴만 참고합니다.'
   ];
 
   report.technical.quick=[
     '계산 가능한 달력·절기 값과 해석 규칙을 분리합니다.',
-    `신강·신약 참고: ${profile.strength.band} ${profile.strength.score}점 · 신뢰도 ${profile.strength.confidence}`,
+    `신강·신약 참고: ${profile.strength.band} ${profile.strength.score}점 · 근거 ${profile.strength.components.map((item)=>item.label).join('·')}`,
     `주요 십신: ${topGods.map((item)=>`${item.tenGod} ${item.score}`).join(' · ')}`
   ];
   report.technical.paragraphs.push(
-    `십신은 비견·겁재·식신·상관·편재·정재·편관·정관·편인·정인을 하나로 뭉개지 않고 천간과 지장간의 위치를 따로 기록합니다. 현재 상위 십신의 대표 위치는 ${topGodPlacementText}입니다. 위치와 가중치를 함께 보는 이유는 같은 십신이라도 겉으로 드러난 천간인지, 지지 안에 잠재된 지장간인지에 따라 해석 비중을 다르게 보기 위해서입니다.`
+    `십신은 비견·겁재·식신·상관·편재·정재·편관·정관·편인·정인을 하나로 뭉개지 않고 천간과 지장간의 위치를 따로 기록합니다. 현재 상위 십신의 대표 위치는 ${topGodPlacementText}입니다. 위치와 가중치를 함께 보는 이유는 같은 십신이라도 밖으로 드러난 천간인지, 지지 안에 잠재된 지장간인지에 따라 해석 비중과 생활 장면이 달라질 수 있기 때문입니다.`
+  );
+  report.technical.paragraphs.push(
+    `신강·신약 참고 지표는 ${profile.strength.components.map((item)=>`${item.label} ${item.delta>=0?'+':''}${item.delta}`).join(', ')}를 합산해 설명합니다. ${profile.strength.disclaimer} 따라서 숫자 하나보다 각 항목의 이유와 실제 생활에서 반복되는 패턴을 함께 확인하는 것이 중요합니다.`
   );
 
   return report;
