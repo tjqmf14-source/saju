@@ -1,0 +1,19 @@
+{
+  "name": "내사주 · Saju & Tarot",
+  "short_name": "내사주",
+  "description": "정밀 만세력, 오늘의 운세, 궁합과 78장 타로를 제공하는 오프라인 사주 앱",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#03111d",
+  "theme_color": "#03111d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/oracle/logo-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
