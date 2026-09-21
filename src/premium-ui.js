@@ -395,7 +395,14 @@ function reportShareText(){
   return `내사주 · ${currentDisplayName}의 리포트\n${headline}\n\n사주와 타로는 자기이해를 위한 참고 정보입니다.`;
 }
 
+function nativeBridge(){
+  const bridge=globalThis.NaesajuNative;
+  return bridge && typeof bridge.platform==='function' ? bridge : null;
+}
+
 async function copyText(text){
+  const bridge=nativeBridge();
+  if(bridge && typeof bridge.copyText==='function'){ bridge.copyText(text); return; }
   if(navigator.clipboard?.writeText){ await navigator.clipboard.writeText(text); return; }
   const area=document.createElement('textarea'); area.value=text; document.body.append(area); area.select(); document.execCommand('copy'); area.remove();
 }
@@ -404,7 +411,11 @@ async function shareReport(){
   const text=reportShareText();
   const status=$('shareStatus');
   try{
-    if(navigator.share) await navigator.share({title:'내사주 리포트',text});
+    const bridge=nativeBridge();
+    if(bridge && typeof bridge.shareText==='function'){
+      bridge.shareText('내사주 리포트',text);
+      status.textContent='공유 창을 열었습니다.';
+    }else if(navigator.share) await navigator.share({title:'내사주 리포트',text});
     else{ await copyText(text); status.textContent='공유용 요약을 클립보드에 복사했습니다.'; }
   }catch(error){
     if(error?.name!=='AbortError') status.textContent='공유하지 못했습니다. 요약 복사를 이용해 주세요.';
