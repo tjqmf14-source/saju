@@ -72,14 +72,13 @@
       </header>
 
 
-      <div class="profile-manager" aria-label="저장된 사주 프로필">
-        <div><strong>내 프로필</strong><small>이 기기에만 저장됩니다.</small></div>
-        <select id="profileSelect" aria-label="저장된 프로필"><option value="">새 프로필</option></select>
-        <button id="saveProfile" type="button">현재 정보 저장</button>
-        <button id="deleteProfile" type="button" class="quiet-button">삭제</button>
-      </div>
-
       <form id="birthForm" novalidate>
+        <div class="profile-manager" aria-label="저장된 사주 프로필">
+          <div><strong>내 프로필</strong><small>이 기기에만 저장됩니다.</small></div>
+          <select id="profileSelect" aria-label="저장된 프로필"><option value="">새 프로필</option></select>
+          <button id="saveProfile" type="button">현재 정보 저장</button>
+          <button id="deleteProfile" type="button" class="quiet-button">삭제</button>
+        </div>
         <div class="form-modes">
           <fieldset class="segmented"><legend class="sr-only">달력 구분</legend>
             <label><input type="radio" name="calendar" value="solar" checked><span>양력</span></label>
