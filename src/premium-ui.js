@@ -395,6 +395,25 @@ function renderToday(chart,todayFlow){
 
 }
 
+function renderWeekForecast(chart){
+  const host=$('weekForecast');
+  if(!host) return;
+  const now=new Date();
+  const formatter=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'numeric',day:'numeric',weekday:'short'});
+  host.innerHTML=Array.from({length:7},(_,index)=>{
+    const target=new Date(now.getTime()+index*86_400_000);
+    const flow=calculateTodayFlow(chart,target);
+    const scores=calculateDailyScores(chart,flow);
+    const copy=GROUP_COPY[flow.group];
+    return `<article class="week-day${index===0?' is-today':''}">
+      <span>${index===0?'오늘':escapeHtml(formatter.format(target))}</span>
+      <strong>${scores.overall.score}<small>/100</small></strong>
+      <b>${escapeHtml(scores.overall.label)}</b>
+      <p>${escapeHtml(copy.summary)}</p>
+    </article>`;
+  }).join('');
+}
+
 function renderYear(yearFlow,monthFlows){
   const copy=GROUP_COPY[yearFlow.group];
   $('yearTitle').textContent=`${yearFlow.year} · ${yearFlow.tenGod}의 해`;
@@ -517,6 +536,7 @@ function renderAll(){
     renderDetailedReport(report);
     renderKeywordInsight(report,document.querySelector('.visual-keyword-card.is-active')?.dataset.reportKey || 'temperament');
     renderToday(chart,todayFlow);
+    renderWeekForecast(chart);
     renderYear(yearFlow,monthFlows);
     renderLuck(chart);
     renderExpert(chart,mbti);
