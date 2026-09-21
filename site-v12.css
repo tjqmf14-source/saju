@@ -1035,3 +1035,9 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
   .profile-tools>summary>span{display:grid;gap:1px}
   .profile-tools>summary small{font-size:16px}
 }
+
+@media(max-width:820px){
+  .profile-tools>summary small{
+    overflow:visible;text-overflow:clip;white-space:normal;overflow-wrap:anywhere;line-height:1.35
+  }
+}
