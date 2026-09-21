@@ -1014,3 +1014,24 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
   .profile-tools-actions select{grid-column:1/-1}
   .profile-tools-actions button,.profile-import{font-size:16px}
 }
+
+
+/* Collapsed profile utility keeps the primary birth task visually dominant. */
+.profile-tools{display:block;padding:0}
+.profile-tools>summary{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:0 14px;cursor:pointer;list-style:none
+}
+.profile-tools>summary::-webkit-details-marker{display:none}
+.profile-tools>summary>span{display:flex;align-items:baseline;gap:10px;min-width:0}
+.profile-tools>summary strong{color:var(--gold-bright);font-size:17px}
+.profile-tools>summary small{overflow:hidden;color:var(--muted-2);font-size:16px;text-overflow:ellipsis;white-space:nowrap}
+.profile-tools>summary>b{color:var(--gold);font-size:22px;font-weight:400;transition:transform .18s}
+.profile-tools[open]>summary>b{transform:rotate(45deg)}
+.profile-tools[open] .profile-tools-actions{border-top:1px solid var(--line-soft)}
+.profile-tools-actions{padding:10px 12px}
+.profile-status{padding:0 12px 10px}
+@media(max-width:820px){
+  .profile-tools>summary{min-height:48px}
+  .profile-tools>summary>span{display:grid;gap:1px}
+  .profile-tools>summary small{font-size:16px}
+}
