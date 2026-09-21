@@ -19,7 +19,11 @@ const form = $('birthForm');
 const results = $('results');
 const errorBox = $('formError');
 let currentReport = null;
+let currentChart = null;
+let currentDisplayName = '당신';
+let dailyOffset = 0;
 let calendarUiMode = form.elements.calendar.value;
+const PROFILE_STORAGE_KEY='naesaju.profiles.v1';
 
 const GROUP_COPY = {
   비겁: {
@@ -79,7 +83,8 @@ const ROLE_BY_ELEMENT = {
 
 function selectedCalendar(){ return form.elements.calendar.value; }
 function currentKstYear(){ return Number(new Intl.DateTimeFormat('en',{timeZone:'Asia/Seoul',year:'numeric'}).format(new Date())); }
-function currentKstDate(){ return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric',weekday:'short'}).format(new Date()); }
+function currentKstDate(date=new Date()){ return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'long',day:'numeric',weekday:'short'}).format(date); }
+function dailyDate(offset=dailyOffset){ const date=new Date(); date.setUTCDate(date.getUTCDate()+offset); return date; }
 function sorted(object){ return Object.entries(object).sort((a,b)=>b[1]-a[1]); }
 function dominantElement(chart){ return sorted(chart.elements)[0]?.[0] || '토'; }
 function dominantRole(chart){ return sorted(chart.roles)[0]?.[0] || '인성'; }
@@ -293,6 +298,172 @@ function kstMonthNumber(date){
   return part?.value || '—';
 }
 
+function safeProfiles(){
+  try{
+    const parsed=JSON.parse(localStorage.getItem(PROFILE_STORAGE_KEY)||'[]');
+    return Array.isArray(parsed)?parsed.slice(0,5):[];
+  }catch{ return []; }
+}
+
+function writeProfiles(profiles){
+  try{ localStorage.setItem(PROFILE_STORAGE_KEY,JSON.stringify(profiles.slice(0,5))); return true; }
+  catch{ return false; }
+}
+
+function captureProfile(){
+  return {
+    id:String(Date.now()),
+    label:$('name').value.trim()||$('birthDate').value||'내 사주',
+    name:$('name').value,
+    calendar:selectedCalendar(),
+    birthDate:$('birthDate').value,
+    birthYear:$('birthYear').value,
+    birthMonth:$('birthMonth').value,
+    birthDay:$('birthDay').value,
+    birthTime:$('birthTime').value,
+    gender:$('gender').value,
+    isLeap:$('isLeap').checked,
+    precision:$('precisionToggle').checked,
+    location:$('birthLocation').value,
+    dayBoundary:$('dayBoundary').value
+  };
+}
+
+function renderProfileSelect(selectedId=''){
+  const select=$('profileSelect');
+  if(!select) return;
+  const profiles=safeProfiles();
+  select.innerHTML='<option value="">현재 입력</option>'+profiles.map((p)=>`<option value="${escapeHtml(p.id)}">${escapeHtml(p.label)}</option>`).join('');
+  select.value=profiles.some((p)=>p.id===selectedId)?selectedId:'';
+  $('deleteProfile').disabled=!select.value;
+}
+
+function loadProfile(id){
+  const profile=safeProfiles().find((item)=>item.id===id);
+  if(!profile) return;
+  $('name').value=profile.name||'';
+  $('birthDate').value=profile.birthDate||'1990-01-01';
+  $('birthYear').value=profile.birthYear||String(Number(profile.birthDate?.slice(0,4))||1990);
+  $('birthMonth').value=profile.birthMonth||'1';
+  $('birthDay').value=profile.birthDay||'1';
+  $('birthTime').value=profile.birthTime||'12:00';
+  $('gender').value=profile.gender||'male';
+  $('isLeap').checked=!!profile.isLeap;
+  $('precisionToggle').checked=profile.precision!==false;
+  $('birthLocation').value=profile.location||'korea';
+  $('dayBoundary').value=profile.dayBoundary||'midnight';
+  setCalendarRadio(profile.calendar||'solar');
+  calendarUiMode=profile.calendar||'solar';
+  applyCalendarUi(calendarUiMode);
+  syncPrecisionUi();
+  syncQuickYearFromActive();
+  dailyOffset=0;
+  renderAll();
+}
+
+function saveCurrentProfile(){
+  const status=$('profileStatus');
+  const profile=captureProfile();
+  let profiles=safeProfiles();
+  const signature=`${profile.calendar}|${profile.birthDate}|${profile.birthYear}|${profile.birthMonth}|${profile.birthDay}|${profile.birthTime}|${profile.name}`;
+  const existing=profiles.findIndex((p)=>`${p.calendar}|${p.birthDate}|${p.birthYear}|${p.birthMonth}|${p.birthDay}|${p.birthTime}|${p.name}`===signature);
+  if(existing>=0){
+    profile.id=profiles[existing].id;
+    profiles[existing]=profile;
+  }else{
+    profiles=[profile,...profiles].slice(0,5);
+  }
+  if(writeProfiles(profiles)){
+    renderProfileSelect(profile.id);
+    status.textContent='이 기기에 프로필을 저장했습니다. 서버로 전송되지 않습니다.';
+  }else status.textContent='브라우저 저장소를 사용할 수 없어 저장하지 못했습니다.';
+}
+
+function deleteSelectedProfile(){
+  const select=$('profileSelect');
+  const id=select?.value;
+  if(!id) return;
+  const profiles=safeProfiles().filter((p)=>p.id!==id);
+  writeProfiles(profiles);
+  renderProfileSelect('');
+  $('profileStatus').textContent='저장된 프로필을 삭제했습니다.';
+}
+
+function reportShareText(){
+  const overview=currentReport?.overview;
+  const headline=overview?.lead||'내 사주 리포트';
+  return `내사주 · ${currentDisplayName}의 리포트\n${headline}\n\n사주와 타로는 자기이해를 위한 참고 정보입니다.`;
+}
+
+async function copyText(text){
+  if(navigator.clipboard?.writeText){ await navigator.clipboard.writeText(text); return; }
+  const area=document.createElement('textarea'); area.value=text; document.body.append(area); area.select(); document.execCommand('copy'); area.remove();
+}
+
+async function shareReport(){
+  const text=reportShareText();
+  const status=$('shareStatus');
+  try{
+    if(navigator.share) await navigator.share({title:'내사주 리포트',text});
+    else{ await copyText(text); status.textContent='공유용 요약을 클립보드에 복사했습니다.'; }
+  }catch(error){
+    if(error?.name!=='AbortError') status.textContent='공유하지 못했습니다. 요약 복사를 이용해 주세요.';
+  }
+}
+
+async function copyReportSummary(){
+  try{ await copyText(reportShareText()); $('shareStatus').textContent='리포트 요약을 복사했습니다.'; }
+  catch{ $('shareStatus').textContent='복사하지 못했습니다.'; }
+}
+
+const GENERATES={목:'화',화:'토',토:'금',금:'수',수:'목'};
+const CONTROLS={목:'토',토:'수',수:'화',화:'금',금:'목'};
+
+function compatibilityElementCopy(a,b){
+  if(a===b) return {title:'비슷한 속도의 공감',body:`${ELEMENT_LABELS[a].label} 기운을 함께 써서 판단 속도와 중요하게 보는 기준이 비슷할 수 있습니다. 다만 둘 다 같은 방식으로 밀어붙일 때는 다른 관점을 의식적으로 확인하는 것이 좋습니다.`};
+  if(GENERATES[a]===b || GENERATES[b]===a) return {title:'서로 이어주는 보완',body:`${ELEMENT_LABELS[a].label}과 ${ELEMENT_LABELS[b].label}은 생의 흐름으로 이어지는 조합입니다. 한 사람이 시작한 것을 다른 사람이 확장하거나 현실화하는 방식으로 장점이 연결되기 쉽습니다.`};
+  if(CONTROLS[a]===b || CONTROLS[b]===a) return {title:'긴장 속에서 기준을 만드는 관계',body:`${ELEMENT_LABELS[a].label}과 ${ELEMENT_LABELS[b].label}은 서로 제어하는 관계가 생길 수 있습니다. 잘 쓰면 균형과 현실 점검이 되지만, 상대를 바꾸려는 방식으로 사용하면 피로가 커질 수 있습니다.`};
+  return {title:'서로 다른 자원을 나누는 관계',body:`${ELEMENT_LABELS[a].label}과 ${ELEMENT_LABELS[b].label}의 강점이 다르므로 역할을 나누면 폭이 넓어질 수 있습니다. 갈등이 생길 때는 결론보다 판단 과정의 차이를 먼저 설명하는 편이 좋습니다.`};
+}
+
+function renderCompatibility(){
+  const target=$('compatibilityResult');
+  if(!currentChart){
+    target.innerHTML='<div class="compatibility-empty"><strong>먼저 내 사주 리포트를 만들어 주세요.</strong><p>기준이 되는 내 원국이 있어야 상대와의 관계 패턴을 비교할 수 있습니다.</p></div>';
+    return;
+  }
+  const date=$('partnerDate').value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const time=$('partnerTime').value.match(/^(\d{2}):(\d{2})$/);
+  if(!date || !time){ target.innerHTML='<div class="compatibility-empty"><strong>상대의 생년월일과 시간을 확인해 주세요.</strong></div>'; return; }
+  try{
+    const partner=calculateSaju({
+      calendar:'solar',year:Number(date[1]),month:Number(date[2]),day:Number(date[3]),
+      hour:Number(time[1]),minute:Number(time[2]),gender:$('partnerGender').value,isLeap:false,
+      precision:$('precisionToggle').checked,location:$('birthLocation').value,dayBoundary:$('dayBoundary').value
+    });
+    const mineElement=dominantElement(currentChart), partnerElement=dominantElement(partner);
+    const mineRole=dominantRole(currentChart), partnerRole=dominantRole(partner);
+    const element=compatibilityElementCopy(mineElement,partnerElement);
+    const sameRole=mineRole===partnerRole;
+    const roleTitle=sameRole?'생활에서 중요하게 보는 기준이 비슷합니다':'관계 안에서 맡는 역할이 자연스럽게 나뉠 수 있습니다';
+    const roleBody=sameRole
+      ? `두 사람 모두 ${ROLE_LABELS[mineRole]} 성향이 중심이라 서로의 선택을 빠르게 이해할 수 있습니다. 반대로 같은 약점을 동시에 보일 수 있으므로 한쪽이 의식적으로 다른 역할을 맡는 것이 도움이 됩니다.`
+      : `나는 ${ROLE_LABELS[mineRole]}, 상대는 ${ROLE_LABELS[partnerRole]} 성향이 중심입니다. 서로의 방식이 다르다는 점을 전제로 역할과 기대를 말로 확인하면 차이가 보완으로 작동하기 쉽습니다.`;
+    const myStem=stemByName(currentChart.dayMaster), partnerStem=stemByName(partner.dayMaster);
+    const partnerName=$('partnerName').value.trim()||'상대';
+    target.innerHTML=`<div class="compatibility-result-head"><div><span>RELATIONSHIP MAP</span><h3>${escapeHtml(currentDisplayName)} × ${escapeHtml(partnerName)}</h3></div><div class="compatibility-tags"><span>${escapeHtml(currentChart.dayMaster)} 일간</span><span>${escapeHtml(partner.dayMaster)} 일간</span></div></div>
+      <div class="compatibility-grid">
+        <article class="compatibility-card"><strong>${escapeHtml(element.title)}</strong><p>${escapeHtml(element.body)}</p></article>
+        <article class="compatibility-card"><strong>${escapeHtml(roleTitle)}</strong><p>${escapeHtml(roleBody)}</p></article>
+        <article class="compatibility-card"><strong>감정 표현의 결</strong><p>${escapeHtml(myStem.yinYang)} 성향의 나와 ${escapeHtml(partnerStem.yinYang)} 성향의 상대는 감정을 드러내는 속도가 다를 수 있습니다. 마음을 추측하기보다 필요한 반응과 시간을 구체적으로 말하는 방식이 관계 안정에 유리합니다.</p></article>
+        <article class="compatibility-card"><strong>관계를 오래 쓰는 방법</strong><p>궁합을 좋고 나쁜 점수로 고정하지 않고 반복되는 상호작용을 살피는 것이 핵심입니다. 서로 편한 역할만 맡지 말고 중요한 결정에서는 상대의 판단 근거를 한 번 더 확인하세요.</p></article>
+      </div>
+      <p class="compatibility-note">※ 두 원국의 오행·십성·일간 관계를 비교한 참고 해석이며 관계의 미래나 감정을 확정하지 않습니다.</p>`;
+  }catch(error){
+    target.innerHTML=`<div class="compatibility-empty"><strong>궁합 계산을 완료하지 못했습니다.</strong><p>${escapeHtml(error?.message||'입력값을 다시 확인해 주세요.')}</p></div>`;
+  }
+}
+
 function renderAccuracyBasis(chart){
   const items=[
     ['CALENDAR',chart.basis.calendarEngine],
@@ -365,7 +536,8 @@ function setupKeywordCards(){
 function renderToday(chart,todayFlow){
   const copy=GROUP_COPY[todayFlow.group];
   const scores=calculateDailyScores(chart,todayFlow);
-  $('todayDate').textContent=currentKstDate();
+  const flowDate=new Date(Date.UTC(todayFlow.date.year,todayFlow.date.month-1,todayFlow.date.day,3));
+  $('todayDate').textContent=currentKstDate(flowDate);
   $('todayHeadline').textContent=`“${copy.summary}”`;
   $('todayQuoteTitle').textContent=copy.summary;
   $('todayQuoteBody').textContent=`${copy.opportunity}에 힘을 싣고, ${copy.caution}은 한 번 더 점검하세요.`;
@@ -503,13 +675,15 @@ function renderAll(){
     const input=collectInput();
     const chart=calculateSaju(input);
     const mbti=calculateSajuMbti(chart);
-    const todayFlow=calculateTodayFlow(chart);
+    const todayFlow=calculateTodayFlow(chart,dailyDate());
     const year=currentKstYear();
     const yearFlow=calculateYearFlows(chart,year,1)[0];
     const monthFlows=calculateMonthFlows(chart,year);
     const report=buildDetailedInterpretation(chart,mbti,yearFlow,monthFlows);
     currentReport=report;
+    currentChart=chart;
     const name=$('name').value.trim()||'당신';
+    currentDisplayName=name;
     renderProfile(chart,mbti,report,name,todayFlow);
     renderDetailedReport(report);
     renderKeywordInsight(report,document.querySelector('.visual-keyword-card.is-active')?.dataset.reportKey || 'temperament');
@@ -764,7 +938,7 @@ function setupFullReportAccess(){
 }
 
 function setupSectionSpy(){
-  const links=[...document.querySelectorAll('.topnav a[href^="#"], .report-nav a[href^="#"]')];
+  const links=[...document.querySelectorAll('.topnav a[href^="#"], .report-nav a[href^="#"], .mobile-bottom-nav a[href^="#"]')];
   const targets=[...new Set(links.map((link)=>document.querySelector(link.getAttribute('href'))).filter(Boolean))];
   if(!('IntersectionObserver' in window) || !targets.length) return;
   const setCurrent=(id)=>{
@@ -807,6 +981,24 @@ document.querySelectorAll('[data-year-shift]').forEach((button)=>button.addEvent
   applyQuickYear(next);
   $('birthYearQuick').focus();
 }));
+renderProfileSelect();
+$('profileSelect').addEventListener('change',(event)=>{
+  $('deleteProfile').disabled=!event.target.value;
+  if(event.target.value) loadProfile(event.target.value);
+});
+$('saveProfile').addEventListener('click',saveCurrentProfile);
+$('deleteProfile').addEventListener('click',deleteSelectedProfile);
+$('shareReport').addEventListener('click',shareReport);
+$('copyReport').addEventListener('click',copyReportSummary);
+document.querySelectorAll('[data-day-shift]').forEach((button)=>button.addEventListener('click',()=>{
+  dailyOffset=Math.max(-30,Math.min(180,dailyOffset+Number(button.dataset.dayShift||0)));
+  if(currentChart) renderToday(currentChart,calculateTodayFlow(currentChart,dailyDate()));
+}));
+$('todayReset').addEventListener('click',()=>{
+  dailyOffset=0;
+  if(currentChart) renderToday(currentChart,calculateTodayFlow(currentChart,dailyDate()));
+});
+$('compatibilityForm').addEventListener('submit',(event)=>{ event.preventDefault(); renderCompatibility(); });
 $('precisionToggle').addEventListener('change',syncPrecisionUi);
 form.addEventListener('input',(event)=>{
   const field=event.target;
