@@ -32,6 +32,7 @@
       <a href="#input">사주리포트</a>
       <a href="#today">오늘의운세</a>
       <a href="#year">올해의흐름</a>
+      <a href="#compatibility">궁합</a>
       <a href="#tarot">타로</a>
       <a href="#full-report">정밀리포트</a>
     </nav>
@@ -71,6 +72,12 @@
 
 
       <form id="birthForm" novalidate>
+        <div class="profile-manager" aria-label="내 사주 프로필">
+          <label><span>저장된 프로필</span><select id="profileSelect"><option value="">현재 입력</option></select></label>
+          <button id="saveProfile" type="button">현재 정보 저장</button>
+          <button id="deleteProfile" type="button" disabled>삭제</button>
+          <p id="profileStatus" role="status" aria-live="polite"></p>
+        </div>
         <div class="form-modes">
           <fieldset class="segmented"><legend class="sr-only">달력 구분</legend>
             <label><input type="radio" name="calendar" value="solar" checked><span>양력</span></label>
@@ -128,6 +135,7 @@
       <a href="#results"><svg class="ui-icon"><use href="#icon-orbit"/></svg><span><b>사주리포트</b><small>나를 깊이 이해하는 시간</small></span></a>
       <a href="#today"><svg class="ui-icon"><use href="#icon-sun"/></svg><span><b>오늘의운세</b><small>오늘의 흐름을 확인하세요</small></span></a>
       <a href="#year"><svg class="ui-icon"><use href="#icon-calendar"/></svg><span><b>올해의흐름</b><small>한 해의 큰 그림을 읽다</small></span></a>
+      <a href="#compatibility"><svg class="ui-icon"><use href="#icon-heart"/></svg><span><b>궁합</b><small>두 사람의 관계 흐름</small></span></a>
       <a href="#tarot"><svg class="ui-icon"><use href="#icon-tarot"/></svg><span><b>타로리딩</b><small>지금, 필요한 메시지</small></span></a>
       <a href="#full-report"><svg class="ui-icon"><use href="#icon-chart"/></svg><span><b>정밀 리포트</b><small>계산 근거와 심화 해석</small></span></a>
     </nav>
@@ -140,6 +148,11 @@
           <h2>나를 이해하는<br>6가지 키워드</h2>
           <p>사주가 알려주는 타고난 흐름과 지금의 선택이 만드는 더 나은 내일.</p>
           <a href="#full-report">전체 리포트 보기 <span aria-hidden="true">→</span></a>
+          <div class="report-actions">
+            <button id="shareReport" type="button">결과 공유</button>
+            <button id="copyReport" type="button">요약 복사</button>
+            <span id="shareStatus" role="status" aria-live="polite"></span>
+          </div>
         </div>
         <button class="visual-keyword-card is-active" type="button" data-report-key="temperament" aria-controls="keywordInsight" aria-pressed="true"><span class="keyword-card-top"><svg class="ui-icon" aria-hidden="true"><use href="#icon-orbit"/></svg><span>01</span></span><strong>성격</strong><small>내게 두드러진 기질은?</small><i aria-hidden="true">해설 보기 →</i></button>
         <button class="visual-keyword-card" type="button" data-report-key="career" aria-controls="keywordInsight" aria-pressed="false"><span class="keyword-card-top"><svg class="ui-icon" aria-hidden="true"><use href="#icon-briefcase"/></svg><span>02</span></span><strong>일</strong><small>어떤 일에서 힘을 낼까?</small><i aria-hidden="true">해설 보기 →</i></button>
@@ -160,7 +173,7 @@
       <section id="today" class="landing-section oracle-panel agency-shell today-panel">
         <header class="section-heading">
           <div><span class="section-no">03</span><p class="section-kicker">TODAY</p></div>
-          <div><h2>오늘의 운세</h2><p>오늘 하루, 어떤 흐름이<br>당신을 기다리고 있을까요?</p><p id="todayDate" class="section-date"></p><a href="#full-report">오늘의 상세 운세 보기 <span aria-hidden="true">→</span></a><blockquote id="todayHeadline"></blockquote></div>
+          <div><h2>오늘의 운세</h2><p>오늘 하루, 어떤 흐름이<br>당신을 기다리고 있을까요?</p><p id="todayDate" class="section-date"></p><div class="day-nav" aria-label="일진 날짜 이동"><button type="button" data-day-shift="-1" aria-label="이전 날짜">←</button><button id="todayReset" type="button">오늘</button><button type="button" data-day-shift="1" aria-label="다음 날짜">→</button></div><a href="#full-report">상세 운세 보기 <span aria-hidden="true">→</span></a><blockquote id="todayHeadline"></blockquote></div>
         </header>
         <div class="daily-layout">
           <article id="dailyPrimary" class="daily-primary"></article>
@@ -187,10 +200,29 @@
         </div>
       </section>
 
+      <section id="compatibility" class="compatibility-panel landing-section oracle-panel agency-shell" aria-labelledby="compatibilityHeading">
+        <header class="section-heading">
+          <div><span class="section-no">05</span><p class="section-kicker">COMPATIBILITY</p></div>
+          <div><h2 id="compatibilityHeading">두 사람의 궁합</h2><p>점수로 단정하지 않고 두 원국에서 잘 맞는 지점과 조율이 필요한 지점을 함께 읽습니다.</p></div>
+        </header>
+        <div class="compatibility-body">
+          <form id="compatibilityForm" class="compatibility-form">
+            <label><span>상대 이름 <small>(선택)</small></span><input id="partnerName" type="text" placeholder="상대 이름" autocomplete="off"></label>
+            <label><span>상대 생년월일</span><input id="partnerDate" type="date" min="1900-01-01" max="2100-12-31" value="1990-01-01" required></label>
+            <label><span>상대 출생시간</span><input id="partnerTime" type="time" value="12:00" required></label>
+            <label><span>상대 성별</span><select id="partnerGender"><option value="female">여자</option><option value="male">남자</option></select></label>
+            <button type="submit">궁합 흐름 보기 <span aria-hidden="true">→</span></button>
+          </form>
+          <div id="compatibilityResult" class="compatibility-result" aria-live="polite">
+            <div class="compatibility-empty"><strong>두 사람의 관계 패턴을 비교합니다.</strong><p>나의 사주 리포트를 만든 뒤 상대 정보를 입력하면 오행·십성·일간을 기준으로 관계의 강점과 조율 포인트를 보여줍니다.</p></div>
+          </div>
+        </div>
+      </section>
+
       <section id="tarot" class="tarot-stage agency-shell">
         <div class="tarot-stage-inner">
           <div class="tarot-copy">
-            <span class="section-no">05</span>
+            <span class="section-no">06</span>
             <p class="section-kicker">타로 리딩</p>
             <h2>타로 리딩</h2>
             <p id="tarotHelp">지금 당신에게 필요한 메시지는 무엇일까요? 카드를 섞고 마음이 가는 카드를 선택해보세요.</p>
@@ -219,7 +251,7 @@
 
       <details id="full-report" class="full-report-shell oracle-panel agency-shell">
         <summary>
-          <span class="full-report-label"><i class="section-no">06</i><span><em class="section-kicker">PRECISION REPORT</em><b>정밀 리포트 열기</b><small>성향부터 대운과 계산 근거까지, 읽기 쉬운 순서로 확인합니다.</small></span></span>
+          <span class="full-report-label"><i class="section-no">07</i><span><em class="section-kicker">PRECISION REPORT</em><b>정밀 리포트 열기</b><small>성향부터 대운과 계산 근거까지, 읽기 쉬운 순서로 확인합니다.</small></span></span>
           <strong aria-hidden="true">+</strong>
         </summary>
         <div class="full-report-body">
@@ -258,6 +290,14 @@
 
     </section>
   </main>
+
+  <nav class="mobile-bottom-nav" aria-label="모바일 빠른 메뉴">
+    <a href="#home"><svg class="ui-icon" aria-hidden="true"><use href="#icon-orbit"/></svg><span>홈</span></a>
+    <a href="#input"><svg class="ui-icon" aria-hidden="true"><use href="#icon-calendar"/></svg><span>사주</span></a>
+    <a href="#today"><svg class="ui-icon" aria-hidden="true"><use href="#icon-sun"/></svg><span>오늘</span></a>
+    <a href="#compatibility"><svg class="ui-icon" aria-hidden="true"><use href="#icon-heart"/></svg><span>궁합</span></a>
+    <a href="#tarot"><svg class="ui-icon" aria-hidden="true"><use href="#icon-tarot"/></svg><span>타로</span></a>
+  </nav>
 
   <footer class="site-footer agency-shell">
     <div><span class="seal" aria-hidden="true">命</span><strong>내사주</strong></div>
