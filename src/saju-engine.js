@@ -62,6 +62,38 @@ function pairPresent(branches, a, b) {
   return branches.includes(a) && branches.includes(b);
 }
 
+export function detectStemRelations(pillars) {
+  const pairs=[
+    ['갑','기','합','토'],['을','경','합','금'],['병','신','합','수'],['정','임','합','목'],['무','계','합','화']
+  ];
+  const entries=PILLAR_KEYS.map((key)=>({key,stem:pillars[key].heavenlyStem}));
+  const result=[];
+  for(const [a,b,type,target] of pairs){
+    const left=entries.filter((item)=>item.stem===a);
+    const right=entries.filter((item)=>item.stem===b);
+    if(!left.length || !right.length) continue;
+    for(const l of left){
+      for(const r of right){
+        result.push({
+          type:'천간합',
+          members:[a,b],
+          pillars:[l.key,r.key],
+          target,
+          text:`${a}·${b} 천간합`,
+          note:`${target} 기운으로의 합화 여부는 계절과 주변 조건을 따로 봐야 하므로 여기서는 합 신호만 표시합니다.`
+        });
+      }
+    }
+  }
+  const seen=new Set();
+  return result.filter((item)=>{
+    const key=`${item.members.join('-')}:${item.pillars.slice().sort().join('-')}`;
+    if(seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 export function detectBranchRelations(branches) {
   const result = [];
   const pushPair = (type, pairs) => {
@@ -167,6 +199,7 @@ export function calculateSaju(rawInput) {
     tenGods: detail.tenGods,
     voidBranches: detail.voidBranches || [],
     relations: detectBranchRelations(branches),
+    stemRelations: detectStemRelations(pillars),
     luck: detail.luckPillars || null,
     basis: {
       timezone: 'Asia/Seoul',
