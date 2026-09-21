@@ -184,53 +184,69 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
     ? profile.strength.rootReasons.join(' · ')
     : '원국에서 일간과 같은 오행의 뚜렷한 통근 신호가 적습니다.';
 
-  report.overview.quick=[
-    ...profile.easyFacts,
-    `쉽게 말하면, 지금 원국을 읽을 때 가장 먼저 볼 것은 ${topGods[0]?.tenGod || '십신'}의 쓰임과 ${profile.strength.band} 쪽으로 기운 균형이 기우는 이유입니다.`
-  ];
+  report.overview.quick=profile.easyFacts.slice(0,3);
+  report.overview.evidence=profile.evidence;
+  report.overview.lead=`쉽게 말하면, 이 원국은 ${profile.strength.band} 쪽 힘을 바탕으로 ${topGods[0]?.simple || '자기 기준'}을 가장 자주 쓰는 구조입니다.`;
 
   report.temperament.quick=[
-    `겉으로 가장 자주 드러나는 십신은 ${topGods[0]?.tenGod || '비견'} · ${topGods[0]?.simple || '자기 기준'}입니다.`,
-    `그 다음은 ${topGods[1]?.tenGod || topGods[0]?.tenGod || '비견'} · ${topGods[1]?.simple || topGods[0]?.simple || '자기 기준'}로, 한 가지 성향만으로 설명되지 않습니다.`,
-    `월령과 통근까지 함께 보면 단순한 오행 개수보다 실제로 어떤 기운을 쓰기 쉬운지가 더 선명해집니다.`
+    `평소에는 ${topGods[0]?.simple || '자기 기준'}이 가장 먼저 드러나고, 그 다음으로 ${topGods[1]?.simple || '다른 보조 성향'}이 따라옵니다.`,
+    `그 이유는 ${topGods[0]?.tenGod || '십신'}이 ${topGods[0]?.locations.slice(0,2).join('·') || '원국'}에 반복되고, 월령은 ${profile.monthCommand.tenGod}(${profile.monthCommand.simple}) 쪽이기 때문입니다.`,
+    `생활에서는 한 가지 성격으로 고정해서 보기보다 “어떤 상황에서 어떤 반응이 먼저 나오는가”를 보는 편이 더 잘 맞습니다.`
+  ];
+  report.temperament.evidence=[
+    `월령 중심 십신: ${profile.monthCommand.tenGod} · ${profile.monthCommand.structureName} 후보`,
+    `상위 십신: ${topGods.map((item)=>`${item.tenGod} ${item.score}`).join(' · ')}`,
+    `천간 노출: ${profile.monthCommand.exposed?profile.monthCommand.exposedLocations.join('·'):'월령 중심 십신의 직접 노출 없음'}`
   ];
 
-  report.balance.title='기운의 중심과 신강·신약';
-  report.balance.lead=`월령·통근·생조·극설을 함께 본 참고 지표는 ${profile.strength.band} ${profile.strength.score}점이며 판정 신뢰도는 ${profile.strength.confidence}입니다.`;
+  report.balance.title='내 기운은 강한 편일까, 약한 편일까?';
+  report.balance.lead=`월령·통근·천간의 도움과 소모를 함께 본 결과, 현재 참고 구간은 ${profile.strength.band}입니다.`;
   report.balance.quick=[
-    profile.strength.month.text,
-    rootText,
-    profile.balanceHint
+    `한 줄 요약: ${profile.strength.band} ${profile.strength.score}점으로, 숫자보다 월령과 통근 이유를 함께 보는 것이 중요합니다.`,
+    `왜 그런가요? ${profile.strength.month.text} ${profile.strength.rootCount? `통근 신호가 ${profile.strength.rootCount}곳 있습니다.`:'통근 신호는 적은 편입니다.'}`,
+    `생활에서는: ${profile.balanceHint}`
+  ];
+  report.balance.evidence=[
+    ...profile.evidence.slice(0,4),
+    `판정 신뢰도: ${profile.strength.confidence} · 같은 원국도 학파에 따라 해석 차이가 날 수 있음`
   ];
   report.balance.paragraphs.unshift(
-    `기존처럼 오행 개수만 세지 않고 월지의 계절 힘, 일간이 지지에 뿌리를 두는지, 천간에서 같은 기운이나 인성의 도움을 받는지, 반대로 식상·재성·관성 쪽으로 힘이 빠지는지를 함께 계산했습니다. 현재 참고 점수는 ${profile.strength.score}점으로 ${profile.strength.band} 구간입니다. ${profile.strength.disclaimer}`
+    `신강·신약은 단순히 오행이 몇 개 많은지를 세는 방식으로 계산하지 않았습니다. 월지의 계절 힘, 각 지지 속 지장간에서 일간이 실제로 뿌리를 얻는 정도, 천간에 드러난 도움과 소모를 따로 가중했습니다. 현재 참고 점수는 ${profile.strength.score}점으로 ${profile.strength.band} 구간이며, 통근 가중치는 ${profile.strength.rootScore}, 천간 도움·소모 값은 ${profile.strength.visibleSupport>=0?'+':''}${profile.strength.visibleSupport}입니다. ${profile.strength.disclaimer}`
+  );
+  report.balance.paragraphs.unshift(
+    `월령을 먼저 보면 ${profile.monthCommand.text} 그래서 ${profile.structureHint} 이것을 ‘격국을 확정했다’는 뜻으로 사용하지 않고, 어떤 십신을 먼저 읽을지 정하는 해석 초점으로 사용합니다.`
   );
 
   report.career.quick=[
-    `직업 해석은 ${topGods[0]?.tenGod || '십신'}만 보지 않고 월주·시주에 어떤 십신이 드러났는지도 함께 확인합니다.`,
-    `두드러진 십신 3개는 ${topGods.map((item)=>item.tenGod).join(' · ')}입니다.`,
-    '직업명 하나를 찍기보다 자율성·책임·표현·관리 중 어떤 조건에서 성과가 나는지 설명합니다.'
+    `한 줄 요약: 일에서는 ${topGods[0]?.simple || '자기 기준'}과 ${topGods[1]?.simple || '보조 성향'}을 함께 쓸 수 있는 환경이 중요합니다.`,
+    `왜 그런가요? 상위 십신은 ${topGods.map((item)=>item.tenGod).join(' · ')}이고, 특히 월주와 시주 배치를 함께 읽습니다.`,
+    '생활에서는: 직업명을 하나 찍기보다 자율성·책임·표현·관리 중 어떤 조건에서 성과가 나는지 확인하는 것이 더 유용합니다.'
   ];
 
   report.money.quick=[
-    '재물운은 “큰돈이 온다”가 아니라 재성의 배치와 현재 세운이 돈을 다루는 방식에 어떤 압력을 주는지로 읽습니다.',
-    `원국에서 재성 점수는 ${((profile.tenGods.score.편재||0)+(profile.tenGods.score.정재||0)).toFixed(2)}입니다.`,
-    '실제 투자·대출·소비 판단은 운세보다 현금흐름과 손실 가능성을 우선합니다.'
+    '한 줄 요약: 재물운은 “큰돈이 들어온다”보다 돈을 다루는 습관과 압력이 어디서 생기는지를 보는 쪽에 가깝습니다.',
+    `왜 그런가요? 원국에서 편재+정재 가중치는 ${((profile.tenGods.score.편재||0)+(profile.tenGods.score.정재||0)).toFixed(2)}이고, 올해 세운의 십신까지 함께 봅니다.`,
+    '생활에서는: 투자·대출·큰 소비는 사주보다 현금흐름과 손실 가능성을 우선하고, 해석은 판단 습관을 점검하는 보조 자료로 쓰세요.'
   ];
 
   report.love.quick=[
-    '관계 해석은 상대의 마음을 맞히는 방식이 아니라 내가 친밀한 관계에서 반복하는 반응 패턴을 설명합니다.',
-    `관계에서 함께 봐야 할 원국 신호는 ${relation}입니다.`,
-    '궁합에서는 두 사람의 원국을 별도로 계산해 공통점과 긴장 지점을 비교합니다.'
+    '한 줄 요약: 관계에서는 상대의 속마음을 맞히기보다 내가 가까운 관계에서 반복하는 반응을 보는 것이 핵심입니다.',
+    `왜 그런가요? 원국 관계 신호는 ${profile.relations.summary} 월령 중심은 ${profile.monthCommand.simple}입니다.`,
+    '생활에서는: 기대를 추측으로 두지 말고 말로 확인하고, 궁합은 두 사람 원국의 공통점과 긴장 지점을 비교하는 용도로 쓰는 것이 좋습니다.'
   ];
+  report.love.evidence=profile.relations.items.slice(0,5).map((item)=>`${item.type} · ${item.pillarLabels.join('↔') || item.members.join('·')} · ${item.contexts.join(' / ')}`);
 
   report.technical.quick=[
-    '계산 가능한 달력·절기 값과 해석 규칙을 분리합니다.',
+    '계산 가능한 달력·절기 값과 해석 규칙을 분리해 보여줍니다.',
     `신강·신약 참고: ${profile.strength.band} ${profile.strength.score}점 · 신뢰도 ${profile.strength.confidence}`,
-    `주요 십신: ${topGods.map((item)=>`${item.tenGod} ${item.score}`).join(' · ')}`
+    `월령 중심: ${profile.monthCommand.tenGod} · 주요 십신: ${topGods.map((item)=>`${item.tenGod} ${item.score}`).join(' · ')}`
+  ];
+  report.technical.evidence=[
+    ...profile.evidence,
+    `상위 십신 대표 위치: ${topGodPlacementText}`
   ];
   report.technical.paragraphs.push(
-    `십신은 비견·겁재·식신·상관·편재·정재·편관·정관·편인·정인을 하나로 뭉개지 않고 천간과 지장간의 위치를 따로 기록합니다. 현재 상위 십신의 대표 위치는 ${topGodPlacementText}입니다. 위치와 가중치를 함께 보는 이유는 같은 십신이라도 겉으로 드러난 천간인지, 지지 안에 잠재된 지장간인지에 따라 해석 비중을 다르게 보기 위해서입니다.`
+    `십신은 비견·겁재·식신·상관·편재·정재·편관·정관·편인·정인을 하나로 뭉개지 않고 천간과 지장간의 위치를 따로 기록합니다. 현재 상위 십신의 대표 위치는 ${topGodPlacementText}입니다. 같은 십신이라도 천간에 드러난 경우와 지장간에 잠재된 경우의 가중치를 다르게 두고, 월령의 중심 지장간이 천간에 실제로 드러났는지도 따로 확인합니다.`
   );
 
   return report;
