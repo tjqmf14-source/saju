@@ -216,7 +216,7 @@ function flowInteractionProfile(chart,yearFlow,monthFlows=[]){
   monthFlows.forEach((m)=>{monthGroupCount[m.group]=(monthGroupCount[m.group]||0)+1;});
   const dominantMonthGroup=Object.entries(monthGroupCount).sort((a,b)=>b[1]-a[1])[0]?.[0]||yearFlow.group;
   const relationSummary=annualRelations.length
-    ? annualRelations.map((r)=>\`\${r.type}(\${r.members.join('·')})\`).join(' · ')
+    ? annualRelations.map((r)=>`${r.type}(${r.members.join('·')})`).join(' · ')
     : '원국과 세운 사이에 두드러진 합·충·형·파·해 신호가 적습니다.';
 
   return {
@@ -229,21 +229,21 @@ function flowInteractionProfile(chart,yearFlow,monthFlows=[]){
     monthGroupCount,
     relationSummary,
     layers:[
-      activeLuck?{label:'대운',value:\`\${activeLuck.korean} · \${activeLuckGod||'십신 계산'}\`}:null,
-      {label:'세운',value:\`\${yearFlow.korean} · \${yearFlow.tenGod}\`},
-      {label:'월운 반복',value:\`\${dominantMonthGroup} 주제가 12개월 중 \${monthGroupCount[dominantMonthGroup]||0}회\`}
+      activeLuck?{label:'대운',value:`${activeLuck.korean} · ${activeLuckGod||'십신 계산'}`}:null,
+      {label:'세운',value:`${yearFlow.korean} · ${yearFlow.tenGod}`},
+      {label:'월운 반복',value:`${dominantMonthGroup} 주제가 12개월 중 ${monthGroupCount[dominantMonthGroup]||0}회`}
     ].filter(Boolean),
     headline:activeLuck
-      ? \`지금은 \${activeLuck.korean} 대운 위에 \${yearFlow.korean} 세운이 겹치는 시기입니다.\`
-      : \`\${yearFlow.korean} 세운의 영향이 현재 해석의 중심입니다.\`,
+      ? `지금은 ${activeLuck.korean} 대운 위에 ${yearFlow.korean} 세운이 겹치는 시기입니다.`
+      : `${yearFlow.korean} 세운의 영향이 현재 해석의 중심입니다.`,
     easy:[
       activeLuck
-        ? \`큰 배경은 \${activeLuck.korean} 대운이고, 올해는 \${yearFlow.tenGod} 주제가 그 위에 겹칩니다.\`
-        : \`올해는 \${yearFlow.tenGod} 주제가 평소보다 자주 체감될 수 있습니다.\`,
+        ? `큰 배경은 ${activeLuck.korean} 대운이고, 올해는 ${yearFlow.tenGod} 주제가 그 위에 겹칩니다.`
+        : `올해는 ${yearFlow.tenGod} 주제가 평소보다 자주 체감될 수 있습니다.`,
       annualRelations.length
-        ? \`원국과 올해 흐름 사이에는 \${relationSummary}가 보여 변화나 조율이 필요한 장면이 생길 수 있습니다.\`
+        ? `원국과 올해 흐름 사이에는 ${relationSummary}가 보여 변화나 조율이 필요한 장면이 생길 수 있습니다.`
         : '원국과 올해 흐름의 충돌 신호가 강하지 않아, 사건보다 선택 습관의 차이가 더 중요합니다.',
-      \`월별로는 \${dominantMonthGroup} 주제가 가장 자주 반복되어 한 해 안에서도 비슷한 질문이 여러 번 돌아올 수 있습니다.\`
+      `월별로는 ${dominantMonthGroup} 주제가 가장 자주 반복되어 한 해 안에서도 비슷한 질문이 여러 번 돌아올 수 있습니다.`
     ]
   };
 }
