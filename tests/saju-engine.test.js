@@ -59,3 +59,28 @@ test('지정일 시간대별 흐름은 6개 생활 시간대로 계산한다', (
   assert.ok(flows.every((flow)=>typeof flow.tenGod==='string' && typeof flow.group==='string'));
   assert.ok(flows.every((flow)=>typeof flow.korean==='string' && flow.korean.length===2));
 });
+
+
+test('independent fortune-service reference sample matches pillars ten-gods and decade cycle',()=>{
+  const chart=calculateSaju({calendar:'solar',year:1987,month:6,day:14,hour:11,minute:45,gender:'male',precision:false});
+  assert.deepEqual(chart.pillarStrings,{year:'정묘',month:'병오',day:'갑오',hour:'경오'});
+  assert.equal(chart.tenGods.year.stem,'상관');
+  assert.equal(chart.tenGods.year.branch,'겁재');
+  assert.equal(chart.tenGods.month.stem,'식신');
+  assert.equal(chart.tenGods.month.branch,'상관');
+  assert.equal(chart.tenGods.day.stem,'비견');
+  assert.equal(chart.tenGods.day.branch,'상관');
+  assert.equal(chart.tenGods.hour.stem,'편관');
+  assert.equal(chart.tenGods.hour.branch,'상관');
+  const luck33=chart.luck.pillars.find((item)=>item.age===33);
+  const luck43=chart.luck.pillars.find((item)=>item.age===43);
+  assert.equal(luck33?.korean,'임인');
+  assert.equal(luck43?.korean,'신축');
+});
+
+test('each monthly flow includes relations against the natal branches',()=>{
+  const chart=calculateSaju({calendar:'solar',year:1987,month:6,day:14,hour:11,minute:45,gender:'male',precision:false});
+  const flows=calculateMonthFlows(chart,2026);
+  assert.ok(flows.every((flow)=>Array.isArray(flow.relations)));
+  assert.ok(flows.some((flow)=>flow.relations.length>0));
+});
