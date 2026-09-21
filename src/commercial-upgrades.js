@@ -239,7 +239,7 @@ function answerCustomQuestion(){
 function setupQuestions(){
   document.querySelectorAll('[data-saju-question]').forEach(btn=>btn.addEventListener('click',()=>{
     const answer=$('sajuAnswer');
-    if(!latest){answer.textContent='먼저 사주 리포트를 생성해 주세요.';return;}
+    if(!latest||!latest.isPersonal){answer.textContent='먼저 본인의 출생정보로 사주 리포트를 생성해 주세요.';return;}
     const key=btn.dataset.sajuQuestion;
     const item=latest.report[key]||latest.report.relationships||latest.report.overview;
     answer.innerHTML='<strong>'+escapeHtml(item.title)+'</strong><p>'+escapeHtml(item.lead)+'</p><p>'+escapeHtml(item.paragraphs?.[0]||'')+'</p><a href="#report-'+key+'" data-open-report>정밀 해석 이어보기 →</a>';
