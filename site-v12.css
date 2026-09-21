@@ -908,3 +908,8 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
   .annual-navigator{grid-template-columns:1fr}.annual-navigator p{grid-column:auto}
   .life-tool-card{padding:20px}.life-tool-card h2{font-size:24px}
 }
+
+.profile-manager button:disabled{opacity:.38;cursor:not-allowed}
+.today-return-meta{text-align:right}.today-return-meta strong{display:inline-block;padding:6px 10px;border:1px solid rgba(216,167,95,.24);border-radius:999px;color:var(--gold-bright);font-size:15px}.today-return-meta p{margin:6px 0 0}
+#expert .report-mini-meta{margin-top:10px;padding-top:10px;border-top:1px solid var(--line-soft)}
+@media(max-width:560px){.today-return-meta{text-align:left;margin-top:8px}}
