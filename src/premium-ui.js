@@ -122,6 +122,54 @@ function solarDateInput(){
   return {year,month,day};
 }
 
+function syncQuickYearFromActive(){
+  const quick=$('birthYearQuick');
+  if(!quick) return;
+  if(calendarUiMode==='solar'){
+    const match=$('birthDate').value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if(match) quick.value=match[1];
+    return;
+  }
+  const year=$('birthYear').value.trim();
+  if(year) quick.value=year;
+}
+
+function applyQuickYear(rawYear){
+  const year=Number(rawYear);
+  if(!Number.isInteger(year) || year<1900 || year>2100){
+    inputError('birthYearQuick','출생연도는 1900~2100 사이의 4자리 숫자로 입력해 주세요.');
+  }
+
+  if(calendarUiMode==='solar'){
+    const field=$('birthDate');
+    const match=field.value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    const month=match?Number(match[2]):1;
+    const day=match?Number(match[3]):1;
+    const maxDay=new Date(Date.UTC(year,month,0)).getUTCDate();
+    const safeDay=Math.min(day,maxDay);
+    field.value=`${year}-${String(month).padStart(2,'0')}-${String(safeDay).padStart(2,'0')}`;
+  }else{
+    $('birthYear').value=String(year);
+    syncLeapAvailability();
+  }
+  $('birthYearQuick').value=String(year);
+}
+
+function commitQuickYear(){
+  try{
+    applyQuickYear($('birthYearQuick').value.trim());
+    $('birthYearQuick').removeAttribute('aria-invalid');
+    $('birthYearQuick').removeAttribute('aria-errormessage');
+    errorBox.textContent='';
+  }catch(error){
+    errorBox.textContent=error?.message||'출생연도를 다시 확인해 주세요.';
+    const field=$('birthYearQuick');
+    field.setAttribute('aria-invalid','true');
+    field.setAttribute('aria-errormessage','formError');
+    field.focus();
+  }
+}
+
 function collectInput(){
   const calendar=selectedCalendar();
   const solar=calendar==='solar' ? solarDateInput() : null;
@@ -181,6 +229,7 @@ function applyCalendarUi(mode){
   $('leapField').classList.toggle('active',lunar);
   $('birthDay').max='30';
   syncLeapAvailability();
+  syncQuickYearFromActive();
 }
 
 function syncCalendarUi(){
@@ -735,6 +784,29 @@ function setupSectionSpy(){
 form.elements.calendar.forEach((radio)=>radio.addEventListener('change',syncCalendarUi));
 $('birthYear').addEventListener('input',syncLeapAvailability);
 $('birthMonth').addEventListener('input',syncLeapAvailability);
+$('birthDate').addEventListener('input',()=>{ if(calendarUiMode==='solar') syncQuickYearFromActive(); });
+$('birthYearQuick').addEventListener('focus',(event)=>event.target.select());
+$('birthYearQuick').addEventListener('input',(event)=>{
+  const raw=event.target.value.trim();
+  if(/^\d{4}$/.test(raw)){
+    const year=Number(raw);
+    if(year>=1900 && year<=2100) applyQuickYear(year);
+  }
+});
+$('birthYearQuick').addEventListener('change',commitQuickYear);
+$('birthYearQuick').addEventListener('keydown',(event)=>{
+  if(event.key==='Enter'){
+    event.preventDefault();
+    commitQuickYear();
+  }
+});
+document.querySelectorAll('[data-year-shift]').forEach((button)=>button.addEventListener('click',()=>{
+  const current=Number($('birthYearQuick').value)||Number((calendarUiMode==='solar'?$ ('birthDate').value.slice(0,4):$('birthYear').value))||1990;
+  const shift=Number(button.dataset.yearShift)||0;
+  const next=Math.min(2100,Math.max(1900,current+shift));
+  applyQuickYear(next);
+  $('birthYearQuick').focus();
+}));
 $('precisionToggle').addEventListener('change',syncPrecisionUi);
 form.addEventListener('input',(event)=>{
   const field=event.target;
