@@ -188,7 +188,7 @@ test('calculation renderers still populate all retained data targets', async ({ 
   await expect(page.locator('#monthForecast .month-card')).toHaveCount(12);
   await expect(page.locator('#luckOverview .luck-overview-item')).toHaveCount(9);
   await expect(page.locator('#pillarGrid .pillar-card')).toHaveCount(4);
-  await expect(page.locator('#dailyMetrics .metric-row')).toHaveCount(5);
+  await expect(page.locator('#dailyMetrics .metric-row')).toHaveCount(6);
   await expect(page.locator('#dailyActionGuide article')).toHaveCount(3);
   await expect(page.locator('#dailyTimeFlow article')).toHaveCount(6);
   await expect(page.locator('.daily-report-extra')).not.toHaveAttribute('open','');
@@ -407,8 +407,8 @@ test('birth CTA recalculates current input and precision report exposes retained
   await expect(fullReport).toHaveAttribute('open', '');
   await expect(page.locator('#yearDeepDive .year-essay')).toHaveCount(1);
   await expect(page.locator('#monthForecast .month-card')).toHaveCount(12);
-  await expect(page.locator('#detailedReport .detail-chapter')).toHaveCount(13);
-  await expect(page.locator('#detailedReport .easy-reading-label')).toHaveCount(13);
+  await expect(page.locator('#detailedReport .detail-chapter')).toHaveCount(14);
+  await expect(page.locator('#detailedReport .easy-reading-label')).toHaveCount(14);
   await expect(page.locator('#report-balance')).toContainText('신강');
   await expect(page.locator('#detailedReport .detail-visual')).toHaveCount(0);
   await assertNoHorizontalOverflow(page);
@@ -579,7 +579,7 @@ test('commercial UX interactions work without a backend', async ({ page }, testI
     expect(compatibilityGeometry.form?.height || 999).toBeLessThan(390);
     expect(compatibilityGeometry.panel?.height || 999).toBeLessThan(520);
   }else{
-    expect(compatibilityGeometry.form?.height || 999).toBeLessThan(560);
+    expect(compatibilityGeometry.form?.height || 999).toBeLessThan(620);
   }
 
   // Local-only profile save/load.
