@@ -538,7 +538,7 @@ function renderProfile(chart,mbti,report,name,todayFlow){
 }
 
 function renderDetailedReport(report){
-  const ordered=['overview','temperament','innerOuter','strengths','balance','career','money','love','relationships','recovery','year','luck','technical'];
+  const ordered=['overview','temperament','innerOuter','strengths','balance','structure','career','money','love','relationships','recovery','year','luck','technical'];
   $('detailedReport').innerHTML=ordered.map((key,index)=>{
     const item=report[key];
     const open=index===0?' open':'';
@@ -594,7 +594,7 @@ function renderToday(chart,todayFlow){
   $('todayDate').textContent=currentKstDate(flowDate);
   $('todayHeadline').textContent=`“${copy.summary}”`;
   $('todayQuoteTitle').textContent=copy.summary;
-  $('todayQuoteBody').textContent=`${copy.opportunity}에 힘을 싣고, ${copy.caution}은 한 번 더 점검하세요.`;
+  $('todayQuoteBody').textContent=`${copy.opportunity}에 힘을 싣고, ${copy.caution}은 한 번 더 점검하세요. 감정 흐름은 ${scores.emotion.label}(${scores.emotion.score}점)으로 계산됩니다.`;
 
   const overall=scores.overall;
   $('dailyPrimary').innerHTML=`<div class="daily-primary-score" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${overall.score}" aria-label="오늘의 종합 운세">
@@ -610,7 +610,8 @@ function renderToday(chart,todayFlow){
     ['love','03','연애',copy.love,'icon-heart'],
     ['work','04','직업',copy.work,'icon-briefcase'],
     ['condition','05','건강',copy.health,'icon-health'],
-    ['study','06','학업',copy.summary,'icon-chart']
+    ['study','06','학업',copy.summary,'icon-chart'],
+    ['emotion','07','감정',scores.emotion.reason,'icon-orbit']
   ];
   $('dailyMetrics').innerHTML=metrics.map(([key,index,title,body,icon])=>{
     const flow=scores[key];
