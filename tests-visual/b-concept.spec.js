@@ -165,7 +165,7 @@ test('V12 remains readable and overflow-free on mobile', async ({ page }, testIn
     });
     return Math.min(...items.map((el)=>parseFloat(getComputedStyle(el).fontSize)).filter(Number.isFinite));
   });
-  expect(mobileMinFont).toBeGreaterThanOrEqual(17.5);
+  expect(mobileMinFont).toBeGreaterThanOrEqual(18.5);
   expect(mobileAudit.cards).toHaveLength(6);
   for (const card of mobileAudit.cards) {
     expect(card.width).toBeGreaterThan(120);
@@ -192,6 +192,7 @@ test('calculation renderers still populate all retained data targets', async ({ 
   await expect(page.locator('#dailyActionGuide article')).toHaveCount(3);
   await expect(page.locator('#dailyBriefGrid article')).toHaveCount(4);
   await expect(page.locator('#dailyTimeFlow article')).toHaveCount(6);
+  await expect(page.locator('#weeklyPreview .weekly-day')).toHaveCount(7);
   await expect(page.locator('.daily-report-extra')).not.toHaveAttribute('open','');
   await expect(page.locator('#tojungQuarterGrid .quarter-card')).toHaveCount(4);
   await assertNoHorizontalOverflow(page);
