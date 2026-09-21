@@ -1,10 +1,10 @@
-const CATEGORY_LABELS={overall:'총운',money:'재물',love:'연애',work:'직업',condition:'건강',study:'학업'};
+const CATEGORY_LABELS={overall:'총운',money:'재물',love:'연애',work:'직업',condition:'건강',study:'학업',emotion:'감정'};
 const GROUP_AFFINITY={
-  비겁:{overall:5,money:-2,love:5,work:4,condition:5,study:2},
-  식상:{overall:7,money:5,love:6,work:8,condition:2,study:5},
-  재성:{overall:7,money:12,love:5,work:8,condition:0,study:2},
-  관성:{overall:6,money:5,love:3,work:12,condition:-2,study:6},
-  인성:{overall:5,money:1,love:4,work:6,condition:10,study:12}
+  비겁:{overall:5,money:-2,love:5,work:4,condition:5,study:2,emotion:3},
+  식상:{overall:7,money:5,love:6,work:8,condition:2,study:5,emotion:7},
+  재성:{overall:7,money:12,love:5,work:8,condition:0,study:2,emotion:2},
+  관성:{overall:6,money:5,love:3,work:12,condition:-2,study:6,emotion:-2},
+  인성:{overall:5,money:1,love:4,work:6,condition:10,study:12,emotion:8}
 };
 const RELATION_EFFECT={합:4,삼합:6,충:-7,형:-5,파:-4,해:-4};
 
@@ -21,7 +21,7 @@ function relationDelta(relations=[]){return clamp(relations.reduce((sum,item)=>s
 function natalRoleBonus(chart,category){
   const roles=chart.roles||{};
   const total=Object.values(roles).reduce((a,b)=>a+b,0)||1;
-  const map={money:'재성',work:'관성',condition:'인성',study:'인성',love:'비겁'};
+  const map={money:'재성',work:'관성',condition:'인성',study:'인성',love:'비겁',emotion:'인성'};
   const key=map[category];
   if(!key)return 0;
   const share=(roles[key]||0)/total;
@@ -39,11 +39,11 @@ export function calculateDailyScores(chart,todayFlow){
   const balance=elementSpread<=1?4:elementSpread<=2?1:-4;
   const affinity=GROUP_AFFINITY[todayFlow.group]||GROUP_AFFINITY.인성;
   const individual={};
-  for(const category of ['money','love','work','condition','study']){
+  for(const category of ['money','love','work','condition','study','emotion']){
     const score=clamp(62+affinity[category]+relation+balance+natalRoleBonus(chart,category));
     individual[category]={score,label:labelFor(score),reason:reasonFor(category,score,todayFlow,relation,balance)};
   }
-  const mean=Object.values(individual).reduce((sum,item)=>sum+item.score,0)/5;
+  const mean=Object.values(individual).reduce((sum,item)=>sum+item.score,0)/6;
   const overallScore=clamp(mean+affinity.overall/2);
   return {
     overall:{score:overallScore,label:labelFor(overallScore),reason:reasonFor('overall',overallScore,todayFlow,relation,balance)},
@@ -51,6 +51,7 @@ export function calculateDailyScores(chart,todayFlow){
     love:individual.love,
     work:individual.work,
     condition:individual.condition,
-    study:individual.study
+    study:individual.study,
+    emotion:individual.emotion
   };
 }
