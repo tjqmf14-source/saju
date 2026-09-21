@@ -2,6 +2,7 @@ import { calculateSaju, calculateTodayFlow } from './saju-engine.js';
 
 const $=(id)=>document.getElementById(id);
 const PROFILE_KEY='naesaju.profiles.v1';
+const STREAK_KEY='naesaju.daily-streak.v1';
 let latest=null;
 let deferredInstall=null;
 
@@ -51,6 +52,8 @@ function renderProfileOptions(){
   const profiles=readProfiles();
   select.innerHTML='<option value="">새 프로필</option>'+profiles.map((p,i)=>'<option value="'+i+'">'+escapeHtml(p.name||('프로필 '+(i+1)))+' · '+escapeHtml(p.birthDate||p.birthYear+'년')+'</option>').join('');
   if(current!==''&&profiles[Number(current)])select.value=current;
+  const del=$('deleteProfile');
+  if(del)del.disabled=profiles.length===0||select.value==='';
 }
 function applyProfile(p){
   if(!p)return;
@@ -139,6 +142,23 @@ function renderCompatibility(event){
     box.innerHTML='<p class="inline-error">'+escapeHtml(error.message||'궁합 정보를 확인해 주세요.')+'</p>';
   }
 }
+function kstDayKey(date=new Date()){
+  const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);
+  const o=Object.fromEntries(parts.map(p=>[p.type,p.value]));
+  return o.year+'-'+o.month+'-'+o.day;
+}
+function updateDailyStreak(){
+  const today=kstDayKey();
+  const yesterday=kstDayKey(new Date(Date.now()-86400000));
+  let data={day:'',count:0};
+  try{data=JSON.parse(localStorage.getItem(STREAK_KEY)||'{}');}catch{}
+  if(data.day!==today){
+    data={day:today,count:data.day===yesterday?Math.max(1,Number(data.count)||0)+1:1};
+    localStorage.setItem(STREAK_KEY,JSON.stringify(data));
+  }
+  return Math.max(1,Number(data.count)||1);
+}
+
 function addTodayExplorer(detail){
   const panel=$('today');
   if(!panel)return;
@@ -149,6 +169,7 @@ function addTodayExplorer(detail){
     explorer.className='today-explorer';
     panel.append(explorer);
   }
+  const streak=updateDailyStreak();
   const days=[];
   for(let i=0;i<7;i++){
     const d=new Date(Date.now()+i*86400000);
@@ -163,7 +184,7 @@ function addTodayExplorer(detail){
     ['저녁 17–21','관계','말의 속도를 조금 늦추고 상대 반응을 확인하세요.'],
     ['밤 21–24','회복',base[1]]
   ];
-  explorer.innerHTML='<div class="today-explorer-head"><div><span class="section-kicker">7 DAY FLOW</span><h3>오늘부터 7일 흐름</h3></div><p>일진과 원국의 관계를 날짜별로 비교합니다.</p></div>'+
+  explorer.innerHTML='<div class="today-explorer-head"><div><span class="section-kicker">7 DAY FLOW</span><h3>오늘부터 7일 흐름</h3></div><div class="today-return-meta"><strong>연속 '+streak+'일 확인</strong><p>일진과 원국의 관계를 날짜별로 비교합니다.</p></div></div>'+
     '<div class="seven-day-strip">'+days.join('')+'</div>'+
     '<div class="time-flow-grid">'+periods.map(p=>'<article><span>'+p[0]+'</span><strong>'+p[1]+'</strong><p>'+escapeHtml(p[2])+'</p></article>').join('')+'</div>';
 }
@@ -244,6 +265,8 @@ $('saveProfile')?.addEventListener('click',saveCurrentProfile);
 $('deleteProfile')?.addEventListener('click',deleteCurrentProfile);
 $('profileSelect')?.addEventListener('change',()=>{
   const value=$('profileSelect').value;
+  const del=$('deleteProfile');
+  if(del)del.disabled=value==='';
   if(value==='')return;
   applyProfile(readProfiles()[Number(value)]);
 });
