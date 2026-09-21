@@ -139,6 +139,7 @@ test('V12 remains readable and overflow-free on mobile', async ({ page }, testIn
       heroBackground:getComputedStyle(document.querySelector('.hero-visual')).backgroundImage,
       premiumWhiteSpace:getComputedStyle(document.querySelector('.premium-link')).whiteSpace,
       premiumFits:document.querySelector('.premium-link').scrollWidth<=document.querySelector('.premium-link').clientWidth+1,
+      topbarPosition:getComputedStyle(document.querySelector('.topbar')).position,
       cards,
     };
   });
@@ -147,6 +148,7 @@ test('V12 remains readable and overflow-free on mobile', async ({ page }, testIn
   expect(mobileAudit.nameField?.width || 0).toBeGreaterThan((mobileAudit.formGrid?.width || 0) * .95);
   expect(mobileAudit.premiumWhiteSpace).toBe('nowrap');
   expect(mobileAudit.premiumFits).toBe(true);
+  expect(mobileAudit.topbarPosition).toBe('relative');
   expect(mobileAudit.input?.height || 9999).toBeLessThan(1250);
   expect(mobileAudit.hero?.height || 9999).toBeLessThan(1250);
   expect(mobileAudit.compatibility?.width || 0).toBeGreaterThan(viewportWidth - 40);
