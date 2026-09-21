@@ -15,7 +15,7 @@ const [gradle, manifest, activity, packageJson, ui, workflow] = await Promise.al
 
 test('Android app is versioned and packages the latest Vite dist', () => {
   assert.match(gradle, /versionCode 220/);
-  assert.match(gradle, /versionName '2\.1\.0'/);
+  assert.match(gradle, /versionName '2\.2\.0'/);
   assert.match(gradle, /generated\/assets\/site/);
   assert.match(gradle, /syncWebAssets/);
 });
