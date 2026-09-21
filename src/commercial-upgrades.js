@@ -204,6 +204,37 @@ function enhanceTrust(detail){
   proof.innerHTML='<strong>이 리포트의 계산 기준</strong><span>'+escapeHtml(detail.chart.basis.calendarEngine)+'</span><span>'+escapeHtml(detail.chart.basis.location)+' · 진태양시 '+escapeHtml(detail.chart.basis.trueSolarTime)+'</span><span>월운은 양력 1일이 아닌 절입 시각 기준</span>';
   box.prepend(proof);
 }
+function renderResultHome(detail){
+  const box=$('resultHomeCards');
+  if(!box)return;
+  const overview=detail.report.overview;
+  const todayCopy=(DAILY_COPY[detail.todayFlow.group]||DAILY_COPY.인성)[0];
+  const yearItem=detail.report.year||detail.report.overview;
+  box.innerHTML=
+    '<article><span>01 · 나의 핵심</span><strong>'+escapeHtml(overview.title)+'</strong><p>'+escapeHtml(overview.lead)+'</p><a href="#report-overview" data-open-report>핵심 해석 →</a></article>'+
+    '<article><span>02 · 오늘</span><strong>'+escapeHtml(detail.todayFlow.tenGod)+' · '+escapeHtml(detail.todayFlow.group)+'</strong><p>'+escapeHtml(todayCopy)+'</p><a href="#today">오늘 흐름 →</a></article>'+
+    '<article><span>03 · 올해</span><strong>'+escapeHtml(yearItem.title)+'</strong><p>'+escapeHtml(yearItem.lead)+'</p><a href="#year">연간 흐름 →</a></article>';
+}
+function questionKey(query){
+  const q=String(query||'').toLowerCase();
+  if(/돈|재물|수입|지출|투자|금전/.test(q))return 'money';
+  if(/연애|사랑|관계|결혼|인연|상대/.test(q))return 'love';
+  if(/건강|휴식|회복|피곤|스트레스/.test(q))return 'recovery';
+  if(/올해|내년|연운|시기|언제/.test(q))return 'year';
+  if(/직업|일|이직|퇴사|커리어|회사|업무/.test(q))return 'career';
+  return 'overview';
+}
+function answerCustomQuestion(){
+  const answer=$('sajuAnswer');
+  const query=$('sajuQuestionInput')?.value.trim();
+  if(!latest){answer.textContent='먼저 사주 리포트를 생성해 주세요.';return;}
+  if(!query){answer.textContent='궁금한 내용을 한 문장으로 입력해 주세요.';return;}
+  const key=questionKey(query);
+  const item=latest.report[key]||latest.report.overview;
+  const second=item.paragraphs?.[1]||item.paragraphs?.[0]||'';
+  answer.innerHTML='<strong>'+escapeHtml(query)+'</strong><p>'+escapeHtml(item.lead)+'</p><p>'+escapeHtml(second)+'</p><small>입력한 질문의 핵심 주제를 현재 사주 리포트에서 찾아 요약한 로컬 답변입니다.</small><br><a href="#report-'+key+'" data-open-report>근거가 된 정밀 해석 읽기 →</a>';
+}
+
 function setupQuestions(){
   document.querySelectorAll('[data-saju-question]').forEach(btn=>btn.addEventListener('click',()=>{
     const answer=$('sajuAnswer');
@@ -212,6 +243,8 @@ function setupQuestions(){
     const item=latest.report[key]||latest.report.relationships||latest.report.overview;
     answer.innerHTML='<strong>'+escapeHtml(item.title)+'</strong><p>'+escapeHtml(item.lead)+'</p><p>'+escapeHtml(item.paragraphs?.[0]||'')+'</p><a href="#report-'+key+'" data-open-report>정밀 해석 이어보기 →</a>';
   }));
+  $('askSaju')?.addEventListener('click',answerCustomQuestion);
+  $('sajuQuestionInput')?.addEventListener('keydown',(event)=>{if(event.key==='Enter'){event.preventDefault();answerCustomQuestion();}});
 }
 async function shareReport(){
   if(!latest)return;
@@ -272,6 +305,7 @@ $('profileSelect')?.addEventListener('change',()=>{
 });
 $('compatibilityForm')?.addEventListener('submit',renderCompatibility);
 $('shareReport')?.addEventListener('click',shareReport);
+$('resultShare')?.addEventListener('click',shareReport);
 renderProfileOptions();
 setupQuestions();
 setupReportLinks();
@@ -281,6 +315,7 @@ addAnnualNavigator();
 
 document.addEventListener('saju:rendered',(event)=>{
   latest=event.detail;
+  renderResultHome(latest);
   addTodayExplorer(latest);
   enhanceTrust(latest);
   repositionMbti();
