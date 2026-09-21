@@ -179,20 +179,42 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   };
 
   const topGods=profile.tenGods.ranking.slice(0,3);
-  const topGodPlacementText=topGods.map((item)=>`${item.tenGod}: ${item.locations.slice(0,3).join('·') || '원국 내부'}`).join(' / ');
+  const topGodPlacementText=topGods.map((item)=>`${item.tenGod}: ${item.locations.slice(0,4).join('·') || '원국 내부'}`).join(' / ');
   const rootText=profile.strength.rootReasons.length
     ? profile.strength.rootReasons.join(' · ')
     : '원국에서 일간과 같은 오행의 뚜렷한 통근 신호가 적습니다.';
+  const placementLead=profile.placements[0];
+  const placementSecond=profile.placements[1];
 
   report.overview.quick=[
     ...profile.easyFacts,
-    `쉽게 말하면, 지금 원국을 읽을 때 가장 먼저 볼 것은 ${topGods[0]?.tenGod || '십신'}의 쓰임과 ${profile.strength.band} 쪽으로 기운 균형이 기우는 이유입니다.`
+    profile.structure.plain
   ];
+  report.overview.paragraphs.unshift(
+    `이 원국을 쉽게 읽는 순서는 ‘일간 → 월령과 통근 → 십신의 실제 위치 → 대운·세운’입니다. 먼저 ${profile.readingOrder[0].body} 그다음 ${profile.readingOrder[1].body} 마지막으로 ${profile.readingOrder[2].body} 이런 순서로 보면 오행 숫자 하나만 보고 성격을 단정하는 것보다 훨씬 입체적으로 읽을 수 있습니다.`
+  );
 
   report.temperament.quick=[
-    `겉으로 가장 자주 드러나는 십신은 ${topGods[0]?.tenGod || '비견'} · ${topGods[0]?.simple || '자기 기준'}입니다.`,
-    `그 다음은 ${topGods[1]?.tenGod || topGods[0]?.tenGod || '비견'} · ${topGods[1]?.simple || topGods[0]?.simple || '자기 기준'}로, 한 가지 성향만으로 설명되지 않습니다.`,
-    `월령과 통근까지 함께 보면 단순한 오행 개수보다 실제로 어떤 기운을 쓰기 쉬운지가 더 선명해집니다.`
+    placementLead?.easy || `가장 두드러지는 십신은 ${topGods[0]?.tenGod || '비견'}입니다.`,
+    placementLead?.life || `생활에서는 ${topGods[0]?.simple || '자기 기준'} 쪽 성향이 먼저 나타날 수 있습니다.`,
+    placementSecond?.easy || `두 번째 축은 ${topGods[1]?.tenGod || topGods[0]?.tenGod || '비견'}입니다.`
+  ];
+  if(placementLead){
+    report.temperament.paragraphs.unshift(
+      `${placementLead.headline}. ${placementLead.visibility} ${placementLead.life} 그래서 ‘나는 원래 이런 사람이다’라는 한 문장보다 어떤 상황에서 이 성향이 먼저 튀어나오는지를 보는 편이 실제 체감과 더 잘 맞습니다.`
+    );
+  }
+
+  report.innerOuter.quick=[
+    placementLead?.visibility || '천간과 지장간의 위치를 나누어 겉으로 보이는 성향과 안쪽에서 작동하는 성향을 구분합니다.',
+    placementSecond?.visibility || '두 번째 십신의 위치도 함께 봅니다.',
+    profile.structure.headline
+  ];
+
+  report.strengths.quick=[
+    `가장 강한 축은 ${topGods[0]?.tenGod || strongRole} · ${topGods[0]?.plain?.easy || topGods[0]?.simple || role.core}입니다.`,
+    `두 번째 축은 ${topGods[1]?.tenGod || secondRole} · ${topGods[1]?.plain?.easy || topGods[1]?.simple || second.core}입니다.`,
+    '강점은 하나를 크게 쓰는 것보다 이 두 축을 어떤 순서로 연결하느냐에서 더 잘 드러납니다.'
   ];
 
   report.balance.title='기운의 중심과 신강·신약';
@@ -203,25 +225,42 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
     profile.balanceHint
   ];
   report.balance.paragraphs.unshift(
-    `기존처럼 오행 개수만 세지 않고 월지의 계절 힘, 일간이 지지에 뿌리를 두는지, 천간에서 같은 기운이나 인성의 도움을 받는지, 반대로 식상·재성·관성 쪽으로 힘이 빠지는지를 함께 계산했습니다. 현재 참고 점수는 ${profile.strength.score}점으로 ${profile.strength.band} 구간입니다. ${profile.strength.disclaimer}`
+    `신강·신약 참고값은 단순 오행 개수가 아닙니다. 기본점 50에서 생조 비중 ${profile.strength.supportDelta>=0?'+':''}${profile.strength.supportDelta}, 월령 ${profile.strength.month.delta>=0?'+':''}${profile.strength.month.delta}, 통근 +${profile.strength.rootScore}, 천간의 투간·극설 ${profile.strength.visibleSupport>=0?'+':''}${profile.strength.visibleSupport}을 함께 참고했습니다. 최종 참고값은 ${profile.strength.score}점으로 ${profile.strength.band} 구간입니다. ${profile.strength.disclaimer}`
   );
 
   report.career.quick=[
-    `직업 해석은 ${topGods[0]?.tenGod || '십신'}만 보지 않고 월주·시주에 어떤 십신이 드러났는지도 함께 확인합니다.`,
-    `두드러진 십신 3개는 ${topGods.map((item)=>item.tenGod).join(' · ')}입니다.`,
-    '직업명 하나를 찍기보다 자율성·책임·표현·관리 중 어떤 조건에서 성과가 나는지 설명합니다.'
+    `일에서는 ${topGods[0]?.tenGod || strongRole}의 ‘${topGods[0]?.plain?.easy || topGods[0]?.simple || role.career}’ 성향을 먼저 봅니다.`,
+    placementLead?.locations?.some?.(()=>false)
+      ? ''
+      : `특히 ${topGods[0]?.locations?.slice(0,2).join('·') || '원국의 주요 위치'}에서 이 십신이 확인됩니다.`,
+    `${topGods[1]?.tenGod || secondRole}도 함께 강해 한 가지 직무명보다 자율성·책임·표현·관리 중 어떤 조건을 함께 쓰는지가 중요합니다.`
   ];
+  report.career.paragraphs.unshift(
+    `직업 해석은 직업명을 찍는 방식보다 원국에서 자주 쓰는 역할을 보는 방식으로 바꿨습니다. 현재 상위 십신은 ${topGods.map((item)=>item.tenGod).join(' · ')}이며, 대표 위치는 ${topGodPlacementText}입니다. 같은 ${topGods[0]?.tenGod || '십신'}이라도 월주 천간처럼 사회생활에서 바로 드러나는지, 지장간처럼 특정 상황에서 꺼내 쓰는지에 따라 실제 직장 체감은 달라질 수 있습니다.`
+  );
 
   report.money.quick=[
-    '재물운은 “큰돈이 온다”가 아니라 재성의 배치와 현재 세운이 돈을 다루는 방식에 어떤 압력을 주는지로 읽습니다.',
-    `원국에서 재성 점수는 ${((profile.tenGods.score.편재||0)+(profile.tenGods.score.정재||0)).toFixed(2)}입니다.`,
-    '실제 투자·대출·소비 판단은 운세보다 현금흐름과 손실 가능성을 우선합니다.'
+    '재물운은 “큰돈이 온다”가 아니라 재성이 어디에 있고 다른 십신과 어떻게 섞이는지를 먼저 봅니다.',
+    `원국의 편재+정재 참고값은 ${((profile.tenGods.score.편재||0)+(profile.tenGods.score.정재||0)).toFixed(2)}이며, 전체 상위 십신은 ${topGods.map((item)=>item.tenGod).join(' · ')}입니다.`,
+    '실제 투자·대출·소비 판단은 사주보다 현금흐름과 손실 가능성을 우선합니다.'
   ];
 
   report.love.quick=[
-    '관계 해석은 상대의 마음을 맞히는 방식이 아니라 내가 친밀한 관계에서 반복하는 반응 패턴을 설명합니다.',
-    `관계에서 함께 봐야 할 원국 신호는 ${relation}입니다.`,
-    '궁합에서는 두 사람의 원국을 별도로 계산해 공통점과 긴장 지점을 비교합니다.'
+    '관계 해석은 상대 마음을 맞히는 대신 내가 가까운 관계에서 반복하는 반응을 설명합니다.',
+    `원국 관계 신호는 ${relation}이며, 일주와 강한 십신의 위치를 함께 봅니다.`,
+    '궁합에서는 두 사람의 원국을 따로 계산한 뒤 공통점과 긴장 지점을 비교합니다.'
+  ];
+
+  report.relationships.quick=[
+    `${profile.structure.mode}이라 상황에 따라 관계에서 쓰는 방식이 달라질 수 있습니다.`,
+    `주요 십신은 ${topGods.map((item)=>`${item.tenGod}(${item.simple})`).join(' · ')}입니다.`,
+    `합·충·형·파·해는 현재 ${relation}이 확인되며, 좋고 나쁨보다 반복되는 상호작용의 단서로 읽습니다.`
+  ];
+
+  report.recovery.quick=[
+    `과부하가 생기면 ${topGods[0]?.tenGod || strongRole}의 장점을 더 세게 쓰려는 패턴이 나타날 수 있습니다.`,
+    `기운 균형은 ${profile.strength.band} 쪽이므로 ${profile.balanceHint}`,
+    '회복은 운세 해석보다 실제 수면·휴식·업무량·통증 기록을 우선합니다.'
   ];
 
   report.technical.quick=[
@@ -230,7 +269,10 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
     `주요 십신: ${topGods.map((item)=>`${item.tenGod} ${item.score}`).join(' · ')}`
   ];
   report.technical.paragraphs.push(
-    `십신은 비견·겁재·식신·상관·편재·정재·편관·정관·편인·정인을 하나로 뭉개지 않고 천간과 지장간의 위치를 따로 기록합니다. 현재 상위 십신의 대표 위치는 ${topGodPlacementText}입니다. 위치와 가중치를 함께 보는 이유는 같은 십신이라도 겉으로 드러난 천간인지, 지지 안에 잠재된 지장간인지에 따라 해석 비중을 다르게 보기 위해서입니다.`
+    `십신은 비견·겁재·식신·상관·편재·정재·편관·정관·편인·정인을 하나로 합치지 않고 천간과 지장간의 위치를 따로 기록합니다. 현재 상위 십신의 대표 위치는 ${topGodPlacementText}입니다. 천간에 있으면 실제 행동에서 비교적 드러나기 쉽고, 지장간에만 있으면 상황이 만들어졌을 때 잠재적으로 작동한다고 보는 전통적 해석 관습을 참고하되 이를 절대적 성격 판정으로 사용하지 않습니다.`
+  );
+  report.technical.paragraphs.push(
+    `신강·신약 참고값의 내부 구성은 ${profile.strength.breakdown.map((item)=>`${item.label} ${item.value>=0?'+':''}${item.value}`).join(' / ')}입니다. 이 값은 해석의 근거를 숨기지 않기 위한 설명용 지표이며, 특정 학파의 용신 판정을 자동으로 확정하는 공식은 아닙니다.`
   );
 
   return report;
