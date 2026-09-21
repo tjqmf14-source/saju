@@ -102,10 +102,10 @@ function dateParts(value){
   if(!m)return null;
   return {year:Number(m[1]),month:Number(m[2]),day:Number(m[3])};
 }
-function pairKey(a,b){return [a,b].sort().join('-');}
+function branchRelation(a,b){return DAY_BRANCH_RELATIONS[a+'-'+b]||DAY_BRANCH_RELATIONS[b+'-'+a]||'';}
 function compatibilityText(a,b){
   const ae=ELEMENT_BY_STEM[a.dayMaster],be=ELEMENT_BY_STEM[b.dayMaster];
-  const relation=DAY_BRANCH_RELATIONS[pairKey(a.pillars.day.earthlyBranch,b.pillars.day.earthlyBranch)]||'';
+  const relation=branchRelation(a.pillars.day.earthlyBranch,b.pillars.day.earthlyBranch);
   let strength='서로의 방식을 이해하고 역할을 나눌수록 안정되는 관계입니다.';
   let caution='감정이 올라올 때 결론부터 내리기보다 사실과 감정을 나눠 말하는 편이 좋습니다.';
   if(ae===be)strength='기본적인 판단 기준과 반응 속도가 비슷해 서로를 빠르게 이해하기 쉽습니다.';
@@ -242,7 +242,11 @@ function repositionMbti(){
 
 $('saveProfile')?.addEventListener('click',saveCurrentProfile);
 $('deleteProfile')?.addEventListener('click',deleteCurrentProfile);
-$('profileSelect')?.addEventListener('change',()=>applyProfile(readProfiles()[Number($('profileSelect').value)]));
+$('profileSelect')?.addEventListener('change',()=>{
+  const value=$('profileSelect').value;
+  if(value==='')return;
+  applyProfile(readProfiles()[Number(value)]);
+});
 $('compatibilityForm')?.addEventListener('submit',renderCompatibility);
 $('shareReport')?.addEventListener('click',shareReport);
 renderProfileOptions();
