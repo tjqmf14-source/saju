@@ -27,3 +27,14 @@ test('plain-language module covers common specialist terms and duplicate copy', 
   assert.match(plain, /dataset\.plainDuplicate/);
   assert.doesNotThrow(() => new Function(plain));
 });
+
+
+test('reader-facing advice is rewritten by life category', () => {
+  assert.match(plain, /ROLE_GUIDE/);
+  for (const key of ['temperament','career','money','relationships','recovery','balance']) {
+    assert.ok(plain.includes(key), key);
+  }
+  assert.match(plain, /rewriteFriendlyAdvice/);
+  assert.match(plain, /혼자 빠르게 결론내리기보다/);
+  assert.match(plain, /아이디어 수보다 끝낸 결과물 수/);
+});

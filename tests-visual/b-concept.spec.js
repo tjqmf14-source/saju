@@ -39,7 +39,7 @@ test('V12 desktop follows the supplied landing-page composition', async ({ page 
   const hero = page.locator('.hero-primary');
   const heroBox = await hero.boundingBox();
   expect(heroBox?.width || 0).toBeGreaterThanOrEqual(1300);
-  expect(heroBox?.height || 0).toBeGreaterThanOrEqual(540);
+  expect(heroBox?.height || 0).toBeGreaterThanOrEqual(400);\n  expect(heroBox?.height || 9999).toBeLessThanOrEqual(520);
 
   const heroVisual = page.locator('.hero-visual');
   const heroBg = await heroVisual.evaluate((el) => getComputedStyle(el).backgroundImage);
@@ -153,7 +153,7 @@ test('V12 remains readable and overflow-free on mobile', async ({ page }, testIn
   expect(mobileAudit.hero?.height || 9999).toBeLessThan(1250);
   expect(mobileAudit.compatibility?.width || 0).toBeGreaterThan(viewportWidth - 40);
   expect(mobileAudit.mobileNav?.height || 0).toBeGreaterThanOrEqual(60);
-  expect(mobileAudit.heroVisual?.height || 0).toBeGreaterThan(250);
+  expect(mobileAudit.heroVisual?.height || 0).toBe(0);
   expect(mobileAudit.keywordShell?.height || 9999).toBeLessThan(1650);
   expect(mobileAudit.fullReport?.width || 0).toBeGreaterThan(viewportWidth - 40);
   expect(mobileAudit.heroBackground).toBe('none');
@@ -635,7 +635,7 @@ test('plain-language layer keeps visible report copy free of specialist jargon',
   await page.locator('#full-report').evaluate((el) => { el.open = true; });
   await page.waitForTimeout(50);
   const text = await page.locator('#results').innerText();
-  for (const term of ['원국','십신','오행','일간','절입','대운','세운','월운','신강','신약','용신','희신','기신','격국','천간','지지','비겁','식상','재성','관성','인성']) {
+  for (const term of ['원국','십신','오행','일간','절입','대운','세운','월운','신강','신약','용신','희신','기신','격국','천간','지지','비겁','식상','재성','관성','인성','양 화','가중 성향 균형','표현 기운']) {
     expect(text).not.toContain(term);
   }
 });
