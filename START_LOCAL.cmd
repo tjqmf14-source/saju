@@ -1,10 +1,19 @@
 @echo off
 setlocal
 chcp 65001 >nul
-cd /d "%~dp0"
 title Naesaju Local Launcher
 
+set "PROJECT_DIR=D:\saju"
 set "LOCAL_URL=http://127.0.0.1:5173"
+
+if not exist "%PROJECT_DIR%\package.json" (
+  echo [ERROR] Local project was not found at %PROJECT_DIR%.
+  echo Expected file: %PROJECT_DIR%\package.json
+  pause
+  exit /b 1
+)
+
+cd /d "%PROJECT_DIR%"
 
 where node >nul 2>&1
 if errorlevel 1 (
@@ -24,7 +33,7 @@ if errorlevel 1 (
 
 if not exist "package.json" (
   echo [ERROR] package.json was not found.
-  echo Keep START_LOCAL.cmd in the repository root folder.
+  echo Expected project folder: %PROJECT_DIR%.
   pause
   exit /b 1
 )
@@ -40,7 +49,7 @@ if not exist "node_modules\vite\bin\vite.js" (
 )
 
 echo [INFO] Starting Naesaju local server at %LOCAL_URL%
-start "Naesaju Local Server" /D "%~dp0" cmd /k "npm run dev:local"
+start "Naesaju Local Server" /D "%PROJECT_DIR%" cmd /k "npm run dev:local"
 
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "$u='%LOCAL_URL%'; for($i=0; $i -lt 60; $i++){ try { $r=Invoke-WebRequest -UseBasicParsing -Uri $u -TimeoutSec 1; if($r.StatusCode -ge 200 -and $r.StatusCode -lt 500){ Start-Process $u; exit 0 } } catch {}; Start-Sleep -Milliseconds 500 }; exit 1"
