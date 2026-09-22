@@ -24,6 +24,6 @@ test('plain-language module covers common specialist terms and duplicate copy', 
     assert.ok(plain.includes(term), term);
   }
   assert.match(plain, /MutationObserver/);
-  assert.match(plain, /data\.plainDuplicate/);
+  assert.match(plain, /dataset\.plainDuplicate/);
   assert.doesNotThrow(() => new Function(plain));
 });
