@@ -56,7 +56,10 @@
     [/음\\s*금/g, '세밀하게 판단하고 다듬는 편'],
     [/양\\s*수/g, '생각을 넓게 확장하는 편'],
     [/음\\s*수/g, '깊이 생각하고 신중히 움직이는 편'],
-    [/합·충·형·파·해/g, '변화 신호']
+    [/합·충·형·파·해/g, '변화 신호'],
+    [/기운/g, '성향'],
+    [/타고난 구조/g, '성향 리포트'],
+    [/관계를 오래 쓰는 방법/g, '관계를 편하게 이어가는 방법']
   ];
 
 
@@ -104,7 +107,7 @@
   };
 
   const FRIENDLY_TITLES = {
-    temperament:'성격', career:'일과 진로', money:'돈',
+    temperament:'성격', strengths:'강점', career:'일과 진로', money:'돈',
     relationships:'관계', recovery:'회복', balance:'균형'
   };
 
@@ -119,7 +122,7 @@
   }
 
   function rewriteFriendlyAdvice() {
-    for (const key of ['temperament','career','money','relationships','recovery']) {
+    for (const key of ['temperament','strengths','career','money','relationships','recovery']) {
       const chapter=root.querySelector(`#detailedReport [data-report-key="${key}"]`);
       const lines=guideFor(key);
       if(!chapter || !lines.length) continue;
@@ -156,6 +159,14 @@
         }
       }
     }
+  }
+
+  for (const guide of Object.values(ROLE_GUIDE)) {
+    guide.strengths = guide.strengths || [
+      guide.balance?.[0] || '잘하는 방식이 분명한 편입니다.',
+      guide.temperament?.[1] || '강점이 과해질 때만 한 번 더 점검해보세요.',
+      guide.balance?.[2] || '잘하는 방식을 상황에 맞게 조절하면 더 안정적입니다.'
+    ];
   }
 
   const skipTags = new Set(['SCRIPT','STYLE','SVG','PATH','SYMBOL','USE']);
@@ -212,6 +223,16 @@
     });
   }
 
+  function simplifyProductCopy() {
+    const reportTitle = root.querySelector('#reportTitle');
+    if (reportTitle) reportTitle.textContent = reportTitle.textContent.replace('타고난 구조','성향 리포트');
+    const reportLead = root.querySelector('#reportLead');
+    if (reportLead) reportLead.textContent = simplifyText(reportLead.textContent);
+    root.querySelectorAll('.compatibility-card strong').forEach((el)=>{
+      el.textContent = el.textContent.replace('관계를 오래 쓰는 방법','관계를 편하게 이어가는 방법');
+    });
+  }
+
   function simplifyHeadings() {
     const yearTitle = root.querySelector('#yearTitle');
     if (yearTitle) {
@@ -249,6 +270,7 @@
     simplifyMonthAndQuarter();
     simplifyDetailedReport();
     simplifyHeadings();
+    simplifyProductCopy();
     rewriteFriendlyAdvice();
     removeExactRepetition();
   }
