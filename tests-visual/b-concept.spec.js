@@ -39,7 +39,8 @@ test('V12 desktop follows the supplied landing-page composition', async ({ page 
   const hero = page.locator('.hero-primary');
   const heroBox = await hero.boundingBox();
   expect(heroBox?.width || 0).toBeGreaterThanOrEqual(1300);
-  expect(heroBox?.height || 0).toBeGreaterThanOrEqual(400);\n  expect(heroBox?.height || 9999).toBeLessThanOrEqual(520);
+  expect(heroBox?.height || 0).toBeGreaterThanOrEqual(400);
+  expect(heroBox?.height || 9999).toBeLessThanOrEqual(520);
 
   const heroVisual = page.locator('.hero-visual');
   const heroBg = await heroVisual.evaluate((el) => getComputedStyle(el).backgroundImage);
