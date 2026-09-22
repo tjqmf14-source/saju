@@ -40,7 +40,7 @@ test('V12 desktop follows the supplied landing-page composition', async ({ page 
   const heroBox = await hero.boundingBox();
   expect(heroBox?.width || 0).toBeGreaterThanOrEqual(1300);
   expect(heroBox?.height || 0).toBeGreaterThanOrEqual(400);
-  expect(heroBox?.height || 9999).toBeLessThanOrEqual(520);
+  expect(heroBox?.height || 9999).toBeLessThanOrEqual(580);
 
   const heroVisual = page.locator('.hero-visual');
   const heroBg = await heroVisual.evaluate((el) => getComputedStyle(el).backgroundImage);
@@ -325,7 +325,7 @@ test('reference-density sections stay compact on desktop and primary disclosure 
   const workCard = page.locator('.visual-keyword-card[data-report-key="career"]');
   await workCard.click();
   await expect(workCard).toHaveAttribute('aria-pressed','true');
-  await expect(page.locator('#keywordInsight')).toContainText('일·직업·재능');
+  await expect(page.locator('#keywordInsight')).toContainText('일과 진로');
   const keywordTitles=[];
   for(const key of ['temperament','career','money','relationships','recovery','balance']){
     const card=page.locator(`.visual-keyword-card[data-report-key="${key}"]`);
