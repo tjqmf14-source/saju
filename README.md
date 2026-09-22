@@ -53,10 +53,25 @@
 
 `npm run check:network`로 앱 소스의 네트워크 전송 및 브라우저 영구 저장 API 사용 여부를 검사합니다.
 
-## 개발 실행
+## 로컬 실행
+
+Windows에서는 저장소 루트의 `START_LOCAL.cmd`를 더블클릭하면 됩니다.
+
+- 첫 실행에만 필요한 패키지를 자동 설치합니다.
+- 로컬 서버를 `http://127.0.0.1:5173`에서 고정 실행합니다.
+- 서버가 준비되면 기본 브라우저를 자동으로 엽니다.
+- 서버를 종료하려면 별도로 열린 `Naesaju Local Server` 창에서 `Ctrl+C`를 누릅니다.
+
+수동 실행:
 
 ```bash
 npm install
+npm run dev:local
+```
+
+기존 개발 서버 실행도 그대로 사용할 수 있습니다.
+
+```bash
 npm run dev
 ```
 
