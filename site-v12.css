@@ -1017,3 +1017,247 @@ mark,.text-highlight{padding:0 .06em;color:#fff2d7;background:linear-gradient(tr
   .weekly-day:first-child{grid-column:auto}
 }
 
+
+
+/* ==========================================================================
+   NAESAJU CLEAN WHITE UI V13
+   Plain-language presentation layer. Core calculation logic is unchanged.
+   ========================================================================== */
+:root{
+  --bg:#f7f8fa;
+  --bg-deep:#f7f8fa;
+  --panel:#ffffff;
+  --panel-2:#f7f8fa;
+  --panel-3:#f2f4f7;
+  --gold:#20242a;
+  --gold-bright:#111317;
+  --gold-soft:#6b7280;
+  --ink:#17191d;
+  --muted:#59616d;
+  --muted-2:#7d8794;
+  --line:#dfe3e8;
+  --line-soft:#eceff2;
+  --shadow:0 14px 40px rgba(17,24,39,.07);
+  --serif:"Pretendard","Noto Sans KR","Malgun Gothic",Arial,sans-serif;
+}
+html{background:#f7f8fa!important;color-scheme:light!important}
+body{
+  color:var(--ink)!important;
+  background:#f7f8fa!important;
+}
+body::before{display:none!important}
+h1,h2,h3,h4,blockquote{font-family:var(--sans)!important;letter-spacing:-.035em!important}
+.section-kicker,.micro{color:#7a8490!important;letter-spacing:.08em!important}
+.section-no{color:#9aa3ad!important}
+.section-lead{color:var(--muted)!important}
+.oracle-panel{
+  border-color:var(--line)!important;
+  background:#fff!important;
+  box-shadow:var(--shadow)!important;
+}
+.topbar{
+  border-bottom-color:var(--line)!important;
+  background:rgba(255,255,255,.96)!important;
+  box-shadow:0 1px 12px rgba(17,24,39,.04)!important;
+}
+.brand-oracle-mark{border-color:var(--line)!important;background:#fff!important}
+.brand-word strong{color:#15171a!important}
+.brand-word small,.topnav a,.premium-link{color:#4f5864!important}
+.topnav a::after{background:#111317!important}
+.premium-link{border-color:#d7dce1!important;background:#fff!important}
+.hero-primary{
+  background:#fff!important;
+  border-bottom-color:var(--line)!important;
+}
+.hero-primary::before,.hero-primary::after,.hero-visual::before,.hero-visual::after{display:none!important}
+.hero-copy h1,.hero-copy h1 em{color:#15171a!important;text-shadow:none!important}
+.hero-lead{color:#59616d!important}
+.hero-visual{
+  background:#f1f3f5!important;
+  border-left:1px solid var(--line)!important;
+}
+.hero-visual-top{display:none!important}
+.hero-cta,.cta,.birth-side-submit,.visual-keyword-intro a,.closing-cta a{
+  border-color:#111317!important;
+  background:#111317!important;
+  color:#fff!important;
+  box-shadow:none!important;
+}
+.hero-proof-oracles .ui-icon{
+  border-color:#dfe3e8!important;
+  color:#20242a!important;
+  background:#fff!important;
+}
+.hero-proof-oracles b{color:#20242a!important}
+.hero-proof-oracles small{color:#7b8490!important}
+.input-panel,.landing-section,.tarot-stage,.full-report-shell{
+  background:#fff!important;
+  border-color:var(--line)!important;
+  box-shadow:var(--shadow)!important;
+}
+.input-panel::before,.input-panel::after,.landing-section::before,.landing-section::after,
+.tarot-stage::before,.tarot-stage::after,.full-report-shell::before,.full-report-shell::after{display:none!important}
+.input-panel .section-heading h2,.landing-section .section-heading h2,.tarot-copy h2,
+.full-report-shell h2,.full-report-shell h3{color:#17191d!important}
+.profile-manager,.precision-settings,.compatibility-form,.tarot-options{
+  background:#f8f9fb!important;
+  border-color:var(--line)!important;
+}
+input,select,textarea{
+  color:#17191d!important;
+  background:#fff!important;
+  border-color:#d7dce2!important;
+}
+input::placeholder,textarea::placeholder{color:#9aa3ad!important}
+.segmented,.year-quick-control,.day-nav,.fortune-date-picker{
+  background:#f3f5f7!important;
+  border-color:#dfe3e8!important;
+}
+.segmented label span,.year-shift,.day-nav button,#todayReset{
+  color:#38414b!important;
+}
+.segmented input:checked+span{
+  background:#fff!important;
+  color:#111317!important;
+  box-shadow:0 1px 5px rgba(17,24,39,.08)!important;
+}
+.precision-switch b,.precision-settings summary,.precision-grid label>span{color:#4f5864!important}
+.precision-explain{background:#fff!important;border-color:var(--line)!important}
+.birth-side-copy{color:#3f4752!important}
+.feature-orbit-nav{
+  border-color:var(--line)!important;
+  background:#fff!important;
+  box-shadow:var(--shadow)!important;
+}
+.feature-orbit-nav a{background:#fff!important;border-color:var(--line-soft)!important}
+.feature-orbit-nav a:hover{background:#f7f8fa!important}
+.feature-orbit-nav b{color:#20242a!important}
+.feature-orbit-nav small{color:#7b8490!important}
+.visual-keyword-showcase{
+  background:#fff!important;
+  border-color:var(--line)!important;
+  box-shadow:var(--shadow)!important;
+}
+.visual-keyword-intro{background:#fff!important}
+.visual-keyword-intro h2,.visual-keyword-card strong,.keyword-insight h3{color:#17191d!important}
+.visual-keyword-intro p,.visual-keyword-card small,.keyword-insight p{color:#59616d!important}
+.visual-keyword-card{
+  background:#fff!important;
+  border-color:#e3e6ea!important;
+  color:#17191d!important;
+}
+.visual-keyword-card.is-active{
+  background:#f7f8fa!important;
+  border-color:#111317!important;
+  box-shadow:inset 0 0 0 1px #111317!important;
+}
+.keyword-insight{background:#f8f9fb!important;border-color:var(--line)!important}
+.keyword-insight mark,.chapter-takeaway mark,.month-card-focus mark{background:transparent!important;color:#111317!important}
+.quote-band,.closing-cta{
+  background:#f1f3f5!important;
+  background-image:none!important;
+  border-color:var(--line)!important;
+  box-shadow:none!important;
+}
+.quote-band blockquote,.closing-cta h2{color:#17191d!important}
+.quote-band p,.closing-cta p{color:#59616d!important}
+.daily-primary,.daily-brief,.today-quote-panel,.daily-report-extra,.annual-content,
+.compatibility-body,.tarot-stage-inner,.reading-opening,.deep-report-block{
+  background:#fff!important;
+  border-color:var(--line)!important;
+}
+.daily-primary-score{background:#fff!important}
+.daily-score-track{stroke:#e5e8ec!important}
+.daily-score-progress{stroke:#111317!important}
+.daily-primary-score strong,.metric-score,.annual-copy blockquote{color:#17191d!important}
+.metric-row,.daily-brief-grid article,.daily-action-guide article,.weekly-day,
+.quarter-card,.advice-card,.month-card,.compatibility-card,.luck-step,.detail-disclosure{
+  background:#fff!important;
+  border-color:#e2e6ea!important;
+  color:#20242a!important;
+}
+.metric-label,.daily-brief-grid strong,.daily-action-guide strong,.quarter-card h3,
+.advice-card span,.month-card strong,.compatibility-card strong,.luck-step strong{color:#20242a!important}
+.metric-track,.bar-track{background:#e9edf1!important}
+.metric-track span,.bar-fill{background:#30363d!important}
+.today-quote-panel{background:#f7f8fa!important}
+.today-quote-panel blockquote,.today-quote-panel p{color:#30363d!important}
+.daily-report-extra>summary,.full-report-shell>summary{background:#fff!important;color:#20242a!important}
+.daily-time-flow article{background:#fff!important;border-color:#e5e8ec!important}
+.daily-time-flow strong,.daily-time-flow p,.weekly-day p{color:#4f5864!important}
+.year-panel>.section-heading{background:#fff!important;border-color:var(--line)!important}
+.annual-copy,.year-essay{background:#fff!important}
+.compatibility-panel{background:#fff!important}
+.compatibility-result-head h3,.compatibility-card p,.compatibility-note{color:#4f5864!important}
+.compatibility-form button{
+  background:#111317!important;
+  color:#fff!important;
+  border-color:#111317!important;
+}
+.tarot-stage{background:#fff!important}
+.tarot-copy p,.tarot-quote p,.tarot-help{color:#59616d!important}
+.tarot-preview-card,.tarot-result,.tarot-reading{
+  background:#fff!important;
+  border-color:#dfe3e8!important;
+  color:#20242a!important;
+}
+.tarot-quote{background:#f7f8fa!important;border-color:var(--line)!important}
+.tarot-button{
+  background:#111317!important;
+  color:#fff!important;
+  border-color:#111317!important;
+}
+.full-report-shell{background:#fff!important}
+.full-report-body{background:#fff!important}
+.report-nav{
+  background:rgba(255,255,255,.97)!important;
+  border-color:var(--line)!important;
+}
+.report-nav a{color:#5b6470!important}
+.report-nav a:hover{color:#111317!important}
+.detail-disclosure>summary{background:#fff!important;color:#20242a!important}
+.detail-chapter-body{background:#fff!important}
+.chapter-quick-list li{background:#f8f9fb!important;border-color:#e4e7eb!important}
+.chapter-quick-list strong{color:#111317!important}
+.chapter-quick-list span{color:#4f5864!important}
+.luck-step.active{border-color:#111317!important;box-shadow:inset 3px 0 #111317!important}
+.site-footer{
+  color:#5f6873!important;
+  border-top-color:#dfe3e8!important;
+}
+.site-footer strong{color:#20242a!important}
+.mobile-bottom-nav{
+  background:rgba(255,255,255,.97)!important;
+  border-top-color:#dfe3e8!important;
+  box-shadow:0 -4px 18px rgba(17,24,39,.05)!important;
+}
+.mobile-bottom-nav a{color:#5f6873!important}
+.mobile-bottom-nav a[aria-current="true"]{color:#111317!important}
+
+/* Keep only reader-facing advice. Technical material remains available to the
+   calculation engine but is intentionally removed from the user interface. */
+#profileTags,#accuracyBasis,#expert,.report-nav a[href="#expert"],
+.chapter-evidence,.chapter-full-analysis,.expert-evidence,.expert-glossary,.expert-raw-intro,
+#pillarGrid,#elementChart,#roleChart,#relationGrid,#mbtiAxes,
+.advice-card small,.month-card small,.quarter-steps,#luckOverview{
+  display:none!important;
+}
+#detailedReport [data-report-key="overview"],
+#detailedReport [data-report-key="innerOuter"],
+#detailedReport [data-report-key="strengths"],
+#detailedReport [data-report-key="balance"],
+#detailedReport [data-report-key="love"],
+#detailedReport [data-report-key="luck"],
+#detailedReport [data-report-key="technical"]{
+  display:none!important;
+}
+.year-essay-points p:last-child{display:none!important}
+.luck-step:not(.active){display:none!important}
+[data-plain-duplicate="true"]{display:none!important}
+
+@media(max-width:820px){
+  .topbar{background:#fff!important}
+  .hero-primary{background:#fff!important}
+  .hero-visual{background:#f1f3f5!important}
+  .quote-band,.closing-cta{background:#f1f3f5!important}
+}

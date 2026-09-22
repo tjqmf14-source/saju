@@ -51,3 +51,13 @@ test('mobile build does not depend on Capacitor and CI builds the existing Andro
   assert.match(workflow, /\.\/gradlew lintDebug assembleDebug/);
   assert.doesNotMatch(workflow, /cap add android|cap sync android/);
 });
+
+
+test('Android native chrome matches the white interface', () => {
+  assert.match(activity, /setStatusBarColor\(Color\.WHITE\)/);
+  assert.match(activity, /setNavigationBarColor\(Color\.WHITE\)/);
+  assert.match(activity, /webView\.setBackgroundColor\(Color\.WHITE\)/);
+  assert.match(activity, /root\.setBackgroundColor\(Color\.WHITE\)/);
+  assert.match(activity, /SYSTEM_UI_FLAG_LIGHT_STATUS_BAR/);
+  assert.match(activity, /SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR/);
+});

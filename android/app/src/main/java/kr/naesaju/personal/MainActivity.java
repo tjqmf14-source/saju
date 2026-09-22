@@ -41,16 +41,21 @@ public final class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         Window window = getWindow();
-        window.setStatusBarColor(Color.rgb(3, 17, 29));
-        window.setNavigationBarColor(Color.rgb(3, 17, 29));
+        window.setStatusBarColor(Color.WHITE);
+        window.setNavigationBarColor(Color.WHITE);
         if (Build.VERSION.SDK_INT >= 29) {
             window.setNavigationBarContrastEnforced(false);
         }
+        int systemUiFlags = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            systemUiFlags |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+        }
+        window.getDecorView().setSystemUiVisibility(systemUiFlags);
 
         WebView.setWebContentsDebuggingEnabled(false);
 
         webView = new WebView(this);
-        webView.setBackgroundColor(Color.rgb(3, 17, 29));
+        webView.setBackgroundColor(Color.WHITE);
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -75,7 +80,7 @@ public final class MainActivity extends Activity {
         }
 
         FrameLayout root = new FrameLayout(this);
-        root.setBackgroundColor(Color.rgb(3, 17, 29));
+        root.setBackgroundColor(Color.WHITE);
         root.addView(webView, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 

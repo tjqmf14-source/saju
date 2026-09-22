@@ -43,7 +43,7 @@ test('V12 desktop follows the supplied landing-page composition', async ({ page 
 
   const heroVisual = page.locator('.hero-visual');
   const heroBg = await heroVisual.evaluate((el) => getComputedStyle(el).backgroundImage);
-  expect(heroBg).toContain('/oracle/b-visual-atlas.webp');
+  expect(heroBg).toBe('none');
 
   await expect(page.locator('.visual-keyword-card')).toHaveCount(6);
   await expect(page.locator('#standards, #faq, .review-card, .faq-list')).toHaveCount(0);
@@ -156,7 +156,7 @@ test('V12 remains readable and overflow-free on mobile', async ({ page }, testIn
   expect(mobileAudit.heroVisual?.height || 0).toBeGreaterThan(250);
   expect(mobileAudit.keywordShell?.height || 9999).toBeLessThan(1650);
   expect(mobileAudit.fullReport?.width || 0).toBeGreaterThan(viewportWidth - 40);
-  expect(mobileAudit.heroBackground).toContain('/oracle/hero-scene.svg');
+  expect(mobileAudit.heroBackground).toBe('none');
   const mobileMinFont=await page.evaluate(()=>{
     const items=[...document.querySelectorAll('body *')].filter((el)=>{
       const s=getComputedStyle(el);
@@ -411,7 +411,7 @@ test('birth CTA recalculates current input and precision report exposes retained
   await expect(page.locator('#monthForecast .month-card')).toHaveCount(12);
   await expect(page.locator('#detailedReport .detail-chapter')).toHaveCount(13);
   await expect(page.locator('#detailedReport .easy-reading-label')).toHaveCount(13);
-  await expect(page.locator('#report-balance')).toContainText('신강');
+  await expect(page.locator('#report-balance')).not.toContainText('신강');
   await expect(page.locator('#detailedReport .detail-visual')).toHaveCount(0);
   await assertNoHorizontalOverflow(page);
 });
@@ -626,4 +626,16 @@ test('commercial UX interactions work without a backend', async ({ page }, testI
   await expect(page.locator('#copyReport')).toBeVisible();
 
   await assertNoHorizontalOverflow(page);
+});
+
+
+test('plain-language layer keeps visible report copy free of specialist jargon', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#results')).toBeVisible();
+  await page.locator('#full-report').evaluate((el) => { el.open = true; });
+  await page.waitForTimeout(50);
+  const text = await page.locator('#results').innerText();
+  for (const term of ['원국','십신','오행','일간','절입','대운','세운','월운','신강','신약','용신','희신','기신','격국','천간','지지','비겁','식상','재성','관성','인성']) {
+    expect(text).not.toContain(term);
+  }
 });
