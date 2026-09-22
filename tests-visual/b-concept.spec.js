@@ -466,7 +466,7 @@ test('expanded precision report has no clipped text or viewport escape', async (
   expect(audit.clipped,JSON.stringify(audit.clipped)).toEqual([]);
   await assertNoHorizontalOverflow(page);
   await page.locator('.reading-opening').screenshot({path:`test-results/v12-report-opening-${testInfo.project.name}.png`});
-  await page.locator('#detailedReport .detail-chapter').first().screenshot({path:`test-results/v12-report-chapter-${testInfo.project.name}.png`});
+  await page.locator('#report-temperament').screenshot({path:`test-results/v12-report-chapter-${testInfo.project.name}.png`});
   if(['desktop','mobile'].includes(testInfo.project.name)) await page.locator('#annualDetailReport').screenshot({path:`test-results/v13-month-flow-${testInfo.project.name}.png`});
 });
 
