@@ -1314,3 +1314,23 @@ input::placeholder,textarea::placeholder{color:#9aa3ad!important}
   .hero-primary{min-height:auto!important}
   .hero-copy{padding:40px 24px 34px!important}
 }
+
+
+/* V13.2 final white-tone consistency */
+.compatibility-result{
+  background:#f8f9fb!important;
+  border-color:#dfe3e8!important;
+  box-shadow:none!important;
+}
+.compatibility-empty{color:#59616d!important}
+.compatibility-empty strong{color:#20242a!important}
+.site-footer{
+  background:#fff!important;
+  color:#5f6873!important;
+  border-top:1px solid #dfe3e8!important;
+}
+.site-footer .seal{
+  background:#fff!important;
+  color:#20242a!important;
+  border-color:#d7dce2!important;
+}
