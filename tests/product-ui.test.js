@@ -7,7 +7,7 @@ const css=await readFile(new URL('../product-v16.css',import.meta.url),'utf8');
 const plain=await readFile(new URL('../src/plain-language-ui.js',import.meta.url),'utf8');
 
 test('product v16 is the only active presentation layer',()=>{
-  assert.match(html,/href="\/product-v15\.css"/);
+  assert.match(html,/href="\/product-v16\.css"/);
   assert.doesNotMatch(html,/href="\/site-v12\.css"/);
   assert.match(html,/data-theme="product-v16"/);
 });
