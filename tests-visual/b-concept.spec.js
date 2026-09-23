@@ -31,7 +31,7 @@ async function selectCalendarMode(page, mode) {
   await expect(page.locator(`input[name="calendar"][value="${mode}"]`)).toBeChecked();
 }
 
-test('Product V15 desktop follows the commercial landing-page composition', async ({ page }, testInfo) => {
+test('Product V16 desktop follows the commercial landing-page composition', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'desktop-only reference contract');
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
@@ -49,10 +49,15 @@ test('Product V15 desktop follows the commercial landing-page composition', asyn
   expect(heroBox?.height || 9999).toBeLessThanOrEqual(700);
 
   const heroVisual = page.locator('.hero-visual');
+  await expect(heroVisual).toBeVisible();
   const heroBg = await heroVisual.evaluate((el) => getComputedStyle(el).backgroundImage);
-  expect(heroBg).toBe('none');
+  expect(heroBg).not.toBe('none');
+  expect(heroBg).toMatch(/^url\(/);
+  const heroVisualBox = await heroVisual.boundingBox();
+  expect(heroVisualBox?.height || 0).toBeGreaterThan(320);
 
   await expect(page.locator('.visual-keyword-card')).toHaveCount(6);
+  await expect(page.locator('.trust-strip p')).toHaveCount(3);
   await expect(page.locator('#standards, #faq, .review-card, .faq-list')).toHaveCount(0);
   await expect(page.locator('.annual-scene, .detail-visual')).toHaveCount(0);
 
@@ -102,10 +107,10 @@ test('Product V15 desktop follows the commercial landing-page composition', asyn
 
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => scrollTo(0,0));
-  await page.screenshot({ path: 'test-results/v15-reference-desktop.png', fullPage: true });
+  await page.screenshot({ path: 'test-results/v16-reference-desktop.png', fullPage: true });
 });
 
-test('Product V15 remains readable and overflow-free on mobile', async ({ page }, testInfo) => {
+test('Product V16 remains readable and overflow-free on mobile', async ({ page }, testInfo) => {
   test.skip(!['mobile','mobile-wide','mobile-small'].includes(testInfo.project.name), 'mobile-only contract');
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
@@ -177,11 +182,11 @@ test('Product V15 remains readable and overflow-free on mobile', async ({ page }
 
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => scrollTo(0,0));
-  await page.locator('.hero-primary').screenshot({ path: `test-results/v15-hero-${testInfo.project.name}.png` });
-  await page.locator('#input').screenshot({ path: `test-results/v15-input-${testInfo.project.name}.png` });
-  await page.locator('.visual-keyword-showcase').screenshot({ path: `test-results/v15-keywords-${testInfo.project.name}.png` });
-  await page.locator('#year').screenshot({ path: `test-results/v15-year-${testInfo.project.name}.png` });
-  await page.screenshot({ path: `test-results/v15-reference-${testInfo.project.name}.png`, fullPage: true });
+  await page.locator('.hero-primary').screenshot({ path: `test-results/v16-hero-${testInfo.project.name}.png` });
+  await page.locator('#input').screenshot({ path: `test-results/v16-input-${testInfo.project.name}.png` });
+  await page.locator('.visual-keyword-showcase').screenshot({ path: `test-results/v16-keywords-${testInfo.project.name}.png` });
+  await page.locator('#year').screenshot({ path: `test-results/v16-year-${testInfo.project.name}.png` });
+  await page.screenshot({ path: `test-results/v16-reference-${testInfo.project.name}.png`, fullPage: true });
 });
 
 test('calculation renderers still populate all retained data targets', async ({ page }) => {
@@ -297,7 +302,7 @@ test('final-build typography and section geometry do not clip or overlap', async
   expect(audit.badSections, JSON.stringify(audit.badSections)).toEqual([]);
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => scrollTo(0,0));
-  await page.screenshot({ path: `test-results/v15-fullpage-${testInfo.project.name}.png`, fullPage: true });
+  await page.screenshot({ path: `test-results/v16-fullpage-${testInfo.project.name}.png`, fullPage: true });
 });
 
 test('reference-density sections stay compact on desktop and primary disclosure works', async ({ page }, testInfo) => {
@@ -404,7 +409,7 @@ test('desktop tarot deal animation expands one stacked deck into a full overlapp
   expect(selectedBounds.cardTop).toBeGreaterThanOrEqual(selectedBounds.stageTop - 1);
   expect(selectedBounds.cardBottom).toBeLessThanOrEqual(selectedBounds.stageBottom + 1);
 
-  await page.locator('#tarot').screenshot({path:'test-results/v15-tarot-78-fan-desktop.png'});
+  await page.locator('#tarot').screenshot({path:'test-results/v16-tarot-78-fan-desktop.png'});
 });
 
 
@@ -476,8 +481,8 @@ test('expanded precision report has no clipped text or viewport escape', async (
   expect(audit.escaped,JSON.stringify(audit.escaped)).toEqual([]);
   expect(audit.clipped,JSON.stringify(audit.clipped)).toEqual([]);
   await assertNoHorizontalOverflow(page);
-  await page.locator('.reading-opening').screenshot({path:`test-results/v15-report-opening-${testInfo.project.name}.png`});
-  await page.locator('#report-temperament').screenshot({path:`test-results/v15-report-chapter-${testInfo.project.name}.png`});
+  await page.locator('.reading-opening').screenshot({path:`test-results/v16-report-opening-${testInfo.project.name}.png`});
+  await page.locator('#report-temperament').screenshot({path:`test-results/v16-report-chapter-${testInfo.project.name}.png`});
   if(['desktop','mobile'].includes(testInfo.project.name)) await page.locator('#annualDetailReport').screenshot({path:`test-results/v13-month-flow-${testInfo.project.name}.png`});
 });
 
@@ -658,34 +663,45 @@ test('plain-language layer keeps visible report copy free of specialist jargon',
 });
 
 
-test('Product V15 keeps a clean white hierarchy on desktop and mobile', async ({ page }) => {
+test('Product V16 keeps the editorial paper hierarchy and isolated tarot stage', async ({ page }) => {
   await page.goto('/');
   const audit=await page.evaluate(()=>{
     const css=(selector)=>getComputedStyle(document.querySelector(selector));
     const rect=(selector)=>document.querySelector(selector)?.getBoundingClientRect();
     return {
+      viewport:innerWidth,
       bodyBg:css('body').backgroundColor,
       heroBg:css('.hero-primary').backgroundColor,
       inputBg:css('#input').backgroundColor,
       tarotBg:css('#tarot').backgroundColor,
       heroVisual:css('.hero-visual').display,
+      heroVisualBg:css('.hero-visual').backgroundImage,
       expert:css('#expert').display,
       hero:rect('.hero-primary'),
       input:rect('#input'),
       shell:rect('.agency-shell')
     };
   });
-  expect(audit.bodyBg).toBe('rgb(246, 247, 248)');
-  expect(audit.heroBg).toBe('rgb(255, 255, 255)');
-  expect(audit.inputBg).toBe('rgb(255, 255, 255)');
-  expect(audit.heroVisual).toBe('none');
+  expect(audit.bodyBg).toBe('rgb(242, 239, 231)');
+  expect(audit.heroBg).toBe('rgb(255, 253, 247)');
+  expect(audit.inputBg).toBe('rgb(255, 253, 247)');
+  expect(audit.tarotBg).toBe('rgb(17, 24, 43)');
+  if(audit.viewport>760){
+    expect(audit.heroVisual).toBe('block');
+    expect(audit.heroVisualBg).not.toBe('none');
+    expect(audit.heroVisualBg).toMatch(/^url\(/);
+  }else{
+    expect(audit.heroVisual).toBe('none');
+    expect(audit.heroVisualBg).toBe('none');
+  }
   expect(audit.expert).toBe('none');
-  expect(audit.hero?.width || 0).toBeGreaterThan(300);
-  expect(audit.input?.width || 0).toBeGreaterThan(300);
+  expect(audit.hero?.width || 0).toBeGreaterThanOrEqual(Math.min(298,audit.viewport-22));
+  expect(audit.input?.width || 0).toBeGreaterThanOrEqual(Math.min(298,audit.viewport-22));
+  await expect(page.locator('.trust-strip p')).toHaveCount(3);
   await assertNoHorizontalOverflow(page);
 });
 
-test('Product V15 shows six life-language categories without technical categories', async ({ page }) => {
+test('Product V16 shows six life-language categories without technical categories', async ({ page }) => {
   await page.goto('/');
   const cards=page.locator('.visual-keyword-card');
   await expect(cards).toHaveCount(6);

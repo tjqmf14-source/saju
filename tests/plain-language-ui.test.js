@@ -3,17 +3,17 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-const css = await readFile(new URL('../product-v15.css', import.meta.url), 'utf8');
+const css = await readFile(new URL('../product-v16.css', import.meta.url), 'utf8');
 const plain = await readFile(new URL('../src/plain-language-ui.js', import.meta.url), 'utf8');
 
-test('Product V15 white interface and plain-language layer are active', () => {
-  assert.match(html, /data-theme="product-v15"/);
-  assert.match(html, /theme-color" content="#ffffff"/);
-  assert.match(html, /href="\/product-v15\.css"/);
+test('Product V16 editorial interface and plain-language layer are active', () => {
+  assert.match(html, /data-theme="product-v16"/);
+  assert.match(html, /theme-color" content="#F2EFE7"/);
+  assert.match(html, /href="\/product-v16\.css"/);
   assert.match(html, /src="\/src\/premium-ui\.js"[\s\S]*src="\/src\/plain-language-ui\.js"/);
-  assert.match(css, /Naesaju Product UI v15/);
-  assert.match(css, /--surface:#fff/);
-  assert.match(css, /--accent:#315c48/);
+  assert.match(css, /Product V16 — Korean Editorial Mysticism/);
+  assert.match(css, /--color-surface:#fffdf7/);
+  assert.match(css, /--color-brand:#b54b3f/);
   assert.match(css, /#expert\{display:none!important\}/);
 });
 
@@ -30,7 +30,7 @@ test('plain-language module covers common specialist terms and duplicate copy', 
   assert.doesNotThrow(() => new Function(plain));
 });
 
-test('reader-facing advice is rewritten by Product V15 life categories', () => {
+test('reader-facing advice is rewritten by Product V16 life categories', () => {
   assert.match(plain, /ROLE_GUIDE/);
   for (const key of ['temperament','strengths','career','money','relationships','recovery']) {
     assert.ok(plain.includes(key), key);

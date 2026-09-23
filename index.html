@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="출생정보를 바탕으로 한 쉬운 사주 해설, Rider–Waite–Smith 78장 타로를 제공하는 내사주">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#F2EFE7">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="application-name" content="내사주">
   <meta name="format-detection" content="telephone=no">
   <link rel="manifest" href="/manifest.webmanifest">
   <title>내사주 · Saju & Tarot</title>
-  <link rel="stylesheet" href="/product-v15.css">
+  <link rel="stylesheet" href="/product-v16.css">
 </head>
-<body data-theme="product-v15">
+<body data-theme="product-v16">
   <svg id="oracleIconSprite" class="svg-sprite" aria-hidden="true">
     <symbol id="icon-calendar" viewBox="0 0 24 24"><path d="M5 3v3M19 3v3M4 8h16M5 5h14a1 1 0 0 1 1 1v13H4V6a1 1 0 0 1 1-1Z"/><path d="M8 12h3v3H8zM14 12h2"/></symbol>
     <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></symbol>
@@ -41,18 +41,25 @@
       <a href="#full-report">자세한리포트</a>
     </nav>
     <div class="topbar-actions">
+      <span class="privacy-chip">기기 안에서 계산</span>
       <a class="premium-link" href="#full-report">자세한 리포트</a>
     </div>
   </header>
+
+  <section class="trust-strip agency-shell" aria-label="서비스 이용 안내">
+    <p><strong>브라우저에서 계산</strong><span>출생정보는 서버로 전송하지 않습니다.</span></p>
+    <p><strong>선택 저장</strong><span>저장한 프로필은 이 기기에만 보관됩니다.</span></p>
+    <p><strong>참고용 해석</strong><span>중요한 판단은 현실 정보와 전문가 의견을 우선하세요.</span></p>
+  </section>
 
   <main id="main-content">
     <div id="home"></div>
 
     <section class="hero-primary agency-shell" aria-labelledby="heroTitle">
       <div class="hero-copy">
-        <p class="section-kicker">내 사주를 쉽게 읽는 방법</p>
-        <h1 id="heroTitle">내 사주, 어렵지 않게.<em>지금 필요한 것부터.</em></h1>
-        <p class="hero-lead">복잡한 명리 용어 대신 성격, 일, 돈, 관계, 회복처럼<br>생활에 바로 닿는 말로 정리해드립니다.</p>
+        <p class="section-kicker">생활의 언어로 읽는 사주</p>
+        <h1 id="heroTitle">당신의 사주를,<em>생활의 언어로.</em></h1>
+        <p class="hero-lead">성격, 일, 돈, 관계, 회복의 흐름부터 먼저 읽고,<br>필요할 때만 더 깊은 해설을 펼쳐보세요.</p>
       <a class="hero-cta" href="#input">내 리포트 만들기 <span aria-hidden="true">→</span></a>
         <div class="hero-proof-oracles" aria-label="서비스 특징">
           <div><svg class="ui-icon"><use href="#icon-calendar"/></svg><span><b>쉬운 해설</b><small>전문용어 없이 핵심만</small></span></div>
@@ -318,7 +325,7 @@
 
   <footer class="site-footer agency-shell">
     <div><span class="seal" aria-hidden="true">命</span><strong>내사주</strong></div>
-    <p>계산은 브라우저 안에서만 수행됩니다. 사주와 타로는 자기이해를 위한 참고 정보이며 중요한 판단은 현실 정보와 전문가 의견을 우선하세요.</p>
+    <p>계산은 브라우저 안에서 수행됩니다. 사용자가 저장한 프로필만 이 기기에 보관되며, 사주와 타로는 자기이해를 위한 참고 정보입니다.</p>
     <span class="footer-copy">© 2026 Naesaju. All rights reserved.</span>
   </footer>
 

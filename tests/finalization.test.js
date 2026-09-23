@@ -3,32 +3,34 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-const css = await readFile(new URL('../product-v15.css', import.meta.url), 'utf8');
+const css = await readFile(new URL('../product-v16.css', import.meta.url), 'utf8');
 const ui = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
 
-test('Product V15 is the only active frontend stylesheet and uses the commercial white palette', () => {
-  assert.ok(html.includes('product-v15.css'));
+test('Product V16 is the only active frontend stylesheet and uses the editorial design system', () => {
+  assert.ok(html.includes('product-v16.css'));
   assert.ok(!html.includes('site-v12.css'));
   assert.equal((html.match(/<link rel="stylesheet"/g) || []).length, 1);
-  assert.match(html, /data-theme="product-v15"/);
-  assert.match(css, /Naesaju Product UI v15/);
-  assert.ok(css.includes('--bg:#f6f7f8'));
-  assert.ok(css.includes('--surface:#fff'));
-  assert.ok(css.includes('--accent:#315c48'));
+  assert.match(html, /data-theme="product-v16"/);
+  assert.match(css, /Product V16 — Korean Editorial Mysticism/);
+  assert.ok(css.includes('--color-bg:#f2efe7'));
+  assert.ok(css.includes('--color-surface:#fffdf7'));
+  assert.ok(css.includes('--color-brand:#b54b3f'));
+  assert.ok(css.includes('--color-tarot:#11182b'));
+  assert.match(html, /class="trust-strip agency-shell"/);
 });
 
-test('desktop base type is readable and mobile increases the base text size', () => {
-  assert.match(css, /body\{[^}]*font:400 16px\/1\.65/);
+test('desktop and mobile base type remain readable', () => {
+  assert.match(css, /body\{background:var\(--color-bg\);font:400 17px\/1\.75/);
   assert.match(css, /@media\(max-width:720px\)\{[\s\S]*?body\{[^}]*font-size:17px/);
   assert.match(css, /\.form-grid input,\.form-grid select,\.profile-manager select,\.profile-manager button,\.precision-grid select\{font-size:16px\}/);
 });
 
-test('landing page follows the Product V15 section order', () => {
+test('landing page follows the Product V16 editorial section order', () => {
   const order = ['id="input"','visual-keyword-showcase','quote-band','id="today"','id="year"','id="compatibility"','id="tarot"','id="full-report"','closing-cta'];
   let cursor = -1;
   for (const token of order) {
     const next = html.indexOf(token);
-    assert.ok(next > cursor, token + ' should appear after the previous Product V15 section');
+    assert.ok(next > cursor, token + ' should appear after the previous Product V16 section');
     cursor = next;
   }
   assert.doesNotMatch(html,/id=["'](?:standards|faq)["']/);
