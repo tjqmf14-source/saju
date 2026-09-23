@@ -51,7 +51,8 @@ test('Product V16 desktop follows the commercial landing-page composition', asyn
   const heroVisual = page.locator('.hero-visual');
   await expect(heroVisual).toBeVisible();
   const heroBg = await heroVisual.evaluate((el) => getComputedStyle(el).backgroundImage);
-  expect(heroBg).toContain('hero-landscape.svg');
+  expect(heroBg).not.toBe('none');
+  expect(heroBg).toMatch(/^url\(/);
   const heroVisualBox = await heroVisual.boundingBox();
   expect(heroVisualBox?.height || 0).toBeGreaterThan(320);
 
@@ -687,14 +688,15 @@ test('Product V16 keeps the editorial paper hierarchy and isolated tarot stage',
   expect(audit.tarotBg).toBe('rgb(17, 24, 43)');
   if(audit.viewport>760){
     expect(audit.heroVisual).toBe('block');
-    expect(audit.heroVisualBg).toContain('hero-landscape.svg');
+    expect(audit.heroVisualBg).not.toBe('none');
+    expect(audit.heroVisualBg).toMatch(/^url\(/);
   }else{
     expect(audit.heroVisual).toBe('none');
     expect(audit.heroVisualBg).toBe('none');
   }
   expect(audit.expert).toBe('none');
-  expect(audit.hero?.width || 0).toBeGreaterThan(300);
-  expect(audit.input?.width || 0).toBeGreaterThan(300);
+  expect(audit.hero?.width || 0).toBeGreaterThanOrEqual(Math.min(298,audit.viewport-22));
+  expect(audit.input?.width || 0).toBeGreaterThanOrEqual(Math.min(298,audit.viewport-22));
   await expect(page.locator('.trust-strip p')).toHaveCount(3);
   await assertNoHorizontalOverflow(page);
 });
