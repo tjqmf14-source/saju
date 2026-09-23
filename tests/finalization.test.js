@@ -3,33 +3,32 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-const css = await readFile(new URL('../site-v12.css', import.meta.url), 'utf8');
+const css = await readFile(new URL('../product-v15.css', import.meta.url), 'utf8');
 const ui = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
 
-test('V12 is the only active frontend stylesheet and follows the reference palette', () => {
-  assert.ok(html.includes('site-v12.css'));
-  assert.ok(!html.includes('site-v11.css'));
+test('Product V15 is the only active frontend stylesheet and uses the commercial white palette', () => {
+  assert.ok(html.includes('product-v15.css'));
+  assert.ok(!html.includes('site-v12.css'));
   assert.equal((html.match(/<link rel="stylesheet"/g) || []).length, 1);
-  assert.ok(css.includes('NAESAJU V12'));
-  assert.ok(css.includes('--bg:#03111d'));
-  assert.ok(css.includes('--gold:#d8a75f'));
-  assert.ok(css.includes("url('/oracle/b-visual-atlas.webp')"));
+  assert.match(html, /data-theme="product-v15"/);
+  assert.match(css, /Naesaju Product UI v15/);
+  assert.ok(css.includes('--bg:#f6f7f8'));
+  assert.ok(css.includes('--surface:#fff'));
+  assert.ok(css.includes('--accent:#315c48'));
 });
 
-test('minimum readable UI type is 12pt-equivalent or larger and mobile adds one point', () => {
-  assert.ok(css.includes('--mobile-font-bump:0px'));
-  assert.ok(css.includes('--min-type:calc(16px + var(--mobile-font-bump))'));
-  assert.ok(css.includes('--mobile-font-bump:3.999px'));
-  assert.ok(css.includes('body,button,input,select,textarea,small{font-size:var(--min-type)}'));
-  assert.doesNotMatch(css, /font-size:(?:[0-9]|1[0-4])px/);
+test('desktop base type is readable and mobile increases the base text size', () => {
+  assert.match(css, /body\{[^}]*font:400 16px\/1\.65/);
+  assert.match(css, /@media\(max-width:720px\)\{[\s\S]*?body\{[^}]*font-size:17px/);
+  assert.match(css, /\.form-grid input,\.form-grid select,\.profile-manager select,\.profile-manager button,\.precision-grid select\{font-size:16px\}/);
 });
 
-test('landing page follows the supplied section order', () => {
-  const order = ['id="input"','visual-keyword-showcase','quote-band','id="today"','id="year"','id="tarot"','id="full-report"','closing-cta'];
+test('landing page follows the Product V15 section order', () => {
+  const order = ['id="input"','visual-keyword-showcase','quote-band','id="today"','id="year"','id="compatibility"','id="tarot"','id="full-report"','closing-cta'];
   let cursor = -1;
   for (const token of order) {
     const next = html.indexOf(token);
-    assert.ok(next > cursor, token + ' should appear after the previous reference section');
+    assert.ok(next > cursor, token + ' should appear after the previous Product V15 section');
     cursor = next;
   }
   assert.doesNotMatch(html,/id=["'](?:standards|faq)["']/);
@@ -71,7 +70,7 @@ test('commercial UX adds local profiles, sharing, compatibility and mobile navig
 });
 
 test('tarot exposes the complete 78-card overlapping fan picker', () => {
-  assert.match(html, /타로 리딩 시작하기/);
+  assert.match(html, /카드 펼치기/);
   assert.match(ui, /prepareTarotFan\(78\)/);
   assert.match(ui, /FULL 78-CARD DECK/);
   assert.match(ui, /스크롤바 없이 전체 덱을 한 장면에서 보여줍니다/);
@@ -98,7 +97,6 @@ test('solar-term month flow remains calculation-backed', () => {
   assert.match(ui, /monthFlowCopy\(item\)/);
   assert.match(ui, /절입/);
 });
-
 
 test('all internal navigation anchors resolve to real targets', () => {
   const ids=new Set([...html.matchAll(/\sid=["']([^"']+)["']/g)].map((match)=>match[1]));
