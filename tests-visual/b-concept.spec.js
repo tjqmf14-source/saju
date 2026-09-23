@@ -662,30 +662,40 @@ test('plain-language layer keeps visible report copy free of specialist jargon',
 });
 
 
-test('Product V16 keeps a clean white hierarchy on desktop and mobile', async ({ page }) => {
+test('Product V16 keeps the editorial paper hierarchy and isolated tarot stage', async ({ page }) => {
   await page.goto('/');
   const audit=await page.evaluate(()=>{
     const css=(selector)=>getComputedStyle(document.querySelector(selector));
     const rect=(selector)=>document.querySelector(selector)?.getBoundingClientRect();
     return {
+      viewport:innerWidth,
       bodyBg:css('body').backgroundColor,
       heroBg:css('.hero-primary').backgroundColor,
       inputBg:css('#input').backgroundColor,
       tarotBg:css('#tarot').backgroundColor,
       heroVisual:css('.hero-visual').display,
+      heroVisualBg:css('.hero-visual').backgroundImage,
       expert:css('#expert').display,
       hero:rect('.hero-primary'),
       input:rect('#input'),
       shell:rect('.agency-shell')
     };
   });
-  expect(audit.bodyBg).toBe('rgb(246, 247, 248)');
-  expect(audit.heroBg).toBe('rgb(255, 255, 255)');
-  expect(audit.inputBg).toBe('rgb(255, 255, 255)');
-  expect(audit.heroVisual).toBe('none');
+  expect(audit.bodyBg).toBe('rgb(242, 239, 231)');
+  expect(audit.heroBg).toBe('rgb(255, 253, 247)');
+  expect(audit.inputBg).toBe('rgb(255, 253, 247)');
+  expect(audit.tarotBg).toBe('rgb(17, 24, 43)');
+  if(audit.viewport>760){
+    expect(audit.heroVisual).toBe('block');
+    expect(audit.heroVisualBg).toContain('hero-landscape.svg');
+  }else{
+    expect(audit.heroVisual).toBe('none');
+    expect(audit.heroVisualBg).toBe('none');
+  }
   expect(audit.expert).toBe('none');
   expect(audit.hero?.width || 0).toBeGreaterThan(300);
   expect(audit.input?.width || 0).toBeGreaterThan(300);
+  await expect(page.locator('.trust-strip p')).toHaveCount(3);
   await assertNoHorizontalOverflow(page);
 });
 
