@@ -108,6 +108,13 @@ function dominantRole(chart){ return sorted(chart.roles)[0]?.[0] || '인성'; }
 function relationLabel(relations){ return relations?.length ? [...new Set(relations.map((r)=>r.type))].join('·') : '큰 충돌 신호 없음'; }
 function escapeHtml(value=''){ return value.replace(/[&<>"']/g,(char)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])); }
 function firstSentence(value=''){ return value.split(/(?<=[.!?])\s+/)[0] || value; }
+function hasBatchim(value=''){
+  const text=String(value).trim();
+  if(!text) return false;
+  const code=text.charCodeAt(text.length-1);
+  return code>=0xAC00 && code<=0xD7A3 && (code-0xAC00)%28!==0;
+}
+function particle(value,withBatchim,withoutBatchim){ return hasBatchim(value)?withBatchim:withoutBatchim; }
 
 const YEAR_HEADLINE={
   비겁:'내 기준을 세우는 해',식상:'아이디어를 결과로 잇는 해',재성:'돈과 시간을 정리하는 해',
@@ -629,7 +636,7 @@ function renderToday(chart,todayFlow){
   const softestDaily=rankedDaily.at(-1);
   $('dailyBriefGrid').innerHTML=[
     ['오늘의 중심',`${strongestDaily[0]} 흐름이 ${strongestDaily[1].label} 쪽입니다.`,strongestDaily[2]],
-    ['한 번 더 확인',`${softestDaily[0]}은 속도보다 점검이 먼저입니다.`,copy.caution],
+    ['한 번 더 확인',`${softestDaily[0]}${particle(softestDaily[0],'은','는')} 속도보다 점검이 먼저입니다.`,copy.caution],
     ['관계 한마디',`상대의 마음을 추측하기보다 반응을 확인하세요.`,copy.love],
     ['회복 한마디',`무리해서 끌고 가기보다 리듬을 일정하게 유지하세요.`,copy.health]
   ].map(([title,lead,body])=>`<article><span>${escapeHtml(title)}</span><strong>${escapeHtml(lead)}</strong><p>${escapeHtml(body)}</p></article>`).join('');
@@ -654,7 +661,8 @@ function renderToday(chart,todayFlow){
     const low=ranked.at(-1);
     const localDate=new Date(Date.UTC(flow.date.year,flow.date.month-1,flow.date.day,3));
     const label=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'numeric',day:'numeric',weekday:'short'}).format(localDate);
-    return `<article class="weekly-day${index===0?' is-selected':''}"><span>${escapeHtml(label)}</span><strong>${weekScores.overall.score}</strong><small>${escapeHtml(weekScores.overall.label)}</small><p><b>${escapeHtml(categoryLabels[top[0]])}</b>이 상대적으로 강하고, <b>${escapeHtml(categoryLabels[low[0]])}</b>은 한 번 더 점검하세요.</p></article>`;
+    const topLabel=categoryLabels[top[0]],lowLabel=categoryLabels[low[0]];
+    return `<article class="weekly-day${index===0?' is-selected':''}"><span>${escapeHtml(label)}</span><strong>${weekScores.overall.score}</strong><small>${escapeHtml(weekScores.overall.label)}</small><p><b>${escapeHtml(topLabel)}</b>${particle(topLabel,'이','가')} 상대적으로 강하고, <b>${escapeHtml(lowLabel)}</b>${particle(lowLabel,'은','는')} 한 번 더 점검하세요.</p></article>`;
   }).join('');
   const timeFlows=calculateTodayTimeFlows(chart,dailyDate());
   $('dailyTimeFlow').innerHTML=timeFlows.map((slot)=>{
