@@ -3,16 +3,18 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-const css = await readFile(new URL('../site-v12.css', import.meta.url), 'utf8');
+const css = await readFile(new URL('../product-v15.css', import.meta.url), 'utf8');
 const plain = await readFile(new URL('../src/plain-language-ui.js', import.meta.url), 'utf8');
 
-test('white interface and plain-language layer are active', () => {
-  assert.match(html, /data-theme="clean-white"/);
+test('Product V15 white interface and plain-language layer are active', () => {
+  assert.match(html, /data-theme="product-v15"/);
   assert.match(html, /theme-color" content="#ffffff"/);
+  assert.match(html, /href="\/product-v15\.css"/);
   assert.match(html, /src="\/src\/premium-ui\.js"[\s\S]*src="\/src\/plain-language-ui\.js"/);
-  assert.match(css, /NAESAJU CLEAN WHITE UI V13/);
-  assert.match(css, /background:#fff!important/);
-  assert.match(css, /#expert/);
+  assert.match(css, /Naesaju Product UI v15/);
+  assert.match(css, /--surface:#fff/);
+  assert.match(css, /--accent:#315c48/);
+  assert.match(css, /#expert\{display:none!important\}/);
 });
 
 test('static user-facing markup avoids specialist saju terms', () => {
@@ -28,12 +30,13 @@ test('plain-language module covers common specialist terms and duplicate copy', 
   assert.doesNotThrow(() => new Function(plain));
 });
 
-
-test('reader-facing advice is rewritten by life category', () => {
+test('reader-facing advice is rewritten by Product V15 life categories', () => {
   assert.match(plain, /ROLE_GUIDE/);
-  for (const key of ['temperament','career','money','relationships','recovery','balance']) {
+  for (const key of ['temperament','strengths','career','money','relationships','recovery']) {
     assert.ok(plain.includes(key), key);
   }
+  assert.match(plain, /FRIENDLY_TITLES/);
+  assert.match(plain, /strengths:'강점'/);
   assert.match(plain, /rewriteFriendlyAdvice/);
   assert.match(plain, /혼자 빠르게 결론내리기보다/);
   assert.match(plain, /아이디어 수보다 끝낸 결과물 수/);
