@@ -352,7 +352,7 @@ test('reference-density sections stay compact on desktop and primary disclosure 
   await expect(fullReport).toHaveAttribute('open', '');
   await expect(page.locator('#detailedReport')).toBeVisible();
 
-  await page.locator('.closing-cta a[href="#input"]').click();
+  await page.locator('.topnav a[href="#input"]:visible, .mobile-bottom-nav a[href="#input"]:visible, .hero-cta[href="#input"]:visible').first().click();
   await expect(page.locator('#input')).toBeInViewport();
   await assertNoHorizontalOverflow(page);
 });
