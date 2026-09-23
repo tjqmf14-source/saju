@@ -263,6 +263,8 @@ test('final-build typography and section geometry do not clip or overlap', async
     const selector='h1,h2,h3,h4,p,span,b,strong,small,label,summary,button,a';
     const nodes=[...document.querySelectorAll(selector)].filter((el)=>{
       if(el.closest('.tarot-fan-stage') || el.classList.contains('skip-link') || el.classList.contains('sr-only')) return false;
+      const closedDetails=el.closest('details:not([open])');
+      if(closedDetails && !el.closest('summary')) return false;
       const style=getComputedStyle(el);
       const rect=el.getBoundingClientRect();
       return style.display!=='none' && style.visibility!=='hidden' && rect.width>0 && rect.height>0;
@@ -528,7 +530,7 @@ test('solar calendar picker and lunar compact fields both drive the retained cal
   await expect(page.locator('#birthYearQuick')).toBeHidden();
   await page.locator('#birthDate').fill('1990-01-01');
   await expect(page.locator('#birthDate')).toHaveValue('1990-01-01');
-  await page.locator('.birth-side-submit:visible').click();
+  await page.locator('#birthForm .cta:visible').click();
   await expect(page.locator('#profileBirth')).toContainText('양력 1990.01.01');
 
   await selectCalendarMode(page,'lunar');
@@ -536,7 +538,7 @@ test('solar calendar picker and lunar compact fields both drive the retained cal
   await page.locator('#birthYear').fill('1989');
   await page.locator('#birthMonth').fill('12');
   await page.locator('#birthDay').fill('5');
-  await page.locator('.birth-side-submit:visible').click();
+  await page.locator('#birthForm .cta:visible').click();
   await expect(page.locator('#profileBirth')).toContainText('양력 1990.01.01');
   await expect(page.locator('#profileBirth')).toContainText('음력 1989년 12월 5일');
 });
