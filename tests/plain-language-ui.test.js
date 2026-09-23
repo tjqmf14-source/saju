@@ -9,7 +9,7 @@ const plain = await readFile(new URL('../src/plain-language-ui.js', import.meta.
 test('Product V16 editorial interface and plain-language layer are active', () => {
   assert.match(html, /data-theme="product-v16"/);
   assert.match(html, /theme-color" content="#F2EFE7"/);
-  assert.match(html, /href="\/product-v15\.css"/);
+  assert.match(html, /href="\/product-v16\.css"/);
   assert.match(html, /src="\/src\/premium-ui\.js"[\s\S]*src="\/src\/plain-language-ui\.js"/);
   assert.match(css, /Product V16 — Korean Editorial Mysticism/);
   assert.match(css, /--color-surface:#fffdf7/);
