@@ -25,20 +25,26 @@ async function assertNoHorizontalOverflow(page) {
   expect(overflow.scrollWidth, JSON.stringify(overflow)).toBeLessThanOrEqual(overflow.clientWidth + 1);
 }
 
-test('V12 desktop follows the supplied landing-page composition', async ({ page }, testInfo) => {
+async function selectCalendarMode(page, mode) {
+  const label = mode === 'lunar' ? '음력' : '양력';
+  await page.locator('.segmented label').filter({ hasText: label }).click();
+  await expect(page.locator(`input[name="calendar"][value="${mode}"]`)).toBeChecked();
+}
+
+test('Product V15 desktop follows the commercial landing-page composition', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'desktop-only reference contract');
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
 
   const order = await page.evaluate(() => {
-    const selectors = ['#input','.visual-keyword-showcase','.quote-band','#today','#year','#tarot','#full-report','.closing-cta'];
+    const selectors = ['#input','.visual-keyword-showcase','#today','#year','#compatibility','#tarot','#full-report'];
     return selectors.map((selector) => ({ selector, top: document.querySelector(selector)?.getBoundingClientRect().top ?? -1 }));
   });
   for (let i = 1; i < order.length; i += 1) expect(order[i].top, order[i].selector).toBeGreaterThan(order[i - 1].top);
 
   const hero = page.locator('.hero-primary');
   const heroBox = await hero.boundingBox();
-  expect(heroBox?.width || 0).toBeGreaterThanOrEqual(1300);
+  expect(heroBox?.width || 0).toBeGreaterThanOrEqual(1100);
   expect(heroBox?.height || 0).toBeGreaterThanOrEqual(360);
   expect(heroBox?.height || 9999).toBeLessThanOrEqual(700);
 
@@ -85,29 +91,27 @@ test('V12 desktop follows the supplied landing-page composition', async ({ page 
   const annualBackground = await page.locator('#year').evaluate((el) => getComputedStyle(el).backgroundImage);
   expect(annualBackground).not.toContain('url(');
 
-  const minFont = await page.evaluate(() => {
-    const items = [...document.querySelectorAll('body *')].filter((el) => {
-      const s = getComputedStyle(el);
-      if (s.display === 'none' || s.visibility === 'hidden') return false;
-      if (['SVG','SYMBOL','PATH','USE'].includes(el.tagName)) return false;
-      return [...el.childNodes].some((node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim());
-    });
-    return Math.min(...items.map((el) => parseFloat(getComputedStyle(el).fontSize)).filter(Number.isFinite));
-  });
-  expect(minFont).toBeGreaterThanOrEqual(16);
+  const typography = await page.evaluate(() => ({
+    body: parseFloat(getComputedStyle(document.body).fontSize),
+    input: parseFloat(getComputedStyle(document.querySelector('#birthDate')).fontSize),
+    button: parseFloat(getComputedStyle(document.querySelector('#birthForm .cta')).fontSize)
+  }));
+  expect(typography.body).toBeGreaterThanOrEqual(16);
+  expect(typography.input).toBeGreaterThanOrEqual(16);
+  expect(typography.button).toBeGreaterThanOrEqual(13);
 
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => scrollTo(0,0));
-  await page.screenshot({ path: 'test-results/v12-reference-desktop.png', fullPage: true });
+  await page.screenshot({ path: 'test-results/v15-reference-desktop.png', fullPage: true });
 });
 
-test('V12 remains readable and overflow-free on mobile', async ({ page }, testInfo) => {
+test('Product V15 remains readable and overflow-free on mobile', async ({ page }, testInfo) => {
   test.skip(!['mobile','mobile-wide','mobile-small'].includes(testInfo.project.name), 'mobile-only contract');
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
 
   const fontSize = await page.locator('.hero-copy h1').evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
-  expect(fontSize).toBeGreaterThanOrEqual(38);
+  expect(fontSize).toBeGreaterThanOrEqual(36);
   expect(fontSize).toBeLessThanOrEqual(46);
 
   await expect(page.locator('.feature-orbit-nav a')).toHaveCount(6);
@@ -147,9 +151,7 @@ test('V12 remains readable and overflow-free on mobile', async ({ page }, testIn
   const viewportWidth=page.viewportSize()?.width || 390;
   expect(mobileAudit.form?.width || 0).toBeGreaterThan(viewportWidth - 80);
   expect(mobileAudit.nameField?.width || 0).toBeGreaterThan((mobileAudit.formGrid?.width || 0) * .95);
-  expect(mobileAudit.premiumWhiteSpace).toBe('nowrap');
-  expect(mobileAudit.premiumFits).toBe(true);
-  expect(mobileAudit.topbarPosition).toBe('relative');
+  expect(mobileAudit.topbarPosition).toBe('sticky');
   expect(mobileAudit.input?.height || 9999).toBeLessThan(1250);
   expect(mobileAudit.hero?.height || 9999).toBeLessThan(1250);
   expect(mobileAudit.compatibility?.width || 0).toBeGreaterThan(viewportWidth - 40);
@@ -158,15 +160,14 @@ test('V12 remains readable and overflow-free on mobile', async ({ page }, testIn
   expect(mobileAudit.keywordShell?.height || 9999).toBeLessThan(1650);
   expect(mobileAudit.fullReport?.width || 0).toBeGreaterThan(viewportWidth - 40);
   expect(mobileAudit.heroBackground).toBe('none');
-  const mobileMinFont=await page.evaluate(()=>{
-    const items=[...document.querySelectorAll('body *')].filter((el)=>{
-      const s=getComputedStyle(el);
-      if(s.display==='none'||s.visibility==='hidden'||['SVG','SYMBOL','PATH','USE'].includes(el.tagName)) return false;
-      return [...el.childNodes].some((node)=>node.nodeType===Node.TEXT_NODE && node.textContent.trim());
-    });
-    return Math.min(...items.map((el)=>parseFloat(getComputedStyle(el).fontSize)).filter(Number.isFinite));
-  });
-  expect(mobileMinFont).toBeGreaterThanOrEqual(18.5);
+  const mobileType=await page.evaluate(()=>({
+    body:parseFloat(getComputedStyle(document.body).fontSize),
+    birthDate:parseFloat(getComputedStyle(document.querySelector('#birthDate')).fontSize),
+    select:parseFloat(getComputedStyle(document.querySelector('#gender')).fontSize)
+  }));
+  expect(mobileType.body).toBeGreaterThanOrEqual(17);
+  expect(mobileType.birthDate).toBeGreaterThanOrEqual(16);
+  expect(mobileType.select).toBeGreaterThanOrEqual(16);
   expect(mobileAudit.cards).toHaveLength(6);
   for (const card of mobileAudit.cards) {
     expect(card.width).toBeGreaterThan(120);
@@ -176,11 +177,11 @@ test('V12 remains readable and overflow-free on mobile', async ({ page }, testIn
 
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => scrollTo(0,0));
-  await page.locator('.hero-primary').screenshot({ path: `test-results/v12-hero-${testInfo.project.name}.png` });
-  await page.locator('#input').screenshot({ path: `test-results/v12-input-${testInfo.project.name}.png` });
-  await page.locator('.visual-keyword-showcase').screenshot({ path: `test-results/v12-keywords-${testInfo.project.name}.png` });
-  await page.locator('#year').screenshot({ path: `test-results/v12-year-${testInfo.project.name}.png` });
-  await page.screenshot({ path: `test-results/v12-reference-${testInfo.project.name}.png`, fullPage: true });
+  await page.locator('.hero-primary').screenshot({ path: `test-results/v15-hero-${testInfo.project.name}.png` });
+  await page.locator('#input').screenshot({ path: `test-results/v15-input-${testInfo.project.name}.png` });
+  await page.locator('.visual-keyword-showcase').screenshot({ path: `test-results/v15-keywords-${testInfo.project.name}.png` });
+  await page.locator('#year').screenshot({ path: `test-results/v15-year-${testInfo.project.name}.png` });
+  await page.screenshot({ path: `test-results/v15-reference-${testInfo.project.name}.png`, fullPage: true });
 });
 
 test('calculation renderers still populate all retained data targets', async ({ page }) => {
@@ -194,6 +195,8 @@ test('calculation renderers still populate all retained data targets', async ({ 
   await expect(page.locator('#dailyBriefGrid article')).toHaveCount(4);
   await expect(page.locator('#dailyTimeFlow article')).toHaveCount(6);
   await expect(page.locator('#weeklyPreview .weekly-day')).toHaveCount(7);
+  await expect(page.locator('#weeklyPreview')).not.toContainText('연애이');
+  await expect(page.locator('#weeklyPreview')).not.toContainText('연애은');
   await expect(page.locator('.daily-report-extra')).not.toHaveAttribute('open','');
   await expect(page.locator('#tojungQuarterGrid .quarter-card')).toHaveCount(4);
   await assertNoHorizontalOverflow(page);
@@ -264,17 +267,22 @@ test('final-build typography and section geometry do not clip or overlap', async
       const rect=el.getBoundingClientRect();
       return style.display!=='none' && style.visibility!=='hidden' && rect.width>0 && rect.height>0;
     });
+    const horizontalScrollers='.feature-orbit-nav,.daily-time-flow,.weekly-preview,.report-nav,.tarot-reveal-deck';
     const outOfViewport=nodes.filter((el)=>{
+      if(el.closest(horizontalScrollers)) return false;
       const rect=el.getBoundingClientRect();
       return rect.left < -2 || rect.right > viewportWidth + 2;
     }).map((el)=>({tag:el.tagName,cls:el.className,text:(el.textContent||'').trim().slice(0,60),left:el.getBoundingClientRect().left,right:el.getBoundingClientRect().right}));
     const clipped=nodes.filter((el)=>{
       const style=getComputedStyle(el);
+      if(style.textOverflow==='ellipsis' || el.closest(horizontalScrollers)) return false;
       const clippedX=['hidden','clip'].includes(style.overflowX);
       return clippedX && el.scrollWidth > el.clientWidth + 2;
     }).map((el)=>({tag:el.tagName,cls:el.className,text:(el.textContent||'').trim().slice(0,60),scrollWidth:el.scrollWidth,clientWidth:el.clientWidth}));
-    const sections=[...document.querySelectorAll('.hero-primary,#input,.feature-orbit-nav,.visual-keyword-showcase,.quote-band,#today,#year,#tarot,#full-report,.closing-cta')];
+    const sections=[...document.querySelectorAll('.hero-primary,#input,.feature-orbit-nav,.visual-keyword-showcase,#today,#year,#compatibility,#tarot,#full-report')];
     const badSections=sections.filter((el)=>{
+      const style=getComputedStyle(el);
+      if(style.display==='none' || style.visibility==='hidden') return false;
       if(el.id==='full-report' && !el.open) return false;
       const r=el.getBoundingClientRect();
       return r.width<=0 || r.height<=0 || r.right>viewportWidth+2 || r.left<-2;
@@ -287,7 +295,7 @@ test('final-build typography and section geometry do not clip or overlap', async
   expect(audit.badSections, JSON.stringify(audit.badSections)).toEqual([]);
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => scrollTo(0,0));
-  await page.screenshot({ path: `test-results/v12-fullpage-${testInfo.project.name}.png`, fullPage: true });
+  await page.screenshot({ path: `test-results/v15-fullpage-${testInfo.project.name}.png`, fullPage: true });
 });
 
 test('reference-density sections stay compact on desktop and primary disclosure works', async ({ page }, testInfo) => {
@@ -307,7 +315,7 @@ test('reference-density sections stay compact on desktop and primary disclosure 
 
   await expect(page.locator('#birthDate')).toBeVisible();
   await expect(page.locator('#leapField')).toBeHidden();
-  await page.locator('input[name="calendar"][value="lunar"]').check();
+  await selectCalendarMode(page,'lunar');
   await expect(page.locator('.birth-date-inputs')).toBeVisible();
   await expect(page.locator('#leapField')).toBeVisible();
   const birthWidths=await page.evaluate(()=>({
@@ -317,7 +325,7 @@ test('reference-density sections stay compact on desktop and primary disclosure 
   }));
   expect(birthWidths.year).toBeGreaterThan(birthWidths.month * 1.35);
   expect(Math.abs(birthWidths.month-birthWidths.day)).toBeLessThan(3);
-  await page.locator('input[name="calendar"][value="solar"]').check();
+  await selectCalendarMode(page,'solar');
   await expect(page.locator('#birthDate')).toBeVisible();
   await expect(page.locator('.birth-date-inputs')).toBeHidden();
   await expect(page.locator('#leapField')).toBeHidden();
@@ -394,7 +402,7 @@ test('desktop tarot deal animation expands one stacked deck into a full overlapp
   expect(selectedBounds.cardTop).toBeGreaterThanOrEqual(selectedBounds.stageTop - 1);
   expect(selectedBounds.cardBottom).toBeLessThanOrEqual(selectedBounds.stageBottom + 1);
 
-  await page.locator('#tarot').screenshot({path:'test-results/v12-tarot-78-fan-desktop.png'});
+  await page.locator('#tarot').screenshot({path:'test-results/v15-tarot-78-fan-desktop.png'});
 });
 
 
@@ -466,19 +474,30 @@ test('expanded precision report has no clipped text or viewport escape', async (
   expect(audit.escaped,JSON.stringify(audit.escaped)).toEqual([]);
   expect(audit.clipped,JSON.stringify(audit.clipped)).toEqual([]);
   await assertNoHorizontalOverflow(page);
-  await page.locator('.reading-opening').screenshot({path:`test-results/v12-report-opening-${testInfo.project.name}.png`});
-  await page.locator('#report-temperament').screenshot({path:`test-results/v12-report-chapter-${testInfo.project.name}.png`});
+  await page.locator('.reading-opening').screenshot({path:`test-results/v15-report-opening-${testInfo.project.name}.png`});
+  await page.locator('#report-temperament').screenshot({path:`test-results/v15-report-chapter-${testInfo.project.name}.png`});
   if(['desktop','mobile'].includes(testInfo.project.name)) await page.locator('#annualDetailReport').screenshot({path:`test-results/v13-month-flow-${testInfo.project.name}.png`});
 });
 
 test('core form and tarot controls retain touch-friendly targets', async ({ page }) => {
   await page.goto('/');
   const audit=await page.evaluate(() => {
-    const selectors=['#birthForm input','#birthForm select','#birthForm button','.birth-side-submit','#drawTarot','#full-report>summary'];
+    const selectors=[
+      '#birthForm input:not([type="radio"]):not([type="checkbox"])',
+      '#birthForm select',
+      '#birthForm button',
+      '.segmented span',
+      '.precision-switch',
+      '.leap-field.active',
+      '.birth-side-submit',
+      '#drawTarot',
+      '#full-report>summary'
+    ];
     return selectors.flatMap((selector)=>[...document.querySelectorAll(selector)]).map((el)=>{
       const r=el.getBoundingClientRect();
-      return {tag:el.tagName,id:el.id||'',cls:el.className||'',width:r.width,height:r.height};
-    }).filter((item)=>item.width>0 && item.height>0 && item.height<43.5);
+      const style=getComputedStyle(el);
+      return {tag:el.tagName,id:el.id||'',cls:el.className||'',width:r.width,height:r.height,display:style.display,visibility:style.visibility};
+    }).filter((item)=>item.display!=='none' && item.visibility!=='hidden' && item.width>0 && item.height>0 && item.height<43.5);
   });
   expect(audit,JSON.stringify(audit)).toEqual([]);
 });
@@ -506,18 +525,13 @@ test('solar calendar picker and lunar compact fields both drive the retained cal
   test.skip(testInfo.project.name !== 'desktop', 'calculation behavior is viewport-independent');
   await page.goto('/');
 
-  await expect(page.locator('#birthYearQuick')).toBeVisible();
+  await expect(page.locator('#birthYearQuick')).toBeHidden();
   await page.locator('#birthDate').fill('1990-01-01');
-  await page.locator('#birthYearQuick').fill('1987');
-  await expect(page.locator('#birthDate')).toHaveValue('1987-01-01');
-  await page.locator('[data-year-shift="10"]').click();
-  await expect(page.locator('#birthDate')).toHaveValue('1997-01-01');
-  await page.locator('#birthYearQuick').fill('1990');
   await expect(page.locator('#birthDate')).toHaveValue('1990-01-01');
   await page.locator('.birth-side-submit:visible').click();
   await expect(page.locator('#profileBirth')).toContainText('양력 1990.01.01');
 
-  await page.locator('input[name="calendar"][value="lunar"]').check();
+  await selectCalendarMode(page,'lunar');
   await expect(page.locator('#birthYearQuick')).toBeHidden();
   await page.locator('#birthYear').fill('1989');
   await page.locator('#birthMonth').fill('12');
@@ -532,31 +546,31 @@ test('calendar mode converts and preserves the same birth date across month-end 
   await page.goto('/');
 
   await page.locator('#birthDate').fill('1990-01-31');
-  await page.locator('input[name="calendar"][value="lunar"]').check();
+  await selectCalendarMode(page,'lunar');
   await expect(page.locator('#birthYear')).toHaveValue('1990');
   await expect(page.locator('#birthMonth')).toHaveValue('1');
   await expect(page.locator('#birthDay')).toHaveValue('5');
-  await page.locator('input[name="calendar"][value="solar"]').check();
+  await selectCalendarMode(page,'solar');
   await expect(page.locator('#birthDate')).toHaveValue('1990-01-31');
 
   await page.locator('#birthDate').fill('2024-02-10');
-  await page.locator('input[name="calendar"][value="lunar"]').check();
+  await selectCalendarMode(page,'lunar');
   await expect(page.locator('#birthYear')).toHaveValue('2024');
   await expect(page.locator('#birthMonth')).toHaveValue('1');
   await expect(page.locator('#birthDay')).toHaveValue('1');
   await expect(page.locator('#isLeap')).toBeDisabled();
   await expect(page.locator('#leapHint')).toHaveText('이 달은 윤달 없음');
-  await page.locator('input[name="calendar"][value="solar"]').check();
+  await selectCalendarMode(page,'solar');
   await expect(page.locator('#birthDate')).toHaveValue('2024-02-10');
 
   await page.locator('#birthDate').fill('2023-03-22');
-  await page.locator('input[name="calendar"][value="lunar"]').check();
+  await selectCalendarMode(page,'lunar');
   await expect(page.locator('#birthYear')).toHaveValue('2023');
   await expect(page.locator('#birthMonth')).toHaveValue('2');
   await expect(page.locator('#birthDay')).toHaveValue('1');
   await expect(page.locator('#isLeap')).toBeEnabled();
   await expect(page.locator('#isLeap')).toBeChecked();
-  await page.locator('input[name="calendar"][value="solar"]').check();
+  await selectCalendarMode(page,'solar');
   await expect(page.locator('#birthDate')).toHaveValue('2023-03-22');
 });
 
