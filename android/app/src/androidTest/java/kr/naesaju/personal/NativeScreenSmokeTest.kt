@@ -9,6 +9,7 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.test.platform.app.InstrumentationRegistry
 import java.io.File
 import java.io.FileOutputStream
@@ -79,7 +80,7 @@ class NativeScreenSmokeTest {
         composeRule.onNodeWithText("처음 한 번만\n나를 알려주세요.").assertIsDisplayed()
         composeRule.onNodeWithText("생년월일").assertIsDisplayed()
         composeRule.onNodeWithText("출생시간을 알고 있어요").assertIsDisplayed()
-        composeRule.onNodeWithText("내 사주 시작하기").assertIsDisplayed()
+        composeRule.onNodeWithText("내 사주 시작하기").performScrollTo().assertIsDisplayed()
         saveRootScreenshot("qa-profile.png")
     }
 
@@ -102,12 +103,12 @@ class NativeScreenSmokeTest {
 
         composeRule.onNodeWithText("오늘의 한마디").assertIsDisplayed()
         composeRule.onNodeWithText("오늘의 흐름").assertIsDisplayed()
-        composeRule.onNodeWithText("지금 필요한 행동").assertIsDisplayed()
+        composeRule.onNodeWithText("지금 필요한 행동").performScrollTo().assertIsDisplayed()
         saveRootScreenshot("qa-home.png")
     }
 
     @Test
-    fun sajuAndFortuneScreensExposeRealReadingContent() {
+    fun sajuScreenExposesRealReadingContent() {
         composeRule.setContent {
             SajutaroTheme {
                 SajuScreen(
@@ -120,9 +121,12 @@ class NativeScreenSmokeTest {
             }
         }
         composeRule.onNodeWithText("나를 한 문장으로").assertIsDisplayed()
-        composeRule.onNodeWithText("내가 잘하는 것").assertIsDisplayed()
+        composeRule.onNodeWithText("내가 잘하는 것").performScrollTo().assertIsDisplayed()
         saveRootScreenshot("qa-saju.png")
+    }
 
+    @Test
+    fun fortuneScreenExposesTodayYearAndMonthlyNavigation() {
         composeRule.setContent {
             SajutaroTheme {
                 FortuneScreen(
@@ -134,7 +138,7 @@ class NativeScreenSmokeTest {
         }
         composeRule.onNodeWithText("오늘").assertIsDisplayed()
         composeRule.onNodeWithText("올해").assertIsDisplayed()
-        composeRule.onNodeWithText("1~12월").assertIsDisplayed()
+        composeRule.onNodeWithText("1~12월").performScrollTo().assertIsDisplayed()
         saveRootScreenshot("qa-fortune.png")
     }
 
@@ -151,7 +155,7 @@ class NativeScreenSmokeTest {
         }
 
         composeRule.onNodeWithText("점수보다\n서로 다른 방식을 봅니다.").assertIsDisplayed()
-        composeRule.onNodeWithText("관계 흐름 보기").assertIsDisplayed()
+        composeRule.onNodeWithText("관계 흐름 보기").performScrollTo().assertIsDisplayed()
         saveRootScreenshot("qa-compatibility.png")
     }
 
@@ -170,8 +174,8 @@ class NativeScreenSmokeTest {
         composeRule.waitUntil(timeoutMillis = 3_000) {
             composeRule.onAllNodesWithText("별 · 정방향").fetchSemanticsNodes().isNotEmpty()
         }
-        composeRule.onNodeWithText("별 · 정방향").assertIsDisplayed()
-        composeRule.onNodeWithText("행동 조언").assertIsDisplayed()
+        composeRule.onNodeWithText("별 · 정방향").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithText("행동 조언").performScrollTo().assertIsDisplayed()
         saveRootScreenshot("qa-tarot.png")
     }
 
