@@ -141,7 +141,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
-      - name: Run native UI smoke tests at 360dp / 1.3 font scale
+      - name: Run native UI smoke tests at 320dp, 360dp large-font, and 412dp
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 35
@@ -155,25 +155,19 @@ jobs:
             adb shell wm size 640x1136
             adb shell wm density 320
             adb shell settings put system font_scale 1.0
-            cd android
-            ./gradlew connectedDebugAndroidTest --stacktrace
-            cd ..
+            ./android/gradlew -p android connectedDebugAndroidTest --stacktrace
             adb pull /sdcard/Android/data/kr.naesaju.personal/files/. mobile/ui-qa/320/
 
             adb shell wm size 720x1280
             adb shell wm density 320
             adb shell settings put system font_scale 1.3
-            cd android
-            ./gradlew connectedDebugAndroidTest --stacktrace
-            cd ..
+            ./android/gradlew -p android connectedDebugAndroidTest --stacktrace
             adb pull /sdcard/Android/data/kr.naesaju.personal/files/. mobile/ui-qa/360-large/
 
             adb shell wm size 824x1648
             adb shell wm density 320
             adb shell settings put system font_scale 1.0
-            cd android
-            ./gradlew connectedDebugAndroidTest --stacktrace
-            cd ..
+            ./android/gradlew -p android connectedDebugAndroidTest --stacktrace
             adb pull /sdcard/Android/data/kr.naesaju.personal/files/. mobile/ui-qa/412/
 
             test -s mobile/ui-qa/320/qa-home.png
