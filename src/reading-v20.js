@@ -38,6 +38,19 @@ const ELEMENT_STYLE = {
   }
 };
 
+const DAY_MASTER_STYLE = {
+  갑:{title:'곧은 기준으로 앞길을 만드는 사람',core:'갑목은 큰 나무처럼 방향과 원칙을 세운 뒤 꾸준히 밀고 가는 힘을 중심에 둡니다.',decision:'먼저 큰 방향을 정하고 세부를 뒤에서 맞추는 판단이 자연스럽습니다.',stress:'방향이 막히거나 자율성을 잃으면 답답함이 빠르게 쌓일 수 있습니다.',relation:'관계에서도 기준이 분명한 만큼 상대의 다른 속도를 기다리는 연습이 중요합니다.'},
+  을:{title:'유연하게 길을 찾고 연결하는 사람',core:'을목은 덩굴과 풀처럼 상황을 읽으며 연결점을 찾고, 작은 틈에서도 성장 경로를 만드는 힘을 가집니다.',decision:'정면 돌파보다 사람과 조건을 조율해 실현 가능한 길을 고르는 편입니다.',stress:'주변을 너무 많이 맞추다 보면 자신의 우선순위가 흐려질 수 있습니다.',relation:'섬세한 관찰이 장점이지만 마음을 추측만 하지 말고 필요한 말은 분명히 하는 편이 좋습니다.'},
+  병:{title:'명확하게 드러내고 분위기를 움직이는 사람',core:'병화는 태양처럼 무엇이 중요한지 밖으로 드러내고 주변의 움직임을 끌어내는 힘이 중심입니다.',decision:'정보가 충분하면 빠르게 방향을 공개하고 사람을 움직이는 결정을 내리기 쉽습니다.',stress:'반응이 없거나 표현을 막는 환경에서는 에너지가 급격히 떨어질 수 있습니다.',relation:'진심을 크게 표현하는 장점은 살리되 상대가 받아들일 여유가 있는지도 확인해야 합니다.'},
+  정:{title:'세밀한 감각으로 오래 빛을 만드는 사람',core:'정화는 등불처럼 가까운 곳을 세심하게 비추며 한 사람, 한 결과물에 집중해 완성도를 높이는 힘이 있습니다.',decision:'겉으로 드러난 크기보다 의미와 디테일을 따져 선택하는 편입니다.',stress:'작은 어긋남을 오래 붙잡거나 감정을 안에서 태우면 피로가 커질 수 있습니다.',relation:'섬세함이 배려로 이어지지만 상대의 반응까지 혼자 책임지지는 않는 것이 중요합니다.'},
+  무:{title:'흔들리지 않는 기반을 만드는 사람',core:'무토는 큰 산처럼 쉽게 방향을 바꾸기보다 전체 구조와 지속 가능성을 먼저 보는 힘이 중심입니다.',decision:'한 번 정한 기준을 오래 유지할 수 있는지를 확인한 뒤 움직이는 편입니다.',stress:'변화가 너무 빠르거나 통제할 수 없는 일이 겹치면 버티는 데 에너지를 과하게 쓸 수 있습니다.',relation:'든든함이 장점이지만 침묵으로 버티기보다 불편한 지점을 초기에 말하는 편이 낫습니다.'},
+  기:{title:'현실을 세심하게 다듬어 살리는 사람',core:'기토는 밭과 흙처럼 사람과 자원을 실제로 굴러가게 만들고, 작은 차이를 조정해 결과를 키우는 힘이 있습니다.',decision:'현실 조건과 사람의 상태를 함께 보고 실행 가능한 선택을 고르는 편입니다.',stress:'챙길 것이 많아지면 자기 몫과 남의 몫의 경계가 흐려질 수 있습니다.',relation:'상대에게 필요한 것을 잘 읽지만 돌봄이 의무가 되지 않도록 선을 정하는 것이 중요합니다.'},
+  경:{title:'기준을 세우고 결단으로 길을 내는 사람',core:'경금은 다듬기 전의 단단한 쇠처럼 무엇을 남기고 무엇을 끊을지 분명히 판단하는 힘이 중심입니다.',decision:'핵심 조건이 정리되면 오래 망설이기보다 결론을 내리고 실행하는 편입니다.',stress:'기준이 너무 높아지면 자신과 주변의 작은 부족함까지 문제로 확대해서 볼 수 있습니다.',relation:'솔직하고 명확한 태도가 신뢰를 만들지만, 맞는 말보다 전달 순서가 더 중요한 순간도 있습니다.'},
+  신:{title:'정교한 기준으로 완성도를 끌어올리는 사람',core:'신금은 잘 다듬어진 금속이나 보석처럼 작은 차이를 구분하고 품질을 세밀하게 높이는 힘이 중심입니다.',decision:'대충 괜찮은 답보다 정확한 조건과 완성도를 비교해 선택하는 편입니다.',stress:'완벽한 기준을 놓지 못하면 결정과 마감이 늦어지고 스스로를 과하게 평가할 수 있습니다.',relation:'세심함은 큰 장점이지만 상대의 부족함보다 관계 전체의 균형을 먼저 보는 연습이 도움이 됩니다.'},
+  임:{title:'넓게 보고 흐름을 바꾸는 사람',core:'임수는 큰 물처럼 정보와 사람을 넓게 연결하고 상황 변화에 맞춰 새로운 길을 찾는 힘이 중심입니다.',decision:'한 가지 답에 고정되기보다 여러 가능성을 비교한 뒤 가장 흐름이 좋은 쪽을 선택합니다.',stress:'생각과 선택지가 너무 많아지면 방향을 정하지 못한 채 에너지만 분산될 수 있습니다.',relation:'상대를 이해하는 폭은 넓지만 중요한 관계에서는 자신의 의도도 선명하게 보여줄 필요가 있습니다.'},
+  계:{title:'깊이 관찰해 정확한 타이밍을 찾는 사람',core:'계수는 비와 이슬처럼 미세한 변화와 감정을 읽고 필요한 곳에 조용히 스며드는 힘이 중심입니다.',decision:'겉으로 보이는 정보보다 맥락과 뉘앙스를 충분히 확인한 뒤 움직이는 편입니다.',stress:'불확실한 상황을 오래 생각하면 실제 문제보다 가능성 자체에 지칠 수 있습니다.',relation:'상대의 감정을 잘 읽는 만큼 추측과 사실을 분리해서 확인하는 습관이 중요합니다.'}
+};
+
 const ROLE_STYLE = {
   비겁: {
     label:'자기주도',
@@ -169,6 +182,7 @@ export function buildCoreReading(chart,{timeKnown=true}={}){
   const stem=stemByName(chart.dayMaster);
   const element=ELEMENT_STYLE[strongElement];
   const weak=ELEMENT_STYLE[weakElement];
+  const dayMaster=DAY_MASTER_STYLE[chart.dayMaster] || DAY_MASTER_STYLE.무;
   const role=ROLE_STYLE[strongRole];
   const second=ROLE_STYLE[secondRole];
   const rel=relationSentence(chart.relations);
@@ -182,17 +196,17 @@ export function buildCoreReading(chart,{timeKnown=true}={}){
   const categories=[
     {
       id:'personality',title:'성향',eyebrow:'나를 움직이는 방식',
-      headline:element.identity+'과 '+role.identity+'입니다.',
-      summary:'처음 보는 상황에서는 '+element.gift+'이 먼저 작동하고, 실제 결정을 내릴 때는 '+role.label+' 성향이 기준을 잡습니다. 그래서 겉으로는 한 번 결정하면 단단해 보이지만, 결정 전에는 생각보다 여러 조건을 비교하는 편일 수 있습니다.',
-      strength:[element.gift,role.strength],
-      watch:[element.risk,role.friction],
+      headline:dayMaster.title+'.',
+      summary:dayMaster.core+' '+dayMaster.decision+' 여기에 '+element.gift+'과 '+role.label+' 성향이 겹치면서, 같은 상황에서도 무엇을 먼저 보고 어떤 방식으로 결론을 내리는지가 더 선명해집니다.',
+      strength:[dayMaster.decision,element.gift,role.strength],
+      watch:[dayMaster.stress,element.risk,role.friction],
       practice:'중요한 결정은 “내가 원하는 것 / 확인해야 할 사실 / 지금 하지 않을 것” 세 줄로 나누면 강점은 살리고 과부하는 줄이기 쉽습니다.',
-      evidence:['가장 두드러진 오행: '+strongElement+' '+elementRatio+'%','가장 두드러진 역할: '+ROLE_LABELS[strongRole]+' '+roleRatio+'%',rel]
+      evidence:['나를 보는 기준점: '+stem.hanja+'('+chart.dayMaster+') · '+stem.yinYang+' '+stem.element,'가장 두드러진 오행: '+strongElement+' '+elementRatio+'%','가장 두드러진 역할: '+ROLE_LABELS[strongRole]+' '+roleRatio+'%',rel]
     },
     {
       id:'work',title:'일',eyebrow:'잘하는 방식과 맞는 환경',
       headline:element.work+'에서 '+role.label+'의 장점이 가장 잘 살아납니다.',
-      summary:'직업명보다 중요한 것은 일하는 구조입니다. '+role.work+'이 맞고, 보조 성향인 '+second.label+'이 함께 쓰일 때 방향을 잡는 힘과 내용을 채우는 힘이 균형을 이루기 쉽습니다.',
+      summary:'직업명보다 중요한 것은 일하는 구조입니다. '+dayMaster.decision+' '+role.work+'이 맞고, 보조 성향인 '+second.label+'이 함께 쓰일 때 방향을 잡는 힘과 내용을 채우는 힘이 균형을 이루기 쉽습니다.',
       strength:['정리가 덜 된 문제를 자기 기준으로 구조화하는 능력',second.strength],
       watch:['권한은 없는데 결과 책임만 큰 환경','기준이 자주 바뀌는데 설명이나 피드백이 없는 환경'],
       practice:'새 역할을 볼 때 직함보다 “결정권 / 전문성 축적 / 결과 확인 / 피드백 질” 네 가지를 먼저 확인하세요.',
@@ -210,7 +224,7 @@ export function buildCoreReading(chart,{timeKnown=true}={}){
     {
       id:'relationship',title:'관계',eyebrow:'가까운 사람과 부딪히는 지점',
       headline:role.relation+'이 관계를 편하게 만드는 핵심입니다.',
-      summary:'가까운 관계에서는 사회적 역할보다 본래의 속도와 기준이 더 선명하게 드러납니다. '+rel+' 이 표시는 상대의 마음을 예언하는 것이 아니라, 갈등이나 연결이 생길 때 내가 어떤 방식으로 반응하기 쉬운지 보는 단서입니다.',
+      summary:'가까운 관계에서는 사회적 역할보다 본래의 속도와 기준이 더 선명하게 드러납니다. '+dayMaster.relation+' '+rel+' 이 표시는 상대의 마음을 예언하는 것이 아니라, 갈등이나 연결이 생길 때 내가 어떤 방식으로 반응하기 쉬운지 보는 단서입니다.',
       strength:['관계에서도 자기 기준을 잃지 않는 힘','반복되는 행동을 통해 신뢰 여부를 판단하는 현실감'],
       watch:['상대가 내 기대를 이미 알고 있다고 가정하기','한 번의 강한 감정으로 관계 전체를 결론내리기'],
       practice:'불편함이 생기면 “사실 / 내가 느낀 점 / 원하는 다음 행동” 순서로 짧게 말해 보세요.',
@@ -229,8 +243,8 @@ export function buildCoreReading(chart,{timeKnown=true}={}){
 
   return {
     signature:{
-      title:element.identity,
-      subtitle:role.label+' 성향이 결정을 잡고 '+second.label+' 성향이 보조합니다.',
+      title:dayMaster.title,
+      subtitle:stem.hanja+'('+chart.dayMaster+')의 판단 방식 위에 '+role.label+' 성향이 중심을 잡고 '+second.label+' 성향이 보조합니다.',
       note:'사주는 미래를 확정하는 예언이 아니라 전통 명리 규칙으로 성향과 시기별 질문을 정리하는 참고 도구입니다.'
     },
     categories,
