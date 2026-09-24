@@ -108,6 +108,7 @@ function dominantRole(chart){ return sorted(chart.roles)[0]?.[0] || '인성'; }
 function relationLabel(relations){ return relations?.length ? [...new Set(relations.map((r)=>r.type))].join('·') : '큰 충돌 신호 없음'; }
 function escapeHtml(value=''){ return value.replace(/[&<>"']/g,(char)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])); }
 function firstSentence(value=''){ return value.split(/(?<=[.!?])\s+/)[0] || value; }
+function cleanQuickLabel(value=''){ return String(value).replace(/^(한 줄 요약|왜 그런가요\?|생활에서는):\s*/,''); }
 function hasBatchim(value=''){
   const text=String(value).trim();
   if(!text) return false;
@@ -537,7 +538,7 @@ function renderProfile(chart,mbti,report,name,todayFlow){
   const strongRole=dominantRole(chart);
   $('profileBirth').textContent=`양력 ${formatSolar(chart.solar)} · 음력 ${formatLunar(chart.lunar)} · ${chart.basis.location}`;
   $('reportTitle').textContent=`${name}님의 사주 리포트`;
-  $('reportLead').textContent=report.overview.lead;
+  $('reportLead').textContent=cleanQuickLabel(report.overview.quick?.[0] || report.overview.lead);
   $('profileTags').innerHTML=[`${strongElement} · ${ELEMENT_LABELS[strongElement].label}`,ROLE_LABELS[strongRole],mbti.type,relationLabel(chart.relations)].map((v)=>`<span>${v}</span>`).join('');
   $('mbtiType').textContent=mbti.type;
   $('mbtiLabel').textContent='성향 참고 · 정식 MBTI 아님';
@@ -556,12 +557,12 @@ function renderDetailedReport(report){
       <details class="detail-disclosure"${open}>
         <summary>
           <span>${String(index+1).padStart(2,'0')}</span>
-          <div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.lead)}</p></div>
+          <div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(cleanQuickLabel(quick[0] || item.lead))}</p></div>
           <b class="detail-toggle" aria-hidden="true">+</b>
         </summary>
         <div class="detail-chapter-body">
           <div class="easy-reading-label"><span>먼저 이것만 보세요</span><small>개인 계산값 기반</small></div>
-          <ul class="chapter-quick-list">${quick.map((p,i)=>`<li><strong>${labels[i]||'참고'}</strong><span>${escapeHtml(p)}</span></li>`).join('')}</ul>
+          <ul class="chapter-quick-list">${quick.map((p,i)=>`<li><strong>${labels[i]||'참고'}</strong><span>${escapeHtml(cleanQuickLabel(p))}</span></li>`).join('')}</ul>
           ${item.evidence?.length?`<details class="chapter-evidence"><summary>해석 근거 보기</summary><ul>${item.evidence.map((line)=>`<li>${escapeHtml(line)}</li>`).join('')}</ul></details>`:''}
           <details class="chapter-full-analysis"><summary>깊이 읽기</summary>${item.paragraphs.map((p)=>`<p>${escapeHtml(p)}</p>`).join('')}</details>
         </div>
@@ -581,8 +582,8 @@ function renderKeywordInsight(report,key='temperament'){
   });
   panel.dataset.reportKey=key;
   const quick=(item.quick?.length?item.quick:item.paragraphs.map(firstSentence)).slice(0,3);
-  const primary=quick[0] || item.lead;
-  const action=quick[2] || quick[1] || '';
+  const primary=cleanQuickLabel(quick[0] || item.lead);
+  const action=cleanQuickLabel(quick[2] || quick[1] || '');
   panel.innerHTML=`<div><span class="section-kicker">MY INSIGHT</span><h3>${escapeHtml(item.title)}</h3></div><p><mark>${escapeHtml(primary)}</mark>${action && action!==primary?`<br>${escapeHtml(action)}`:''}</p><a href="#report-${key}">자세히 읽기 <span aria-hidden="true">→</span></a>`;
 }
 
