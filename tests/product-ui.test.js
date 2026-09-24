@@ -18,10 +18,10 @@ test('primary information architecture is reduced to top user tasks',()=>{
   for(const label of ['사주 리포트','오늘','올해','타로']) assert.ok(topnav.includes(label),label);
   assert.doesNotMatch(topnav,/궁합|자세한리포트/);
 
-  const feature=html.match(/<nav class="feature-orbit-nav"[\s\S]*?<\/nav>/)?.[0]||'';
+  const feature=html.match(/<nav class="feature-orbit-nav[^"]*"[\s\S]*?<\/nav>/)?.[0]||'';
   assert.equal((feature.match(/<a /g)||[]).length,4);
 
-  const mobile=html.match(/<nav class="mobile-bottom-nav"[\s\S]*?<\/nav>/)?.[0]||'';
+  const mobile=html.match(/<nav class="mobile-bottom-nav[^"]*"[\s\S]*?<\/nav>/)?.[0]||'';
   assert.equal((mobile.match(/<a /g)||[]).length,5);
   assert.match(mobile,/href="#year"[\s\S]*>흐름</);
   assert.doesNotMatch(mobile,/href="#compatibility"/);
