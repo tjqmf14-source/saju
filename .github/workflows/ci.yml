@@ -153,24 +153,41 @@ jobs:
             set -eu
             mkdir -p mobile/ui-qa/320 mobile/ui-qa/360-large mobile/ui-qa/412
 
-            run_case() {
-              size="$1"
-              font_scale="$2"
-              target_dir="$3"
-              adb shell wm size "$size"
-              adb shell wm density 320
-              adb shell settings put system font_scale "$font_scale"
-              adb shell rm -rf /sdcard/Download/sajutaro-qa
-              ./android/gradlew -p android connectedDebugAndroidTest --rerun-tasks --stacktrace
-              for file in qa-profile.png qa-home.png qa-saju.png qa-fortune.png qa-compatibility.png qa-tarot.png; do
-                adb pull "/sdcard/Download/sajutaro-qa/$file" "$target_dir/$file"
-                test -s "$target_dir/$file"
-              done
-            }
+            adb shell wm size 640x1136
+            adb shell wm density 320
+            adb shell settings put system font_scale 1.0
+            adb shell rm -rf /sdcard/Download/sajutaro-qa
+            ./android/gradlew -p android connectedDebugAndroidTest --rerun-tasks --stacktrace
+            adb pull /sdcard/Download/sajutaro-qa/qa-profile.png mobile/ui-qa/320/qa-profile.png
+            adb pull /sdcard/Download/sajutaro-qa/qa-home.png mobile/ui-qa/320/qa-home.png
+            adb pull /sdcard/Download/sajutaro-qa/qa-saju.png mobile/ui-qa/320/qa-saju.png
+            adb pull /sdcard/Download/sajutaro-qa/qa-fortune.png mobile/ui-qa/320/qa-fortune.png
+            adb pull /sdcard/Download/sajutaro-qa/qa-compatibility.png mobile/ui-qa/320/qa-compatibility.png
+            adb pull /sdcard/Download/sajutaro-qa/qa-tarot.png mobile/ui-qa/320/qa-tarot.png
 
-            run_case 640x1136 1.0 mobile/ui-qa/320
-            run_case 720x1280 1.3 mobile/ui-qa/360-large
-            run_case 824x1648 1.0 mobile/ui-qa/412
+            adb shell wm size 720x1280
+            adb shell wm density 320
+            adb shell settings put system font_scale 1.3
+            adb shell rm -rf /sdcard/Download/sajutaro-qa
+            ./android/gradlew -p android connectedDebugAndroidTest --rerun-tasks --stacktrace
+            adb pull /sdcard/Download/sajutaro-qa/qa-profile.png mobile/ui-qa/360-large/qa-profile.png
+            adb pull /sdcard/Download/sajutaro-qa/qa-home.png mobile/ui-qa/360-large/qa-home.png
+            adb pull /sdcard/Download/sajutaro-qa/qa-saju.png mobile/ui-qa/360-large/qa-saju.png
+            adb pull /sdcard/Download/sajutaro-qa/qa-fortune.png mobile/ui-qa/360-large/qa-fortune.png
+            adb pull /sdcard/Download/sajutaro-qa/qa-compatibility.png mobile/ui-qa/360-large/qa-compatibility.png
+            adb pull /sdcard/Download/sajutaro-qa/qa-tarot.png mobile/ui-qa/360-large/qa-tarot.png
+
+            adb shell wm size 824x1648
+            adb shell wm density 320
+            adb shell settings put system font_scale 1.0
+            adb shell rm -rf /sdcard/Download/sajutaro-qa
+            ./android/gradlew -p android connectedDebugAndroidTest --rerun-tasks --stacktrace
+            adb pull /sdcard/Download/sajutaro-qa/qa-profile.png mobile/ui-qa/412/qa-profile.png
+            adb pull /sdcard/Download/sajutaro-qa/qa-home.png mobile/ui-qa/412/qa-home.png
+            adb pull /sdcard/Download/sajutaro-qa/qa-saju.png mobile/ui-qa/412/qa-saju.png
+            adb pull /sdcard/Download/sajutaro-qa/qa-fortune.png mobile/ui-qa/412/qa-fortune.png
+            adb pull /sdcard/Download/sajutaro-qa/qa-compatibility.png mobile/ui-qa/412/qa-compatibility.png
+            adb pull /sdcard/Download/sajutaro-qa/qa-tarot.png mobile/ui-qa/412/qa-tarot.png
 
             test "$(find mobile/ui-qa -name 'qa-*.png' -type f -size +1k | wc -l)" -eq 18
             find mobile/ui-qa -name 'qa-*.png' -type f -print0 | xargs -0 file | tee mobile/ui-qa/file-types.txt
