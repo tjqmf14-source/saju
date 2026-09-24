@@ -4,25 +4,26 @@ import { readFile } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const css = await readFile(new URL('../product-v17.css', import.meta.url), 'utf8');
+const cssV3 = await readFile(new URL('../product-v3.css', import.meta.url), 'utf8');
 const ui = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
 
-test('Product V17 is the only active frontend stylesheet and uses the mobile app-first design system', () => {
-  assert.ok(html.includes('product-v17.css'));
+test('Product V3 overlay is active while the verified V17 base remains as a compatibility layer', () => {
+  assert.match(html, /href="\/product-v17\.css"[\s\S]*href="\/product-v3\.css"/);
   assert.ok(!html.includes('site-v12.css'));
-  assert.equal((html.match(/<link rel="stylesheet"/g) || []).length, 1);
-  assert.match(html, /data-theme="product-v17"/);
-  assert.match(css, /Product V17 — mobile app-first remodeling/);
-  assert.ok(css.includes('--color-bg:#f2efe7'));
-  assert.ok(css.includes('--color-surface:#fffdf7'));
-  assert.ok(css.includes('--color-brand:#b54b3f'));
-  assert.ok(css.includes('--color-tarot:#11182b'));
+  assert.equal((html.match(/<link rel="stylesheet"/g) || []).length, 2);
+  assert.match(html, /data-theme="product-v3"/);
+  assert.match(cssV3, /Naesaju Product UI v3/);
+  assert.ok(cssV3.includes('--v3-bg:#f5f6f3'));
+  assert.ok(cssV3.includes('--v3-surface:#ffffff'));
+  assert.ok(cssV3.includes('--v3-brand:#2f5d4a'));
   assert.match(html, /class="trust-strip agency-shell"/);
 });
 
-test('desktop and mobile base type remain readable', () => {
-  assert.match(css, /body\{background:var\(--color-bg\);font:400 17px\/1\.75/);
-  assert.match(css, /@media\(max-width:720px\)\{[\s\S]*?body\{[^}]*font-size:17px/);
-  assert.match(css, /\.form-grid input,\.form-grid select,\.profile-manager select,\.profile-manager button,\.precision-grid select\{font-size:16px\}/);
+test('V3 desktop and mobile type have a larger readability floor', () => {
+  assert.match(cssV3, /body\[data-theme="product-v3"\]\{[\s\S]*font-size:17px/);
+  assert.match(cssV3, /@media\(max-width:760px\)\{[\s\S]*body\[data-theme="product-v3"\]\{[\s\S]*font-size:18px/);
+  assert.match(cssV3, /body\[data-theme="product-v3"\] small\{font-size:15px!important/);
+  assert.match(cssV3, /body\[data-theme="product-v3"\] button,[\s\S]*font-size:17px/);
 });
 
 
