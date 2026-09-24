@@ -2,7 +2,8 @@ import {
   calculateSaju,
   calculateTodayFlow,
   calculateYearFlow,
-  calculateMonthFlows
+  calculateMonthFlows,
+  detectBranchRelations
 } from './saju-engine.js';
 import { calculateSajuMbti } from './mbti.js';
 import { buildDetailedInterpretation } from './interpretation.js';
@@ -176,6 +177,95 @@ export function calculateForAndroid(jsonString) {
   }
 }
 
+const ROLE_COPY = {
+  비겁:'자기 기준과 실행',
+  식상:'표현과 결과 만들기',
+  재성:'현실 관리와 자원',
+  관성:'책임과 기준',
+  인성:'이해와 학습'
+};
+
+function dominantRole(chart) {
+  return Object.entries(chart.roles || {}).sort((a, b) => b[1] - a[1])[0]?.[0] || '인성';
+}
+
+function compatibilityPayload(first, second) {
+  const firstBranches = Object.values(first.pillars).map((pillar) => pillar.earthlyBranch);
+  const secondBranches = Object.values(second.pillars).map((pillar) => pillar.earthlyBranch);
+  const relationSignals = detectBranchRelations([...firstBranches, ...secondBranches]).filter((relation) =>
+    relation.members.some((member) => firstBranches.includes(member)) &&
+    relation.members.some((member) => secondBranches.includes(member))
+  );
+  const firstRole = dominantRole(first);
+  const secondRole = dominantRole(second);
+  const supportive = relationSignals.filter((item) => item.type === '합' || item.type === '삼합');
+  const friction = relationSignals.filter((item) => ['충','형','파','해'].includes(item.type));
+
+  const strengths = firstRole === secondRole
+    ? '두 사람 모두 ' + ROLE_COPY[firstRole] + '을 중요하게 보는 편이라 결정 기준을 맞추기 쉽습니다.'
+    : '한 사람은 ' + ROLE_COPY[firstRole] + ', 다른 사람은 ' + ROLE_COPY[secondRole] + ' 쪽이 두드러져 역할을 나누면 서로의 빈틈을 보완할 수 있습니다.';
+
+  const differences = first.dayMaster === second.dayMaster
+    ? '핵심 반응 방식이 비슷해 공감은 빠를 수 있지만, 같은 방식으로 고집을 부리면 갈등도 길어질 수 있습니다.'
+    : '핵심 반응 방식이 다르므로 같은 상황을 다르게 해석할 수 있습니다. 결론보다 서로의 판단 기준을 먼저 확인하는 편이 좋습니다.';
+
+  const conflictText = friction.length
+    ? '교차 관계에서 ' + friction.map((item) => item.text).join(' · ') + ' 신호가 보입니다. 압박이 큰 상황에서는 즉답보다 시간을 두고 합의점을 정하세요.'
+    : '강한 충돌 신호가 두드러지지 않습니다. 다만 갈등이 없다는 뜻은 아니므로 기대와 경계를 말로 확인하는 과정은 필요합니다.';
+
+  const summary = supportive.length
+    ? '서로 연결되는 지점이 있으면서 성향 차이도 함께 나타나는 관계입니다. 잘 맞는 부분을 당연하게 여기기보다 실제 생활의 역할과 기대를 맞추는 것이 중요합니다.'
+    : '좋고 나쁨을 한 점수로 정하기보다 서로 다른 기준을 어떻게 조율하는지가 중요한 관계입니다.';
+
+  return {
+    summary,
+    sections: [
+      { id:'strengths', title:'잘 맞는 부분', text:strengths },
+      { id:'differences', title:'다른 부분', text:differences },
+      { id:'conflict', title:'갈등하기 쉬운 상황', text:conflictText },
+      {
+        id:'understand',
+        title:'서로 이해하면 좋은 점',
+        text:'첫 번째 사람은 ' + ROLE_COPY[firstRole] + ', 두 번째 사람은 ' + ROLE_COPY[secondRole] + '을 우선하기 쉽습니다. 상대의 방식이 틀렸다기보다 우선순위가 다를 수 있다는 점을 먼저 확인하세요.'
+      },
+      {
+        id:'advice',
+        title:'현실적인 관계 조언',
+        text:'중요한 결정은 감정이 가장 높은 순간을 피하고, 원하는 것·양보 가능한 것·지킬 경계를 각각 한 문장으로 정리해 대화하세요.'
+      }
+    ],
+    evidence: {
+      firstDayMaster:first.dayMaster,
+      secondDayMaster:second.dayMaster,
+      firstDominantRole:firstRole,
+      secondDominantRole:secondRole,
+      relationSignals:relationSignals.map((item) => item.text)
+    },
+    note:'궁합은 관계의 좋고 나쁨을 확정하는 점수가 아니라 두 사람의 차이를 이해하기 위한 참고 해설입니다.'
+  };
+}
+
+export function calculateCompatibilityForAndroid(jsonString) {
+  try {
+    const request = JSON.parse(String(jsonString || '{}'));
+    const firstInput = normalizeAndroidRequest(request.first || {});
+    const secondInput = normalizeAndroidRequest(request.second || {});
+    const firstNormalized = { ...firstInput };
+    const secondNormalized = { ...secondInput };
+    delete firstNormalized.birthTimeKnown;
+    delete secondNormalized.birthTimeKnown;
+    const first = calculateSaju(firstNormalized);
+    const second = calculateSaju(secondNormalized);
+    return JSON.stringify({
+      ok:true,
+      schemaVersion:SCHEMA_VERSION,
+      compatibility:compatibilityPayload(first, second)
+    });
+  } catch (error) {
+    return JSON.stringify(failurePayload(error));
+  }
+}
+
 export function drawTarotForAndroid(jsonString) {
   try {
     const request = JSON.parse(String(jsonString || '{}'));
@@ -215,5 +305,6 @@ export function drawTarotForAndroid(jsonString) {
 globalThis.SajutaroEngine = Object.freeze({
   schemaVersion: SCHEMA_VERSION,
   calculate: calculateForAndroid,
+  calculateCompatibility: calculateCompatibilityForAndroid,
   drawTarot: drawTarotForAndroid
 });
