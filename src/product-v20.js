@@ -92,7 +92,9 @@ function calculateAll(profile){
   const chart=calculateSaju(profile);
   const currentYear=kstNowParts().year;
   const yearFlow=calculateYearFlow(chart,currentYear);
-  const monthFlows=calculateMonthFlows(chart,currentYear);
+  const previousYearMonths=calculateMonthFlows(chart,currentYear-1);
+  const currentYearMonths=calculateMonthFlows(chart,currentYear);
+  const monthFlows=[previousYearMonths.at(-1),...currentYearMonths.slice(0,11)];
   state.profile=profile;
   state.chart=chart;
   state.core=buildCoreReading(chart,{timeKnown:profile.timeKnown});
