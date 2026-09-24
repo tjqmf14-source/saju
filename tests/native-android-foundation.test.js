@@ -128,3 +128,20 @@ test('native product tabs are implemented screens rather than placeholders', asy
   assert.match(gradleFile, /datastore-preferences/);
   assert.match(gradleFile, /\.\.\/\.\.\/public/);
 });
+
+
+test('native home avoids duplicate tab-entry CTAs and keeps the simplified moon motif', () => {
+  assert.match(homeScreen, /MoonMark\(\)/);
+  assert.match(homeScreen, /관계 살펴보기/);
+  assert.match(homeScreen, /두 사람 궁합 보기/);
+  assert.doesNotMatch(homeScreen, /내 사주 자세히 보기|오늘 · 올해 · 월별 운세|타로 카드 펼치기/);
+});
+
+test('instrumentation QA verifies the packaged local engine with a real profile', async () => {
+  const integration = await safeRead('android/app/src/androidTest/java/kr/naesaju/personal/RealEngineIntegrationTest.kt');
+  assert.match(integration, /LocalJsEngine/);
+  assert.match(integration, /1987-06-14/);
+  assert.match(integration, /정묘/);
+  assert.match(integration, /parseReadingSnapshot/);
+  assert.match(integration, /months\.map \{ it\.action \}\.toSet\(\)\.size/);
+});

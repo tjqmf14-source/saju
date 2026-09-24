@@ -173,9 +173,6 @@ fun SajutaroApp() {
                     profile = currentProfile,
                     reading = reading,
                     contentPadding = innerPadding,
-                    onOpenSaju = { destinationName = AppDestination.SAJU.name },
-                    onOpenFortune = { destinationName = AppDestination.FORTUNE.name },
-                    onOpenTarot = { destinationName = AppDestination.TAROT.name },
                     onOpenCompatibility = { compatibilityOpen = true },
                     onEditProfile = { editingProfile = true }
                 )
