@@ -21,7 +21,7 @@ test('Product V3 overlay is active while the verified V17 base remains as a comp
 
 test('V3 desktop and mobile type have a larger readability floor', () => {
   assert.match(cssV3, /body\[data-theme="product-v3"\]\{[\s\S]*font-size:17px/);
-  assert.match(cssV3, /@media\(max-width:760px\)\{[\s\S]*body\[data-theme="product-v3"\]\{[\s\S]*font-size:18px/);
+  assert.match(cssV3, /@media\(max-width:760px\)\{[\s\S]*body\[data-theme="product-v3"\]\{[\s\S]*font-size:20px/);
   assert.match(cssV3, /body\[data-theme="product-v3"\] small\{font-size:15px!important/);
   assert.match(cssV3, /body\[data-theme="product-v3"\] button,[\s\S]*font-size:17px/);
 });
