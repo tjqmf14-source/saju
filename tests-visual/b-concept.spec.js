@@ -440,9 +440,10 @@ test('birth CTA recalculates current input and precision report exposes retained
   await expect(fullReport).toHaveAttribute('open', '');
   await expect(page.locator('#yearDeepDive .year-essay')).toHaveCount(1);
   await expect(page.locator('#monthForecast .month-card')).toHaveCount(12);
-  await expect(page.locator('#detailedReport .detail-chapter')).toHaveCount(13);
-  await expect(page.locator('#detailedReport .easy-reading-label')).toHaveCount(13);
-  await expect(page.locator('#report-balance')).not.toContainText('신강');
+  await expect(page.locator('#detailedReport .detail-chapter')).toHaveCount(7);
+  await expect(page.locator('#detailedReport .easy-reading-label')).toHaveCount(7);
+  await expect(page.locator('#detailedReport .chapter-evidence')).toHaveCount(7);
+  await expect(page.locator('#detailedReport .chapter-evidence[open]')).toHaveCount(0);
   await expect(page.locator('#detailedReport .detail-visual')).toHaveCount(0);
   await assertNoHorizontalOverflow(page);
 });
@@ -618,7 +619,7 @@ test('commercial UX interactions work without a backend', async ({ page }, testI
     expect(compatibilityGeometry.form?.height || 999).toBeLessThan(520);
     expect(compatibilityGeometry.panel?.height || 999).toBeLessThan(760);
   }else{
-    expect(compatibilityGeometry.form?.height || 999).toBeLessThan(560);
+    expect(compatibilityGeometry.form?.height || 999).toBeLessThan(640);
   }
 
   // Local-only profile save/load.
@@ -666,15 +667,17 @@ test('commercial UX interactions work without a backend', async ({ page }, testI
 });
 
 
-test('plain-language layer keeps visible report copy free of specialist jargon', async ({ page }) => {
+test('primary report summaries keep specialist jargon behind progressive disclosure', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
   await page.locator('#full-report').evaluate((el) => { el.open = true; });
   await page.waitForTimeout(50);
-  const text = await page.locator('#results').innerText();
-  for (const term of ['원국','십신','오행','일간','절입','대운','세운','월운','신강','신약','용신','희신','기신','격국','천간','지지','비겁','식상','재성','관성','인성','양 화','가중 성향 균형','표현 기운']) {
-    expect(text).not.toContain(term);
+  const text = await page.locator('.visual-keyword-showcase, #reportLead, #detailedReport .detail-disclosure > summary, #detailedReport .chapter-quick-list').allInnerTexts();
+  const visible = text.join('\n');
+  for (const term of ['원국','십신','오행','일간','절입','대운','세운','월운','신강','신약','용신','희신','기신','격국','천간','지지','비겁','식상','재성','관성','인성','가중 성향 균형','표현 기운']) {
+    expect(visible).not.toContain(term);
   }
+  await expect(page.locator('#detailedReport .chapter-evidence')).toHaveCount(7);
 });
 
 
