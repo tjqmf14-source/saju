@@ -11,7 +11,7 @@ test('Product V18 app-first interface and plain-language layer are active', () =
   assert.match(html, /theme-color" content="#F5F1E8"/);
   assert.match(html, /href="\/product-v18\.css"/);
   assert.match(html, /src="\/src\/premium-ui\.js"[\s\S]*src="\/src\/plain-language-ui\.js"/);
-  assert.match(css, /Product V18 — mobile app-first remodeling/);
+  assert.match(css, /Product V18 — readability and evidence-first interpretation/);
   assert.match(css, /--color-surface:#fffdf7/);
   assert.match(css, /--color-brand:#b54b3f/);
   assert.match(css, /#expert\{display:none!important\}/);
