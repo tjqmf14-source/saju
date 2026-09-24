@@ -51,3 +51,18 @@ test('reader-facing interpretation avoids unresolved data and mechanical particl
   assert.doesNotMatch(text, /구조를 삶의 방식|구조가 먼저 보이|관리이 |관계이 |방식이 기본적인/);
   assert.match(text, /실제 생활|현실|행동|점검/);
 });
+
+test('V3 primary life chapters expose calculation-backed quick reads and evidence', () => {
+  for (const key of ['overview','temperament','strengths','career','money','relationships','recovery']) {
+    assert.ok(Array.isArray(report[key].quick), key + ' quick');
+    assert.equal(report[key].quick.length, 3, key + ' quick length');
+    assert.ok(report[key].quick.every((line) => typeof line === 'string' && line.length >= 18), key + ' quick quality');
+    assert.ok(Array.isArray(report[key].evidence), key + ' evidence');
+    assert.ok(report[key].evidence.length >= 1, key + ' evidence length');
+  }
+  assert.match(report.strengths.quick.join(' '), /강약|생활|강점|성향/);
+  assert.match(report.money.evidence.join(' '), /편재|정재|세운/);
+  assert.match(report.relationships.quick.join(' '), /관계|역할|기대/);
+  assert.match(report.recovery.quick.join(' '), /과부하|회복|컨디션/);
+});
+
