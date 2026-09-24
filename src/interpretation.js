@@ -190,7 +190,7 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
     `생활에서는 한 가지 성격으로 단정하기보다 어떤 상황에서 어떤 반응이 먼저 나오는지 살펴보는 편이 더 정확합니다.`
   ];
   report.overview.evidence=profile.evidence;
-  report.overview.lead=report.overview.quick[0];
+  report.overview.lead=`쉽게 말하면, ${report.overview.quick[0]}`;
 
   report.temperament.quick=[
     `평소에는 ${topGods[0]?.simple || '자기 기준'}이 가장 먼저 드러나고, 그 다음으로 ${topGods[1]?.simple || '다른 보조 성향'}이 따라옵니다.`,
