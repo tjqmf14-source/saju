@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -34,6 +36,7 @@ fun ProfileScreen(
 ) {
     var name by rememberSaveable(initial) { mutableStateOf(initial?.name.orEmpty()) }
     var calendar by rememberSaveable(initial) { mutableStateOf(initial?.calendar ?: "solar") }
+    var isLeap by rememberSaveable(initial) { mutableStateOf(initial?.isLeap ?: false) }
     var birthDate by rememberSaveable(initial) { mutableStateOf(initial?.birthDate.orEmpty()) }
     var birthTime by rememberSaveable(initial) { mutableStateOf(initial?.birthTime ?: "12:00") }
     var birthTimeKnown by rememberSaveable(initial) { mutableStateOf(initial?.birthTimeKnown ?: true) }
@@ -42,7 +45,11 @@ fun ProfileScreen(
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize().testTag("profile-list"),
+            modifier = Modifier
+                .fillMaxSize()
+                .safeDrawingPadding()
+                .imePadding()
+                .testTag("profile-list"),
             contentPadding = androidx.compose.foundation.layout.PaddingValues(
                 start = 20.dp,
                 top = 36.dp,
@@ -88,7 +95,10 @@ fun ProfileScreen(
                 ) {
                     FilterChip(
                         selected = calendar == "solar",
-                        onClick = { calendar = "solar" },
+                        onClick = {
+                            calendar = "solar"
+                            isLeap = false
+                        },
                         label = { Text("양력") }
                     )
                     FilterChip(
@@ -96,6 +106,25 @@ fun ProfileScreen(
                         onClick = { calendar = "lunar" },
                         label = { Text("음력") }
                     )
+                }
+                if (calendar == "lunar") {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("윤달로 태어났어요", style = MaterialTheme.typography.bodyLarge)
+                            Text(
+                                "윤달 생일인 경우에만 켜주세요.",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Switch(
+                            checked = isLeap,
+                            onCheckedChange = { isLeap = it }
+                        )
+                    }
                 }
             }
 
@@ -188,7 +217,8 @@ fun ProfileScreen(
                                     birthDate = birthDate,
                                     birthTime = if (birthTimeKnown) birthTime else "12:00",
                                     birthTimeKnown = birthTimeKnown,
-                                    gender = gender
+                                    gender = gender,
+                                    isLeap = calendar == "lunar" && isLeap
                                 )
                             )
                         }
