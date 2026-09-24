@@ -3,32 +3,34 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
-const css=await readFile(new URL('../product-v17.css',import.meta.url),'utf8');
-const plain=await readFile(new URL('../src/plain-language-ui.js',import.meta.url),'utf8');
+const css=await readFile(new URL('../product-v20.css',import.meta.url),'utf8');
+const reading=await readFile(new URL('../src/reading-v20.js',import.meta.url),'utf8');
 
-test('product v17 is the only active presentation layer',()=>{
-  assert.match(html,/href="\/product-v17\.css"/);
-  assert.doesNotMatch(html,/href="\/site-v12\.css"/);
-  assert.match(html,/data-theme="product-v17"/);
+test('primary navigation is task based and stable',()=>{
+  for(const label of ['홈','내 사주','운세','타로']) assert.ok(html.includes('>'+label+'<'),label);
+  assert.match(html,/aria-label="주요 메뉴"/);
+  assert.match(css,/@media\(max-width:980px\)/);
+  assert.match(css,/\.mobile-nav\{position:fixed/);
 });
 
-test('app-first UI uses progressive disclosure and mobile-first controls',()=>{
-  for(const token of ['--app-bg:#f5f1e8','--app-brand:#b54b3f','--app-pine:#34574c','.trust-strip','.mobile-bottom-nav','.full-report-shell','.tarot-fan-stage']){
-    assert.ok(css.includes(token),token);
-  }
-  assert.ok(html.indexOf('hero-primary') < html.indexOf('trust-strip'),'hero should lead before trust details');
-  assert.match(css,/@media\(max-width:760px\)\{[\s\S]*?\.feature-orbit-nav\{display:none!important\}/);
-  assert.match(css,/\.visual-keyword-showcase\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
-  assert.match(css,/#expert\{display:none!important\}/);
-  assert.match(css,/\.chapter-evidence\{[\s\S]*?display:block!important/);
-  assert.match(css,/\.chapter-full-analysis\{[\s\S]*?display:block!important/);
+test('saju report uses five life categories and progressive evidence',()=>{
+  for(const label of ['성향','일','돈','관계','회복']) assert.ok(reading.includes("title:'"+label+"'"),label);
+  assert.match(html,/id="sajuTabs"/);
+  assert.match(html,/id="sajuReading"/);
+  assert.match(html,/id="evidenceButton"/);
+  assert.match(html,/id="evidenceDialog"/);
+});
+
+test('home prioritizes one daily summary and four practical categories',()=>{
+  assert.match(html,/id="homeScore"/);
+  assert.match(html,/id="homeDailyGrid"/);
+  assert.match(html,/오늘의 네 가지 흐름/);
+  assert.doesNotMatch(html,/학업운|행운의 번호|코디 추천|바이오리듬/);
+});
+
+test('responsive design preserves readable controls and text scale',()=>{
+  assert.match(css,/min-height:48px/);
   assert.match(css,/@media\(max-width:720px\)/);
-});
-
-test('reader-facing category set is simple and life-oriented',()=>{
-  for(const label of ['성격','강점','일','돈','관계','회복']) assert.ok(html.includes('>'+label+'<'),label);
-  for(const term of ['원국','십신','격국','용신','희신']) assert.doesNotMatch(html,new RegExp(term));
-  assert.match(plain,/FRIENDLY_TITLES/);
-  assert.match(plain,/strengths:'강점'/);
-  assert.doesNotThrow(()=>new Function(plain));
+  assert.match(css,/font-size:16px/);
+  assert.doesNotMatch(css,/font-size:\s*(?:[0-9]|1[0-5])(?:\.\d+)?px/);
 });
