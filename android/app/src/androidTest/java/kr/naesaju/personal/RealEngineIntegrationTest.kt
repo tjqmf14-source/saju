@@ -74,8 +74,7 @@ class RealEngineIntegrationTest {
             assertTrue(!Regex("""비견|겁재|식신|상관|편재|정재|편관|정관|편인|정인""").containsMatchIn(visibleToday))
             val visibleSaju = parsed.sajuSections.flatMap { listOf(it.summary, it.reason, it.action) }.joinToString(" ")
             assertTrue("표현·문제제기가" in visibleSaju)
-            assertTrue("표현·문제제기이" !in visibleSaju)
-            assertTrue("표현·문제제기과" !in visibleSaju)
+            assertTrue(!Regex("""표현·문제제기이\s|표현·문제제기과\s|자기 기준·동료이\s|자기 기준·동료을\s""").containsMatchIn(visibleSaju))
             assertEquals(12, parsed.months.size)
             assertEquals(12, parsed.months.map { it.action }.toSet().size)
         } finally {

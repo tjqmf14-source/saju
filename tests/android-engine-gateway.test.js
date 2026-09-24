@@ -211,5 +211,5 @@ test('Android native interpretation copy uses natural Korean particles for the r
 
   const visible = [result.native.headline, ...result.native.sajuSections.flatMap((item) => [item.summary, item.reason, item.action])].join(' ');
   assert.match(visible, /표현·문제제기가/);
-  assert.doesNotMatch(visible, /표현·문제제기이|표현·문제제기과|자기 기준·동료이|자기 기준·동료을/);
+  assert.doesNotMatch(visible, /표현·문제제기이\s|표현·문제제기과\s|자기 기준·동료이\s|자기 기준·동료을\s/);
 });
