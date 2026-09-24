@@ -33,12 +33,34 @@ data class MonthReading(
     val signal: String
 )
 
+data class TojeongGuide(
+    val tone: String,
+    val topics: List<String>,
+    val action: String,
+    val note: String
+)
+
+data class TojeongMonth(
+    val month: Int,
+    val guide: TojeongGuide
+)
+
+data class TojeongReading(
+    val targetYear: Int,
+    val code: String,
+    val overview: TojeongGuide,
+    val months: List<TojeongMonth>,
+    val methodName: String,
+    val reference: String
+)
+
 data class ReadingSnapshot(
     val headline: String,
     val sajuSections: List<GuidanceSection>,
     val today: TodayReading,
     val year: GuidanceSection,
     val months: List<MonthReading>,
+    val tojeong: TojeongReading?,
     val mbti: String
 )
 
@@ -115,7 +137,37 @@ fun parseReadingSnapshot(raw: String?): ReadingSnapshot? {
         today = today,
         year = year,
         months = months,
+        tojeong = parseTojeong(native.optJSONObject("tojeong")),
         mbti = native.optString("mbti")
+    )
+}
+
+private fun parseTojeong(value: JSONObject?): TojeongReading? {
+    if (value == null) return null
+    val overviewObject = value.optJSONObject("overview") ?: return null
+    val method = value.optJSONObject("method") ?: JSONObject()
+    val months = value.optJSONArray("months").objects().map { item ->
+        TojeongMonth(
+            month = item.optInt("month"),
+            guide = parseTojeongGuide(item)
+        )
+    }
+    return TojeongReading(
+        targetYear = value.optInt("targetYear"),
+        code = value.optString("code"),
+        overview = parseTojeongGuide(overviewObject),
+        months = months,
+        methodName = method.optString("name"),
+        reference = method.optString("reference")
+    )
+}
+
+private fun parseTojeongGuide(value: JSONObject): TojeongGuide {
+    return TojeongGuide(
+        tone = value.optString("tone"),
+        topics = value.optJSONArray("topics").strings(),
+        action = value.optString("action"),
+        note = value.optString("note")
     )
 }
 
@@ -150,6 +202,16 @@ private fun JSONArray?.objects(): List<JSONObject> {
     return buildList {
         for (index in 0 until length()) {
             optJSONObject(index)?.let(::add)
+        }
+    }
+}
+
+private fun JSONArray?.strings(): List<String> {
+    if (this == null) return emptyList()
+    return buildList {
+        for (index in 0 until length()) {
+            val value = optString(index)
+            if (value.isNotBlank()) add(value)
         }
     }
 }
