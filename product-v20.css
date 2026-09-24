@@ -69,7 +69,7 @@ small{font-size:16px!important}
 .text-button,.outline-button,.primary-button,.secondary-button{min-height:48px;border-radius:999px;padding:0 18px;font-size:16px;font-weight:820;transition:transform var(--ease),background var(--ease),border-color var(--ease)}
 .text-button{border:0;background:transparent;color:var(--brand);padding-inline:6px}
 .text-button:hover{transform:translateX(2px)}
-.outline-button{border:1px solid var(--line-strong);background:var(--surface);color:var(--ink)}
+.outline-button{border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);white-space:nowrap;flex:0 0 auto}
 .primary-button{border:1px solid var(--brand);background:var(--brand);color:#fff}
 .primary-button:hover{background:#87352d}
 .secondary-button{border:1px solid var(--line);background:var(--surface);color:var(--ink-2)}
@@ -130,7 +130,7 @@ small{font-size:16px!important}
 .structure-grid h3{font-size:20px}
 .bar-list{display:grid;gap:12px}
 .bar-row{display:grid;grid-template-columns:74px minmax(0,1fr) 48px;gap:12px;align-items:center}
-.bar-row span,.bar-row strong{font-size:16px}
+.bar-row span,.bar-row strong{font-size:16px}.bar-row span{word-break:keep-all}
 .bar-track{height:9px;border-radius:999px;background:#e5e1d8;overflow:hidden}
 .bar-track i{display:block;height:100%;border-radius:inherit;background:var(--pine)}
 .fortune-date{display:flex;gap:6px;align-items:center}
@@ -264,7 +264,7 @@ small{font-size:16px!important}
   .reading-panel header h2{font-size:27px}
   .reading-columns{grid-template-columns:1fr;gap:20px}
   .structure-grid{grid-template-columns:1fr;gap:24px}
-  .bar-row{grid-template-columns:62px minmax(0,1fr) 44px}
+  .bar-row{grid-template-columns:84px minmax(0,1fr) 44px}
   .fortune-date{grid-column:1/-1;width:100%;margin-top:8px}
   .fortune-date input{flex:1;min-width:0}
   .screen-head:has(.fortune-date){flex-wrap:wrap}
@@ -300,7 +300,7 @@ small{font-size:16px!important}
   .app-header-inner{width:calc(100% - 18px)}
   .screen-head h1{font-size:32px}
   .profile-button>span:last-child{display:none}
-  .daily-row{grid-template-columns:52px 56px minmax(0,1fr)}
+  .daily-row>span{white-space:nowrap}
   .tarot-deck{grid-template-columns:repeat(3,1fr)}
   .tarot-reading-card{grid-template-columns:1fr}
   .tarot-image-wrap{width:min(190px,70%);margin:auto}
