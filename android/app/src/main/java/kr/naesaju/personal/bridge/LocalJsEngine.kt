@@ -35,6 +35,10 @@ class LocalJsEngine(context: Context) : SajuEngineGateway {
         enqueue("calculate", requestJson, callback)
     }
 
+    override fun calculateCompatibility(requestJson: String, callback: (Result<String>) -> Unit) {
+        enqueue("calculateCompatibility", requestJson, callback)
+    }
+
     override fun drawTarot(requestJson: String, callback: (Result<String>) -> Unit) {
         enqueue("drawTarot", requestJson, callback)
     }
@@ -128,7 +132,7 @@ class LocalJsEngine(context: Context) : SajuEngineGateway {
     private fun markReady() {
         val view = webView ?: return
         view.evaluateJavascript(
-            "Boolean(globalThis.SajutaroEngine && globalThis.SajutaroEngine.calculate && globalThis.SajutaroEngine.drawTarot)"
+            "Boolean(globalThis.SajutaroEngine && globalThis.SajutaroEngine.calculate && globalThis.SajutaroEngine.calculateCompatibility && globalThis.SajutaroEngine.drawTarot)"
         ) { result ->
             ready = result == "true"
             if (!ready) {
