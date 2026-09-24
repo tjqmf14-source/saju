@@ -30,7 +30,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: b-concept-visual-qa
+          name: product-v20-visual-qa
           path: test-results/*.png
           if-no-files-found: ignore
 
@@ -44,7 +44,7 @@ jobs:
           repos/${{ github.repository }}/statuses/${{ github.sha }}
           -f state=success
           -f context=ci/verify
-          -f description='Unit, privacy, build and Chromium QA passed'
+          -f description='V20 unit, privacy, build and Chromium QA passed'
           -f target_url='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
       - name: Publish failed commit status
         if: failure()

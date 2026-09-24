@@ -13,6 +13,7 @@ on:
       - 'src/**'
       - 'public/**'
       - 'index.html'
+      - 'product-v20.css'
       - 'site-v12.css'
       - 'package.json'
       - 'android/**'
@@ -59,8 +60,8 @@ jobs:
       - name: Verify APK
         run: |
           test -f android/app/build/outputs/apk/debug/app-debug.apk
-          grep -q "versionName '2.4.0'" android/app/build.gradle
-          grep -q "versionCode 240" android/app/build.gradle
+          grep -q "versionName '3.0.0'" android/app/build.gradle
+          grep -q "versionCode 300" android/app/build.gradle
           if grep -q "android.permission.INTERNET" android/app/src/main/AndroidManifest.xml; then
             echo "Unexpected INTERNET permission"
             exit 1
@@ -69,13 +70,13 @@ jobs:
       - name: Prepare artifact
         run: |
           mkdir -p mobile/artifacts
-          cp android/app/build/outputs/apk/debug/app-debug.apk mobile/artifacts/Naesaju-2.4.0-debug.apk
-          sha256sum mobile/artifacts/Naesaju-2.4.0-debug.apk > mobile/artifacts/SHA256SUMS.txt
+          cp android/app/build/outputs/apk/debug/app-debug.apk mobile/artifacts/Naesaju-3.0.0-debug.apk
+          sha256sum mobile/artifacts/Naesaju-3.0.0-debug.apk > mobile/artifacts/SHA256SUMS.txt
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Naesaju-Android-Debug
+          name: Naesaju-Android-V3
           path: mobile/artifacts/*
           if-no-files-found: error
           retention-days: 30
