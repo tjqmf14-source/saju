@@ -3,10 +3,10 @@ package kr.naesaju.personal.feature.fortune
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -48,13 +48,14 @@ fun FortuneScreen(
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(top = 8.dp)
             )
-            Row(
+            LazyRow(
                 modifier = Modifier.padding(top = 18.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                FilterChip(selected = tab == "today", onClick = { tab = "today" }, label = { Text("오늘") })
-                FilterChip(selected = tab == "year", onClick = { tab = "year" }, label = { Text("올해") })
-                FilterChip(selected = tab == "months", onClick = { tab = "months" }, label = { Text("1~12월") })
+                item { FilterChip(selected = tab == "today", onClick = { tab = "today" }, label = { Text("오늘") }) }
+                item { FilterChip(selected = tab == "year", onClick = { tab = "year" }, label = { Text("올해") }) }
+                item { FilterChip(selected = tab == "months", onClick = { tab = "months" }, label = { Text("1~12월") }) }
+                item { FilterChip(selected = tab == "tojeong", onClick = { tab = "tojeong" }, label = { Text("토정비결") }) }
             }
         }
 
@@ -79,13 +80,49 @@ fun FortuneScreen(
                 if (reading.year.reason.isNotBlank()) item { FortuneCard("왜 그런가요", reading.year.reason) }
                 if (reading.year.action.isNotBlank()) item { FortuneCard("올해의 행동 기준", reading.year.action) }
             }
-            else -> {
+            tab == "months" -> {
                 items(reading.months) { month ->
                     FortuneCard(
                         title = month.month.toString() + "월 · " + month.focus,
                         body = month.action,
                         meta = month.check + " · " + month.signal
                     )
+                }
+            }
+            else -> {
+                val tojeong = reading.tojeong
+                if (tojeong == null) {
+                    item { FortuneCard("토정비결", "검증된 작괘 데이터를 불러오지 못했습니다.") }
+                } else {
+                    item {
+                        FortuneCard(
+                            title = tojeong.targetYear.toString() + " 토정비결 · " + tojeong.code + "괘",
+                            body = tojeong.overview.tone,
+                            meta = tojeong.overview.topics.joinToString(" · "),
+                            emphasized = true
+                        )
+                    }
+                    item {
+                        FortuneCard(
+                            title = "올해 행동 기준",
+                            body = tojeong.overview.action,
+                            meta = tojeong.overview.note
+                        )
+                    }
+                    items(tojeong.months) { month ->
+                        FortuneCard(
+                            title = month.month.toString() + "월 · " + month.guide.tone,
+                            body = month.guide.action,
+                            meta = month.guide.topics.joinToString(" · ")
+                        )
+                    }
+                    item {
+                        FortuneCard(
+                            title = "계산 기준",
+                            body = tojeong.methodName,
+                            meta = tojeong.reference
+                        )
+                    }
                 }
             }
         }
