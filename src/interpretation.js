@@ -199,6 +199,17 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
     `천간 노출: ${profile.monthCommand.exposed?profile.monthCommand.exposedLocations.join('·'):'월령 중심 십신의 직접 노출 없음'}`
   ];
 
+  report.strengths.quick=[
+    `한 줄 요약: 가장 자주 쓰는 힘은 ${topGods[0]?.simple || element.gift}이고, ${topGods[1]?.simple || second.core}이 두 번째 축으로 받쳐줍니다.`,
+    `왜 그런가요? ${topGods[0]?.tenGod || '주요 성향'}은 ${topGods[0]?.locations.slice(0,2).join('·') || '원국 여러 위치'}에서 확인되고, 강약 참고값은 ${profile.strength.band} ${profile.strength.score}점입니다.`,
+    `생활에서는: ${element.gift}을 강점으로 쓰되, ${element.risk}이 보이기 시작하면 ${weak.use}으로 속도를 조절해보세요.`
+  ];
+  report.strengths.evidence=[
+    `상위 성향: ${topGods.map((item)=>`${item.tenGod} ${item.score}`).join(' · ')}`,
+    `주요 위치: ${topGodPlacementText}`,
+    `강약 참고: ${profile.strength.band} ${profile.strength.score}점 · ${rootText}`
+  ];
+
   report.balance.title='내 기운은 강한 편일까, 약한 편일까?';
   report.balance.lead=`월령·통근·천간의 도움과 소모를 함께 본 결과, 현재 참고 구간은 ${profile.strength.band} ${profile.strength.score}점입니다.`;
   report.balance.quick=[
@@ -222,11 +233,41 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
     `왜 그런가요? 상위 십신은 ${topGods.map((item)=>item.tenGod).join(' · ')}이고, 특히 월주와 시주 배치를 함께 읽습니다.`,
     '생활에서는: 직업명을 하나 찍기보다 자율성·책임·표현·관리 중 어떤 조건에서 성과가 나는지 확인하는 것이 더 유용합니다.'
   ];
+  report.career.evidence=[
+    `상위 성향 배치: ${topGodPlacementText}`,
+    `월령 중심: ${profile.monthCommand.tenGod} · ${profile.monthCommand.simple}`,
+    `올해 직업·역할 주제: ${yearFlow.tenGod} · ${ROLE_LABELS[yearFlow.group]}`
+  ];
 
+  const wealthScore=((profile.tenGods.score.편재||0)+(profile.tenGods.score.정재||0)).toFixed(2);
   report.money.quick=[
     '한 줄 요약: 재물운은 “큰돈이 들어온다”보다 돈을 다루는 습관과 압력이 어디서 생기는지를 보는 쪽에 가깝습니다.',
-    `왜 그런가요? 원국에서 편재+정재 가중치는 ${((profile.tenGods.score.편재||0)+(profile.tenGods.score.정재||0)).toFixed(2)}이고, 올해 세운의 십신까지 함께 봅니다.`,
+    `왜 그런가요? 원국에서 편재+정재 가중치는 ${wealthScore}이고, 올해 세운의 십신까지 함께 봅니다.`,
     '생활에서는: 투자·대출·큰 소비는 사주보다 현금흐름과 손실 가능성을 우선하고, 해석은 판단 습관을 점검하는 보조 자료로 쓰세요.'
+  ];
+  report.money.evidence=[
+    `편재+정재 가중치: ${wealthScore}`,
+    `올해 세운: ${yearFlow.tenGod} · ${ROLE_LABELS[yearFlow.group]}`,
+    `월령 중심: ${profile.monthCommand.tenGod} · 돈의 좋고 나쁨을 확정하는 점수가 아님`
+  ];
+
+  report.relationships.quick=[
+    `한 줄 요약: 관계에서는 ${topGods[0]?.simple || role.core}이 먼저 드러나고, 역할과 기대가 명확할수록 편안함을 느끼기 쉽습니다.`,
+    `왜 그런가요? 원국 관계 신호는 ${profile.relations.summary} 월령 중심은 ${profile.monthCommand.simple}입니다.`,
+    '생활에서는: 상대의 마음을 추측하기보다 역할·기대·불편을 짧게 확인하고, 반복되는 행동을 기준으로 관계를 판단하세요.'
+  ];
+  report.relationships.evidence=profile.relations.items.slice(0,5).map((item)=>`${item.type} · ${item.pillarLabels.join('↔') || item.members.join('·')} · ${item.contexts.join(' / ')}`);
+  if(!report.relationships.evidence.length) report.relationships.evidence=[`관계 신호: ${profile.relations.summary}`];
+
+  report.recovery.quick=[
+    `한 줄 요약: 과부하가 오면 ${role.stress}이 나타나기 쉬워, 평소 강점을 더 세게 쓰는 방식보다 쉬는 기준을 먼저 정하는 편이 좋습니다.`,
+    `왜 그런가요? 강한 오행은 ${strongElement}, 상대적으로 약한 오행은 ${weakElement}이며 강약 참고값은 ${profile.strength.band} ${profile.strength.score}점입니다.`,
+    `생활에서는: ${weak.use}을 회복 루틴으로 두고, 지속되는 통증·수면·컨디션 문제는 사주가 아니라 실제 기록과 의료적 판단을 우선하세요.`
+  ];
+  report.recovery.evidence=[
+    `강한 오행: ${strongElement} · 상대적으로 약한 오행: ${weakElement}`,
+    `대표 과부하 패턴: ${role.stress}`,
+    `균형 참고: ${profile.balanceHint}`
   ];
 
   report.love.quick=[
