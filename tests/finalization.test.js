@@ -66,7 +66,8 @@ test('commercial UX adds local profiles, sharing, compatibility and mobile navig
   assert.match(ui,/navigator\.share/);
   assert.match(ui,/calculateTodayTimeFlows/);
   assert.match(ui,/weeklyPreview/);
-  assert.match(ui,/먼저 이것만 보세요/);
+  assert.match(ui,/핵심만 먼저/);
+  assert.match(ui,/const labels=\['핵심','계산 근거','지금 할 일'\]/);
   assert.match(ui,/오늘의 중심/);
   assert.match(ui,/chapter-evidence/);
 });
