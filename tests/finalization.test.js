@@ -6,12 +6,12 @@ const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const css = await readFile(new URL('../product-v18.css', import.meta.url), 'utf8');
 const ui = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
 
-test('Product V18 is the only active frontend stylesheet and uses the mobile app-first design system', () => {
+test('Product V18 is the only active frontend stylesheet and uses the readability and evidence-first design system', () => {
   assert.ok(html.includes('product-v18.css'));
   assert.ok(!html.includes('site-v12.css'));
   assert.equal((html.match(/<link rel="stylesheet"/g) || []).length, 1);
   assert.match(html, /data-theme="product-v18"/);
-  assert.match(css, /Product V18 — mobile app-first remodeling/);
+  assert.match(css, /Product V18 — readability and evidence-first interpretation/);
   assert.ok(css.includes('--color-bg:#f2efe7'));
   assert.ok(css.includes('--color-surface:#fffdf7'));
   assert.ok(css.includes('--color-brand:#b54b3f'));
