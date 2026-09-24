@@ -60,7 +60,7 @@ body[data-theme="product-v3"] .topbar{
   box-shadow:none
 }
 body[data-theme="product-v3"] .brand-word strong{font-size:19px}
-body[data-theme="product-v3"] .brand-word small{font-size:13px!important}
+body[data-theme="product-v3"] .brand-word small{font-size:15px!important}
 body[data-theme="product-v3"] .topnav{gap:4px}
 body[data-theme="product-v3"] .topnav a{
   min-height:44px;
@@ -83,8 +83,9 @@ body[data-theme="product-v3"] .premium-link{
 body[data-theme="product-v3"] .privacy-chip{font-size:14px}
 
 body[data-theme="product-v3"] .hero-primary{
+  min-height:560px;
   margin-top:24px;
-  padding:70px 66px 58px;
+  padding:0;
   border-color:var(--v3-line);
   border-radius:28px;
   background:
@@ -94,6 +95,8 @@ body[data-theme="product-v3"] .hero-primary{
   box-shadow:var(--v3-shadow)
 }
 body[data-theme="product-v3"] .hero-primary::after{display:none}
+body[data-theme="product-v3"] .hero-copy{padding:48px 52px}
+body[data-theme="product-v3"] .hero-visual{min-height:560px}
 body[data-theme="product-v3"] .section-kicker{
   color:var(--v3-brand);
   font-size:14px!important;
@@ -548,7 +551,7 @@ body[data-theme="product-v3"] .site-footer{font-size:14px}
     grid-template-columns:1fr auto;
     padding:0 14px
   }
-  body[data-theme="product-v3"] .brand-word small{font-size:12px!important}
+  body[data-theme="product-v3"] .brand-word small{font-size:15px!important}
   body[data-theme="product-v3"] .topbar-actions{gap:6px}
   body[data-theme="product-v3"] .privacy-chip{display:none}
   body[data-theme="product-v3"] .premium-link{
@@ -559,10 +562,14 @@ body[data-theme="product-v3"] .site-footer{font-size:14px}
   }
 
   body[data-theme="product-v3"] .hero-primary{
+    display:block;
+    min-height:0;
     margin-top:10px;
     padding:34px 22px 28px;
     border-radius:22px
   }
+  body[data-theme="product-v3"] .hero-copy{padding:0}
+  body[data-theme="product-v3"] .hero-visual{display:none!important;min-height:0}
   body[data-theme="product-v3"] .hero-copy h1{
     font-size:40px;
     line-height:1.09
