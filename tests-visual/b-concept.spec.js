@@ -31,7 +31,7 @@ async function selectCalendarMode(page, mode) {
   await expect(page.locator(`input[name="calendar"][value="${mode}"]`)).toBeChecked();
 }
 
-test('Product V16 desktop follows the commercial landing-page composition', async ({ page }, testInfo) => {
+test('Product V17 desktop preserves the editorial landing-page composition', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'desktop-only reference contract');
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
@@ -107,10 +107,10 @@ test('Product V16 desktop follows the commercial landing-page composition', asyn
 
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => scrollTo(0,0));
-  await page.screenshot({ path: 'test-results/v16-reference-desktop.png', fullPage: true });
+  await page.screenshot({ path: 'test-results/v17-reference-desktop.png', fullPage: true });
 });
 
-test('Product V16 remains readable and overflow-free on mobile', async ({ page }, testInfo) => {
+test('Product V17 is app-like, readable and overflow-free on mobile', async ({ page }, testInfo) => {
   test.skip(!['mobile','mobile-wide','mobile-small'].includes(testInfo.project.name), 'mobile-only contract');
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
@@ -157,6 +157,12 @@ test('Product V16 remains readable and overflow-free on mobile', async ({ page }
   expect(mobileAudit.form?.width || 0).toBeGreaterThan(viewportWidth - 80);
   expect(mobileAudit.nameField?.width || 0).toBeGreaterThan((mobileAudit.formGrid?.width || 0) * .95);
   expect(mobileAudit.topbarPosition).toBe('sticky');
+  await expect(page.locator('.feature-orbit-nav')).toBeHidden();
+  const trustTop=await page.locator('.trust-strip').boundingBox();
+  const heroTop=await page.locator('.hero-primary').boundingBox();
+  expect((trustTop?.y||0)).toBeGreaterThan((heroTop?.y||0));
+  const keywordColumns=await page.locator('.visual-keyword-showcase').evaluate((el)=>getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length);
+  expect(keywordColumns).toBeGreaterThanOrEqual(2);
   expect(mobileAudit.input?.height || 9999).toBeLessThan(1250);
   expect(mobileAudit.hero?.height || 9999).toBeLessThan(1250);
   expect(mobileAudit.compatibility?.width || 0).toBeGreaterThan(viewportWidth - 40);
@@ -182,11 +188,11 @@ test('Product V16 remains readable and overflow-free on mobile', async ({ page }
 
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => scrollTo(0,0));
-  await page.locator('.hero-primary').screenshot({ path: `test-results/v16-hero-${testInfo.project.name}.png` });
-  await page.locator('#input').screenshot({ path: `test-results/v16-input-${testInfo.project.name}.png` });
-  await page.locator('.visual-keyword-showcase').screenshot({ path: `test-results/v16-keywords-${testInfo.project.name}.png` });
-  await page.locator('#year').screenshot({ path: `test-results/v16-year-${testInfo.project.name}.png` });
-  await page.screenshot({ path: `test-results/v16-reference-${testInfo.project.name}.png`, fullPage: true });
+  await page.locator('.hero-primary').screenshot({ path: `test-results/v17-hero-${testInfo.project.name}.png` });
+  await page.locator('#input').screenshot({ path: `test-results/v17-input-${testInfo.project.name}.png` });
+  await page.locator('.visual-keyword-showcase').screenshot({ path: `test-results/v17-keywords-${testInfo.project.name}.png` });
+  await page.locator('#year').screenshot({ path: `test-results/v17-year-${testInfo.project.name}.png` });
+  await page.screenshot({ path: `test-results/v17-reference-${testInfo.project.name}.png`, fullPage: true });
 });
 
 test('calculation renderers still populate all retained data targets', async ({ page }) => {
@@ -274,7 +280,7 @@ test('final-build typography and section geometry do not clip or overlap', async
       const rect=el.getBoundingClientRect();
       return style.display!=='none' && style.visibility!=='hidden' && rect.width>0 && rect.height>0;
     });
-    const horizontalScrollers='.feature-orbit-nav,.daily-time-flow,.weekly-preview,.report-nav,.tarot-reveal-deck';
+    const horizontalScrollers='.feature-orbit-nav,.hero-proof-oracles,.trust-strip,.daily-time-flow,.weekly-preview,.report-nav,.tarot-reveal-deck';
     const outOfViewport=nodes.filter((el)=>{
       if(el.closest(horizontalScrollers)) return false;
       const rect=el.getBoundingClientRect();
@@ -302,7 +308,7 @@ test('final-build typography and section geometry do not clip or overlap', async
   expect(audit.badSections, JSON.stringify(audit.badSections)).toEqual([]);
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => scrollTo(0,0));
-  await page.screenshot({ path: `test-results/v16-fullpage-${testInfo.project.name}.png`, fullPage: true });
+  await page.screenshot({ path: `test-results/v17-fullpage-${testInfo.project.name}.png`, fullPage: true });
 });
 
 test('reference-density sections stay compact on desktop and primary disclosure works', async ({ page }, testInfo) => {
@@ -409,7 +415,7 @@ test('desktop tarot deal animation expands one stacked deck into a full overlapp
   expect(selectedBounds.cardTop).toBeGreaterThanOrEqual(selectedBounds.stageTop - 1);
   expect(selectedBounds.cardBottom).toBeLessThanOrEqual(selectedBounds.stageBottom + 1);
 
-  await page.locator('#tarot').screenshot({path:'test-results/v16-tarot-78-fan-desktop.png'});
+  await page.locator('#tarot').screenshot({path:'test-results/v17-tarot-78-fan-desktop.png'});
 });
 
 
@@ -481,8 +487,8 @@ test('expanded precision report has no clipped text or viewport escape', async (
   expect(audit.escaped,JSON.stringify(audit.escaped)).toEqual([]);
   expect(audit.clipped,JSON.stringify(audit.clipped)).toEqual([]);
   await assertNoHorizontalOverflow(page);
-  await page.locator('.reading-opening').screenshot({path:`test-results/v16-report-opening-${testInfo.project.name}.png`});
-  await page.locator('#report-temperament').screenshot({path:`test-results/v16-report-chapter-${testInfo.project.name}.png`});
+  await page.locator('.reading-opening').screenshot({path:`test-results/v17-report-opening-${testInfo.project.name}.png`});
+  await page.locator('#report-temperament').screenshot({path:`test-results/v17-report-chapter-${testInfo.project.name}.png`});
   if(['desktop','mobile'].includes(testInfo.project.name)) await page.locator('#annualDetailReport').screenshot({path:`test-results/v13-month-flow-${testInfo.project.name}.png`});
 });
 
@@ -663,7 +669,7 @@ test('plain-language layer keeps visible report copy free of specialist jargon',
 });
 
 
-test('Product V16 keeps the editorial paper hierarchy and isolated tarot stage', async ({ page }) => {
+test('Product V17 keeps the editorial paper hierarchy and isolated tarot stage', async ({ page }) => {
   await page.goto('/');
   const audit=await page.evaluate(()=>{
     const css=(selector)=>getComputedStyle(document.querySelector(selector));
@@ -682,15 +688,16 @@ test('Product V16 keeps the editorial paper hierarchy and isolated tarot stage',
       shell:rect('.agency-shell')
     };
   });
-  expect(audit.bodyBg).toBe('rgb(242, 239, 231)');
-  expect(audit.heroBg).toBe('rgb(255, 253, 247)');
-  expect(audit.inputBg).toBe('rgb(255, 253, 247)');
+  expect(audit.bodyBg).toBe('rgb(245, 241, 232)');
   expect(audit.tarotBg).toBe('rgb(17, 24, 43)');
   if(audit.viewport>760){
+    expect(audit.heroBg).toBe('rgb(255, 253, 247)');
+    expect(audit.inputBg).toBe('rgb(255, 253, 247)');
     expect(audit.heroVisual).toBe('block');
     expect(audit.heroVisualBg).not.toBe('none');
     expect(audit.heroVisualBg).toMatch(/^url\(/);
   }else{
+    expect(audit.inputBg).toBe('rgb(255, 253, 248)');
     expect(audit.heroVisual).toBe('none');
     expect(audit.heroVisualBg).toBe('none');
   }
@@ -701,7 +708,7 @@ test('Product V16 keeps the editorial paper hierarchy and isolated tarot stage',
   await assertNoHorizontalOverflow(page);
 });
 
-test('Product V16 shows six life-language categories without technical categories', async ({ page }) => {
+test('Product V17 shows six life-language categories without technical categories', async ({ page }) => {
   await page.goto('/');
   const cards=page.locator('.visual-keyword-card');
   await expect(cards).toHaveCount(6);
