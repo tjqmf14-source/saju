@@ -3,13 +3,13 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
-const css=await readFile(new URL('../product-v17.css',import.meta.url),'utf8');
+const css=await readFile(new URL('../product-v18.css',import.meta.url),'utf8');
 const plain=await readFile(new URL('../src/plain-language-ui.js',import.meta.url),'utf8');
 
-test('product v17 is the only active presentation layer',()=>{
-  assert.match(html,/href="\/product-v17\.css"/);
+test('product v18 is the only active presentation layer',()=>{
+  assert.match(html,/href="\/product-v18\.css"/);
   assert.doesNotMatch(html,/href="\/site-v12\.css"/);
-  assert.match(html,/data-theme="product-v17"/);
+  assert.match(html,/data-theme="product-v18"/);
 });
 
 test('app-first UI uses progressive disclosure and mobile-first controls',()=>{
