@@ -54,4 +54,5 @@ test('144괘 현대 해설은 12개월 모두 제공하고 단정적 예언 대�
     assert.ok(month.action.length > 10);
     assert.ok(month.topics.length >= 1);
   }
+  assert.equal(new Set(result.months.map((month) => month.action)).size, 12);
 });
