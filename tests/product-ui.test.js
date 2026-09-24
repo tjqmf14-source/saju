@@ -33,6 +33,7 @@ test('responsive design preserves readable controls and text scale',()=>{
   assert.match(css,/@media\(max-width:720px\)/);
   assert.match(css,/font-size:16px/);
   assert.match(css,/\.outline-button\{[^}]*white-space:nowrap/);
+  assert.match(css,/\.text-button\{[^}]*white-space:nowrap/);
   assert.match(css,/\.daily-row>span\{white-space:nowrap\}/);
   assert.match(css,/\.bar-row span\{word-break:keep-all\}/);
   assert.doesNotMatch(css,/font-size:\s*(?:[0-9]|1[0-5])(?:\.\d+)?px/);
