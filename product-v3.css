@@ -90,6 +90,7 @@ body[data-theme="product-v3"] .hero-primary{
   background:
     radial-gradient(circle at 88% 18%,rgba(47,93,74,.09),transparent 30%),
     linear-gradient(135deg,#fff 0%,#fbfcfa 100%);
+  background-color:#fff;
   box-shadow:var(--v3-shadow)
 }
 body[data-theme="product-v3"] .hero-primary::after{display:none}
