@@ -175,7 +175,19 @@ jobs:
             test -s mobile/ui-qa/412/qa-home.png
             test "$(find mobile/ui-qa -name 'qa-*.png' -type f | wc -l)" -ge 18
 
+      - name: Upload Android UI test diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sajutaro-V4-AndroidTest-Diagnostics
+          path: |
+            android/app/build/reports/androidTests/connected/debug/**
+            android/app/build/outputs/androidTest-results/connected/**
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Upload native UI QA evidence
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: Sajutaro-V4-Native-UI-QA
