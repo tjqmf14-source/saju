@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import kr.naesaju.personal.data.profile.UserProfile
 import kr.naesaju.personal.domain.ReadingSnapshot
@@ -39,7 +40,7 @@ fun HomeScreen(
     onEditProfile: () -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.safeDrawingPadding(),
+        modifier = Modifier.safeDrawingPadding().testTag("home-list"),
         contentPadding = PaddingValues(
             start = 20.dp,
             top = contentPadding.calculateTopPadding() + 24.dp,
