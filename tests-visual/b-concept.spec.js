@@ -59,7 +59,7 @@ test('primary navigation exposes only four destinations and each route switches 
   await setupProfile(page);
   const routes=['home','saju','fortune','tarot'];
   for(const route of routes){
-    const button=page.locator('.mobile-nav [data-route="'+route+'"], .side-nav [data-route="'+route+'"]').first();
+    const button=page.locator('[data-route="'+route+'"]:visible').first();
     await button.click();
     await expect(page.locator('[data-screen="'+route+'"]')).toBeVisible();
     const visible=await page.locator('[data-screen]:visible').count();
@@ -69,7 +69,7 @@ test('primary navigation exposes only four destinations and each route switches 
 
 test('five saju categories have distinct useful readings and evidence',async({page},testInfo)=>{
   await setupProfile(page);
-  await page.locator('[data-route="saju"]').first().click();
+  await page.locator('[data-route="saju"]:visible').first().click();
   const tabs=page.locator('#sajuTabs [role="tab"]');
   await expect(tabs).toHaveCount(5);
   const headlines=[];
@@ -85,7 +85,7 @@ test('five saju categories have distinct useful readings and evidence',async({pa
 
 test('fortune keeps four adult daily categories and twelve non-duplicate monthly readings',async({page},testInfo)=>{
   await setupProfile(page);
-  await page.locator('[data-route="fortune"]').first().click();
+  await page.locator('[data-route="fortune"]:visible').first().click();
   await expect(page.locator('#fortuneDailyList .daily-row')).toHaveCount(4);
   const scores=await page.locator('#fortuneDailyList .daily-row').evaluateAll((rows)=>rows.map((row)=>Number(row.dataset.score)));
   expect(scores.every((score)=>Number.isFinite(score) && score>=0 && score<=100)).toBe(true);
@@ -98,6 +98,8 @@ test('fortune keeps four adult daily categories and twelve non-duplicate monthly
     caution:item.querySelector('.month-copy p:nth-child(2)')?.textContent.trim()
   })));
   expect(new Set(months.map((item)=>item.title)).size).toBe(12);
+  const monthNumbers=await page.locator('#monthList .month-no').allTextContents();
+  expect(monthNumbers.map((value)=>Number(value.replace('월','')))).toEqual([1,2,3,4,5,6,7,8,9,10,11,12]);
   expect(new Set(months.map((item)=>item.action)).size).toBe(12);
   expect(new Set(months.map((item)=>item.caution)).size).toBe(12);
   await page.screenshot({path:'test-results/v20-year-'+testInfo.project.name+'.png',fullPage:true});
@@ -105,7 +107,7 @@ test('fortune keeps four adult daily categories and twelve non-duplicate monthly
 
 test('tarot preserves the whole card image and gives the selected topic a focused reading',async({page},testInfo)=>{
   await setupProfile(page);
-  await page.locator('[data-route="tarot"]').first().click();
+  await page.locator('[data-route="tarot"]:visible').first().click();
   await page.locator('#shuffleTarot').click();
   await expect(page.locator('#tarotDeck .tarot-card-back')).toHaveCount(12);
   await page.locator('#tarotDeck .tarot-card-back').first().click();
