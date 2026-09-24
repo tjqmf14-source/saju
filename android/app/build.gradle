@@ -25,6 +25,10 @@ android {
         compose true
     }
 
+    sourceSets {
+        main.assets.srcDir(layout.buildDirectory.dir('generated/engine-assets'))
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
