@@ -31,7 +31,7 @@ async function selectCalendarMode(page, mode) {
   await expect(page.locator(`input[name="calendar"][value="${mode}"]`)).toBeChecked();
 }
 
-test('Product V17 desktop preserves the editorial landing-page composition', async ({ page }, testInfo) => {
+test('Product V18 desktop preserves the editorial landing-page composition', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'desktop-only reference contract');
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
@@ -107,10 +107,10 @@ test('Product V17 desktop preserves the editorial landing-page composition', asy
 
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => scrollTo(0,0));
-  await page.screenshot({ path: 'test-results/v17-reference-desktop.png', fullPage: true });
+  await page.screenshot({ path: 'test-results/v18-reference-desktop.png', fullPage: true });
 });
 
-test('Product V17 is app-like, readable and overflow-free on mobile', async ({ page }, testInfo) => {
+test('Product V18 is app-like, readable and overflow-free on mobile', async ({ page }, testInfo) => {
   test.skip(!['mobile','mobile-wide','mobile-small'].includes(testInfo.project.name), 'mobile-only contract');
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
@@ -188,11 +188,11 @@ test('Product V17 is app-like, readable and overflow-free on mobile', async ({ p
 
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => scrollTo(0,0));
-  await page.locator('.hero-primary').screenshot({ path: `test-results/v17-hero-${testInfo.project.name}.png` });
-  await page.locator('#input').screenshot({ path: `test-results/v17-input-${testInfo.project.name}.png` });
-  await page.locator('.visual-keyword-showcase').screenshot({ path: `test-results/v17-keywords-${testInfo.project.name}.png` });
-  await page.locator('#year').screenshot({ path: `test-results/v17-year-${testInfo.project.name}.png` });
-  await page.screenshot({ path: `test-results/v17-reference-${testInfo.project.name}.png`, fullPage: true });
+  await page.locator('.hero-primary').screenshot({ path: `test-results/v18-hero-${testInfo.project.name}.png` });
+  await page.locator('#input').screenshot({ path: `test-results/v18-input-${testInfo.project.name}.png` });
+  await page.locator('.visual-keyword-showcase').screenshot({ path: `test-results/v18-keywords-${testInfo.project.name}.png` });
+  await page.locator('#year').screenshot({ path: `test-results/v18-year-${testInfo.project.name}.png` });
+  await page.screenshot({ path: `test-results/v18-reference-${testInfo.project.name}.png`, fullPage: true });
 });
 
 test('calculation renderers still populate all retained data targets', async ({ page }) => {
@@ -200,7 +200,7 @@ test('calculation renderers still populate all retained data targets', async ({ 
   await expect(page.locator('#results')).toBeVisible();
   await expect(page.locator('#monthForecast .month-card')).toHaveCount(12);
   await expect(page.locator('#luckOverview .luck-overview-item')).toHaveCount(9);
-  await expect(page.locator('#pillarGrid .pillar-card')).toHaveCount(4);
+  await expect(page.locator('#pillarGrid .pillar-card')).toHaveCount(3);
   await expect(page.locator('#dailyMetrics .metric-row')).toHaveCount(5);
   await expect(page.locator('#dailyActionGuide article')).toHaveCount(3);
   await expect(page.locator('#dailyBriefGrid article')).toHaveCount(4);
@@ -308,7 +308,7 @@ test('final-build typography and section geometry do not clip or overlap', async
   expect(audit.badSections, JSON.stringify(audit.badSections)).toEqual([]);
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => scrollTo(0,0));
-  await page.screenshot({ path: `test-results/v17-fullpage-${testInfo.project.name}.png`, fullPage: true });
+  await page.screenshot({ path: `test-results/v18-fullpage-${testInfo.project.name}.png`, fullPage: true });
 });
 
 test('reference-density sections stay compact on desktop and primary disclosure works', async ({ page }, testInfo) => {
@@ -415,7 +415,7 @@ test('desktop tarot deal animation expands one stacked deck into a full overlapp
   expect(selectedBounds.cardTop).toBeGreaterThanOrEqual(selectedBounds.stageTop - 1);
   expect(selectedBounds.cardBottom).toBeLessThanOrEqual(selectedBounds.stageBottom + 1);
 
-  await page.locator('#tarot').screenshot({path:'test-results/v17-tarot-78-fan-desktop.png'});
+  await page.locator('#tarot').screenshot({path:'test-results/v18-tarot-78-fan-desktop.png'});
 });
 
 
@@ -431,8 +431,8 @@ test('birth CTA recalculates current input and precision report exposes retained
   await expect(fullReport).toHaveAttribute('open', '');
   await expect(page.locator('#yearDeepDive .year-essay')).toHaveCount(1);
   await expect(page.locator('#monthForecast .month-card')).toHaveCount(12);
-  await expect(page.locator('#detailedReport .detail-chapter')).toHaveCount(13);
-  await expect(page.locator('#detailedReport .easy-reading-label')).toHaveCount(13);
+  await expect(page.locator('#detailedReport .detail-chapter')).toHaveCount(8);
+  await expect(page.locator('#detailedReport .easy-reading-label')).toHaveCount(8);
   await expect(page.locator('#report-balance')).not.toContainText('신강');
   await expect(page.locator('#detailedReport .detail-visual')).toHaveCount(0);
   await assertNoHorizontalOverflow(page);
@@ -487,8 +487,8 @@ test('expanded precision report has no clipped text or viewport escape', async (
   expect(audit.escaped,JSON.stringify(audit.escaped)).toEqual([]);
   expect(audit.clipped,JSON.stringify(audit.clipped)).toEqual([]);
   await assertNoHorizontalOverflow(page);
-  await page.locator('.reading-opening').screenshot({path:`test-results/v17-report-opening-${testInfo.project.name}.png`});
-  await page.locator('#report-temperament').screenshot({path:`test-results/v17-report-chapter-${testInfo.project.name}.png`});
+  await page.locator('.reading-opening').screenshot({path:`test-results/v18-report-opening-${testInfo.project.name}.png`});
+  await page.locator('#report-temperament').screenshot({path:`test-results/v18-report-chapter-${testInfo.project.name}.png`});
   if(['desktop','mobile'].includes(testInfo.project.name)) await page.locator('#annualDetailReport').screenshot({path:`test-results/v13-month-flow-${testInfo.project.name}.png`});
 });
 
@@ -669,7 +669,7 @@ test('plain-language layer keeps visible report copy free of specialist jargon',
 });
 
 
-test('Product V17 keeps the editorial paper hierarchy and isolated tarot stage', async ({ page }) => {
+test('Product V18 keeps the editorial paper hierarchy and isolated tarot stage', async ({ page }) => {
   await page.goto('/');
   const audit=await page.evaluate(()=>{
     const css=(selector)=>getComputedStyle(document.querySelector(selector));
@@ -708,7 +708,7 @@ test('Product V17 keeps the editorial paper hierarchy and isolated tarot stage',
   await assertNoHorizontalOverflow(page);
 });
 
-test('Product V17 shows six life-language categories without technical categories', async ({ page }) => {
+test('Product V18 shows six life-language categories without technical categories', async ({ page }) => {
   await page.goto('/');
   const cards=page.locator('.visual-keyword-card');
   await expect(cards).toHaveCount(6);
@@ -716,4 +716,59 @@ test('Product V17 shows six life-language categories without technical categorie
   expect(labels).toEqual(['성격','일','돈','관계','회복','강점']);
   await page.locator('.visual-keyword-card[data-report-key="strengths"]').click();
   await expect(page.locator('#keywordInsight')).toContainText('강점');
+});
+
+
+test('Product V18 enforces the 10pt minimum on visible text', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#results')).toBeVisible();
+  await page.locator('#full-report').evaluate((el)=>{el.open=true;});
+  const tooSmall=await page.evaluate(()=>{
+    const floor=13.3;
+    const excludedTags=new Set(['SVG','PATH','USE','CIRCLE','SYMBOL']);
+    return [...document.querySelectorAll('body *')].filter((el)=>{
+      if(excludedTags.has(el.tagName) || el.closest('.svg-sprite') || el.classList.contains('sr-only') || el.classList.contains('skip-link')) return false;
+      const style=getComputedStyle(el);
+      const rect=el.getBoundingClientRect();
+      const ownText=[...el.childNodes].filter((node)=>node.nodeType===Node.TEXT_NODE).map((node)=>node.nodeValue||'').join('').trim();
+      if(!ownText || style.display==='none' || style.visibility==='hidden' || rect.width<=0 || rect.height<=0) return false;
+      const closed=el.closest('details:not([open])');
+      if(closed && !el.closest('summary')) return false;
+      return parseFloat(style.fontSize)<floor;
+    }).map((el)=>({tag:el.tagName,id:el.id||'',cls:String(el.className||''),size:getComputedStyle(el).fontSize,text:(el.textContent||'').trim().slice(0,50)}));
+  });
+  expect(tooSmall,JSON.stringify(tooSmall)).toEqual([]);
+});
+
+test('Product V18 reveals tarot artwork without top or bottom cropping', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name!=='desktop','representative browser image-fit verification');
+  await page.goto('/');
+  await page.locator('#tarotMode').selectOption('today');
+  await page.locator('#drawTarot').click();
+  const stage=page.locator('.tarot-fan-stage');
+  const box=await stage.boundingBox();
+  if(!box) throw new Error('tarot stage missing');
+  await stage.click({position:{x:box.width*.5,y:box.height*.55}});
+  await expect(page.locator('.tarot-card.revealed')).toHaveCount(1);
+  const result=await page.locator('.tarot-card-image').evaluate((img)=>{
+    const style=getComputedStyle(img);
+    const parent=img.parentElement.getBoundingClientRect();
+    const rect=img.getBoundingClientRect();
+    return {
+      fit:style.objectFit,
+      position:style.objectPosition,
+      naturalWidth:img.naturalWidth,
+      naturalHeight:img.naturalHeight,
+      parentWidth:parent.width,
+      parentHeight:parent.height,
+      rectWidth:rect.width,
+      rectHeight:rect.height
+    };
+  });
+  expect(result.fit).toBe('contain');
+  expect(result.position).toContain('50%');
+  expect(result.naturalWidth).toBeGreaterThan(0);
+  expect(result.naturalHeight).toBeGreaterThan(0);
+  expect(result.rectWidth).toBeLessThanOrEqual(result.parentWidth+1);
+  expect(result.rectHeight).toBeLessThanOrEqual(result.parentHeight+1);
 });
