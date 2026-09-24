@@ -1036,7 +1036,7 @@ body{background:var(--app-bg)}
   }
   .segmented span{min-width:0;height:44px;border-radius:10px}
   .segmented input:checked+span{border-radius:10px;background:var(--app-ink)}
-  .precision-switch{min-height:42px;font-size:12px}
+  .precision-switch{min-height:44px;font-size:12px}
   .form-demo-note{
     margin-bottom:12px;
     padding:0 2px 10px;
@@ -1342,7 +1342,7 @@ body{background:var(--app-bg)}
 
 @media(max-width:330px){
   :root{--shell:calc(100vw - 16px)}
-  .hero-copy h1{font-size:31px}
+  .hero-copy h1{font-size:36px}
   .visual-keyword-card strong{font-size:17px}
   .daily-brief-grid{grid-template-columns:1fr}
 }
