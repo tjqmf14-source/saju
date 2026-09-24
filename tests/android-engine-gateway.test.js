@@ -60,6 +60,9 @@ test('Android gateway provides user-facing native summaries without exposing tec
   assert.equal(result.native.today.items.length, 4);
   assert.equal(result.native.months.length, 12);
   assert.equal(typeof result.native.year.summary, 'string');
+  assert.equal(result.native.tojeong.months.length, 12);
+  assert.match(result.native.tojeong.method.name, /144괘/);
+  assert.equal(new Set(result.native.tojeong.months.map((month) => month.action)).size, 12);
 });
 
 test('Android gateway preserves lunar and leap-month input fields', async () => {
@@ -135,4 +138,38 @@ test('Android engine gateway is data-only and contains no browser UI or network 
   assert.doesNotMatch(source, /\bfetch\s*\(|XMLHttpRequest|WebSocket|EventSource|sendBeacon/);
   assert.match(source, /globalThis\.SajutaroEngine/);
   assert.match(source, /drawTarotForAndroid/);
+});
+
+
+test('Android compatibility gateway returns five practical sections without a ranking score', async () => {
+  const { calculateCompatibilityForAndroid } = await importGateway();
+  const first = {
+    calendar: 'solar',
+    birthDate: '1987-06-14',
+    birthTime: '11:45',
+    birthTimeKnown: true,
+    gender: 'male',
+    precision: false
+  };
+  const second = {
+    calendar: 'solar',
+    birthDate: '1990-03-22',
+    birthTime: '09:10',
+    birthTimeKnown: true,
+    gender: 'female',
+    precision: false
+  };
+  const result = JSON.parse(calculateCompatibilityForAndroid(JSON.stringify({ first, second })));
+
+  assert.equal(result.ok, true);
+  assert.equal(result.compatibility.sections.length, 5);
+  assert.deepEqual(result.compatibility.sections.map((section) => section.title), [
+    '잘 맞는 부분',
+    '다른 부분',
+    '갈등하기 쉬운 상황',
+    '서로 이해하면 좋은 점',
+    '현실적인 관계 조언'
+  ]);
+  assert.equal('score' in result.compatibility, false);
+  assert.match(result.compatibility.note, /좋고 나쁨을 확정하는 점수/);
 });
