@@ -293,6 +293,10 @@ small{font-size:16px!important}
 }
 @media(max-width:390px){
   .app-layout{width:calc(100% - 18px)}
+  .daily-row{grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding-block:16px}
+  .daily-row>span{grid-column:1}
+  .daily-row>strong{grid-column:2;grid-row:1;text-align:right}
+  .daily-row>p{grid-column:1/-1;margin-top:3px;line-height:1.6}
   .app-header-inner{width:calc(100% - 18px)}
   .screen-head h1{font-size:32px}
   .profile-button>span:last-child{display:none}
