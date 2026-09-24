@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import kr.naesaju.personal.bridge.SajuEngineGateway
@@ -49,7 +50,7 @@ fun CompatibilityScreen(
     var loading by rememberSaveable { mutableStateOf(false) }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().testTag("compatibility-list"),
         contentPadding = androidx.compose.foundation.layout.PaddingValues(
             start = 20.dp,
             top = 24.dp,
