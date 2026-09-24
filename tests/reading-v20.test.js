@@ -9,7 +9,9 @@ const chart=calculateSaju({
   gender:'male',isLeap:false,precision:true,location:'korea',dayBoundary:'midnight'
 });
 const yearFlow=calculateYearFlow(chart,2026);
-const months=calculateMonthFlows(chart,2026);
+const previousMonths=calculateMonthFlows(chart,2025);
+const currentMonths=calculateMonthFlows(chart,2026);
+const months=[previousMonths.at(-1),...currentMonths.slice(0,11)];
 
 test('core reading is concise, evidence backed and limited to five useful categories',()=>{
   const result=buildCoreReading(chart,{timeKnown:true});
@@ -33,6 +35,7 @@ test('all twelve monthly readings have distinct visible titles, actions and caut
   const result=buildYearReading(chart,yearFlow,months);
   assert.equal(result.months.length,12);
   assert.equal(new Set(result.months.map((item)=>item.title)).size,12);
+  assert.deepEqual(result.months.map((item)=>item.month),[1,2,3,4,5,6,7,8,9,10,11,12]);
   assert.equal(new Set(result.months.map((item)=>item.action)).size,12);
   assert.equal(new Set(result.months.map((item)=>item.caution)).size,12);
 });
