@@ -31,7 +31,7 @@ async function selectCalendarMode(page, mode) {
   await expect(page.locator(`input[name="calendar"][value="${mode}"]`)).toBeChecked();
 }
 
-test('Product V17 desktop preserves the editorial landing-page composition', async ({ page }, testInfo) => {
+test('Product V3 desktop preserves the editorial landing-page composition', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'desktop-only reference contract');
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
@@ -110,7 +110,7 @@ test('Product V17 desktop preserves the editorial landing-page composition', asy
   await page.screenshot({ path: 'test-results/v17-reference-desktop.png', fullPage: true });
 });
 
-test('Product V17 is app-like, readable and overflow-free on mobile', async ({ page }, testInfo) => {
+test('Product V3 is app-like, readable and overflow-free on mobile', async ({ page }, testInfo) => {
   test.skip(!['mobile','mobile-wide','mobile-small'].includes(testInfo.project.name), 'mobile-only contract');
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
@@ -678,7 +678,7 @@ test('plain-language layer keeps visible report copy free of specialist jargon',
 });
 
 
-test('Product V17 keeps the editorial paper hierarchy and isolated tarot stage', async ({ page }) => {
+test('Product V3 keeps the editorial paper hierarchy and isolated tarot stage', async ({ page }) => {
   await page.goto('/');
   const audit=await page.evaluate(()=>{
     const css=(selector)=>getComputedStyle(document.querySelector(selector));
@@ -697,16 +697,16 @@ test('Product V17 keeps the editorial paper hierarchy and isolated tarot stage',
       shell:rect('.agency-shell')
     };
   });
-  expect(audit.bodyBg).toBe('rgb(245, 241, 232)');
-  expect(audit.tarotBg).toBe('rgb(17, 24, 43)');
+  expect(audit.bodyBg).toBe('rgb(245, 246, 243)');
+  expect(audit.tarotBg).toBe('rgb(21, 28, 44)');
   if(audit.viewport>760){
-    expect(audit.heroBg).toBe('rgb(255, 253, 247)');
-    expect(audit.inputBg).toBe('rgb(255, 253, 247)');
+    expect(audit.heroBg).toBe('rgb(255, 255, 255)');
+    expect(audit.inputBg).toBe('rgb(255, 255, 255)');
     expect(audit.heroVisual).toBe('block');
     expect(audit.heroVisualBg).not.toBe('none');
     expect(audit.heroVisualBg).toMatch(/^url\(/);
   }else{
-    expect(audit.inputBg).toBe('rgb(255, 253, 248)');
+    expect(audit.inputBg).toBe('rgb(255, 255, 255)');
     expect(audit.heroVisual).toBe('none');
     expect(audit.heroVisualBg).toBe('none');
   }
