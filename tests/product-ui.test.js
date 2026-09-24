@@ -29,9 +29,9 @@ test('primary information architecture is reduced to top user tasks',()=>{
 
 test('V3 typography and controls raise the mobile readability floor',()=>{
   assert.match(css,/body\[data-theme="product-v3"\]\{[\s\S]*font-size:17px/);
-  assert.match(css,/@media\(max-width:760px\)\{[\s\S]*body\[data-theme="product-v3"\]\{[\s\S]*font-size:18px/);
+  assert.match(css,/@media\(max-width:760px\)\{[\s\S]*body\[data-theme="product-v3"\]\{[\s\S]*font-size:20px/);
   assert.match(css,/body\[data-theme="product-v3"\] small\{font-size:15px!important/);
-  assert.match(css,/@media\(max-width:760px\)[\s\S]*small\{font-size:16px!important/);
+  assert.match(css,/@media\(max-width:760px\)[\s\S]*small\{font-size:17px!important/);
   assert.match(css,/min-height:50px/);
   assert.match(css,/min-height:54px/);
 });
