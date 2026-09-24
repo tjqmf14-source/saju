@@ -151,29 +151,33 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
             mkdir -p mobile/ui-qa/320 mobile/ui-qa/360-large mobile/ui-qa/412
+            export_screenshots() {
+              target_dir="$1"
+              for file in qa-profile.png qa-home.png qa-saju.png qa-fortune.png qa-compatibility.png qa-tarot.png; do
+                adb exec-out run-as kr.naesaju.personal cat "files/$file" > "$target_dir/$file"
+                test -s "$target_dir/$file"
+              done
+            }
 
             adb shell wm size 640x1136
             adb shell wm density 320
             adb shell settings put system font_scale 1.0
-            ./android/gradlew -p android connectedDebugAndroidTest --stacktrace
-            adb pull /sdcard/Android/data/kr.naesaju.personal/files/. mobile/ui-qa/320/
+            ./android/gradlew -p android connectedDebugAndroidTest --rerun-tasks --stacktrace
+            export_screenshots mobile/ui-qa/320
 
             adb shell wm size 720x1280
             adb shell wm density 320
             adb shell settings put system font_scale 1.3
-            ./android/gradlew -p android connectedDebugAndroidTest --stacktrace
-            adb pull /sdcard/Android/data/kr.naesaju.personal/files/. mobile/ui-qa/360-large/
+            ./android/gradlew -p android connectedDebugAndroidTest --rerun-tasks --stacktrace
+            export_screenshots mobile/ui-qa/360-large
 
             adb shell wm size 824x1648
             adb shell wm density 320
             adb shell settings put system font_scale 1.0
-            ./android/gradlew -p android connectedDebugAndroidTest --stacktrace
-            adb pull /sdcard/Android/data/kr.naesaju.personal/files/. mobile/ui-qa/412/
+            ./android/gradlew -p android connectedDebugAndroidTest --rerun-tasks --stacktrace
+            export_screenshots mobile/ui-qa/412
 
-            test -s mobile/ui-qa/320/qa-home.png
-            test -s mobile/ui-qa/360-large/qa-home.png
-            test -s mobile/ui-qa/412/qa-home.png
-            test "$(find mobile/ui-qa -name 'qa-*.png' -type f | wc -l)" -ge 18
+            test "$(find mobile/ui-qa -name 'qa-*.png' -type f | wc -l)" -eq 18
 
       - name: Upload Android UI test diagnostics
         if: always()
