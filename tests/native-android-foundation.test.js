@@ -72,7 +72,7 @@ test('Sajutaro typography and native home enforce the readable baseline', () => 
   assert.match(typeScale, /bodyMedium[\s\S]*16\.sp/);
   assert.match(homeScreen, /오늘의 한마디/);
   assert.match(homeScreen, /오늘의 흐름/);
-  assert.match(homeScreen, /지금 필요한 조언/);
+  assert.match(homeScreen, /지금 필요한 행동/);
   assert.match(strings, /<string name="app_name">사주타로<\/string>/);
 });
 
@@ -92,7 +92,35 @@ test('calculation runtime is local-only and never becomes the visible app UI', a
   assert.match(runtime, /evaluateJavascript/);
   assert.doesNotMatch(runtime, /addJavascriptInterface/);
   assert.doesNotMatch(runtime, /addView\(|setContentView/);
-  assert.doesNotMatch(nativeApp, /WebView|LocalJsEngine/);
+  assert.doesNotMatch(nativeApp, /WebView|PlaceholderDestination/);
+  assert.match(nativeApp, /LocalJsEngine/);
+  assert.match(gateway, /fun drawTarot\(requestJson: String/);
   assert.match(host, /engine\.js/);
   assert.match(gradleFile, /generated\/engine-assets/);
+});
+
+
+test('native product tabs are implemented screens rather than placeholders', async () => {
+  const [profile, saju, fortune, tarot, app, gradleFile] = await Promise.all([
+    safeRead('android/app/src/main/java/kr/naesaju/personal/feature/onboarding/ProfileScreen.kt'),
+    safeRead('android/app/src/main/java/kr/naesaju/personal/feature/saju/SajuScreen.kt'),
+    safeRead('android/app/src/main/java/kr/naesaju/personal/feature/fortune/FortuneScreen.kt'),
+    safeRead('android/app/src/main/java/kr/naesaju/personal/feature/tarot/TarotScreen.kt'),
+    safeRead('android/app/src/main/java/kr/naesaju/personal/app/SajutaroApp.kt'),
+    safeRead('android/app/build.gradle')
+  ]);
+
+  assert.match(profile, /내 사주 시작하기/);
+  assert.match(profile, /출생시간을 알고 있어요/);
+  assert.match(saju, /나를 한 문장으로/);
+  assert.match(fortune, /오늘부터 올해까지/);
+  assert.match(fortune, /1~12월/);
+  assert.match(tarot, /오늘의 카드 뽑기/);
+  assert.match(tarot, /ContentScale\.Fit/);
+  assert.match(app, /SajuScreen/);
+  assert.match(app, /FortuneScreen/);
+  assert.match(app, /TarotScreen/);
+  assert.doesNotMatch(app, /PlaceholderDestination/);
+  assert.match(gradleFile, /datastore-preferences/);
+  assert.match(gradleFile, /\.\.\/\.\.\/public/);
 });
