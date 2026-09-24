@@ -26,11 +26,11 @@ jobs:
       - run: npm run check
       - run: npx playwright install --with-deps chromium
       - run: npm run visual:check
-      - name: Upload visual QA screenshots
+      - name: Upload legacy web reference screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: b-concept-visual-qa
+          name: legacy-web-reference-visual-qa
           path: test-results/*.png
           if-no-files-found: ignore
 
@@ -44,8 +44,9 @@ jobs:
           repos/${{ github.repository }}/statuses/${{ github.sha }}
           -f state=success
           -f context=ci/verify
-          -f description='Unit, privacy, build and Chromium QA passed'
+          -f description='Unit, privacy and legacy reference checks passed'
           -f target_url='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+
       - name: Publish failed commit status
         if: failure()
         continue-on-error: true
@@ -59,19 +60,13 @@ jobs:
           -f description='Verification failed; inspect the workflow run'
           -f target_url='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
 
-
-  build-android-v3:
-    if: startsWith(github.ref, 'refs/heads/gpt/product-v3-commercial-rebuild-20260924') || github.event_name == 'pull_request'
+  build-android-native:
+    if: github.ref == 'refs/heads/gpt/sajutaro-android-rebuild' || github.event_name == 'pull_request'
     needs: verify
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
 
       - uses: actions/setup-java@v4
         with:
@@ -79,38 +74,32 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Re-run verification before APK packaging
-        run: npm run check
-
-      - name: Build Android debug APK
+      - name: Build native Android debug APK
         run: |
           chmod +x android/gradlew
           cd android
-          ./gradlew lintDebug assembleDebug --stacktrace
+          ./gradlew lintDebug testDebugUnitTest assembleDebug --stacktrace
 
-      - name: Verify Android V3 package
+      - name: Verify native Android package
         run: |
           test -f android/app/build/outputs/apk/debug/app-debug.apk
-          grep -q "versionName '3.0.0'" android/app/build.gradle
-          grep -q "versionCode 300" android/app/build.gradle
+          grep -q "versionName '4.0.0'" android/app/build.gradle
+          grep -q "versionCode 400" android/app/build.gradle
           if grep -q "android.permission.INTERNET" android/app/src/main/AndroidManifest.xml; then
             echo "Unexpected INTERNET permission"
             exit 1
           fi
 
-      - name: Prepare APK artifact
+      - name: Prepare native APK artifact
         run: |
           mkdir -p mobile/artifacts
-          cp android/app/build/outputs/apk/debug/app-debug.apk mobile/artifacts/Naesaju-3.0.0-debug.apk
-          sha256sum mobile/artifacts/Naesaju-3.0.0-debug.apk > mobile/artifacts/SHA256SUMS.txt
+          cp android/app/build/outputs/apk/debug/app-debug.apk mobile/artifacts/Sajutaro-4.0.0-debug.apk
+          sha256sum mobile/artifacts/Sajutaro-4.0.0-debug.apk > mobile/artifacts/SHA256SUMS.txt
 
-      - name: Upload APK artifact
+      - name: Upload native APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Naesaju-V3-Android-Debug
+          name: Sajutaro-V4-Native-Debug
           path: mobile/artifacts/*
           if-no-files-found: error
           retention-days: 30
