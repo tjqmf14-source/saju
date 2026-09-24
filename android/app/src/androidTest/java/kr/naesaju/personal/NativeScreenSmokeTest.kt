@@ -149,8 +149,7 @@ class NativeScreenSmokeTest {
             }
         }
 
-        composeRule.onNodeWithText("점수보다
-서로 다른 방식을 봅니다.").assertIsDisplayed()
+        composeRule.onNodeWithText("점수보다\n서로 다른 방식을 봅니다.").assertIsDisplayed()
         composeRule.onNodeWithText("관계 흐름 보기").assertIsDisplayed()
         saveRootScreenshot("qa-compatibility.png")
     }
