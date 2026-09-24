@@ -79,6 +79,7 @@ class NativeScreenSmokeTest {
         composeRule.onNodeWithText("생년월일").assertIsDisplayed()
         composeRule.onNodeWithText("출생시간을 알고 있어요").assertIsDisplayed()
         composeRule.onNodeWithText("내 사주 시작하기").assertIsDisplayed()
+        saveRootScreenshot("qa-profile.png")
     }
 
     @Test
@@ -119,6 +120,7 @@ class NativeScreenSmokeTest {
         }
         composeRule.onNodeWithText("나를 한 문장으로").assertIsDisplayed()
         composeRule.onNodeWithText("내가 잘하는 것").assertIsDisplayed()
+        saveRootScreenshot("qa-saju.png")
 
         composeRule.setContent {
             SajutaroTheme {
@@ -132,6 +134,7 @@ class NativeScreenSmokeTest {
         composeRule.onNodeWithText("오늘").assertIsDisplayed()
         composeRule.onNodeWithText("올해").assertIsDisplayed()
         composeRule.onNodeWithText("1~12월").assertIsDisplayed()
+        saveRootScreenshot("qa-fortune.png")
     }
 
     @Test
@@ -149,6 +152,7 @@ class NativeScreenSmokeTest {
         composeRule.onNodeWithText("점수보다
 서로 다른 방식을 봅니다.").assertIsDisplayed()
         composeRule.onNodeWithText("관계 흐름 보기").assertIsDisplayed()
+        saveRootScreenshot("qa-compatibility.png")
     }
 
     @Test
@@ -168,6 +172,7 @@ class NativeScreenSmokeTest {
         }
         composeRule.onNodeWithText("별 · 정방향").assertIsDisplayed()
         composeRule.onNodeWithText("행동 조언").assertIsDisplayed()
+        saveRootScreenshot("qa-tarot.png")
     }
 
     private fun saveRootScreenshot(fileName: String) {
