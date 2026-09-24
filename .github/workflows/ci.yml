@@ -150,20 +150,41 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
+            mkdir -p mobile/ui-qa/320 mobile/ui-qa/360-large mobile/ui-qa/412
+
+            adb shell wm size 640x1136
+            adb shell wm density 320
+            adb shell settings put system font_scale 1.0
+            cd android
+            ./gradlew connectedDebugAndroidTest --stacktrace
+            cd ..
+            adb pull /sdcard/Android/data/kr.naesaju.personal/files/. mobile/ui-qa/320/
+
             adb shell wm size 720x1280
             adb shell wm density 320
             adb shell settings put system font_scale 1.3
             cd android
             ./gradlew connectedDebugAndroidTest --stacktrace
             cd ..
-            mkdir -p mobile/ui-qa
-            adb pull /sdcard/Android/data/kr.naesaju.personal/files/qa-home.png mobile/ui-qa/qa-home.png
-            test -s mobile/ui-qa/qa-home.png
+            adb pull /sdcard/Android/data/kr.naesaju.personal/files/. mobile/ui-qa/360-large/
+
+            adb shell wm size 824x1648
+            adb shell wm density 320
+            adb shell settings put system font_scale 1.0
+            cd android
+            ./gradlew connectedDebugAndroidTest --stacktrace
+            cd ..
+            adb pull /sdcard/Android/data/kr.naesaju.personal/files/. mobile/ui-qa/412/
+
+            test -s mobile/ui-qa/320/qa-home.png
+            test -s mobile/ui-qa/360-large/qa-home.png
+            test -s mobile/ui-qa/412/qa-home.png
+            test "$(find mobile/ui-qa -name 'qa-*.png' -type f | wc -l)" -ge 18
 
       - name: Upload native UI QA evidence
         uses: actions/upload-artifact@v4
         with:
           name: Sajutaro-V4-Native-UI-QA
-          path: mobile/ui-qa/qa-home.png
+          path: mobile/ui-qa/**/*.png
           if-no-files-found: error
           retention-days: 30
