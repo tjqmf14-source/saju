@@ -98,9 +98,6 @@ class NativeScreenSmokeTest {
                     profile = profile,
                     reading = reading,
                     contentPadding = PaddingValues(),
-                    onOpenSaju = {},
-                    onOpenFortune = {},
-                    onOpenTarot = {},
                     onOpenCompatibility = {},
                     onEditProfile = {}
                 )
@@ -111,6 +108,7 @@ class NativeScreenSmokeTest {
         composeRule.onNodeWithText("오늘의 흐름").assertIsDisplayed()
         composeRule.onNodeWithTag("home-list").performScrollToIndex(5)
         composeRule.onNodeWithText("지금 필요한 행동").assertIsDisplayed()
+        composeRule.onNodeWithText("두 사람 궁합 보기").performScrollTo().assertIsDisplayed()
         saveRootScreenshot("qa-home.png")
     }
 

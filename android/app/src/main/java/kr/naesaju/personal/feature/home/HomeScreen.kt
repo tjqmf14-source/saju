@@ -1,6 +1,7 @@
 package kr.naesaju.personal.feature.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -10,9 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +23,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -33,9 +36,6 @@ fun HomeScreen(
     profile: UserProfile,
     reading: ReadingSnapshot?,
     contentPadding: PaddingValues,
-    onOpenSaju: () -> Unit,
-    onOpenFortune: () -> Unit,
-    onOpenTarot: () -> Unit,
     onOpenCompatibility: () -> Unit,
     onEditProfile: () -> Unit
 ) {
@@ -115,29 +115,17 @@ fun HomeScreen(
 
         item {
             SectionTitle(
-                title = "빠르게 보기",
-                description = "필요한 순간에 바로 들어갈 수 있게 핵심 기능만 남겼습니다."
+                title = "관계 살펴보기",
+                description = "궁합은 점수보다 서로 다른 반응 방식과 조율할 지점을 함께 봅니다."
             )
         }
 
         item {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Button(
-                    onClick = onOpenSaju,
-                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)
-                ) { Text("내 사주 자세히 보기") }
-                OutlinedButton(
-                    onClick = onOpenFortune,
-                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)
-                ) { Text("오늘 · 올해 · 월별 운세") }
-                OutlinedButton(
-                    onClick = onOpenTarot,
-                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)
-                ) { Text("타로 카드 펼치기") }
-                OutlinedButton(
-                    onClick = onOpenCompatibility,
-                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)
-                ) { Text("두 사람 궁합 보기") }
+            OutlinedButton(
+                onClick = onOpenCompatibility,
+                modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)
+            ) {
+                Text("두 사람 궁합 보기")
             }
         }
     }
@@ -158,7 +146,18 @@ private fun HighlightCard(
             modifier = Modifier.padding(horizontal = 22.dp, vertical = 24.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Text(eyebrow, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    eyebrow,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+                MoonMark()
+            }
             Text(title, style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onPrimary)
             Text(
                 body,
@@ -166,6 +165,22 @@ private fun HighlightCard(
                 color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.82f)
             )
         }
+    }
+}
+
+@Composable
+private fun MoonMark() {
+    Box(modifier = Modifier.size(48.dp)) {
+        Surface(
+            modifier = Modifier.size(42.dp).align(Alignment.CenterStart),
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.tertiary
+        ) {}
+        Surface(
+            modifier = Modifier.size(38.dp).align(Alignment.CenterEnd),
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.primary
+        ) {}
     }
 }
 
