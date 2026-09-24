@@ -168,6 +168,10 @@ class NativeScreenSmokeTest {
             callback(Result.failure(UnsupportedOperationException()))
         }
 
+        override fun calculateCompatibility(requestJson: String, callback: (Result<String>) -> Unit) {
+            callback(Result.failure(UnsupportedOperationException()))
+        }
+
         override fun drawTarot(requestJson: String, callback: (Result<String>) -> Unit) {
             callback(
                 Result.success(
