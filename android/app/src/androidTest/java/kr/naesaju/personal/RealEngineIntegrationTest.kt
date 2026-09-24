@@ -56,7 +56,26 @@ class RealEngineIntegrationTest {
             assertEquals(7, parsed.sajuSections.size)
             assertTrue(parsed.sajuSections.all { it.summary.length >= 4 && it.action.length >= 4 })
             assertEquals(4, parsed.today.items.size)
-            assertTrue(parsed.today.items.all { it.text.length >= 8 })
+            assertTrue(parsed.today.items.all { it.text.length in 12..48 })
+            val visibleToday = buildString {
+                append(parsed.today.headline)
+                parsed.today.items.forEach {
+                    append(' ')
+                    append(it.label)
+                    append(' ')
+                    append(it.text)
+                }
+                append(' ')
+                append(parsed.today.good)
+                append(' ')
+                append(parsed.today.avoid)
+            }
+            assertTrue(!Regex("""\d+점""").containsMatchIn(visibleToday))
+            assertTrue(!Regex("""비견|겁재|식신|상관|편재|정재|편관|정관|편인|정인""").containsMatchIn(visibleToday))
+            val visibleSaju = parsed.sajuSections.flatMap { listOf(it.summary, it.reason, it.action) }.joinToString(" ")
+            assertTrue("표현·문제제기가" in visibleSaju)
+            assertTrue("표현·문제제기이" !in visibleSaju)
+            assertTrue("표현·문제제기과" !in visibleSaju)
             assertEquals(12, parsed.months.size)
             assertEquals(12, parsed.months.map { it.action }.toSet().size)
         } finally {

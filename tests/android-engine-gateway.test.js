@@ -173,3 +173,43 @@ test('Android compatibility gateway returns five practical sections without a ra
   assert.equal('score' in result.compatibility, false);
   assert.match(result.compatibility.note, /좋고 나쁨을 확정하는 점수/);
 });
+
+
+test('Android native daily copy hides numeric fortune scores and technical ten-god jargon', async () => {
+  const { calculateForAndroid } = await importGateway();
+  const result = JSON.parse(calculateForAndroid(JSON.stringify({
+    calendar: 'solar',
+    birthDate: '1987-06-14',
+    birthTime: '11:45',
+    birthTimeKnown: true,
+    gender: 'male',
+    precision: false
+  })));
+
+  const visible = [
+    result.native.today.headline,
+    ...result.native.today.items.flatMap((item) => [item.label, item.text]),
+    result.native.today.good,
+    result.native.today.avoid
+  ].join(' ');
+
+  assert.doesNotMatch(visible, /\d+점/);
+  assert.doesNotMatch(visible, /비견|겁재|식신|상관|편재|정재|편관|정관|편인|정인/);
+  assert.ok(result.native.today.items.every((item) => item.text.length >= 12 && item.text.length <= 48));
+});
+
+test('Android native interpretation copy uses natural Korean particles for the reference profile', async () => {
+  const { calculateForAndroid } = await importGateway();
+  const result = JSON.parse(calculateForAndroid(JSON.stringify({
+    calendar: 'solar',
+    birthDate: '1987-06-14',
+    birthTime: '11:45',
+    birthTimeKnown: true,
+    gender: 'male',
+    precision: false
+  })));
+
+  const visible = [result.native.headline, ...result.native.sajuSections.flatMap((item) => [item.summary, item.reason, item.action])].join(' ');
+  assert.match(visible, /표현·문제제기가/);
+  assert.doesNotMatch(visible, /표현·문제제기이|표현·문제제기과|자기 기준·동료이|자기 기준·동료을/);
+});

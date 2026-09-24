@@ -145,3 +145,29 @@ test('instrumentation QA verifies the packaged local engine with a real profile'
   assert.match(integration, /parseReadingSnapshot/);
   assert.match(integration, /months\.map \{ it\.action \}\.toSet\(\)\.size/);
 });
+
+
+test('native profile preserves lunar leap-month input through storage and engine request', async () => {
+  const [profile, model, store] = await Promise.all([
+    safeRead('android/app/src/main/java/kr/naesaju/personal/feature/onboarding/ProfileScreen.kt'),
+    safeRead('android/app/src/main/java/kr/naesaju/personal/data/profile/UserProfile.kt'),
+    safeRead('android/app/src/main/java/kr/naesaju/personal/data/profile/ProfileStore.kt')
+  ]);
+  assert.match(profile, /윤달로 태어났어요/);
+  assert.match(profile, /isLeap = calendar == "lunar" && isLeap/);
+  assert.match(model, /val isLeap: Boolean = false/);
+  assert.match(model, /put\("isLeap", calendar == "lunar" && isLeap\)/);
+  assert.match(store, /booleanPreferencesKey\("is_leap"\)/);
+});
+
+test('native theme explicitly defines branded container colors instead of Material defaults', async () => {
+  const [colors, theme] = await Promise.all([
+    safeRead('android/app/src/main/java/kr/naesaju/personal/design/SajutaroColors.kt'),
+    safeRead('android/app/src/main/java/kr/naesaju/personal/design/SajutaroTheme.kt')
+  ]);
+  assert.match(colors, /PaleViolet/);
+  assert.match(colors, /PaleRose/);
+  assert.match(theme, /primaryContainer = PaleViolet/);
+  assert.match(theme, /secondaryContainer = PaleViolet/);
+  assert.match(theme, /tertiaryContainer = PaleRose/);
+});
