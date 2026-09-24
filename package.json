@@ -16,7 +16,7 @@
     "visual:check": "playwright test",
     "assets:prepare": "node scripts/build-oracle-atlas.js && node scripts/sync-rws-assets.js",
     "pretest": "node scripts/build-oracle-atlas.js",
-    "mobile:build": "npm run check && cd android && gradlew.bat assembleDebug",
+    "mobile:build": "npm run check && npm run build:android-engine && cd android && gradlew.bat assembleDebug",
     "predev:local": "node scripts/build-oracle-atlas.js && node scripts/sync-rws-assets.js",
     "dev:local": "vite --host 127.0.0.1 --port 5173 --strictPort",
     "build:android-engine": "vite build --config vite.android-engine.config.js",
