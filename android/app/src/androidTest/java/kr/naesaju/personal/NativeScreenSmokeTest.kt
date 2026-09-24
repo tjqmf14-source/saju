@@ -193,6 +193,12 @@ class NativeScreenSmokeTest {
             assertTrue(bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, stream))
         }
         assertTrue(file.exists() && file.length() > 0)
+
+        val uiAutomation = InstrumentationRegistry.getInstrumentation().uiAutomation
+        uiAutomation.executeShellCommand("mkdir -p /sdcard/Download/sajutaro-qa").use { }
+        uiAutomation.executeShellCommand(
+            "sh -c 'run-as kr.naesaju.personal cat files/$fileName > /sdcard/Download/sajutaro-qa/$fileName'"
+        ).use { }
     }
 
     private class FakeTarotGateway : SajuEngineGateway {
