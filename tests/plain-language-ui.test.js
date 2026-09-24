@@ -3,15 +3,15 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-const css = await readFile(new URL('../product-v17.css', import.meta.url), 'utf8');
+const css = await readFile(new URL('../product-v18.css', import.meta.url), 'utf8');
 const plain = await readFile(new URL('../src/plain-language-ui.js', import.meta.url), 'utf8');
 
-test('Product V17 app-first interface and plain-language layer are active', () => {
-  assert.match(html, /data-theme="product-v17"/);
+test('Product V18 app-first interface and plain-language layer are active', () => {
+  assert.match(html, /data-theme="product-v18"/);
   assert.match(html, /theme-color" content="#F5F1E8"/);
-  assert.match(html, /href="\/product-v17\.css"/);
+  assert.match(html, /href="\/product-v18\.css"/);
   assert.match(html, /src="\/src\/premium-ui\.js"[\s\S]*src="\/src\/plain-language-ui\.js"/);
-  assert.match(css, /Product V17 — mobile app-first remodeling/);
+  assert.match(css, /Product V18 — readability and evidence-first interpretation/);
   assert.match(css, /--color-surface:#fffdf7/);
   assert.match(css, /--color-brand:#b54b3f/);
   assert.match(css, /#expert\{display:none!important\}/);
@@ -30,7 +30,7 @@ test('plain-language module covers common specialist terms and duplicate copy', 
   assert.doesNotThrow(() => new Function(plain));
 });
 
-test('reader-facing advice is rewritten by Product V17 life categories', () => {
+test('reader-facing layer simplifies labels without replacing calculated interpretation copy', () => {
   assert.match(plain, /ROLE_GUIDE/);
   for (const key of ['temperament','strengths','career','money','relationships','recovery']) {
     assert.ok(plain.includes(key), key);
@@ -38,6 +38,7 @@ test('reader-facing advice is rewritten by Product V17 life categories', () => {
   assert.match(plain, /FRIENDLY_TITLES/);
   assert.match(plain, /strengths:'강점'/);
   assert.match(plain, /rewriteFriendlyAdvice/);
-  assert.match(plain, /혼자 빠르게 결론내리기보다/);
-  assert.match(plain, /아이디어 수보다 끝낸 결과물 수/);
+  const rewrite=plain.slice(plain.indexOf('function rewriteFriendlyAdvice'),plain.indexOf('for (const guide of Object.values',plain.indexOf('function rewriteFriendlyAdvice')));
+  assert.doesNotMatch(rewrite, /chapter-quick-list li/);
+  assert.doesNotMatch(rewrite, /body\.textContent=lines/);
 });

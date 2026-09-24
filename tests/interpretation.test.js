@@ -51,3 +51,28 @@ test('reader-facing interpretation avoids unresolved data and mechanical particl
   assert.doesNotMatch(text, /구조를 삶의 방식|구조가 먼저 보이|관리이 |관계이 |방식이 기본적인/);
   assert.match(text, /실제 생활|현실|행동|점검/);
 });
+
+
+test('V18 essential chapters expose concise conclusion evidence and action copy', () => {
+  const essential=['overview','temperament','strengths','balance','career','money','relationships','recovery'];
+  for(const key of essential){
+    assert.ok(Array.isArray(report[key].quick), key);
+    assert.equal(report[key].quick.length,3,key);
+    assert.ok(report[key].quick.every((line)=>typeof line==='string' && line.length>=18 && line.length<=190),key);
+  }
+  assert.equal(new Set(essential.map((key)=>report[key].quick.join('|'))).size,essential.length);
+});
+
+test('V18 interpretation context changes when the calculated chart changes', () => {
+  const otherChart=calculateSaju({
+    calendar:'solar',year:1994,month:11,day:3,hour:21,minute:10,
+    gender:'female',isLeap:false,precision:true,location:'seoul'
+  });
+  const otherMbti=calculateSajuMbti(otherChart);
+  const otherYear=calculateYearFlows(otherChart,year,1)[0];
+  const otherMonths=calculateMonthFlows(otherChart,year);
+  const otherReport=buildDetailedInterpretation(otherChart,otherMbti,otherYear,otherMonths);
+  const keys=['overview','temperament','strengths','career','money','relationships','recovery'];
+  const changed=keys.filter((key)=>report[key].quick.join('|')!==otherReport[key].quick.join('|'));
+  assert.ok(changed.length>=5,`expected at least five chart-specific sections, got ${changed.join(',')}`);
+});

@@ -545,12 +545,12 @@ function renderProfile(chart,mbti,report,name,todayFlow){
 }
 
 function renderDetailedReport(report){
-  const ordered=['overview','temperament','innerOuter','strengths','balance','career','money','love','relationships','recovery','year','luck','technical'];
+  const ordered=['overview','temperament','strengths','balance','career','money','relationships','recovery'];
   $('detailedReport').innerHTML=ordered.map((key,index)=>{
     const item=report[key];
     const open=index===0?' open':'';
-    const labels=['한 줄 요약','왜 그런가요?','생활에서는'];
-    const quick=(item.quick?.length?item.quick:item.paragraphs.map(firstSentence).slice(0,3));
+    const labels=['핵심','계산 근거','지금 할 일'];
+    const quick=(item.quick?.length?item.quick:item.paragraphs.map(firstSentence).slice(0,3)).slice(0,3);
     return `<article id="report-${key}" class="detail-chapter detail-chapter-${String(index+1).padStart(2,'0')}" data-report-key="${key}">
       <details class="detail-disclosure"${open}>
         <summary>
@@ -559,11 +559,10 @@ function renderDetailedReport(report){
           <b class="detail-toggle" aria-hidden="true">+</b>
         </summary>
         <div class="detail-chapter-body">
-          <p class="chapter-takeaway"><mark>${escapeHtml(item.lead)}</mark></p>
-          <div class="easy-reading-label"><span>먼저 이것만 보세요</span><small>쉬운 해설</small></div>
-          <ul class="chapter-quick-list">${quick.map((p,i)=>`<li><strong>${labels[i]||'근거'}</strong><span>${escapeHtml(p)}</span></li>`).join('')}</ul>
-          ${item.evidence?.length?`<div class="chapter-evidence"><strong>계산 근거</strong><ul>${item.evidence.map((line)=>`<li>${escapeHtml(line)}</li>`).join('')}</ul></div>`:''}
-          <details class="chapter-full-analysis"><summary>전문 해설까지 자세히 보기</summary>${item.paragraphs.map((p)=>`<p>${escapeHtml(p)}</p>`).join('')}</details>
+          <div class="easy-reading-label"><span>핵심만 먼저</span><small>근거 기반 요약</small></div>
+          <ul class="chapter-quick-list">${quick.map((p,i)=>`<li><strong>${labels[i]||'참고'}</strong><span>${escapeHtml(p)}</span></li>`).join('')}</ul>
+          ${item.evidence?.length?`<details class="chapter-evidence"><summary><strong>계산 근거 더 보기</strong></summary><ul>${item.evidence.map((line)=>`<li>${escapeHtml(line)}</li>`).join('')}</ul></details>`:''}
+          <details class="chapter-full-analysis"><summary>해석 맥락 더 보기</summary>${item.paragraphs.slice(0,2).map((p)=>`<p>${escapeHtml(p)}</p>`).join('')}</details>
         </div>
       </details>
     </article>`;
@@ -580,8 +579,9 @@ function renderKeywordInsight(report,key='temperament'){
     button.setAttribute('aria-pressed',active?'true':'false');
   });
   panel.dataset.reportKey=key;
-  const easy=item.quick?.[0] || firstSentence(item.paragraphs[0]);
-  panel.innerHTML=`<div><span class="section-kicker">SELECTED INSIGHT</span><h3>${escapeHtml(item.title)}</h3></div><p><mark>${escapeHtml(item.lead)}</mark><br>${escapeHtml(easy)}</p><a href="#report-${key}">정밀 해설 이어 읽기 <span aria-hidden="true">→</span></a>`;
+  const labels=['핵심','근거','지금 할 일'];
+  const quick=(item.quick?.length?item.quick:item.paragraphs.map(firstSentence).slice(0,3)).slice(0,3);
+  panel.innerHTML=`<div><span class="section-kicker">SELECTED INSIGHT</span><h3>${escapeHtml(item.title)}</h3></div><ul class="keyword-insight-points">${quick.map((text,index)=>`<li><strong>${labels[index]}</strong><span>${escapeHtml(text)}</span></li>`).join('')}</ul><a href="#report-${key}">근거와 맥락 더 보기 <span aria-hidden="true">→</span></a>`;
 }
 
 function setupKeywordCards(){
@@ -634,11 +634,12 @@ function renderToday(chart,todayFlow){
   ].sort((a,b)=>b[1].score-a[1].score);
   const strongestDaily=rankedDaily[0];
   const softestDaily=rankedDaily.at(-1);
+  const todaySignal=relationLabel(todayFlow.relations);
+  const todayBasis=`${todayFlow.korean || ''} · ${todayFlow.tenGod || copy.label} · 원국 관계 ${todaySignal}`;
   $('dailyBriefGrid').innerHTML=[
     ['오늘의 중심',`${strongestDaily[0]} 흐름이 ${strongestDaily[1].label} 쪽입니다.`,strongestDaily[2]],
     ['한 번 더 확인',`${softestDaily[0]}${particle(softestDaily[0],'은','는')} 속도보다 점검이 먼저입니다.`,copy.caution],
-    ['관계 한마디',`상대의 마음을 추측하기보다 반응을 확인하세요.`,copy.love],
-    ['회복 한마디',`무리해서 끌고 가기보다 리듬을 일정하게 유지하세요.`,copy.health]
+    ['계산 근거',todayBasis,'오늘 점수는 미래 사건의 확률이 아니라 원국과 일진의 상대적 흐름을 비교한 내부 지표입니다.']
   ].map(([title,lead,body])=>`<article><span>${escapeHtml(title)}</span><strong>${escapeHtml(lead)}</strong><p>${escapeHtml(body)}</p></article>`).join('');
 
   $('dailyActionGuide').innerHTML=[
@@ -685,8 +686,7 @@ function renderYear(yearFlow,monthFlows){
   const advice=[
     ['올해의 기회',copy.opportunity,`${yearFlow.tenGod} 세운 · ${yearFlow.korean}`],
     ['주의할 패턴',copy.caution,`원국 관계 · ${relationLabel(yearFlow.relations)}`],
-    ['돈의 포인트',copy.money,monthBasis(firstMonthFor(['재성']))],
-    ['관계의 포인트',copy.love,monthBasis(firstMonthFor(['비겁','관성']))]
+    ['생활에 적용',copy.work,`반복 월운 · ${monthBasis(firstMonthFor([yearFlow.group]))}`]
   ];
   $('yearAdviceGrid').innerHTML=advice.map(([title,body,basis])=>`<article class="advice-card"><span>${escapeHtml(title)}</span><p>${escapeHtml(body)}</p><small>계산 참고 · ${escapeHtml(basis)}</small></article>`).join('');
   const quarterStarts=[0,3,6,9];

@@ -65,7 +65,8 @@ test('reader report separates plain-language summary from calculation evidence',
   const yearFlow=calculateYearFlows(chart,2026,1)[0];
   const months=calculateMonthFlows(chart,2026);
   const report=buildDetailedInterpretation(chart,mbti,yearFlow,months);
-  assert.match(report.overview.lead,/쉽게 말하면/);
+  assert.ok(report.overview.lead.length>=30);
+  assert.match(report.overview.quick[1],/월령|십신|점|가중/);
   assert.ok(report.overview.evidence.length>=4);
   assert.ok(report.balance.evidence.length>=4);
   assert.match(report.balance.paragraphs.join(' '),/월령|통근|지장간/);
