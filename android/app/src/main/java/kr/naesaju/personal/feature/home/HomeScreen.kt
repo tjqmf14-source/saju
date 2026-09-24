@@ -35,6 +35,7 @@ fun HomeScreen(
     onOpenSaju: () -> Unit,
     onOpenFortune: () -> Unit,
     onOpenTarot: () -> Unit,
+    onOpenCompatibility: () -> Unit,
     onEditProfile: () -> Unit
 ) {
     LazyColumn(
@@ -132,6 +133,10 @@ fun HomeScreen(
                     onClick = onOpenTarot,
                     modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)
                 ) { Text("타로 카드 펼치기") }
+                OutlinedButton(
+                    onClick = onOpenCompatibility,
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp)
+                ) { Text("두 사람 궁합 보기") }
             }
         }
     }
