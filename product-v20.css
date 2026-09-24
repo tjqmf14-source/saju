@@ -67,7 +67,7 @@ small{font-size:16px!important}
 .screen-head h1{margin:0;font-size:clamp(32px,4vw,52px);line-height:1.08}
 .screen-head>div>p:last-child{margin-bottom:0}
 .text-button,.outline-button,.primary-button,.secondary-button{min-height:48px;border-radius:999px;padding:0 18px;font-size:16px;font-weight:820;transition:transform var(--ease),background var(--ease),border-color var(--ease)}
-.text-button{border:0;background:transparent;color:var(--brand);padding-inline:6px}
+.text-button{border:0;background:transparent;color:var(--brand);padding-inline:6px;white-space:nowrap;flex:0 0 auto}
 .text-button:hover{transform:translateX(2px)}
 .outline-button{border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);white-space:nowrap;flex:0 0 auto}
 .primary-button{border:1px solid var(--brand);background:var(--brand);color:#fff}
