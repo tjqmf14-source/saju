@@ -49,6 +49,10 @@ test('mobile build does not depend on Capacitor and CI builds the existing Andro
   assert.equal(pkg.devDependencies?.['@capacitor/cli'], undefined);
   assert.equal(pkg.scripts['mobile:build'], 'npm run check && cd android && gradlew.bat assembleDebug');
   assert.match(workflow, /\.\/gradlew lintDebug assembleDebug/);
+  assert.match(workflow, /gpt\/product-v3-commercial-rebuild-20260924/);
+  assert.match(workflow, /versionName '3\.0\.0'/);
+  assert.match(workflow, /versionCode 300/);
+  assert.match(workflow, /Naesaju-3\.0\.0-debug\.apk/);
   assert.doesNotMatch(workflow, /cap add android|cap sync android/);
 });
 
