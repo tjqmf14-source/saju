@@ -75,3 +75,24 @@ test('Sajutaro typography and native home enforce the readable baseline', () => 
   assert.match(homeScreen, /지금 필요한 조언/);
   assert.match(strings, /<string name="app_name">사주타로<\/string>/);
 });
+
+
+test('calculation runtime is local-only and never becomes the visible app UI', async () => {
+  const [gateway, runtime, host, nativeApp, gradleFile] = await Promise.all([
+    safeRead('android/app/src/main/java/kr/naesaju/personal/bridge/SajuEngineGateway.kt'),
+    safeRead('android/app/src/main/java/kr/naesaju/personal/bridge/LocalJsEngine.kt'),
+    safeRead('android/app/src/main/assets/engine/host.html'),
+    safeRead('android/app/src/main/java/kr/naesaju/personal/app/SajutaroApp.kt'),
+    safeRead('android/app/build.gradle')
+  ]);
+
+  assert.match(gateway, /fun calculate\(requestJson: String/);
+  assert.match(runtime, /file:\/\/\/android_asset\/engine\/host\.html/);
+  assert.match(runtime, /blockNetworkLoads\s*=\s*true/);
+  assert.match(runtime, /evaluateJavascript/);
+  assert.doesNotMatch(runtime, /addJavascriptInterface/);
+  assert.doesNotMatch(runtime, /addView\(|setContentView/);
+  assert.doesNotMatch(nativeApp, /WebView|LocalJsEngine/);
+  assert.match(host, /engine\.js/);
+  assert.match(gradleFile, /generated\/engine-assets/);
+});
