@@ -1,5 +1,8 @@
 package kr.naesaju.personal
 
+import android.content.ContentValues
+import android.os.Environment
+import android.provider.MediaStore
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.test.assertIsDisplayed
@@ -187,18 +190,42 @@ class NativeScreenSmokeTest {
     private fun saveRootScreenshot(fileName: String) {
         val bitmap = composeRule.onRoot().captureToImage().asAndroidBitmap()
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val directory = context.filesDir
-        val file = File(directory, fileName)
-        FileOutputStream(file).use { stream ->
+
+        val internalFile = File(context.filesDir, fileName)
+        FileOutputStream(internalFile).use { stream ->
             assertTrue(bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, stream))
         }
-        assertTrue(file.exists() && file.length() > 0)
+        assertTrue(internalFile.exists() && internalFile.length() > 1024)
 
-        val uiAutomation = InstrumentationRegistry.getInstrumentation().uiAutomation
-        uiAutomation.executeShellCommand("mkdir -p /sdcard/Download/sajutaro-qa").use { }
-        uiAutomation.executeShellCommand(
-            "sh -c 'run-as kr.naesaju.personal cat files/$fileName > /sdcard/Download/sajutaro-qa/$fileName'"
-        ).use { }
+        val resolver = context.contentResolver
+        val collection = MediaStore.Downloads.EXTERNAL_CONTENT_URI
+        resolver.delete(
+            collection,
+            MediaStore.MediaColumns.DISPLAY_NAME + "=?",
+            arrayOf(fileName)
+        )
+
+        val values = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
+            put(
+                MediaStore.MediaColumns.RELATIVE_PATH,
+                Environment.DIRECTORY_DOWNLOADS + "/sajutaro-qa"
+            )
+            put(MediaStore.MediaColumns.IS_PENDING, 1)
+        }
+        val uri = resolver.insert(collection, values)
+        assertTrue(uri != null)
+
+        resolver.openOutputStream(uri!!).use { stream ->
+            assertTrue(stream != null)
+            assertTrue(bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, stream!!))
+        }
+
+        val ready = ContentValues().apply {
+            put(MediaStore.MediaColumns.IS_PENDING, 0)
+        }
+        assertTrue(resolver.update(uri, ready, null, null) >= 0)
     }
 
     private class FakeTarotGateway : SajuEngineGateway {
