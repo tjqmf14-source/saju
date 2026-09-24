@@ -3,32 +3,42 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
-const css=await readFile(new URL('../product-v17.css',import.meta.url),'utf8');
+const css=await readFile(new URL('../product-v3.css',import.meta.url),'utf8');
 const plain=await readFile(new URL('../src/plain-language-ui.js',import.meta.url),'utf8');
 
-test('product v17 is the only active presentation layer',()=>{
-  assert.match(html,/href="\/product-v17\.css"/);
-  assert.doesNotMatch(html,/href="\/site-v12\.css"/);
-  assert.match(html,/data-theme="product-v17"/);
+test('Product V3 overlay is the active theme',()=>{
+  assert.match(html,/href="\/product-v17\.css"[\s\S]*href="\/product-v3\.css"/);
+  assert.match(html,/data-theme="product-v3"/);
+  assert.match(css,/Naesaju Product UI v3/);
 });
 
-test('app-first UI uses progressive disclosure and mobile-first controls',()=>{
-  for(const token of ['--app-bg:#f5f1e8','--app-brand:#b54b3f','--app-pine:#34574c','.trust-strip','.mobile-bottom-nav','.full-report-shell','.tarot-fan-stage']){
-    assert.ok(css.includes(token),token);
+test('primary information architecture is reduced to top user tasks',()=>{
+  const topnav=html.match(/<nav class="topnav"[\s\S]*?<\/nav>/)?.[0]||'';
+  assert.equal((topnav.match(/<a /g)||[]).length,4);
+  for(const label of ['사주 리포트','오늘','올해','타로']) assert.ok(topnav.includes(label),label);
+  assert.doesNotMatch(topnav,/궁합|자세한리포트/);
+
+  const feature=html.match(/<nav class="feature-orbit-nav"[\s\S]*?<\/nav>/)?.[0]||'';
+  assert.equal((feature.match(/<a /g)||[]).length,4);
+
+  const mobile=html.match(/<nav class="mobile-bottom-nav"[\s\S]*?<\/nav>/)?.[0]||'';
+  assert.equal((mobile.match(/<a /g)||[]).length,5);
+  assert.match(mobile,/href="#year"[\s\S]*>흐름</);
+  assert.doesNotMatch(mobile,/href="#compatibility"/);
+});
+
+test('V3 typography and controls raise the mobile readability floor',()=>{
+  assert.match(css,/body\[data-theme="product-v3"\]\{[\s\S]*font-size:17px/);
+  assert.match(css,/@media\(max-width:760px\)\{[\s\S]*body\[data-theme="product-v3"\]\{[\s\S]*font-size:18px/);
+  assert.match(css,/body\[data-theme="product-v3"\] small\{font-size:15px!important/);
+  assert.match(css,/@media\(max-width:760px\)[\s\S]*small\{font-size:16px!important/);
+  assert.match(css,/min-height:50px/);
+  assert.match(css,/min-height:54px/);
+});
+
+test('secondary capabilities remain available without crowding primary navigation',()=>{
+  for(const id of ['compatibility','compatibilityForm','tarot','full-report','annualDetailReport','luck']) {
+    assert.match(html,new RegExp(`id="${id}"`),id);
   }
-  assert.ok(html.indexOf('hero-primary') < html.indexOf('trust-strip'),'hero should lead before trust details');
-  assert.match(css,/@media\(max-width:760px\)\{[\s\S]*?\.feature-orbit-nav\{display:none!important\}/);
-  assert.match(css,/\.visual-keyword-showcase\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
-  assert.match(css,/#expert\{display:none!important\}/);
-  assert.match(css,/\.chapter-evidence\{[\s\S]*?display:block!important/);
-  assert.match(css,/\.chapter-full-analysis\{[\s\S]*?display:block!important/);
-  assert.match(css,/@media\(max-width:720px\)/);
-});
-
-test('reader-facing category set is simple and life-oriented',()=>{
-  for(const label of ['성격','강점','일','돈','관계','회복']) assert.ok(html.includes('>'+label+'<'),label);
-  for(const term of ['원국','십신','격국','용신','희신']) assert.doesNotMatch(html,new RegExp(term));
-  assert.match(plain,/FRIENDLY_TITLES/);
-  assert.match(plain,/strengths:'강점'/);
-  assert.doesNotThrow(()=>new Function(plain));
+  assert.match(plain,/compatibilityNote/);
 });
