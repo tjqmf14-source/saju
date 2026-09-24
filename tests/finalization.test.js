@@ -25,6 +25,20 @@ test('desktop and mobile base type remain readable', () => {
   assert.match(css, /\.form-grid input,\.form-grid select,\.profile-manager select,\.profile-manager button,\.precision-grid select\{font-size:16px\}/);
 });
 
+
+test('10pt floor, uncropped tarot art and evidence-first report rules are enforced', () => {
+  const px=[...css.matchAll(/font-size\\s*:\\s*([0-9]+(?:\\.[0-9]+)?)px/g)].map((match)=>Number(match[1]));
+  const shorthand=[...css.matchAll(/font\\s*:\\s*[^;{}]*?([0-9]+(?:\\.[0-9]+)?)px[^;{}]*/g)].map((match)=>Number(match[1]));
+  assert.ok(Math.min(...px,...shorthand) >= (10*96/72));
+  assert.match(css,/\\.tarot-preview-card img\\{[^}]*object-fit:contain/);
+  assert.match(css,/\\.tarot-card-inner\\{[^}]*aspect-ratio:7\\/12/);
+  assert.match(css,/\\.tarot-card-image\\{object-fit:contain;object-position:center\\}/);
+  assert.match(css,/\\.chapter-takeaway\\{display:none!important\\}/);
+  assert.match(css,/\\.chapter-evidence\\{[\\s\\S]*?display:block!important/);
+  assert.match(css,/\\.chapter-full-analysis\\{[\\s\\S]*?display:block!important/);
+  assert.match(css,/\\.month-card small\\{[\\s\\S]*?display:block!important/);
+});
+
 test('landing page follows the Product V17 editorial section order', () => {
   const order = ['id="input"','visual-keyword-showcase','quote-band','id="today"','id="year"','id="compatibility"','id="tarot"','id="full-report"','closing-cta'];
   let cursor = -1;

@@ -549,7 +549,7 @@ function renderDetailedReport(report){
   $('detailedReport').innerHTML=ordered.map((key,index)=>{
     const item=report[key];
     const open=index===0?' open':'';
-    const labels=['한 줄 요약','왜 그런가요?','생활에서는'];
+    const labels=['핵심','근거','생활 조언'];
     const quick=(item.quick?.length?item.quick:item.paragraphs.map(firstSentence).slice(0,3));
     return `<article id="report-${key}" class="detail-chapter detail-chapter-${String(index+1).padStart(2,'0')}" data-report-key="${key}">
       <details class="detail-disclosure"${open}>

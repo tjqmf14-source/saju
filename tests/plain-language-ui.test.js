@@ -40,4 +40,6 @@ test('reader-facing advice is rewritten by Product V17 life categories', () => {
   assert.match(plain, /rewriteFriendlyAdvice/);
   assert.match(plain, /혼자 빠르게 결론내리기보다/);
   assert.match(plain, /아이디어 수보다 끝낸 결과물 수/);
+  assert.match(plain, /month-card-focus mark/);
+  assert.match(plain, /\['핵심', '근거', '생활 조언'\]/);
 });
