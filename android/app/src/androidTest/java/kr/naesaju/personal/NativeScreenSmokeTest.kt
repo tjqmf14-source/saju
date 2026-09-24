@@ -19,6 +19,7 @@ import kr.naesaju.personal.domain.MonthReading
 import kr.naesaju.personal.domain.ReadingSnapshot
 import kr.naesaju.personal.domain.TodayItem
 import kr.naesaju.personal.domain.TodayReading
+import kr.naesaju.personal.feature.compatibility.CompatibilityScreen
 import kr.naesaju.personal.feature.fortune.FortuneScreen
 import kr.naesaju.personal.feature.home.HomeScreen
 import kr.naesaju.personal.feature.onboarding.ProfileScreen
@@ -131,6 +132,23 @@ class NativeScreenSmokeTest {
         composeRule.onNodeWithText("오늘").assertIsDisplayed()
         composeRule.onNodeWithText("올해").assertIsDisplayed()
         composeRule.onNodeWithText("1~12월").assertIsDisplayed()
+    }
+
+    @Test
+    fun compatibilityScreenExplainsRelationshipWithoutScore() {
+        composeRule.setContent {
+            SajutaroTheme {
+                CompatibilityScreen(
+                    profile = profile,
+                    engine = FakeTarotGateway(),
+                    onBack = {}
+                )
+            }
+        }
+
+        composeRule.onNodeWithText("점수보다
+서로 다른 방식을 봅니다.").assertIsDisplayed()
+        composeRule.onNodeWithText("관계 흐름 보기").assertIsDisplayed()
     }
 
     @Test
