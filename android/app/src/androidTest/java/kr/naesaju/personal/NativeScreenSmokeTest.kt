@@ -91,6 +91,7 @@ class NativeScreenSmokeTest {
                     onOpenSaju = {},
                     onOpenFortune = {},
                     onOpenTarot = {},
+                    onOpenCompatibility = {},
                     onEditProfile = {}
                 )
             }
