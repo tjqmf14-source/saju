@@ -187,8 +187,7 @@ class NativeScreenSmokeTest {
     private fun saveRootScreenshot(fileName: String) {
         val bitmap = composeRule.onRoot().captureToImage().asAndroidBitmap()
         val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val directory = context.getExternalFilesDir(null)
-        assertTrue(directory != null)
+        val directory = context.filesDir
         val file = File(directory, fileName)
         FileOutputStream(file).use { stream ->
             assertTrue(bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, stream))
