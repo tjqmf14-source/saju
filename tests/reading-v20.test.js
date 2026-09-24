@@ -25,6 +25,18 @@ test('core reading is concise, evidence backed and limited to five useful catego
   }
 });
 
+test('different day masters produce different core signatures rather than one generic template',()=>{
+  const nextDay=calculateSaju({
+    calendar:'solar',year:1990,month:5,day:16,hour:9,minute:20,
+    gender:'male',isLeap:false,precision:true,location:'korea',dayBoundary:'midnight'
+  });
+  const first=buildCoreReading(chart,{timeKnown:true});
+  const second=buildCoreReading(nextDay,{timeKnown:true});
+  assert.notEqual(chart.dayMaster,nextDay.dayMaster);
+  assert.notEqual(first.signature.title,second.signature.title);
+  assert.notEqual(first.categories[0].headline,second.categories[0].headline);
+});
+
 test('unknown birth time is explicitly downgraded rather than silently treated as certain',()=>{
   const result=buildCoreReading(chart,{timeKnown:false});
   assert.equal(result.structure.timeKnown,false);
