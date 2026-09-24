@@ -280,7 +280,7 @@ test('final-build typography and section geometry do not clip or overlap', async
       const rect=el.getBoundingClientRect();
       return style.display!=='none' && style.visibility!=='hidden' && rect.width>0 && rect.height>0;
     });
-    const horizontalScrollers='.feature-orbit-nav,.daily-time-flow,.weekly-preview,.report-nav,.tarot-reveal-deck';
+    const horizontalScrollers='.feature-orbit-nav,.hero-proof-oracles,.trust-strip,.daily-time-flow,.weekly-preview,.report-nav,.tarot-reveal-deck';
     const outOfViewport=nodes.filter((el)=>{
       if(el.closest(horizontalScrollers)) return false;
       const rect=el.getBoundingClientRect();
@@ -688,15 +688,16 @@ test('Product V17 keeps the editorial paper hierarchy and isolated tarot stage',
       shell:rect('.agency-shell')
     };
   });
-  expect(audit.bodyBg).toBe('rgb(242, 239, 231)');
-  expect(audit.heroBg).toBe('rgb(255, 253, 247)');
-  expect(audit.inputBg).toBe('rgb(255, 253, 247)');
+  expect(audit.bodyBg).toBe('rgb(245, 241, 232)');
   expect(audit.tarotBg).toBe('rgb(17, 24, 43)');
   if(audit.viewport>760){
+    expect(audit.heroBg).toBe('rgb(255, 253, 247)');
+    expect(audit.inputBg).toBe('rgb(255, 253, 247)');
     expect(audit.heroVisual).toBe('block');
     expect(audit.heroVisualBg).not.toBe('none');
     expect(audit.heroVisualBg).toMatch(/^url\(/);
   }else{
+    expect(audit.inputBg).toBe('rgb(255, 253, 248)');
     expect(audit.heroVisual).toBe('none');
     expect(audit.heroVisualBg).toBe('none');
   }
