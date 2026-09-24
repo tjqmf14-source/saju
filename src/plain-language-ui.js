@@ -122,40 +122,28 @@
   }
 
   function rewriteFriendlyAdvice() {
+    // V18: 계산된 해설 본문은 절대 공통 문구로 덮어쓰지 않는다.
+    // 이 레이어는 제목과 용어만 쉽게 바꾸고, 핵심/근거/조언의 내용은
+    // interpretation.js가 만든 개인별 계산 결과를 그대로 보존한다.
     for (const key of ['temperament','strengths','career','money','relationships','recovery']) {
       const chapter=root.querySelector(`#detailedReport [data-report-key="${key}"]`);
-      const lines=guideFor(key);
-      if(!chapter || !lines.length) continue;
+      if(!chapter) continue;
       const heading=chapter.querySelector('summary h3');
-      const summary=chapter.querySelector('summary p');
-      const takeaway=chapter.querySelector('.chapter-takeaway mark');
       if(heading) heading.textContent=FRIENDLY_TITLES[key];
-      if(summary) summary.textContent=lines[0];
-      if(takeaway) takeaway.textContent=lines[0];
-      const labels=['핵심','조금 더 쉽게','생활 조언'];
-      chapter.querySelectorAll('.chapter-quick-list li').forEach((item,index)=>{
-        const label=item.querySelector('strong');
-        const body=item.querySelector('span');
-        if(label) label.textContent=labels[index] || '참고';
-        if(body) body.textContent=lines[index] || lines.at(-1);
-      });
     }
 
     const panel=root.querySelector('#keywordInsight');
     const key=panel?.dataset?.reportKey;
     if(panel && FRIENDLY_TITLES[key]){
-      const lines=guideFor(key);
       const heading=panel.querySelector('h3');
-      const body=panel.querySelector('p');
       const link=panel.querySelector('a');
       if(heading) heading.textContent=FRIENDLY_TITLES[key];
-      if(body) body.textContent=[lines[0],lines[2]].filter(Boolean).join(' ');
       if(link){
         if(key==='balance') link.hidden=true;
         else{
           link.hidden=false;
           link.href='#report-'+key;
-          link.innerHTML='쉽게 이어 읽기 <span aria-hidden="true">→</span>';
+          link.innerHTML='근거와 맥락 더 보기 <span aria-hidden="true">→</span>';
         }
       }
     }
@@ -212,14 +200,14 @@
   }
 
   function simplifyDetailedReport() {
-    const labels = ['핵심', '쉽게 말하면', '생활 조언'];
+    const labels = ['핵심', '계산 근거', '지금 할 일'];
     root.querySelectorAll('#detailedReport .chapter-quick-list').forEach((list) => {
       list.querySelectorAll('li strong').forEach((label, index) => {
         label.textContent = labels[index] || '참고';
       });
     });
     root.querySelectorAll('#keywordInsight a').forEach((link) => {
-      link.innerHTML = '쉽게 이어 읽기 <span aria-hidden="true">→</span>';
+      link.innerHTML = '근거와 맥락 더 보기 <span aria-hidden="true">→</span>';
     });
   }
 
