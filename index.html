@@ -4,15 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="description" content="출생정보를 바탕으로 한 쉬운 사주 해설, Rider–Waite–Smith 78장 타로를 제공하는 내사주">
-  <meta name="theme-color" content="#F5F1E8">
+  <meta name="theme-color" content="#F5F6F3">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="application-name" content="내사주">
   <meta name="format-detection" content="telephone=no">
   <link rel="manifest" href="/manifest.webmanifest">
   <title>내사주 · Saju & Tarot</title>
   <link rel="stylesheet" href="/product-v17.css">
+  <link rel="stylesheet" href="/product-v3.css">
 </head>
-<body data-theme="product-v17">
+<body data-theme="product-v3">
   <svg id="oracleIconSprite" class="svg-sprite" aria-hidden="true">
     <symbol id="icon-calendar" viewBox="0 0 24 24"><path d="M5 3v3M19 3v3M4 8h16M5 5h14a1 1 0 0 1 1 1v13H4V6a1 1 0 0 1 1-1Z"/><path d="M8 12h3v3H8zM14 12h2"/></symbol>
     <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></symbol>
@@ -33,12 +34,10 @@
       <span class="brand-word"><strong>내사주</strong><small>SAJU · TAROT</small></span>
     </a>
     <nav class="topnav" aria-label="주요 메뉴">
-      <a href="#input">내 리포트</a>
-      <a href="#today">오늘의운세</a>
-      <a href="#year">올해의흐름</a>
-      <a href="#compatibility">궁합</a>
+      <a href="#input">사주 리포트</a>
+      <a href="#today">오늘</a>
+      <a href="#year">올해</a>
       <a href="#tarot">타로</a>
-      <a href="#full-report">자세한리포트</a>
     </nav>
     <div class="topbar-actions">
       <span class="privacy-chip">기기 안에서 계산</span>
@@ -143,12 +142,10 @@
     </section>
 
     <nav class="feature-orbit-nav agency-shell" aria-label="주요 서비스">
-      <a href="#results"><svg class="ui-icon"><use href="#icon-orbit"/></svg><span><b>내 리포트</b><small>나를 깊이 이해하는 시간</small></span></a>
-      <a href="#today"><svg class="ui-icon"><use href="#icon-sun"/></svg><span><b>오늘의운세</b><small>오늘의 흐름을 확인하세요</small></span></a>
-      <a href="#year"><svg class="ui-icon"><use href="#icon-calendar"/></svg><span><b>올해의흐름</b><small>한 해의 큰 그림을 읽다</small></span></a>
-      <a href="#compatibility"><svg class="ui-icon"><use href="#icon-heart"/></svg><span><b>궁합</b><small>두 사람의 관계 흐름</small></span></a>
-      <a href="#tarot"><svg class="ui-icon"><use href="#icon-tarot"/></svg><span><b>타로리딩</b><small>지금, 필요한 메시지</small></span></a>
-      <a href="#full-report"><svg class="ui-icon"><use href="#icon-chart"/></svg><span><b>자세한 리포트</b><small>필요한 내용만 더 보기</small></span></a>
+      <a href="#results"><svg class="ui-icon"><use href="#icon-orbit"/></svg><span><b>내 리포트</b><small>핵심 성향과 생활 해설</small></span></a>
+      <a href="#today"><svg class="ui-icon"><use href="#icon-sun"/></svg><span><b>오늘</b><small>오늘의 흐름과 행동 포인트</small></span></a>
+      <a href="#year"><svg class="ui-icon"><use href="#icon-calendar"/></svg><span><b>올해</b><small>월별로 달라지는 흐름</small></span></a>
+      <a href="#tarot"><svg class="ui-icon"><use href="#icon-tarot"/></svg><span><b>타로</b><small>질문에 맞춰 카드 보기</small></span></a>
     </nav>
 
     <section id="results" hidden>
@@ -156,8 +153,8 @@
         <div class="visual-keyword-intro">
           <span class="section-no">02</span>
           <p class="section-kicker">리포트 미리보기</p>
-          <h2>한눈에 보는<br>나의 6가지 모습</h2>
-          <p>긴 설명보다 먼저, 지금 나에게 중요한 특징부터 확인하세요.</p>
+          <h2>먼저 보는<br>나의 5가지 핵심</h2>
+          <p>성격 설명을 늘어놓기보다 실제 생활에서 자주 쓰는 다섯 가지 주제로 먼저 정리합니다.</p>
           <a href="#full-report">더 자세히 보기 <span aria-hidden="true">→</span></a>
           <div class="report-actions">
             <button id="shareReport" type="button">결과 공유</button>
@@ -165,12 +162,11 @@
             <span id="shareStatus" role="status" aria-live="polite"></span>
           </div>
         </div>
-        <button class="visual-keyword-card is-active" type="button" data-report-key="temperament" aria-controls="keywordInsight" aria-pressed="true"><span class="keyword-card-top"><svg class="ui-icon" aria-hidden="true"><use href="#icon-orbit"/></svg><span>01</span></span><strong>성격</strong><small>내게 두드러진 기질은?</small><i aria-hidden="true">해설 보기 →</i></button>
-        <button class="visual-keyword-card" type="button" data-report-key="career" aria-controls="keywordInsight" aria-pressed="false"><span class="keyword-card-top"><svg class="ui-icon" aria-hidden="true"><use href="#icon-briefcase"/></svg><span>02</span></span><strong>일</strong><small>어떤 일에서 힘을 낼까?</small><i aria-hidden="true">해설 보기 →</i></button>
+        <button class="visual-keyword-card is-active" type="button" data-report-key="temperament" aria-controls="keywordInsight" aria-pressed="true"><span class="keyword-card-top"><svg class="ui-icon" aria-hidden="true"><use href="#icon-orbit"/></svg><span>01</span></span><strong>나</strong><small>나는 어떤 방식으로 움직일까?</small><i aria-hidden="true">해설 보기 →</i></button>
+        <button class="visual-keyword-card" type="button" data-report-key="career" aria-controls="keywordInsight" aria-pressed="false"><span class="keyword-card-top"><svg class="ui-icon" aria-hidden="true"><use href="#icon-briefcase"/></svg><span>02</span></span><strong>일</strong><small>어떤 환경에서 힘을 낼까?</small><i aria-hidden="true">해설 보기 →</i></button>
         <button class="visual-keyword-card" type="button" data-report-key="money" aria-controls="keywordInsight" aria-pressed="false"><span class="keyword-card-top"><svg class="ui-icon" aria-hidden="true"><use href="#icon-coin"/></svg><span>03</span></span><strong>돈</strong><small>돈을 다루는 습관은?</small><i aria-hidden="true">해설 보기 →</i></button>
-        <button class="visual-keyword-card" type="button" data-report-key="relationships" aria-controls="keywordInsight" aria-pressed="false"><span class="keyword-card-top"><svg class="ui-icon" aria-hidden="true"><use href="#icon-heart"/></svg><span>04</span></span><strong>관계</strong><small>사람과 맺는 방식은?</small><i aria-hidden="true">해설 보기 →</i></button>
-        <button class="visual-keyword-card" type="button" data-report-key="recovery" aria-controls="keywordInsight" aria-pressed="false"><span class="keyword-card-top"><svg class="ui-icon" aria-hidden="true"><use href="#icon-health"/></svg><span>05</span></span><strong>회복</strong><small>어떻게 쉬어야 할까?</small><i aria-hidden="true">해설 보기 →</i></button>
-        <button class="visual-keyword-card" type="button" data-report-key="strengths" aria-controls="keywordInsight" aria-pressed="false"><span class="keyword-card-top"><svg class="ui-icon" aria-hidden="true"><use href="#icon-chart"/></svg><span>06</span></span><strong>강점</strong><small>내가 잘 쓰는 힘은?</small><i aria-hidden="true">해설 보기 →</i></button>
+        <button class="visual-keyword-card" type="button" data-report-key="relationships" aria-controls="keywordInsight" aria-pressed="false"><span class="keyword-card-top"><svg class="ui-icon" aria-hidden="true"><use href="#icon-heart"/></svg><span>04</span></span><strong>관계</strong><small>가까운 사람과 맺는 방식은?</small><i aria-hidden="true">해설 보기 →</i></button>
+        <button class="visual-keyword-card" type="button" data-report-key="recovery" aria-controls="keywordInsight" aria-pressed="false"><span class="keyword-card-top"><svg class="ui-icon" aria-hidden="true"><use href="#icon-health"/></svg><span>05</span></span><strong>회복</strong><small>지칠 때 무엇부터 조절할까?</small><i aria-hidden="true">해설 보기 →</i></button>
         <article id="keywordInsight" class="keyword-insight" role="region" aria-label="선택한 키워드 해설" aria-live="polite" aria-atomic="true"></article>
       </section>
 
@@ -288,10 +284,9 @@
             <div id="accuracyBasis" class="accuracy-basis"></div>
           </section>
           <nav class="report-nav" aria-label="자세한 리포트 목차">
-            <a href="#detailedReport">나의 특징</a>
+            <a href="#detailedReport">핵심 해설</a>
             <a href="#annualDetailReport">올해 흐름</a>
             <a href="#luck">긴 흐름</a>
-            <a href="#expert">계산 정보</a>
           </nav>
           <section id="detailedReport" class="detailed-report"></section>
           <section id="annualDetailReport" class="deep-report-block">
@@ -319,7 +314,7 @@
     <a href="#home"><svg class="ui-icon" aria-hidden="true"><use href="#icon-orbit"/></svg><span>홈</span></a>
     <a href="#input"><svg class="ui-icon" aria-hidden="true"><use href="#icon-calendar"/></svg><span>사주</span></a>
     <a href="#today"><svg class="ui-icon" aria-hidden="true"><use href="#icon-sun"/></svg><span>오늘</span></a>
-    <a href="#compatibility"><svg class="ui-icon" aria-hidden="true"><use href="#icon-heart"/></svg><span>궁합</span></a>
+    <a href="#year"><svg class="ui-icon" aria-hidden="true"><use href="#icon-chart"/></svg><span>흐름</span></a>
     <a href="#tarot"><svg class="ui-icon" aria-hidden="true"><use href="#icon-tarot"/></svg><span>타로</span></a>
   </nav>
 
