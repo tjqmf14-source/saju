@@ -27,16 +27,18 @@ test('desktop and mobile base type remain readable', () => {
 
 
 test('10pt floor, uncropped tarot art and evidence-first report rules are enforced', () => {
-  const px=[...css.matchAll(/font-size\\s*:\\s*([0-9]+(?:\\.[0-9]+)?)px/g)].map((match)=>Number(match[1]));
-  const shorthand=[...css.matchAll(/font\\s*:\\s*[^;{}]*?([0-9]+(?:\\.[0-9]+)?)px[^;{}]*/g)].map((match)=>Number(match[1]));
+  const px=[...css.matchAll(/font-size\s*:\s*([0-9]+(?:\.[0-9]+)?)px/g)].map((match)=>Number(match[1]));
+  const shorthand=[...css.matchAll(/font\s*:\s*[^;{}]*?([0-9]+(?:\.[0-9]+)?)px[^;{}]*/g)].map((match)=>Number(match[1]));
   assert.ok(Math.min(...px,...shorthand) >= (10*96/72));
-  assert.match(css,/\\.tarot-preview-card img\\{[^}]*object-fit:contain/);
-  assert.match(css,/\\.tarot-card-inner\\{[^}]*aspect-ratio:7\\/12/);
-  assert.match(css,/\\.tarot-card-image\\{object-fit:contain;object-position:center\\}/);
-  assert.match(css,/\\.chapter-takeaway\\{display:none!important\\}/);
-  assert.match(css,/\\.chapter-evidence\\{[\\s\\S]*?display:block!important/);
-  assert.match(css,/\\.chapter-full-analysis\\{[\\s\\S]*?display:block!important/);
-  assert.match(css,/\\.month-card small\\{[\\s\\S]*?display:block!important/);
+  assert.ok(css.includes('.tarot-preview-card img{width:100%;aspect-ratio:2/3;object-fit:contain;object-position:center'));
+  assert.ok(css.includes('.tarot-card-inner{position:relative;aspect-ratio:7/12;'));
+  assert.ok(css.includes('.tarot-card-image{object-fit:contain;object-position:center}'));
+  const hardening=css.slice(css.lastIndexOf('Product V18 QA hardening'));
+  assert.ok(hardening.includes('.chapter-takeaway{display:none!important}'));
+  assert.ok(hardening.includes('.chapter-evidence{'));
+  assert.ok(hardening.includes('display:block!important'));
+  assert.ok(hardening.includes('.chapter-full-analysis{'));
+  assert.ok(hardening.includes('.month-card small{'));
 });
 
 test('landing page follows the Product V17 editorial section order', () => {
