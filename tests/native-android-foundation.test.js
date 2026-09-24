@@ -101,11 +101,12 @@ test('calculation runtime is local-only and never becomes the visible app UI', a
 
 
 test('native product tabs are implemented screens rather than placeholders', async () => {
-  const [profile, saju, fortune, tarot, app, gradleFile] = await Promise.all([
+  const [profile, saju, fortune, tarot, compatibility, app, gradleFile] = await Promise.all([
     safeRead('android/app/src/main/java/kr/naesaju/personal/feature/onboarding/ProfileScreen.kt'),
     safeRead('android/app/src/main/java/kr/naesaju/personal/feature/saju/SajuScreen.kt'),
     safeRead('android/app/src/main/java/kr/naesaju/personal/feature/fortune/FortuneScreen.kt'),
     safeRead('android/app/src/main/java/kr/naesaju/personal/feature/tarot/TarotScreen.kt'),
+    safeRead('android/app/src/main/java/kr/naesaju/personal/feature/compatibility/CompatibilityScreen.kt'),
     safeRead('android/app/src/main/java/kr/naesaju/personal/app/SajutaroApp.kt'),
     safeRead('android/app/build.gradle')
   ]);
@@ -117,9 +118,12 @@ test('native product tabs are implemented screens rather than placeholders', asy
   assert.match(fortune, /1~12월/);
   assert.match(tarot, /오늘의 카드 뽑기/);
   assert.match(tarot, /ContentScale\.Fit/);
+  assert.match(compatibility, /점수보다/);
+  assert.match(compatibility, /관계 흐름 보기/);
   assert.match(app, /SajuScreen/);
   assert.match(app, /FortuneScreen/);
   assert.match(app, /TarotScreen/);
+  assert.match(app, /CompatibilityScreen/);
   assert.doesNotMatch(app, /PlaceholderDestination/);
   assert.match(gradleFile, /datastore-preferences/);
   assert.match(gradleFile, /\.\.\/\.\.\/public/);
