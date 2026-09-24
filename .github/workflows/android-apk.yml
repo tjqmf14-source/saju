@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - 'gpt/**'
       - gpt/mobile-app-v1
       - gpt/deep-interpretation-mobile-v3
       - gpt/deep-reading-jumsin
