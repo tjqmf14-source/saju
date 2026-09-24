@@ -3,43 +3,40 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-const css = await readFile(new URL('../product-v17.css', import.meta.url), 'utf8');
+const css = await readFile(new URL('../product-v3.css', import.meta.url), 'utf8');
 const plain = await readFile(new URL('../src/plain-language-ui.js', import.meta.url), 'utf8');
+const ui = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
 
-test('Product V17 app-first interface and plain-language layer are active', () => {
-  assert.match(html, /data-theme="product-v17"/);
-  assert.match(html, /theme-color" content="#F5F1E8"/);
-  assert.match(html, /href="\/product-v17\.css"/);
-  assert.match(html, /src="\/src\/premium-ui\.js"[\s\S]*src="\/src\/plain-language-ui\.js"/);
-  assert.match(css, /Product V17 — mobile app-first remodeling/);
-  assert.match(css, /--color-surface:#fffdf7/);
-  assert.match(css, /--color-brand:#b54b3f/);
-  assert.match(css, /#expert\{display:none!important\}/);
+test('Product V3 presentation layer is active on top of the stable V17 base', () => {
+  assert.match(html, /data-theme="product-v3"/);
+  assert.match(html, /href="\/product-v17\.css"[\s\S]*href="\/product-v3\.css"/);
+  assert.match(html, /theme-color" content="#F5F6F3"/);
+  assert.match(css, /Naesaju Product UI v3/);
+  assert.match(css, /--v3-brand:#2f5d4a/);
 });
 
-test('static user-facing markup avoids specialist saju terms', () => {
-  assert.doesNotMatch(html, /(원국|십신|오행|일간|절입|대운|세운|월운|자시 관법|진태양시)/);
-});
-
-test('plain-language module covers common specialist terms and duplicate copy', () => {
-  for (const term of ['신강','신약','용신','격국','천간','지지','비겁','식상','재성','관성','인성']) {
-    assert.ok(plain.includes(term), term);
-  }
+test('V3 plain-language layer does not replace personalized calculated advice', () => {
+  assert.doesNotMatch(plain, /ROLE_GUIDE/);
+  assert.doesNotMatch(plain, /rewriteFriendlyAdvice/);
+  assert.doesNotMatch(plain, /chapter-quick-list li/);
+  assert.match(plain, /Calculated interpretation copy is the source of truth/);
   assert.match(plain, /MutationObserver/);
-  assert.match(plain, /dataset\.plainDuplicate/);
+  assert.match(plain, /markExactDuplicateParagraphs/);
   assert.doesNotThrow(() => new Function(plain));
 });
 
-test('reader-facing advice is rewritten by Product V17 life categories', () => {
-  assert.match(plain, /ROLE_GUIDE/);
-  for (const key of ['temperament','strengths','career','money','relationships','recovery']) {
-    assert.ok(plain.includes(key), key);
-  }
-  assert.match(plain, /FRIENDLY_TITLES/);
-  assert.match(plain, /strengths:'강점'/);
-  assert.match(plain, /rewriteFriendlyAdvice/);
-  assert.match(plain, /혼자 빠르게 결론내리기보다/);
-  assert.match(plain, /아이디어 수보다 끝낸 결과물 수/);
-  assert.match(plain, /month-card-focus mark/);
-  assert.match(plain, /\['핵심', '근거', '생활 조언'\]/);
+test('V3 reader-facing summary uses five primary life categories', () => {
+  const keywordCards=[...html.matchAll(/class="visual-keyword-card[^"]*"[^>]+data-report-key="([^"]+)"/g)].map((match)=>match[1]);
+  assert.deepEqual(keywordCards,['temperament','career','money','relationships','recovery']);
+  for (const label of ['>나<','>일<','>돈<','>관계<','>회복<']) assert.ok(html.includes(label), label);
+  assert.doesNotMatch(html, /data-report-key="strengths"[^>]*class="visual-keyword-card/);
+});
+
+test('deep report keeps only seven non-duplicated chapters in the primary reading flow', () => {
+  assert.match(ui, /const ordered=\['overview','temperament','strengths','career','money','relationships','recovery'\]/);
+  assert.match(ui, /\['한 줄 요약','왜 이렇게 보나요','생활에서 써먹기'\]/);
+  assert.match(ui, /<details class="chapter-evidence"><summary>해석 근거 보기<\/summary>/);
+  assert.match(ui, /<details class="chapter-full-analysis"><summary>깊이 읽기<\/summary>/);
+  assert.doesNotMatch(ui, /const ordered=\[[^\]]*'innerOuter'/);
+  assert.doesNotMatch(ui, /const ordered=\[[^\]]*'technical'/);
 });
