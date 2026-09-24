@@ -3,15 +3,15 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-const css = await readFile(new URL('../product-v16.css', import.meta.url), 'utf8');
+const css = await readFile(new URL('../product-v17.css', import.meta.url), 'utf8');
 const ui = await readFile(new URL('../src/premium-ui.js', import.meta.url), 'utf8');
 
-test('Product V16 is the only active frontend stylesheet and uses the editorial design system', () => {
-  assert.ok(html.includes('product-v16.css'));
+test('Product V17 is the only active frontend stylesheet and uses the mobile app-first design system', () => {
+  assert.ok(html.includes('product-v17.css'));
   assert.ok(!html.includes('site-v12.css'));
   assert.equal((html.match(/<link rel="stylesheet"/g) || []).length, 1);
-  assert.match(html, /data-theme="product-v16"/);
-  assert.match(css, /Product V16 — Korean Editorial Mysticism/);
+  assert.match(html, /data-theme="product-v17"/);
+  assert.match(css, /Product V17 — mobile app-first remodeling/);
   assert.ok(css.includes('--color-bg:#f2efe7'));
   assert.ok(css.includes('--color-surface:#fffdf7'));
   assert.ok(css.includes('--color-brand:#b54b3f'));
@@ -25,12 +25,12 @@ test('desktop and mobile base type remain readable', () => {
   assert.match(css, /\.form-grid input,\.form-grid select,\.profile-manager select,\.profile-manager button,\.precision-grid select\{font-size:16px\}/);
 });
 
-test('landing page follows the Product V16 editorial section order', () => {
+test('landing page follows the Product V17 editorial section order', () => {
   const order = ['id="input"','visual-keyword-showcase','quote-band','id="today"','id="year"','id="compatibility"','id="tarot"','id="full-report"','closing-cta'];
   let cursor = -1;
   for (const token of order) {
     const next = html.indexOf(token);
-    assert.ok(next > cursor, token + ' should appear after the previous Product V16 section');
+    assert.ok(next > cursor, token + ' should appear after the previous Product V17 section');
     cursor = next;
   }
   assert.doesNotMatch(html,/id=["'](?:standards|faq)["']/);
