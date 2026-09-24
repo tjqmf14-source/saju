@@ -7,9 +7,11 @@ import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToIndex
 import androidx.test.platform.app.InstrumentationRegistry
 import java.io.File
 import java.io.FileOutputStream
@@ -80,7 +82,8 @@ class NativeScreenSmokeTest {
         composeRule.onNodeWithText("처음 한 번만\n나를 알려주세요.").assertIsDisplayed()
         composeRule.onNodeWithText("생년월일").assertIsDisplayed()
         composeRule.onNodeWithText("출생시간을 알고 있어요").assertIsDisplayed()
-        composeRule.onNodeWithText("내 사주 시작하기").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("profile-list").performScrollToIndex(6)
+        composeRule.onNodeWithText("내 사주 시작하기").assertIsDisplayed()
         saveRootScreenshot("qa-profile.png")
     }
 
@@ -103,7 +106,8 @@ class NativeScreenSmokeTest {
 
         composeRule.onNodeWithText("오늘의 한마디").assertIsDisplayed()
         composeRule.onNodeWithText("오늘의 흐름").assertIsDisplayed()
-        composeRule.onNodeWithText("지금 필요한 행동").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("home-list").performScrollToIndex(5)
+        composeRule.onNodeWithText("지금 필요한 행동").assertIsDisplayed()
         saveRootScreenshot("qa-home.png")
     }
 
@@ -155,7 +159,8 @@ class NativeScreenSmokeTest {
         }
 
         composeRule.onNodeWithText("점수보다\n서로 다른 방식을 봅니다.").assertIsDisplayed()
-        composeRule.onNodeWithText("관계 흐름 보기").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithTag("compatibility-list").performScrollToIndex(5)
+        composeRule.onNodeWithText("관계 흐름 보기").assertIsDisplayed()
         saveRootScreenshot("qa-compatibility.png")
     }
 
