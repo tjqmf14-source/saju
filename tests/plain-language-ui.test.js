@@ -8,7 +8,7 @@ const plain = await readFile(new URL('../src/plain-language-ui.js', import.meta.
 
 test('Product V17 app-first interface and plain-language layer are active', () => {
   assert.match(html, /data-theme="product-v17"/);
-  assert.match(html, /theme-color" content="#F2EFE7"/);
+  assert.match(html, /theme-color" content="#F5F1E8"/);
   assert.match(html, /href="\/product-v17\.css"/);
   assert.match(html, /src="\/src\/premium-ui\.js"[\s\S]*src="\/src\/plain-language-ui\.js"/);
   assert.match(css, /Product V17 — mobile app-first remodeling/);
