@@ -22,6 +22,18 @@ function strongest(object){ return sorted(object)[0]?.[0]; }
 function weakest(object){ return sorted(object).at(-1)?.[0]; }
 function relationNames(chart){ return chart.relations?.length ? [...new Set(chart.relations.map((r)=>r.type))].join('·') : '두드러진 충돌 신호 없음'; }
 function section(title, lead, paragraphs){ return {title,lead,paragraphs}; }
+function hasFinalConsonant(text=''){
+  const syllable=[...String(text)].reverse().find((character)=>/[가-힣]/.test(character));
+  if(!syllable) return false;
+  return (syllable.charCodeAt(0)-0xAC00)%28!==0;
+}
+function withParticle(text, consonantParticle, vowelParticle){
+  const value=String(text||'').trim();
+  return value+(hasFinalConsonant(value)?consonantParticle:vowelParticle);
+}
+function subject(text){ return withParticle(text,'이','가'); }
+function object(text){ return withParticle(text,'을','를'); }
+function companion(text){ return withParticle(text,'과','와'); }
 
 function monthDominance(monthFlows){
   const count={비겁:0,식상:0,재성:0,관성:0,인성:0};
@@ -193,7 +205,7 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   report.overview.lead=`쉽게 말하면, ${report.overview.quick[0]}`;
 
   report.temperament.quick=[
-    `평소에는 ${topGods[0]?.simple || '자기 기준'}이 가장 먼저 드러나고, 그 다음으로 ${topGods[1]?.simple || '다른 보조 성향'}이 따라옵니다.`,
+    `평소에는 ${subject(topGods[0]?.simple || '자기 기준')} 가장 먼저 드러나고, 그 다음으로 ${subject(topGods[1]?.simple || '다른 보조 성향')} 따라옵니다.`,
     `이 두 성향이 여러 자리에서 반복되고, 태어난 달의 중심 흐름도 ${profile.monthCommand.simple} 쪽이라 서로 보완합니다.`,
     `생활에서는 한 가지 성격으로 고정해서 보기보다 “어떤 상황에서 어떤 반응이 먼저 나오는가”를 보는 편이 더 잘 맞습니다.`
   ];
@@ -204,7 +216,7 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   ];
 
   report.strengths.quick=[
-    `한 줄 요약: 가장 자주 쓰는 힘은 ${topGods[0]?.simple || element.gift}이고, ${topGods[1]?.simple || second.core}이 두 번째 축으로 받쳐줍니다.`,
+    `한 줄 요약: 가장 자주 쓰는 힘은 ${topGods[0]?.simple || element.gift}이고, ${subject(topGods[1]?.simple || second.core)} 두 번째 축으로 받쳐줍니다.`,
     `왜 그런가요? 가장 두드러진 성향이 여러 자리에서 반복되고, 두 번째 성향도 함께 받쳐주기 때문에 강점을 쓰는 방식이 비교적 선명합니다.`,
     `생활에서는: ${element.gift}을 강점으로 쓰되, ${element.risk}이 보이기 시작하면 ${weak.use}으로 속도를 조절해보세요.`
   ];
@@ -233,8 +245,8 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   );
 
   report.career.quick=[
-    `한 줄 요약: 일에서는 ${topGods[0]?.simple || '자기 기준'}과 ${topGods[1]?.simple || '보조 성향'}을 함께 쓸 수 있는 환경이 중요합니다.`,
-    `왜 그런가요? ${topGods[0]?.simple || '주요 성향'}과 ${topGods[1]?.simple || '보조 성향'}이 함께 반복되어, 한 가지 능력만 쓰는 일보다 두 역할을 연결할 때 힘이 잘 납니다.`,
+    `한 줄 요약: 일에서는 ${companion(topGods[0]?.simple || '자기 기준')} ${object(topGods[1]?.simple || '보조 성향')} 함께 쓸 수 있는 환경이 중요합니다.`,
+    `왜 그런가요? ${companion(topGods[0]?.simple || '주요 성향')} ${subject(topGods[1]?.simple || '보조 성향')} 함께 반복되어, 한 가지 능력만 쓰는 일보다 두 역할을 연결할 때 힘이 잘 납니다.`,
     '생활에서는: 직업명을 하나 찍기보다 자율성·책임·표현·관리 중 어떤 조건에서 성과가 나는지 확인하는 것이 더 유용합니다.'
   ];
   report.career.evidence=[
@@ -256,7 +268,7 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   ];
 
   report.relationships.quick=[
-    `한 줄 요약: 관계에서는 ${topGods[0]?.simple || role.core}이 먼저 드러나고, 역할과 기대가 명확할수록 편안함을 느끼기 쉽습니다.`,
+    `한 줄 요약: 관계에서는 ${subject(topGods[0]?.simple || role.core)} 먼저 드러나고, 역할과 기대가 명확할수록 편안함을 느끼기 쉽습니다.`,
     `왜 그런가요? 관계에서 반복되는 연결·긴장 신호와 ${profile.monthCommand.simple} 성향을 함께 보면, 역할과 기대가 분명할수록 관계가 안정되기 쉽습니다.`,
     '생활에서는: 상대의 마음을 추측하기보다 역할·기대·불편을 짧게 확인하고, 반복되는 행동을 기준으로 관계를 판단하세요.'
   ];
