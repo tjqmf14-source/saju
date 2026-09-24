@@ -30,7 +30,7 @@ test('plain-language module covers common specialist terms and duplicate copy', 
   assert.doesNotThrow(() => new Function(plain));
 });
 
-test('reader-facing advice is rewritten by Product V18 life categories', () => {
+test('reader-facing layer simplifies labels without replacing calculated interpretation copy', () => {
   assert.match(plain, /ROLE_GUIDE/);
   for (const key of ['temperament','strengths','career','money','relationships','recovery']) {
     assert.ok(plain.includes(key), key);
@@ -38,6 +38,7 @@ test('reader-facing advice is rewritten by Product V18 life categories', () => {
   assert.match(plain, /FRIENDLY_TITLES/);
   assert.match(plain, /strengths:'강점'/);
   assert.match(plain, /rewriteFriendlyAdvice/);
-  assert.match(plain, /혼자 빠르게 결론내리기보다/);
-  assert.match(plain, /아이디어 수보다 끝낸 결과물 수/);
+  const rewrite=plain.slice(plain.indexOf('function rewriteFriendlyAdvice'),plain.indexOf('for (const guide of Object.values',plain.indexOf('function rewriteFriendlyAdvice')));
+  assert.doesNotMatch(rewrite, /chapter-quick-list li/);
+  assert.doesNotMatch(rewrite, /body\.textContent=lines/);
 });
