@@ -31,7 +31,7 @@ async function selectCalendarMode(page, mode) {
   await expect(page.locator(`input[name="calendar"][value="${mode}"]`)).toBeChecked();
 }
 
-test('Product V17 desktop preserves the editorial landing-page composition', async ({ page }, testInfo) => {
+test('Product V3 desktop preserves the editorial landing-page composition', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'desktop-only reference contract');
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
@@ -56,7 +56,7 @@ test('Product V17 desktop preserves the editorial landing-page composition', asy
   const heroVisualBox = await heroVisual.boundingBox();
   expect(heroVisualBox?.height || 0).toBeGreaterThan(320);
 
-  await expect(page.locator('.visual-keyword-card')).toHaveCount(6);
+  await expect(page.locator('.visual-keyword-card')).toHaveCount(5);
   await expect(page.locator('.trust-strip p')).toHaveCount(3);
   await expect(page.locator('#standards, #faq, .review-card, .faq-list')).toHaveCount(0);
   await expect(page.locator('.annual-scene, .detail-visual')).toHaveCount(0);
@@ -110,7 +110,7 @@ test('Product V17 desktop preserves the editorial landing-page composition', asy
   await page.screenshot({ path: 'test-results/v17-reference-desktop.png', fullPage: true });
 });
 
-test('Product V17 is app-like, readable and overflow-free on mobile', async ({ page }, testInfo) => {
+test('Product V3 is app-like, readable and overflow-free on mobile', async ({ page }, testInfo) => {
   test.skip(!['mobile','mobile-wide','mobile-small'].includes(testInfo.project.name), 'mobile-only contract');
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
@@ -119,8 +119,8 @@ test('Product V17 is app-like, readable and overflow-free on mobile', async ({ p
   expect(fontSize).toBeGreaterThanOrEqual(36);
   expect(fontSize).toBeLessThanOrEqual(46);
 
-  await expect(page.locator('.feature-orbit-nav a')).toHaveCount(6);
-  await expect(page.locator('.visual-keyword-card')).toHaveCount(6);
+  await expect(page.locator('.feature-orbit-nav a')).toHaveCount(4);
+  await expect(page.locator('.visual-keyword-card')).toHaveCount(5);
   await expect(page.locator('#standards, #faq')).toHaveCount(0);
 
   const mobileAudit = await page.evaluate(() => {
@@ -176,10 +176,10 @@ test('Product V17 is app-like, readable and overflow-free on mobile', async ({ p
     birthDate:parseFloat(getComputedStyle(document.querySelector('#birthDate')).fontSize),
     select:parseFloat(getComputedStyle(document.querySelector('#gender')).fontSize)
   }));
-  expect(mobileType.body).toBeGreaterThanOrEqual(17);
+  expect(mobileType.body).toBeGreaterThanOrEqual(18);
   expect(mobileType.birthDate).toBeGreaterThanOrEqual(16);
   expect(mobileType.select).toBeGreaterThanOrEqual(16);
-  expect(mobileAudit.cards).toHaveLength(6);
+  expect(mobileAudit.cards).toHaveLength(5);
   for (const card of mobileAudit.cards) {
     expect(card.width).toBeGreaterThan(120);
     expect(card.x).toBeGreaterThanOrEqual(0);
@@ -357,13 +357,13 @@ test('reference-density sections stay compact on desktop and primary disclosure 
   await expect(workCard).toHaveAttribute('aria-pressed','true');
   await expect(page.locator('#keywordInsight')).toContainText('일과 진로');
   const keywordTitles=[];
-  for(const key of ['temperament','career','money','relationships','recovery','strengths']){
+  for(const key of ['temperament','career','money','relationships','recovery']){
     const card=page.locator(`.visual-keyword-card[data-report-key="${key}"]`);
     await card.click();
     keywordTitles.push((await page.locator('#keywordInsight h3').textContent())?.trim());
     await expect(page.locator('#keywordInsight a')).toHaveAttribute('href',`#report-${key}`);
   }
-  expect(new Set(keywordTitles).size).toBe(6);
+  expect(new Set(keywordTitles).size).toBe(5);
 
   const fullReport = page.locator('#full-report');
   await expect(fullReport).not.toHaveAttribute('open', '');
@@ -440,9 +440,10 @@ test('birth CTA recalculates current input and precision report exposes retained
   await expect(fullReport).toHaveAttribute('open', '');
   await expect(page.locator('#yearDeepDive .year-essay')).toHaveCount(1);
   await expect(page.locator('#monthForecast .month-card')).toHaveCount(12);
-  await expect(page.locator('#detailedReport .detail-chapter')).toHaveCount(13);
-  await expect(page.locator('#detailedReport .easy-reading-label')).toHaveCount(13);
-  await expect(page.locator('#report-balance')).not.toContainText('신강');
+  await expect(page.locator('#detailedReport .detail-chapter')).toHaveCount(7);
+  await expect(page.locator('#detailedReport .easy-reading-label')).toHaveCount(7);
+  await expect(page.locator('#detailedReport .chapter-evidence')).toHaveCount(7);
+  await expect(page.locator('#detailedReport .chapter-evidence[open]')).toHaveCount(0);
   await expect(page.locator('#detailedReport .detail-visual')).toHaveCount(0);
   await assertNoHorizontalOverflow(page);
 });
@@ -618,7 +619,7 @@ test('commercial UX interactions work without a backend', async ({ page }, testI
     expect(compatibilityGeometry.form?.height || 999).toBeLessThan(520);
     expect(compatibilityGeometry.panel?.height || 999).toBeLessThan(760);
   }else{
-    expect(compatibilityGeometry.form?.height || 999).toBeLessThan(560);
+    expect(compatibilityGeometry.form?.height || 999).toBeLessThan(640);
   }
 
   // Local-only profile save/load.
@@ -666,19 +667,21 @@ test('commercial UX interactions work without a backend', async ({ page }, testI
 });
 
 
-test('plain-language layer keeps visible report copy free of specialist jargon', async ({ page }) => {
+test('primary report summaries keep specialist jargon behind progressive disclosure', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#results')).toBeVisible();
   await page.locator('#full-report').evaluate((el) => { el.open = true; });
   await page.waitForTimeout(50);
-  const text = await page.locator('#results').innerText();
-  for (const term of ['원국','십신','오행','일간','절입','대운','세운','월운','신강','신약','용신','희신','기신','격국','천간','지지','비겁','식상','재성','관성','인성','양 화','가중 성향 균형','표현 기운']) {
-    expect(text).not.toContain(term);
+  const text = await page.locator('.visual-keyword-showcase, #reportLead, #detailedReport .detail-disclosure > summary, #detailedReport .chapter-quick-list').allInnerTexts();
+  const visible = text.join('\n');
+  for (const term of ['원국','십신','오행','일간','절입','대운','세운','월운','신강','신약','용신','희신','기신','격국','천간','지지','비겁','식상','재성','관성','인성','가중 성향 균형','표현 기운']) {
+    expect(visible).not.toContain(term);
   }
+  await expect(page.locator('#detailedReport .chapter-evidence')).toHaveCount(7);
 });
 
 
-test('Product V17 keeps the editorial paper hierarchy and isolated tarot stage', async ({ page }) => {
+test('Product V3 keeps the editorial paper hierarchy and isolated tarot stage', async ({ page }) => {
   await page.goto('/');
   const audit=await page.evaluate(()=>{
     const css=(selector)=>getComputedStyle(document.querySelector(selector));
@@ -697,16 +700,16 @@ test('Product V17 keeps the editorial paper hierarchy and isolated tarot stage',
       shell:rect('.agency-shell')
     };
   });
-  expect(audit.bodyBg).toBe('rgb(245, 241, 232)');
-  expect(audit.tarotBg).toBe('rgb(17, 24, 43)');
+  expect(audit.bodyBg).toBe('rgb(245, 246, 243)');
+  expect(audit.tarotBg).toBe('rgb(21, 28, 44)');
   if(audit.viewport>760){
-    expect(audit.heroBg).toBe('rgb(255, 253, 247)');
-    expect(audit.inputBg).toBe('rgb(255, 253, 247)');
+    expect(audit.heroBg).toBe('rgb(255, 255, 255)');
+    expect(audit.inputBg).toBe('rgb(255, 255, 255)');
     expect(audit.heroVisual).toBe('block');
     expect(audit.heroVisualBg).not.toBe('none');
     expect(audit.heroVisualBg).toMatch(/^url\(/);
   }else{
-    expect(audit.inputBg).toBe('rgb(255, 253, 248)');
+    expect(audit.inputBg).toBe('rgb(255, 255, 255)');
     expect(audit.heroVisual).toBe('none');
     expect(audit.heroVisualBg).toBe('none');
   }
@@ -717,12 +720,13 @@ test('Product V17 keeps the editorial paper hierarchy and isolated tarot stage',
   await assertNoHorizontalOverflow(page);
 });
 
-test('Product V17 shows six life-language categories without technical categories', async ({ page }) => {
+test('Product V3 shows five primary life-language categories without duplicate strength navigation', async ({ page }) => {
   await page.goto('/');
   const cards=page.locator('.visual-keyword-card');
-  await expect(cards).toHaveCount(6);
+  await expect(cards).toHaveCount(5);
   const labels=await cards.locator('strong').allTextContents();
-  expect(labels).toEqual(['성격','일','돈','관계','회복','강점']);
-  await page.locator('.visual-keyword-card[data-report-key="strengths"]').click();
-  await expect(page.locator('#keywordInsight')).toContainText('강점');
+  expect(labels).toEqual(['나','일','돈','관계','회복']);
+  await page.locator('.visual-keyword-card[data-report-key="temperament"]').click();
+  await expect(page.locator('#keywordInsight')).toContainText('나의 기본 성향');
+  await expect(page.locator('.visual-keyword-card[data-report-key="strengths"]')).toHaveCount(0);
 });

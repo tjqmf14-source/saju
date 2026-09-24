@@ -58,3 +58,59 @@ jobs:
           -f context=ci/verify
           -f description='Verification failed; inspect the workflow run'
           -f target_url='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+
+
+  build-android-v3:
+    if: startsWith(github.ref, 'refs/heads/gpt/product-v3-commercial-rebuild-20260924') || github.event_name == 'pull_request'
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Re-run verification before APK packaging
+        run: npm run check
+
+      - name: Build Android debug APK
+        run: |
+          chmod +x android/gradlew
+          cd android
+          ./gradlew lintDebug assembleDebug --stacktrace
+
+      - name: Verify Android V3 package
+        run: |
+          test -f android/app/build/outputs/apk/debug/app-debug.apk
+          grep -q "versionName '3.0.0'" android/app/build.gradle
+          grep -q "versionCode 300" android/app/build.gradle
+          if grep -q "android.permission.INTERNET" android/app/src/main/AndroidManifest.xml; then
+            echo "Unexpected INTERNET permission"
+            exit 1
+          fi
+
+      - name: Prepare APK artifact
+        run: |
+          mkdir -p mobile/artifacts
+          cp android/app/build/outputs/apk/debug/app-debug.apk mobile/artifacts/Naesaju-3.0.0-debug.apk
+          sha256sum mobile/artifacts/Naesaju-3.0.0-debug.apk > mobile/artifacts/SHA256SUMS.txt
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Naesaju-V3-Android-Debug
+          path: mobile/artifacts/*
+          if-no-files-found: error
+          retention-days: 30

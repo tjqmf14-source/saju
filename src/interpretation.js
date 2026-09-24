@@ -184,19 +184,34 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
     ? profile.strength.rootReasons.join(' · ')
     : '원국에서 일간과 같은 오행의 뚜렷한 통근 신호가 적습니다.';
 
-  report.overview.quick=profile.easyFacts.slice(0,3);
+  report.overview.quick=[
+    `가장 먼저 드러나는 성향은 ${topGods[0]?.simple || '자기 기준'}이고, 그 다음은 ${topGods[1]?.simple || '보조 성향'}입니다.`,
+    `태어난 달의 중심 흐름은 ${profile.monthCommand.simple} 쪽이라 두 성향이 상황에 따라 번갈아 드러날 수 있습니다.`,
+    `생활에서는 한 가지 성격으로 단정하기보다 어떤 상황에서 어떤 반응이 먼저 나오는지 살펴보는 편이 더 정확합니다.`
+  ];
   report.overview.evidence=profile.evidence;
-  report.overview.lead=`쉽게 말하면, 이 원국은 ${profile.strength.band} 쪽 힘을 바탕으로 ${topGods[0]?.simple || '자기 기준'}을 가장 자주 쓰는 구조입니다.`;
+  report.overview.lead=`쉽게 말하면, ${report.overview.quick[0]}`;
 
   report.temperament.quick=[
     `평소에는 ${topGods[0]?.simple || '자기 기준'}이 가장 먼저 드러나고, 그 다음으로 ${topGods[1]?.simple || '다른 보조 성향'}이 따라옵니다.`,
-    `그 이유는 ${topGods[0]?.tenGod || '십신'}이 ${topGods[0]?.locations.slice(0,2).join('·') || '원국'}에 반복되고, 월령은 ${profile.monthCommand.tenGod}(${profile.monthCommand.simple}) 쪽이기 때문입니다.`,
+    `이 두 성향이 여러 자리에서 반복되고, 태어난 달의 중심 흐름도 ${profile.monthCommand.simple} 쪽이라 서로 보완합니다.`,
     `생활에서는 한 가지 성격으로 고정해서 보기보다 “어떤 상황에서 어떤 반응이 먼저 나오는가”를 보는 편이 더 잘 맞습니다.`
   ];
   report.temperament.evidence=[
     `월령 중심 십신: ${profile.monthCommand.tenGod} · ${profile.monthCommand.structureName} 후보`,
     `상위 십신: ${topGods.map((item)=>`${item.tenGod} ${item.score}`).join(' · ')}`,
     `천간 노출: ${profile.monthCommand.exposed?profile.monthCommand.exposedLocations.join('·'):'월령 중심 십신의 직접 노출 없음'}`
+  ];
+
+  report.strengths.quick=[
+    `한 줄 요약: 가장 자주 쓰는 힘은 ${topGods[0]?.simple || element.gift}이고, ${topGods[1]?.simple || second.core}이 두 번째 축으로 받쳐줍니다.`,
+    `왜 그런가요? 가장 두드러진 성향이 여러 자리에서 반복되고, 두 번째 성향도 함께 받쳐주기 때문에 강점을 쓰는 방식이 비교적 선명합니다.`,
+    `생활에서는: ${element.gift}을 강점으로 쓰되, ${element.risk}이 보이기 시작하면 ${weak.use}으로 속도를 조절해보세요.`
+  ];
+  report.strengths.evidence=[
+    `상위 성향: ${topGods.map((item)=>`${item.tenGod} ${item.score}`).join(' · ')}`,
+    `주요 위치: ${topGodPlacementText}`,
+    `강약 참고: ${profile.strength.band} ${profile.strength.score}점 · ${rootText}`
   ];
 
   report.balance.title='내 기운은 강한 편일까, 약한 편일까?';
@@ -219,14 +234,44 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
 
   report.career.quick=[
     `한 줄 요약: 일에서는 ${topGods[0]?.simple || '자기 기준'}과 ${topGods[1]?.simple || '보조 성향'}을 함께 쓸 수 있는 환경이 중요합니다.`,
-    `왜 그런가요? 상위 십신은 ${topGods.map((item)=>item.tenGod).join(' · ')}이고, 특히 월주와 시주 배치를 함께 읽습니다.`,
+    `왜 그런가요? ${topGods[0]?.simple || '주요 성향'}과 ${topGods[1]?.simple || '보조 성향'}이 함께 반복되어, 한 가지 능력만 쓰는 일보다 두 역할을 연결할 때 힘이 잘 납니다.`,
     '생활에서는: 직업명을 하나 찍기보다 자율성·책임·표현·관리 중 어떤 조건에서 성과가 나는지 확인하는 것이 더 유용합니다.'
   ];
+  report.career.evidence=[
+    `상위 성향 배치: ${topGodPlacementText}`,
+    `월령 중심: ${profile.monthCommand.tenGod} · ${profile.monthCommand.simple}`,
+    `올해 직업·역할 주제: ${yearFlow.tenGod} · ${ROLE_LABELS[yearFlow.group]}`
+  ];
 
+  const wealthScore=((profile.tenGods.score.편재||0)+(profile.tenGods.score.정재||0)).toFixed(2);
   report.money.quick=[
     '한 줄 요약: 재물운은 “큰돈이 들어온다”보다 돈을 다루는 습관과 압력이 어디서 생기는지를 보는 쪽에 가깝습니다.',
-    `왜 그런가요? 원국에서 편재+정재 가중치는 ${((profile.tenGods.score.편재||0)+(profile.tenGods.score.정재||0)).toFixed(2)}이고, 올해 세운의 십신까지 함께 봅니다.`,
+    `왜 그런가요? 돈과 성과를 다루는 성향의 비중과 올해의 생활 흐름을 함께 보면, 빠른 결정보다 기준을 세워 관리하는 쪽이 더 중요하게 나타납니다.`,
     '생활에서는: 투자·대출·큰 소비는 사주보다 현금흐름과 손실 가능성을 우선하고, 해석은 판단 습관을 점검하는 보조 자료로 쓰세요.'
+  ];
+  report.money.evidence=[
+    `편재+정재 가중치: ${wealthScore}`,
+    `올해 세운: ${yearFlow.tenGod} · ${ROLE_LABELS[yearFlow.group]}`,
+    `월령 중심: ${profile.monthCommand.tenGod} · 돈의 좋고 나쁨을 확정하는 점수가 아님`
+  ];
+
+  report.relationships.quick=[
+    `한 줄 요약: 관계에서는 ${topGods[0]?.simple || role.core}이 먼저 드러나고, 역할과 기대가 명확할수록 편안함을 느끼기 쉽습니다.`,
+    `왜 그런가요? 관계에서 반복되는 연결·긴장 신호와 ${profile.monthCommand.simple} 성향을 함께 보면, 역할과 기대가 분명할수록 관계가 안정되기 쉽습니다.`,
+    '생활에서는: 상대의 마음을 추측하기보다 역할·기대·불편을 짧게 확인하고, 반복되는 행동을 기준으로 관계를 판단하세요.'
+  ];
+  report.relationships.evidence=profile.relations.items.slice(0,5).map((item)=>`${item.type} · ${item.pillarLabels.join('↔') || item.members.join('·')} · ${item.contexts.join(' / ')}`);
+  if(!report.relationships.evidence.length) report.relationships.evidence=[`관계 신호: ${profile.relations.summary}`];
+
+  report.recovery.quick=[
+    `한 줄 요약: 과부하가 오면 ${role.stress}이 나타나기 쉬워, 평소 강점을 더 세게 쓰는 방식보다 쉬는 기준을 먼저 정하는 편이 좋습니다.`,
+    `왜 그런가요? 평소 잘 쓰는 방식과 상대적으로 덜 쓰는 방식의 차이가 커질수록, 강점을 더 밀어붙이기보다 반대쪽 생활 습관을 보충하는 편이 회복에 도움이 됩니다.`,
+    `생활에서는: ${weak.use}을 회복 루틴으로 두고, 지속되는 통증·수면·컨디션 문제는 사주가 아니라 실제 기록과 의료적 판단을 우선하세요.`
+  ];
+  report.recovery.evidence=[
+    `강한 오행: ${strongElement} · 상대적으로 약한 오행: ${weakElement}`,
+    `대표 과부하 패턴: ${role.stress}`,
+    `균형 참고: ${profile.balanceHint}`
   ];
 
   report.love.quick=[

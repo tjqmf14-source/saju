@@ -31,15 +31,15 @@ test('checked-in oracle atlas chunks reconstruct the exact production WebP', asy
   assert.equal(createHash('sha256').update(decoded).digest('hex'), EXPECTED_ATLAS_SHA256);
 });
 
-test('B concept report preview exposes six interactive information cards without unrelated decorative art', () => {
+test('Product V3 report preview exposes five focused information cards without unrelated decorative art', () => {
   assert.match(html, /class="[^"]*visual-keyword-showcase[^"]*"/);
   const cards = html.match(/class="[^"]*visual-keyword-card[^"]*"/g) || [];
-  assert.equal(cards.length, 6);
+  assert.equal(cards.length, 5);
   assert.doesNotMatch(html, /atlas-card atlas-card-/);
-  assert.equal((html.match(/class="keyword-card-top"/g) || []).length, 6);
-  assert.equal((html.match(/data-report-key=/g) || []).length, 6);
+  assert.equal((html.match(/class="keyword-card-top"/g) || []).length, 5);
+  assert.equal((html.match(/data-report-key=/g) || []).length, 5);
   assert.match(html, /id="keywordInsight"/);
-  assert.equal((html.match(/aria-pressed=/g) || []).length, 6);
+  assert.equal((html.match(/aria-pressed=/g) || []).length, 5);
   assert.doesNotMatch(html, /visual-keyword-card[^>]+aria-expanded=/);
   assert.match(html, /id="keywordInsight"[^>]+role="region"/);
   assert.doesNotMatch(html, /keyword-(character|work|money|relation|health|advice)\.svg/);
