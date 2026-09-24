@@ -32,13 +32,25 @@ class LocalJsEngine(context: Context) : SajuEngineGateway {
     }
 
     override fun calculate(requestJson: String, callback: (Result<String>) -> Unit) {
+        enqueue("calculate", requestJson, callback)
+    }
+
+    override fun drawTarot(requestJson: String, callback: (Result<String>) -> Unit) {
+        enqueue("drawTarot", requestJson, callback)
+    }
+
+    private fun enqueue(
+        method: String,
+        requestJson: String,
+        callback: (Result<String>) -> Unit
+    ) {
         mainHandler.post {
             if (closed) {
                 callback(Result.failure(IllegalStateException("사주 계산 엔진이 종료되었습니다.")))
                 return@post
             }
 
-            val request = PendingRequest(requestJson, callback)
+            val request = PendingRequest(method, requestJson, callback)
             if (!ready || webView == null) {
                 pending.addLast(request)
                 return@post
@@ -75,8 +87,13 @@ class LocalJsEngine(context: Context) : SajuEngineGateway {
             settings.blockNetworkLoads = true
             settings.allowContentAccess = false
             settings.allowFileAccess = true
-            settings.allowFileAccessFromFileURLs = false
-            settings.allowUniversalAccessFromFileURLs = false
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+                @Suppress("DEPRECATION")
+                run {
+                    settings.allowFileAccessFromFileURLs = false
+                    settings.allowUniversalAccessFromFileURLs = false
+                }
+            }
             settings.javaScriptCanOpenWindowsAutomatically = false
             settings.setSupportMultipleWindows(false)
             settings.mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
@@ -96,9 +113,8 @@ class LocalJsEngine(context: Context) : SajuEngineGateway {
         }
 
         val quoted = JSONObject.quote(request.json)
-        view.evaluateJavascript(
-            "globalThis.SajutaroEngine.calculate($quoted)"
-        ) { encoded ->
+        val script = "globalThis.SajutaroEngine." + request.method + "(" + quoted + ")"
+        view.evaluateJavascript(script) { encoded ->
             try {
                 val decoded = JSONTokener(encoded).nextValue() as? String
                     ?: throw IllegalStateException("계산 결과 형식이 올바르지 않습니다.")
@@ -112,7 +128,7 @@ class LocalJsEngine(context: Context) : SajuEngineGateway {
     private fun markReady() {
         val view = webView ?: return
         view.evaluateJavascript(
-            "Boolean(globalThis.SajutaroEngine && globalThis.SajutaroEngine.calculate)"
+            "Boolean(globalThis.SajutaroEngine && globalThis.SajutaroEngine.calculate && globalThis.SajutaroEngine.drawTarot)"
         ) { result ->
             ready = result == "true"
             if (!ready) {
@@ -137,21 +153,16 @@ class LocalJsEngine(context: Context) : SajuEngineGateway {
             view: WebView,
             request: WebResourceRequest
         ): WebResourceResponse? {
-            return if (isEngineAsset(request.url)) {
-                null
-            } else {
-                blockedResponse()
-            }
+            return if (isEngineAsset(request.url)) null else blockedResponse()
         }
 
         override fun onPageFinished(view: WebView, url: String) {
-            if (url == ENGINE_URL) {
-                markReady()
-            }
+            if (url == ENGINE_URL) markReady()
         }
     }
 
     private data class PendingRequest(
+        val method: String,
         val json: String,
         val callback: (Result<String>) -> Unit
     )
