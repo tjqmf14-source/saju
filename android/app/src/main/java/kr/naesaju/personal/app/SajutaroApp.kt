@@ -1,5 +1,12 @@
 package kr.naesaju.personal.app
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -151,33 +158,44 @@ fun SajutaroApp() {
             }
         }
     ) { innerPadding ->
-        when (selected) {
-            AppDestination.HOME -> HomeScreen(
-                profile = currentProfile,
-                reading = reading,
-                contentPadding = innerPadding,
-                onOpenSaju = { destinationName = AppDestination.SAJU.name },
-                onOpenFortune = { destinationName = AppDestination.FORTUNE.name },
-                onOpenTarot = { destinationName = AppDestination.TAROT.name },
-                onOpenCompatibility = { compatibilityOpen = true },
-                onEditProfile = { editingProfile = true }
-            )
-            AppDestination.SAJU -> SajuScreen(
-                profile = currentProfile,
-                reading = reading,
-                calculationError = calculationError,
-                contentPadding = innerPadding,
-                onEditProfile = { editingProfile = true }
-            )
-            AppDestination.FORTUNE -> FortuneScreen(
-                reading = reading,
-                calculationError = calculationError,
-                contentPadding = innerPadding
-            )
-            AppDestination.TAROT -> TarotScreen(
-                engine = engine,
-                contentPadding = innerPadding
-            )
+        AnimatedContent(
+            targetState = selected,
+            label = "main_destination",
+            transitionSpec = {
+                (fadeIn(tween(220)) + slideInHorizontally(tween(220)) { fullWidth -> fullWidth / 18 })
+                    .togetherWith(
+                        fadeOut(tween(140)) + slideOutHorizontally(tween(140)) { fullWidth -> -fullWidth / 24 }
+                    )
+            }
+        ) { destination ->
+            when (destination) {
+                AppDestination.HOME -> HomeScreen(
+                    profile = currentProfile,
+                    reading = reading,
+                    contentPadding = innerPadding,
+                    onOpenSaju = { destinationName = AppDestination.SAJU.name },
+                    onOpenFortune = { destinationName = AppDestination.FORTUNE.name },
+                    onOpenTarot = { destinationName = AppDestination.TAROT.name },
+                    onOpenCompatibility = { compatibilityOpen = true },
+                    onEditProfile = { editingProfile = true }
+                )
+                AppDestination.SAJU -> SajuScreen(
+                    profile = currentProfile,
+                    reading = reading,
+                    calculationError = calculationError,
+                    contentPadding = innerPadding,
+                    onEditProfile = { editingProfile = true }
+                )
+                AppDestination.FORTUNE -> FortuneScreen(
+                    reading = reading,
+                    calculationError = calculationError,
+                    contentPadding = innerPadding
+                )
+                AppDestination.TAROT -> TarotScreen(
+                    engine = engine,
+                    contentPadding = innerPadding
+                )
+            }
         }
     }
 }
