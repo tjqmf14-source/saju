@@ -60,7 +60,7 @@ data class ReadingSnapshot(
     val today: TodayReading,
     val year: GuidanceSection,
     val months: List<MonthReading>,
-    val tojeong: TojeongReading?,
+    val tojeong: TojeongReading? = null,
     val mbti: String
 )
 
