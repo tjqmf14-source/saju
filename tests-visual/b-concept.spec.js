@@ -56,7 +56,7 @@ test('Product V17 desktop preserves the editorial landing-page composition', asy
   const heroVisualBox = await heroVisual.boundingBox();
   expect(heroVisualBox?.height || 0).toBeGreaterThan(320);
 
-  await expect(page.locator('.visual-keyword-card')).toHaveCount(6);
+  await expect(page.locator('.visual-keyword-card')).toHaveCount(5);
   await expect(page.locator('.trust-strip p')).toHaveCount(3);
   await expect(page.locator('#standards, #faq, .review-card, .faq-list')).toHaveCount(0);
   await expect(page.locator('.annual-scene, .detail-visual')).toHaveCount(0);
@@ -119,8 +119,8 @@ test('Product V17 is app-like, readable and overflow-free on mobile', async ({ p
   expect(fontSize).toBeGreaterThanOrEqual(36);
   expect(fontSize).toBeLessThanOrEqual(46);
 
-  await expect(page.locator('.feature-orbit-nav a')).toHaveCount(6);
-  await expect(page.locator('.visual-keyword-card')).toHaveCount(6);
+  await expect(page.locator('.feature-orbit-nav a')).toHaveCount(4);
+  await expect(page.locator('.visual-keyword-card')).toHaveCount(5);
   await expect(page.locator('#standards, #faq')).toHaveCount(0);
 
   const mobileAudit = await page.evaluate(() => {
@@ -176,10 +176,10 @@ test('Product V17 is app-like, readable and overflow-free on mobile', async ({ p
     birthDate:parseFloat(getComputedStyle(document.querySelector('#birthDate')).fontSize),
     select:parseFloat(getComputedStyle(document.querySelector('#gender')).fontSize)
   }));
-  expect(mobileType.body).toBeGreaterThanOrEqual(17);
+  expect(mobileType.body).toBeGreaterThanOrEqual(18);
   expect(mobileType.birthDate).toBeGreaterThanOrEqual(16);
   expect(mobileType.select).toBeGreaterThanOrEqual(16);
-  expect(mobileAudit.cards).toHaveLength(6);
+  expect(mobileAudit.cards).toHaveLength(5);
   for (const card of mobileAudit.cards) {
     expect(card.width).toBeGreaterThan(120);
     expect(card.x).toBeGreaterThanOrEqual(0);
@@ -357,13 +357,13 @@ test('reference-density sections stay compact on desktop and primary disclosure 
   await expect(workCard).toHaveAttribute('aria-pressed','true');
   await expect(page.locator('#keywordInsight')).toContainText('일과 진로');
   const keywordTitles=[];
-  for(const key of ['temperament','career','money','relationships','recovery','strengths']){
+  for(const key of ['temperament','career','money','relationships','recovery']){
     const card=page.locator(`.visual-keyword-card[data-report-key="${key}"]`);
     await card.click();
     keywordTitles.push((await page.locator('#keywordInsight h3').textContent())?.trim());
     await expect(page.locator('#keywordInsight a')).toHaveAttribute('href',`#report-${key}`);
   }
-  expect(new Set(keywordTitles).size).toBe(6);
+  expect(new Set(keywordTitles).size).toBe(5);
 
   const fullReport = page.locator('#full-report');
   await expect(fullReport).not.toHaveAttribute('open', '');
@@ -717,12 +717,13 @@ test('Product V17 keeps the editorial paper hierarchy and isolated tarot stage',
   await assertNoHorizontalOverflow(page);
 });
 
-test('Product V17 shows six life-language categories without technical categories', async ({ page }) => {
+test('Product V3 shows five primary life-language categories without duplicate strength navigation', async ({ page }) => {
   await page.goto('/');
   const cards=page.locator('.visual-keyword-card');
-  await expect(cards).toHaveCount(6);
+  await expect(cards).toHaveCount(5);
   const labels=await cards.locator('strong').allTextContents();
-  expect(labels).toEqual(['성격','일','돈','관계','회복','강점']);
-  await page.locator('.visual-keyword-card[data-report-key="strengths"]').click();
-  await expect(page.locator('#keywordInsight')).toContainText('강점');
+  expect(labels).toEqual(['나','일','돈','관계','회복']);
+  await page.locator('.visual-keyword-card[data-report-key="temperament"]').click();
+  await expect(page.locator('#keywordInsight')).toContainText('나의 기본 성향');
+  await expect(page.locator('.visual-keyword-card[data-report-key="strengths"]')).toHaveCount(0);
 });
