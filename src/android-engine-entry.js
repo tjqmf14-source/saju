@@ -9,6 +9,7 @@ import { buildDetailedInterpretation } from './interpretation.js';
 import { calculateDailyScores } from './daily-score.js';
 import { monthFlowCopy } from './flow-copy.js';
 import { drawTarot, interpretSpread } from './tarot.js';
+import { calculateTojeong } from './tojeong.js';
 
 const SCHEMA_VERSION = 2;
 const DATE_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
@@ -93,6 +94,7 @@ function nativePayload(chart, now = new Date()) {
   const months = calculateMonthFlows(chart, today.date.year);
   const mbti = calculateSajuMbti(chart);
   const report = buildDetailedInterpretation(chart, mbti, year, months);
+  const tojeong = calculateTojeong(chart.input, today.date.year);
   const monthGuides = months.map((flow, index) => ({
     month: index + 1,
     korean: flow.korean,
@@ -125,6 +127,14 @@ function nativePayload(chart, now = new Date()) {
     },
     year: readingSection(report, 'year', '올해의 흐름'),
     months: monthGuides,
+    tojeong: {
+      targetYear: tojeong.targetYear,
+      code: tojeong.code,
+      overview: tojeong.overview,
+      months: tojeong.months,
+      evidence: tojeong.evidence,
+      method: tojeong.method
+    },
     mbti: mbti.type
   };
 }
