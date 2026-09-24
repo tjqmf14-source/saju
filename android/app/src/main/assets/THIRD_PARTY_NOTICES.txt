@@ -9,6 +9,11 @@ separately before distribution beyond personal testing.
 manseryeok 2.0.0: https://www.npmjs.com/package/manseryeok
 MIT License - Copyright (c) 2025 Yoohyojun
 
+mcp-tojeong: https://github.com/molpass/mcp-tojeong
+MIT License - Copyright (c) 2026 Lee, JungHoon
+The 144-gwae source text is included as reference data; the app presents
+modernized, non-deterministic summaries by default.
+
 MIT License terms for the above software:
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

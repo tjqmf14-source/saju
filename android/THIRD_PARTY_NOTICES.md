@@ -19,3 +19,9 @@ The app's website assets may have additional third-party notices in the web
 project. This file does not grant any rights in third-party materials.
 
 Both MIT license notices and terms are reproduced in the packaged text file.
+
+The traditional Tojeong-bigyul 144-gwae source text is adapted from
+[molpass/mcp-tojeong](https://github.com/molpass/mcp-tojeong), licensed under
+the MIT License (Copyright (c) 2026 Lee, JungHoon). The app uses its source
+text as reference data and presents a separate modernized, non-deterministic
+summary by default.
