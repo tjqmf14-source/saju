@@ -33,6 +33,7 @@ import kr.naesaju.personal.bridge.LocalJsEngine
 import kr.naesaju.personal.data.profile.ProfileStore
 import kr.naesaju.personal.data.profile.UserProfile
 import kr.naesaju.personal.domain.parseReadingSnapshot
+import kr.naesaju.personal.feature.compatibility.CompatibilityScreen
 import kr.naesaju.personal.feature.fortune.FortuneScreen
 import kr.naesaju.personal.feature.home.HomeScreen
 import kr.naesaju.personal.feature.onboarding.ProfileScreen
@@ -49,6 +50,7 @@ fun SajutaroApp() {
     var profile by remember { mutableStateOf<UserProfile?>(null) }
     var profileLoaded by remember { mutableStateOf(false) }
     var editingProfile by rememberSaveable { mutableStateOf(false) }
+    var compatibilityOpen by rememberSaveable { mutableStateOf(false) }
     var destinationName by rememberSaveable { mutableStateOf(AppDestination.HOME.name) }
     var readingRaw by remember { mutableStateOf<String?>(null) }
     var calculationError by remember { mutableStateOf("") }
@@ -105,6 +107,16 @@ fun SajutaroApp() {
 
     val currentProfile = profile ?: return
     val reading = parseReadingSnapshot(readingRaw)
+
+    if (compatibilityOpen) {
+        CompatibilityScreen(
+            profile = currentProfile,
+            engine = engine,
+            onBack = { compatibilityOpen = false }
+        )
+        return
+    }
+
     val selected = AppDestination.valueOf(destinationName)
 
     Scaffold(
@@ -147,6 +159,7 @@ fun SajutaroApp() {
                 onOpenSaju = { destinationName = AppDestination.SAJU.name },
                 onOpenFortune = { destinationName = AppDestination.FORTUNE.name },
                 onOpenTarot = { destinationName = AppDestination.TAROT.name },
+                onOpenCompatibility = { compatibilityOpen = true },
                 onEditProfile = { editingProfile = true }
             )
             AppDestination.SAJU -> SajuScreen(
