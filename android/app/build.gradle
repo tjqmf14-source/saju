@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'kr.naesaju.personal'
-    compileSdk 35
+    compileSdk 37
 
     defaultConfig {
         applicationId 'kr.naesaju.personal'
