@@ -14,6 +14,10 @@ permissions:
   contents: read
   statuses: write
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -25,16 +29,6 @@ jobs:
       - run: npm install
       - run: npm run check
       - run: npm run check:android-engine
-      - run: npx playwright install --with-deps chromium
-      - run: npm run visual:check
-      - name: Upload legacy web reference screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: legacy-web-reference-visual-qa
-          path: test-results/*.png
-          if-no-files-found: ignore
-
       - name: Publish verified commit status
         if: success()
         continue-on-error: true
@@ -62,7 +56,7 @@ jobs:
           -f target_url='${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
 
   build-android-native:
-    if: github.ref == 'refs/heads/gpt/sajutaro-android-rebuild' || github.event_name == 'pull_request'
+    if: github.ref == 'refs/heads/gpt/sajutaro-android-rebuild' || github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
     needs: verify
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -113,5 +107,63 @@ jobs:
         with:
           name: Sajutaro-V4-Native-Debug
           path: mobile/artifacts/*
+          if-no-files-found: error
+          retention-days: 30
+
+  android-ui-smoke:
+    if: github.ref == 'refs/heads/gpt/sajutaro-android-rebuild' || github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+    needs: build-android-native
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build local calculation engine asset
+        run: npm run build:android-engine
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run native UI smoke tests at 360dp / 1.3 font scale
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_2
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: |
+            adb shell wm size 720x1280
+            adb shell wm density 320
+            adb shell settings put system font_scale 1.3
+            cd android
+            ./gradlew connectedDebugAndroidTest --stacktrace
+            cd ..
+            mkdir -p mobile/ui-qa
+            adb pull /sdcard/Android/data/kr.naesaju.personal/files/qa-home.png mobile/ui-qa/qa-home.png
+            test -s mobile/ui-qa/qa-home.png
+
+      - name: Upload native UI QA evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sajutaro-V4-Native-UI-QA
+          path: mobile/ui-qa/qa-home.png
           if-no-files-found: error
           retention-days: 30
