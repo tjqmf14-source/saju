@@ -533,15 +533,15 @@ body[data-theme="product-v3"] .site-footer{font-size:14px}
 @media(max-width:760px){
   :root{--v3-shell:calc(100vw - 22px)}
   body[data-theme="product-v3"]{
-    font-size:18px;
-    line-height:1.7;
+    font-size:20px;
+    line-height:1.68;
     padding-bottom:78px
   }
   body[data-theme="product-v3"] button,
   body[data-theme="product-v3"] input,
   body[data-theme="product-v3"] select,
-  body[data-theme="product-v3"] textarea{font-size:17px}
-  body[data-theme="product-v3"] small{font-size:16px!important}
+  body[data-theme="product-v3"] textarea{font-size:18px}
+  body[data-theme="product-v3"] small{font-size:17px!important}
 
   body[data-theme="product-v3"] .topbar{
     height:62px;
@@ -569,7 +569,7 @@ body[data-theme="product-v3"] .site-footer{font-size:14px}
   }
   body[data-theme="product-v3"] .hero-lead{
     margin-top:17px;
-    font-size:18px;
+    font-size:19px;
     line-height:1.68
   }
   body[data-theme="product-v3"] .hero-lead br{display:none}
@@ -584,8 +584,8 @@ body[data-theme="product-v3"] .site-footer{font-size:14px}
     margin-top:24px
   }
   body[data-theme="product-v3"] .hero-proof-oracles>div{min-height:62px}
-  body[data-theme="product-v3"] .hero-proof-oracles b{font-size:16px}
-  body[data-theme="product-v3"] .hero-proof-oracles small{font-size:15px!important}
+  body[data-theme="product-v3"] .hero-proof-oracles b{font-size:17px}
+  body[data-theme="product-v3"] .hero-proof-oracles small{font-size:16px!important}
 
   body[data-theme="product-v3"] .trust-strip{
     display:grid;
@@ -601,7 +601,7 @@ body[data-theme="product-v3"] .site-footer{font-size:14px}
     border-radius:20px
   }
   body[data-theme="product-v3"] .section-heading h2{font-size:27px}
-  body[data-theme="product-v3"] .section-heading p{font-size:16px}
+  body[data-theme="product-v3"] .section-heading p{font-size:17px}
   body[data-theme="product-v3"] .profile-manager{
     grid-template-columns:1fr 1fr;
     gap:9px
@@ -637,7 +637,7 @@ body[data-theme="product-v3"] .site-footer{font-size:14px}
   }
   body[data-theme="product-v3"] .visual-keyword-intro>p{
     margin-top:8px;
-    font-size:16px
+    font-size:17px
   }
   body[data-theme="product-v3"] .visual-keyword-intro>a{
     display:inline-flex;
@@ -654,13 +654,13 @@ body[data-theme="product-v3"] .site-footer{font-size:14px}
   }
   body[data-theme="product-v3"] .visual-keyword-card:last-of-type{grid-column:1/-1}
   body[data-theme="product-v3"] .visual-keyword-card strong{font-size:20px}
-  body[data-theme="product-v3"] .visual-keyword-card small{font-size:15px!important}
+  body[data-theme="product-v3"] .visual-keyword-card small{font-size:16px!important}
   body[data-theme="product-v3"] .keyword-insight{
     grid-template-columns:1fr;
     gap:10px;
     padding:17px
   }
-  body[data-theme="product-v3"] .keyword-insight p{font-size:16px}
+  body[data-theme="product-v3"] .keyword-insight p{font-size:17px}
   body[data-theme="product-v3"] .keyword-insight a{font-size:15px}
 
   body[data-theme="product-v3"] .landing-section{
@@ -677,21 +677,21 @@ body[data-theme="product-v3"] .site-footer{font-size:14px}
   body[data-theme="product-v3"] .daily-primary{min-height:230px}
   body[data-theme="product-v3"] .daily-metrics{grid-template-columns:1fr}
   body[data-theme="product-v3"] .daily-brief-grid{grid-template-columns:1fr 1fr}
-  body[data-theme="product-v3"] .daily-brief-grid strong{font-size:16px}
-  body[data-theme="product-v3"] .daily-brief-grid p{font-size:15px}
+  body[data-theme="product-v3"] .daily-brief-grid strong{font-size:17px}
+  body[data-theme="product-v3"] .daily-brief-grid p{font-size:16px}
   body[data-theme="product-v3"] .daily-action-guide{grid-template-columns:1fr}
-  body[data-theme="product-v3"] .daily-action-guide article p{font-size:15px}
+  body[data-theme="product-v3"] .daily-action-guide article p{font-size:16px}
   body[data-theme="product-v3"] .daily-time-flow,
   body[data-theme="product-v3"] .weekly-preview{
     grid-template-columns:repeat(2,minmax(0,1fr))
   }
   body[data-theme="product-v3"] .daily-time-flow p,
-  body[data-theme="product-v3"] .weekly-day p{font-size:15px}
+  body[data-theme="product-v3"] .weekly-day p{font-size:16px}
 
   body[data-theme="product-v3"] .quarter-grid{grid-template-columns:1fr 1fr}
   body[data-theme="product-v3"] .quarter-card{min-height:0}
-  body[data-theme="product-v3"] .quarter-card h3{font-size:16px}
-  body[data-theme="product-v3"] .quarter-card p{font-size:15px}
+  body[data-theme="product-v3"] .quarter-card h3{font-size:17px}
+  body[data-theme="product-v3"] .quarter-card p{font-size:16px}
 
   body[data-theme="product-v3"] .compatibility-body{grid-template-columns:1fr}
   body[data-theme="product-v3"] .compatibility-form{grid-template-columns:1fr}
@@ -704,7 +704,7 @@ body[data-theme="product-v3"] .site-footer{font-size:14px}
   }
   body[data-theme="product-v3"] .tarot-stage-inner{grid-template-columns:1fr}
   body[data-theme="product-v3"] .tarot-copy h2{font-size:30px}
-  body[data-theme="product-v3"] .tarot-copy p{font-size:16px}
+  body[data-theme="product-v3"] .tarot-copy p{font-size:17px}
   body[data-theme="product-v3"] .tarot-button{width:100%;min-height:54px}
   body[data-theme="product-v3"] .tarot-preview-card strong{font-size:15px}
   body[data-theme="product-v3"] .tarot-controls{grid-template-columns:1fr}
@@ -716,7 +716,7 @@ body[data-theme="product-v3"] .site-footer{font-size:14px}
   body[data-theme="product-v3"] .full-report-label small{font-size:15px!important}
   body[data-theme="product-v3"] .full-report-body{padding:0 15px 22px}
   body[data-theme="product-v3"] .reading-opening h2{font-size:28px}
-  body[data-theme="product-v3"] #reportLead{font-size:16px}
+  body[data-theme="product-v3"] #reportLead{font-size:17px}
   body[data-theme="product-v3"] .report-nav{
     top:62px;
     gap:4px;
@@ -736,21 +736,21 @@ body[data-theme="product-v3"] .site-footer{font-size:14px}
     padding:15px 13px
   }
   body[data-theme="product-v3"] .detail-disclosure>summary h3{font-size:18px}
-  body[data-theme="product-v3"] .detail-disclosure>summary p{font-size:15px}
+  body[data-theme="product-v3"] .detail-disclosure>summary p{font-size:16px}
   body[data-theme="product-v3"] .detail-chapter-body{padding:0 13px 14px}
   body[data-theme="product-v3"] .chapter-quick-list{grid-template-columns:1fr}
   body[data-theme="product-v3"] .chapter-quick-list li{min-height:0}
-  body[data-theme="product-v3"] .chapter-quick-list strong{font-size:15px}
-  body[data-theme="product-v3"] .chapter-quick-list span{font-size:16px}
-  body[data-theme="product-v3"] .chapter-evidence>summary{font-size:15px}
-  body[data-theme="product-v3"] .chapter-evidence li{font-size:15px!important}
-  body[data-theme="product-v3"] .chapter-full-analysis>summary{font-size:16px!important}
-  body[data-theme="product-v3"] .chapter-full-analysis p{font-size:16px!important}
+  body[data-theme="product-v3"] .chapter-quick-list strong{font-size:16px}
+  body[data-theme="product-v3"] .chapter-quick-list span{font-size:17px}
+  body[data-theme="product-v3"] .chapter-evidence>summary{font-size:16px}
+  body[data-theme="product-v3"] .chapter-evidence li{font-size:16px!important}
+  body[data-theme="product-v3"] .chapter-full-analysis>summary{font-size:17px!important}
+  body[data-theme="product-v3"] .chapter-full-analysis p{font-size:17px!important}
   body[data-theme="product-v3"] .deep-report-block>header h2{font-size:25px}
   body[data-theme="product-v3"] .month-forecast{grid-template-columns:1fr}
-  body[data-theme="product-v3"] .month-card-head strong{font-size:16px}
-  body[data-theme="product-v3"] .month-card p{font-size:15px}
-  body[data-theme="product-v3"] .month-card small{font-size:14px!important}
+  body[data-theme="product-v3"] .month-card-head strong{font-size:17px}
+  body[data-theme="product-v3"] .month-card p{font-size:16px}
+  body[data-theme="product-v3"] .month-card small{font-size:16px!important}
 
   body[data-theme="product-v3"] .mobile-bottom-nav{
     left:8px;
@@ -764,7 +764,7 @@ body[data-theme="product-v3"] .site-footer{font-size:14px}
   }
   body[data-theme="product-v3"] .mobile-bottom-nav a{
     min-height:54px;
-    font-size:14px
+    font-size:15px
   }
   body[data-theme="product-v3"] .mobile-bottom-nav a[aria-current=true]{
     background:var(--v3-brand-soft);
