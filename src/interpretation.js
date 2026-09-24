@@ -168,8 +168,8 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
       ]
     ),
     technical: section(
-      '계산 기준과 정확도',
-      '달력·절기처럼 계산 가능한 값과, 학파에 따라 달라질 수 있는 명리 해석을 분리해 표시하는 것이 이 사이트의 정확도 원칙입니다.',
+      '계산 기준과 해석 범위',
+      '달력·절기처럼 계산 가능한 값과, 학파에 따라 달라질 수 있는 명리 해석을 분리해 표시합니다.',
       [
         `연주와 월주는 양력 1월 1일이나 매월 1일을 경계로 단순 변경하지 않습니다. 연주의 핵심 경계는 입춘이며, 월운은 입춘·경칩·청명·입하·망종·소서·입추·백로·한로·입동·대설·소한의 실제 절입 시각을 사용합니다. 그래서 절기 경계에 가까운 날짜에서도 양력 15일 같은 대표값을 쓰는 방식보다 계산 기준을 더 명확하게 유지할 수 있습니다.`,
         `${precisionText} 음력과 윤달 변환, 선택한 자시 관법도 계산 입력에 포함됩니다. 다만 출생 시간이 경계에 매우 가까운 경우에는 출생지, 당시 표준시, 채택하는 자시 관법에 따라 다른 만세력과 결과가 달라질 수 있으므로 화면에 사용한 기준을 함께 표시합니다.`,
@@ -184,9 +184,13 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
     ? profile.strength.rootReasons.join(' · ')
     : '원국에서 일간과 같은 오행의 뚜렷한 통근 신호가 적습니다.';
 
-  report.overview.quick=profile.easyFacts.slice(0,3);
+  report.overview.quick=[
+    `${topGods[0]?.simple || '자기 기준'}이 가장 먼저 작동하고, ${topGods[1]?.simple || '보조 성향'}이 그 판단을 보완하는 구조입니다.`,
+    `월령은 ${profile.monthCommand.tenGod}(${profile.monthCommand.simple}), 상위 십신은 ${topGods.slice(0,2).map((item)=>`${item.tenGod} ${item.score}`).join(' · ')}입니다.`,
+    `${profile.strength.band} ${profile.strength.score}점은 확정 판정이 아니라 참고값입니다. 실제 생활에서 반복되는 선택 패턴과 맞는지 먼저 확인하세요.`
+  ];
   report.overview.evidence=profile.evidence;
-  report.overview.lead=`쉽게 말하면, 이 원국은 ${profile.strength.band} 쪽 힘을 바탕으로 ${topGods[0]?.simple || '자기 기준'}을 가장 자주 쓰는 구조입니다.`;
+  report.overview.lead=`이 원국은 ${profile.strength.band} 쪽 힘을 바탕으로 ${topGods[0]?.simple || '자기 기준'}을 자주 쓰는 구조입니다.`;
 
   report.temperament.quick=[
     `평소에는 ${topGods[0]?.simple || '자기 기준'}이 가장 먼저 드러나고, 그 다음으로 ${topGods[1]?.simple || '다른 보조 성향'}이 따라옵니다.`,
@@ -197,6 +201,17 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
     `월령 중심 십신: ${profile.monthCommand.tenGod} · ${profile.monthCommand.structureName} 후보`,
     `상위 십신: ${topGods.map((item)=>`${item.tenGod} ${item.score}`).join(' · ')}`,
     `천간 노출: ${profile.monthCommand.exposed?profile.monthCommand.exposedLocations.join('·'):'월령 중심 십신의 직접 노출 없음'}`
+  ];
+
+  report.strengths.quick=[
+    `${element.gift}이 핵심 강점이며, ${topGods[0]?.simple || '자기 기준'}이 이 힘을 실제 행동으로 연결합니다.`,
+    `오행 내부 가중치에서 ${strongElement} ${Number(chart.elements[strongElement]||0).toFixed(2)}가 가장 높고, ${topGods[0]?.tenGod || '주요 십신'}은 ${topGods[0]?.locations.slice(0,2).join('·') || '원국'}에 반복됩니다.`,
+    `${element.risk}이 반복될 때는 강점을 더 밀어붙이지 말고, ${weak.use}을 먼저 넣어 과부하를 끊어보세요.`
+  ];
+  report.strengths.evidence=[
+    `강한 오행: ${strongElement} ${Number(chart.elements[strongElement]||0).toFixed(2)}`,
+    `약한 오행: ${weakElement} ${Number(chart.elements[weakElement]||0).toFixed(2)}`,
+    `주요 십신 위치: ${topGods[0]?.tenGod || '주요 십신'} · ${topGods[0]?.locations.join('·') || '원국 내부'}`
   ];
 
   report.balance.title='내 기운은 강한 편일까, 약한 편일까?';
@@ -218,15 +233,24 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
   );
 
   report.career.quick=[
-    `한 줄 요약: 일에서는 ${topGods[0]?.simple || '자기 기준'}과 ${topGods[1]?.simple || '보조 성향'}을 함께 쓸 수 있는 환경이 중요합니다.`,
-    `왜 그런가요? 상위 십신은 ${topGods.map((item)=>item.tenGod).join(' · ')}이고, 특히 월주와 시주 배치를 함께 읽습니다.`,
-    '생활에서는: 직업명을 하나 찍기보다 자율성·책임·표현·관리 중 어떤 조건에서 성과가 나는지 확인하는 것이 더 유용합니다.'
+    `${topGods[0]?.simple || '자기 기준'}과 ${topGods[1]?.simple || '보조 성향'}을 함께 쓸 수 있는 일이 잘 맞는 편입니다.`,
+    `상위 십신은 ${topGods.slice(0,3).map((item)=>`${item.tenGod}(${item.locations.slice(0,2).join('·') || '원국'})`).join(' · ')}이며, 월령은 ${profile.monthCommand.simple} 쪽입니다.`,
+    '직업명을 맞히려 하기보다 자율성·책임 범위·결과 확인 방식이 내 강점과 맞는지 비교하세요.'
+  ];
+  report.career.evidence=[
+    `상위 십신: ${topGods.map((item)=>`${item.tenGod} ${item.score}`).join(' · ')}`,
+    `월령 중심: ${profile.monthCommand.tenGod} · ${profile.monthCommand.structureName} 후보`
   ];
 
+  const wealthWeight=((profile.tenGods.score.편재||0)+(profile.tenGods.score.정재||0)).toFixed(2);
   report.money.quick=[
-    '한 줄 요약: 재물운은 “큰돈이 들어온다”보다 돈을 다루는 습관과 압력이 어디서 생기는지를 보는 쪽에 가깝습니다.',
-    `왜 그런가요? 원국에서 편재+정재 가중치는 ${((profile.tenGods.score.편재||0)+(profile.tenGods.score.정재||0)).toFixed(2)}이고, 올해 세운의 십신까지 함께 봅니다.`,
-    '생활에서는: 투자·대출·큰 소비는 사주보다 현금흐름과 손실 가능성을 우선하고, 해석은 판단 습관을 점검하는 보조 자료로 쓰세요.'
+    '재물 해석은 큰돈의 유입을 예언하기보다 돈을 결정하고 관리하는 습관을 보는 항목입니다.',
+    `원국의 편재+정재 내부 가중치는 ${wealthWeight}, 올해 세운은 ${yearFlow.tenGod}(${yearFlow.group})입니다.`,
+    '투자·대출·큰 소비는 실제 현금흐름과 손실 한도를 먼저 확인하고, 사주 해석은 판단 습관을 점검하는 보조 자료로만 쓰세요.'
+  ];
+  report.money.evidence=[
+    `편재+정재 가중치: ${wealthWeight}`,
+    `올해 세운: ${yearFlow.korean} · ${yearFlow.tenGod}`
   ];
 
   report.love.quick=[
@@ -235,6 +259,27 @@ export function buildDetailedInterpretation(chart, mbti, yearFlow, monthFlows){
     '생활에서는: 기대를 추측으로 두지 말고 말로 확인하고, 궁합은 두 사람 원국의 공통점과 긴장 지점을 비교하는 용도로 쓰는 것이 좋습니다.'
   ];
   report.love.evidence=profile.relations.items.slice(0,5).map((item)=>`${item.type} · ${item.pillarLabels.join('↔') || item.members.join('·')} · ${item.contexts.join(' / ')}`);
+
+  const relationAction=profile.relations.tension.length
+    ? '긴장 신호가 있는 관계에서는 상대 의도를 추측하기보다 기대·역할·경계를 말로 확인하세요.'
+    : '강한 충돌 신호가 적더라도 기대를 암묵적으로 두지 말고 역할과 속도를 짧게 확인하세요.';
+  report.relationships.quick=[
+    `${profile.relations.summary} 관계에서는 ${role.love}이 기본 패턴으로 나타나기 쉽습니다.`,
+    `월령은 ${profile.monthCommand.tenGod}(${profile.monthCommand.simple})이고, 관계 신호는 연결 ${profile.relations.connection.length}개 / 긴장·변화 ${profile.relations.tension.length}개입니다.`,
+    relationAction
+  ];
+  report.relationships.evidence=profile.relations.items.slice(0,5).map((item)=>`${item.type} · ${item.pillarLabels.join('↔') || item.members.join('·')} · ${item.contexts.join(' / ')}`);
+
+  report.recovery.quick=[
+    `과부하 때는 “${role.stress}” 패턴이 먼저 나타날 수 있습니다.`,
+    `${strongElement} 기운의 과사용 위험은 ${element.risk}이며, 상대적으로 약한 ${weakElement} 쪽 행동이 균형 후보입니다.`,
+    `${weak.use}을 일정에 먼저 넣고, 회복 뒤에 판단 강도를 다시 올리세요.`
+  ];
+  report.recovery.evidence=[
+    `강한 오행: ${strongElement} ${Number(chart.elements[strongElement]||0).toFixed(2)}`,
+    `약한 오행: ${weakElement} ${Number(chart.elements[weakElement]||0).toFixed(2)}`,
+    `주요 과부하 패턴: ${role.stress}`
+  ];
 
   if(profile.flow){
     report.year.lead=profile.flow.headline+` 쉽게 말하면, 올해는 ${profile.flow.annualGod} 주제가 평소보다 더 자주 드러나는 해입니다.`;
