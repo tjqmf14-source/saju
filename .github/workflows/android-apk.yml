@@ -9,11 +9,14 @@ on:
       - gpt/deep-interpretation-mobile-v3
       - gpt/deep-reading-jumsin
       - gpt/plugin-reference-accuracy-v24
+      - gpt/product-v3-commercial-rebuild-20260924
     paths:
       - 'src/**'
       - 'public/**'
       - 'index.html'
       - 'site-v12.css'
+      - 'product-v17.css'
+      - 'product-v3.css'
       - 'package.json'
       - 'android/**'
       - 'mobile/**'
@@ -59,8 +62,8 @@ jobs:
       - name: Verify APK
         run: |
           test -f android/app/build/outputs/apk/debug/app-debug.apk
-          grep -q "versionName '2.4.0'" android/app/build.gradle
-          grep -q "versionCode 240" android/app/build.gradle
+          grep -q "versionName '3.0.0'" android/app/build.gradle
+          grep -q "versionCode 300" android/app/build.gradle
           if grep -q "android.permission.INTERNET" android/app/src/main/AndroidManifest.xml; then
             echo "Unexpected INTERNET permission"
             exit 1
@@ -69,8 +72,8 @@ jobs:
       - name: Prepare artifact
         run: |
           mkdir -p mobile/artifacts
-          cp android/app/build/outputs/apk/debug/app-debug.apk mobile/artifacts/Naesaju-2.4.0-debug.apk
-          sha256sum mobile/artifacts/Naesaju-2.4.0-debug.apk > mobile/artifacts/SHA256SUMS.txt
+          cp android/app/build/outputs/apk/debug/app-debug.apk mobile/artifacts/Naesaju-3.0.0-debug.apk
+          sha256sum mobile/artifacts/Naesaju-3.0.0-debug.apk > mobile/artifacts/SHA256SUMS.txt
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
