@@ -24,6 +24,7 @@ jobs:
           node-version: 24
       - run: npm install
       - run: npm run check
+      - run: npm run check:android-engine
       - run: npx playwright install --with-deps chromium
       - run: npm run visual:check
       - name: Upload legacy web reference screenshots
