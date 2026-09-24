@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { getSolarTerm } from 'manseryeok';
-import { calculateSaju, calculateMonthFlows, calculateTodayTimeFlows, detectBranchRelations } from '../src/saju-engine.js';
+import { calculateSaju, calculateYearFlow, calculateMonthFlows, calculateTodayTimeFlows, detectBranchRelations } from '../src/saju-engine.js';
 
 test('1987-06-14 11:45 KST 원국을 검증된 간지로 계산한다', () => {
   const chart = calculateSaju({calendar:'solar',year:1987,month:6,day:14,hour:11,minute:45,gender:'male',precision:false});
@@ -9,6 +9,15 @@ test('1987-06-14 11:45 KST 원국을 검증된 간지로 계산한다', () => {
   assert.equal(chart.dayMaster,'갑');
   assert.equal(chart.lunar.month,5);
   assert.equal(chart.lunar.day,18);
+});
+
+test('1990-05-15 independent manse reference matches year month day and 2026 annual pillar', () => {
+  const chart = calculateSaju({calendar:'solar',year:1990,month:5,day:15,hour:9,minute:20,gender:'male',precision:false});
+  assert.equal(chart.pillarStrings.year,'경오');
+  assert.equal(chart.pillarStrings.month,'신사');
+  assert.equal(chart.pillarStrings.day,'경진');
+  assert.equal(chart.dayMaster,'경');
+  assert.equal(calculateYearFlow(chart,2026).korean,'병오');
 });
 
 test('동일 날짜의 음력 입력은 같은 원국을 만든다', () => {
