@@ -39,6 +39,8 @@ test('10pt floor, uncropped tarot art and evidence-first report rules are enforc
   assert.ok(hardening.includes('display:block!important'));
   assert.ok(hardening.includes('.chapter-full-analysis{'));
   assert.ok(hardening.includes('.month-card small{'));
+  assert.ok(css.includes('small{font-size:13.5px!important}'));
+  assert.ok(css.includes('#today .daily-layout{row-gap:14px;column-gap:22px}'));
 });
 
 test('landing page follows the Product V17 editorial section order', () => {

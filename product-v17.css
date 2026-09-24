@@ -1384,3 +1384,12 @@ body{background:var(--app-bg)}
   font-size:13.5px!important;
   line-height:1.5
 }
+
+
+/* V18 browser-default and desktop density hardening */
+small{font-size:13.5px!important}
+@media(min-width:761px){
+  #today.landing-section>.section-heading{padding-bottom:24px;margin-bottom:26px}
+  #today .daily-layout{row-gap:14px;column-gap:22px}
+  #today .daily-brief{padding-top:22px;padding-bottom:22px}
+}
