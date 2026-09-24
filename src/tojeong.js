@@ -90,7 +90,22 @@ function signalCount(text, words) {
   return words.reduce((sum, word) => sum + (text.includes(word) ? 1 : 0), 0);
 }
 
-function modernize(text) {
+const MONTH_ACTIONS = [
+  '시작 전에 조건을 한 줄로 적고, 가장 작은 첫 단계부터 실행하세요.',
+  '관계된 사람과 기대·역할을 먼저 맞춘 뒤 일정을 확정하세요.',
+  '추가 결정보다 현재 계획에서 빠진 정보 하나를 먼저 확인하세요.',
+  '중간 점검 날짜를 정하고 결과가 약한 일 하나를 줄이세요.',
+  '말이나 계약은 즉시 확정하지 말고 핵심 조건을 다시 읽어보세요.',
+  '일정이 몰리면 우선순위 두 가지만 남기고 나머지는 미루세요.',
+  '상반기 결과를 숫자로 정리하고 이어갈 일과 끝낼 일을 나누세요.',
+  '새 기회는 비용·시간·되돌릴 수 있는지 세 가지를 확인한 뒤 선택하세요.',
+  '관계나 협업은 애매한 기대를 남기지 말고 역할을 문장으로 합의하세요.',
+  '체력이 떨어질수록 큰 결정보다 마감과 회복을 먼저 관리하세요.',
+  '남은 자원과 일정을 다시 계산해 올해 안에 끝낼 한 가지를 고르세요.',
+  '성과와 실수를 함께 기록하고 내년으로 넘길 과제를 한 가지로 줄이세요.'
+];
+
+function modernize(text, month = 0) {
   const positive = signalCount(text, POSITIVE);
   const caution = signalCount(text, CAUTION);
   const tone = positive >= caution + 2
@@ -112,6 +127,8 @@ function modernize(text) {
   if (topics.includes('관계')) action = '중요한 관계에서는 추측보다 사실과 요청을 짧게 확인하는 대화를 우선하세요.';
   if (topics.includes('컨디션')) action = '일정을 무리하게 늘리지 말고 회복 시간을 확보하세요. 지속되는 증상은 실제 의료 판단을 우선하세요.';
   if (topics.includes('이동')) action = '이동이나 변화가 필요하다면 일정·비용·대안을 먼저 확인한 뒤 결정하세요.';
+
+  if (month >= 1 && month <= 12) action = MONTH_ACTIONS[month - 1];
 
   return {
     tone,
@@ -165,7 +182,7 @@ export function calculateTojeong(input, targetYear = new Date().getFullYear()) {
       const traditional = source.months[String(number)] || '';
       return {
         month: number,
-        ...modernize(traditional)
+        ...modernize(traditional, number)
       };
     }),
     traditionalSource: {
