@@ -536,21 +536,22 @@ function renderProfile(chart,mbti,report,name,todayFlow){
   const strongElement=dominantElement(chart);
   const strongRole=dominantRole(chart);
   $('profileBirth').textContent=`양력 ${formatSolar(chart.solar)} · 음력 ${formatLunar(chart.lunar)} · ${chart.basis.location}`;
-  $('reportTitle').textContent=`${name}님의 타고난 구조`;
+  $('reportTitle').textContent=`${name}님의 사주 리포트`;
   $('reportLead').textContent=report.overview.lead;
   $('profileTags').innerHTML=[`${strongElement} · ${ELEMENT_LABELS[strongElement].label}`,ROLE_LABELS[strongRole],mbti.type,relationLabel(chart.relations)].map((v)=>`<span>${v}</span>`).join('');
   $('mbtiType').textContent=mbti.type;
-  $('mbtiLabel').textContent='사주 기반 성향 · 비공식 참고';
+  $('mbtiLabel').textContent='성향 참고 · 정식 MBTI 아님';
   renderAccuracyBasis(chart);
 }
 
 function renderDetailedReport(report){
-  const ordered=['overview','temperament','innerOuter','strengths','balance','career','money','love','relationships','recovery','year','luck','technical'];
+  const ordered=['overview','temperament','strengths','career','money','relationships','recovery'];
+  const labels=['한 줄 요약','왜 이렇게 보나요','생활에서 써먹기'];
   $('detailedReport').innerHTML=ordered.map((key,index)=>{
     const item=report[key];
+    if(!item) return '';
     const open=index===0?' open':'';
-    const labels=['핵심','근거','생활 조언'];
-    const quick=(item.quick?.length?item.quick:item.paragraphs.map(firstSentence).slice(0,3));
+    const quick=(item.quick?.length?item.quick:item.paragraphs.map(firstSentence).slice(0,3)).slice(0,3);
     return `<article id="report-${key}" class="detail-chapter detail-chapter-${String(index+1).padStart(2,'0')}" data-report-key="${key}">
       <details class="detail-disclosure"${open}>
         <summary>
@@ -559,11 +560,10 @@ function renderDetailedReport(report){
           <b class="detail-toggle" aria-hidden="true">+</b>
         </summary>
         <div class="detail-chapter-body">
-          <p class="chapter-takeaway"><mark>${escapeHtml(item.lead)}</mark></p>
-          <div class="easy-reading-label"><span>먼저 이것만 보세요</span><small>쉬운 해설</small></div>
-          <ul class="chapter-quick-list">${quick.map((p,i)=>`<li><strong>${labels[i]||'근거'}</strong><span>${escapeHtml(p)}</span></li>`).join('')}</ul>
-          ${item.evidence?.length?`<div class="chapter-evidence"><strong>계산 근거</strong><ul>${item.evidence.map((line)=>`<li>${escapeHtml(line)}</li>`).join('')}</ul></div>`:''}
-          <details class="chapter-full-analysis"><summary>전문 해설까지 자세히 보기</summary>${item.paragraphs.map((p)=>`<p>${escapeHtml(p)}</p>`).join('')}</details>
+          <div class="easy-reading-label"><span>먼저 이것만 보세요</span><small>개인 계산값 기반</small></div>
+          <ul class="chapter-quick-list">${quick.map((p,i)=>`<li><strong>${labels[i]||'참고'}</strong><span>${escapeHtml(p)}</span></li>`).join('')}</ul>
+          ${item.evidence?.length?`<details class="chapter-evidence"><summary>해석 근거 보기</summary><ul>${item.evidence.map((line)=>`<li>${escapeHtml(line)}</li>`).join('')}</ul></details>`:''}
+          <details class="chapter-full-analysis"><summary>깊이 읽기</summary>${item.paragraphs.map((p)=>`<p>${escapeHtml(p)}</p>`).join('')}</details>
         </div>
       </details>
     </article>`;
@@ -580,8 +580,10 @@ function renderKeywordInsight(report,key='temperament'){
     button.setAttribute('aria-pressed',active?'true':'false');
   });
   panel.dataset.reportKey=key;
-  const easy=item.quick?.[0] || firstSentence(item.paragraphs[0]);
-  panel.innerHTML=`<div><span class="section-kicker">SELECTED INSIGHT</span><h3>${escapeHtml(item.title)}</h3></div><p><mark>${escapeHtml(item.lead)}</mark><br>${escapeHtml(easy)}</p><a href="#report-${key}">정밀 해설 이어 읽기 <span aria-hidden="true">→</span></a>`;
+  const quick=(item.quick?.length?item.quick:item.paragraphs.map(firstSentence)).slice(0,3);
+  const primary=quick[0] || item.lead;
+  const action=quick[2] || quick[1] || '';
+  panel.innerHTML=`<div><span class="section-kicker">MY INSIGHT</span><h3>${escapeHtml(item.title)}</h3></div><p><mark>${escapeHtml(primary)}</mark>${action && action!==primary?`<br>${escapeHtml(action)}`:''}</p><a href="#report-${key}">자세히 읽기 <span aria-hidden="true">→</span></a>`;
 }
 
 function setupKeywordCards(){
@@ -615,10 +617,10 @@ function renderToday(chart,todayFlow){
 
   const metrics=[
     ['money','02','재물',copy.money,'icon-coin'],
-    ['love','03','연애',copy.love,'icon-heart'],
-    ['work','04','직업',copy.work,'icon-briefcase'],
-    ['condition','05','건강',copy.health,'icon-health'],
-    ['study','06','학업',copy.summary,'icon-chart']
+    ['love','03','관계',copy.love,'icon-heart'],
+    ['work','04','일',copy.work,'icon-briefcase'],
+    ['condition','05','컨디션',copy.health,'icon-health'],
+    ['study','06','성장',copy.summary,'icon-chart']
   ];
   $('dailyMetrics').innerHTML=metrics.map(([key,index,title,body,icon])=>{
     const flow=scores[key];
@@ -627,10 +629,10 @@ function renderToday(chart,todayFlow){
 
   const rankedDaily=[
     ['재물',scores.money,copy.money],
-    ['연애',scores.love,copy.love],
-    ['직업',scores.work,copy.work],
-    ['건강',scores.condition,copy.health],
-    ['학업',scores.study,copy.summary]
+    ['관계',scores.love,copy.love],
+    ['일',scores.work,copy.work],
+    ['컨디션',scores.condition,copy.health],
+    ['성장',scores.study,copy.summary]
   ].sort((a,b)=>b[1].score-a[1].score);
   const strongestDaily=rankedDaily[0];
   const softestDaily=rankedDaily.at(-1);
@@ -648,7 +650,7 @@ function renderToday(chart,todayFlow){
   ].map(([title,body],index)=>`<article><span>0${index+1}</span><strong>${escapeHtml(title)}</strong><p>${escapeHtml(body)}</p></article>`).join('');
 
   const weekBase=dailyDate();
-  const categoryLabels={money:'재물',love:'연애',work:'직업',condition:'건강',study:'학업'};
+  const categoryLabels={money:'재물',love:'관계',work:'일',condition:'컨디션',study:'성장'};
   $('weeklyPreview').innerHTML=Array.from({length:7},(_,index)=>{
     const date=new Date(weekBase.getTime());
     date.setUTCDate(date.getUTCDate()+index);
