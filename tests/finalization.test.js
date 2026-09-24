@@ -25,6 +25,24 @@ test('desktop and mobile base type remain readable', () => {
   assert.match(css, /\.form-grid input,\.form-grid select,\.profile-manager select,\.profile-manager button,\.precision-grid select\{font-size:16px\}/);
 });
 
+
+test('10pt floor, uncropped tarot art and evidence-first report rules are enforced', () => {
+  const px=[...css.matchAll(/font-size\s*:\s*([0-9]+(?:\.[0-9]+)?)px/g)].map((match)=>Number(match[1]));
+  const shorthand=[...css.matchAll(/font\s*:\s*[^;{}]*?([0-9]+(?:\.[0-9]+)?)px[^;{}]*/g)].map((match)=>Number(match[1]));
+  assert.ok(Math.min(...px,...shorthand) >= (10*96/72));
+  assert.ok(css.includes('.tarot-preview-card img{width:100%;aspect-ratio:2/3;object-fit:contain;object-position:center'));
+  assert.ok(css.includes('.tarot-card-inner{position:relative;aspect-ratio:7/12;'));
+  assert.ok(css.includes('.tarot-card-image{object-fit:contain;object-position:center}'));
+  const hardening=css.slice(css.lastIndexOf('Product V18 QA hardening'));
+  assert.ok(hardening.includes('.chapter-takeaway{display:none!important}'));
+  assert.ok(hardening.includes('.chapter-evidence{'));
+  assert.ok(hardening.includes('display:block!important'));
+  assert.ok(hardening.includes('.chapter-full-analysis{'));
+  assert.ok(hardening.includes('.month-card small{'));
+  assert.ok(css.includes('small{font-size:13.5px!important}'));
+  assert.ok(css.includes('#today .daily-layout{row-gap:14px;column-gap:22px}'));
+});
+
 test('landing page follows the Product V17 editorial section order', () => {
   const order = ['id="input"','visual-keyword-showcase','quote-band','id="today"','id="year"','id="compatibility"','id="tarot"','id="full-report"','closing-cta'];
   let cursor = -1;

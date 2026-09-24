@@ -247,6 +247,10 @@ test('tarot exposes all 78 cards as one overlapping fan without a scrollbar', as
   await expect(page.locator('.tarot-card-caption')).toHaveCount(3);
   await expect(page.locator('.tarot-reading')).toHaveCount(3);
 
+  const revealFits=await page.locator('.tarot-card-image').evaluateAll((images)=>images.map((img)=>getComputedStyle(img).objectFit));
+  expect(revealFits.length).toBeGreaterThan(0);
+  expect(revealFits.every((fit)=>fit==='contain')).toBe(true);
+
   const revealGeometry=await page.evaluate(() => {
     const captions=[...document.querySelectorAll('.tarot-card-caption')].map((el)=>{
       const r=el.getBoundingClientRect();
@@ -271,7 +275,7 @@ test('final-build typography and section geometry do not clip or overlap', async
 
   const audit = await page.evaluate(() => {
     const viewportWidth=document.documentElement.clientWidth;
-    const selector='h1,h2,h3,h4,p,span,b,strong,small,label,summary,button,a';
+    const selector='h1,h2,h3,h4,p,span,b,strong,small,label,summary,button,a,input,select,textarea,li,dt,dd';
     const nodes=[...document.querySelectorAll(selector)].filter((el)=>{
       if(el.closest('.tarot-fan-stage') || el.classList.contains('skip-link') || el.classList.contains('sr-only')) return false;
       const closedDetails=el.closest('details:not([open])');
@@ -292,6 +296,10 @@ test('final-build typography and section geometry do not clip or overlap', async
       const clippedX=['hidden','clip'].includes(style.overflowX);
       return clippedX && el.scrollWidth > el.clientWidth + 2;
     }).map((el)=>({tag:el.tagName,cls:el.className,text:(el.textContent||'').trim().slice(0,60),scrollWidth:el.scrollWidth,clientWidth:el.clientWidth}));
+    const undersized=nodes.filter((el)=>{
+      const text=((el.textContent||'') || ('value' in el ? el.value : '')).trim();
+      return text && parseFloat(getComputedStyle(el).fontSize) < 13.3;
+    }).map((el)=>({tag:el.tagName,cls:el.className,text:((el.textContent||'') || ('value' in el ? el.value : '')).trim().slice(0,60),fontSize:getComputedStyle(el).fontSize}));
     const sections=[...document.querySelectorAll('.hero-primary,#input,.feature-orbit-nav,.visual-keyword-showcase,#today,#year,#compatibility,#tarot,#full-report')];
     const badSections=sections.filter((el)=>{
       const style=getComputedStyle(el);
@@ -300,12 +308,13 @@ test('final-build typography and section geometry do not clip or overlap', async
       const r=el.getBoundingClientRect();
       return r.width<=0 || r.height<=0 || r.right>viewportWidth+2 || r.left<-2;
     }).map((el)=>({id:el.id,cls:el.className}));
-    return {outOfViewport,clipped,badSections};
+    return {outOfViewport,clipped,badSections,undersized};
   });
 
   expect(audit.outOfViewport, JSON.stringify(audit.outOfViewport)).toEqual([]);
   expect(audit.clipped, JSON.stringify(audit.clipped)).toEqual([]);
   expect(audit.badSections, JSON.stringify(audit.badSections)).toEqual([]);
+  expect(audit.undersized, JSON.stringify(audit.undersized)).toEqual([]);
   await assertNoHorizontalOverflow(page);
   await page.evaluate(() => scrollTo(0,0));
   await page.screenshot({ path: `test-results/v17-fullpage-${testInfo.project.name}.png`, fullPage: true });

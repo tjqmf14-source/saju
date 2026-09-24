@@ -204,7 +204,8 @@
     root.querySelectorAll('#monthForecast .month-card').forEach((card) => {
       const month = card.querySelector('.month-number')?.textContent?.trim();
       const title = card.querySelector('.month-card-head strong');
-      if (month && title) title.textContent = month + '월';
+      const focus = card.querySelector('.month-card-focus mark')?.textContent?.split('·')[0]?.trim();
+      if (month && title) title.textContent = focus ? `${month}월 · ${simplifyText(focus)}` : month + '월';
     });
     root.querySelectorAll('#tojungQuarterGrid .quarter-card h3').forEach((title) => {
       title.textContent = title.textContent.replace(/\s*·.*$/, '');
@@ -212,7 +213,7 @@
   }
 
   function simplifyDetailedReport() {
-    const labels = ['핵심', '쉽게 말하면', '생활 조언'];
+    const labels = ['핵심', '근거', '생활 조언'];
     root.querySelectorAll('#detailedReport .chapter-quick-list').forEach((list) => {
       list.querySelectorAll('li strong').forEach((label, index) => {
         label.textContent = labels[index] || '참고';

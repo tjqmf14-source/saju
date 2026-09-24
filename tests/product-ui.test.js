@@ -20,7 +20,8 @@ test('app-first UI uses progressive disclosure and mobile-first controls',()=>{
   assert.match(css,/@media\(max-width:760px\)\{[\s\S]*?\.feature-orbit-nav\{display:none!important\}/);
   assert.match(css,/\.visual-keyword-showcase\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
   assert.match(css,/#expert\{display:none!important\}/);
-  assert.match(css,/chapter-evidence,.chapter-full-analysis\{display:none!important\}/);
+  assert.match(css,/\.chapter-evidence\{[\s\S]*?display:block!important/);
+  assert.match(css,/\.chapter-full-analysis\{[\s\S]*?display:block!important/);
   assert.match(css,/@media\(max-width:720px\)/);
 });
 
