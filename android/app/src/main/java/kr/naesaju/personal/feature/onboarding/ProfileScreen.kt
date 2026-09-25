@@ -52,11 +52,11 @@ fun ProfileScreen(
                 .testTag("profile-list"),
             contentPadding = androidx.compose.foundation.layout.PaddingValues(
                 start = 20.dp,
-                top = 36.dp,
+                top = 20.dp,
                 end = 20.dp,
-                bottom = 36.dp
+                bottom = 24.dp
             ),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             item {
                 Text(
@@ -67,13 +67,13 @@ fun ProfileScreen(
                 Text(
                     text = if (initial == null) "처음 한 번만\n나를 알려주세요." else "프로필을\n다시 확인해 주세요.",
                     style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 6.dp)
                 )
                 Text(
                     text = "입력한 정보는 기기 안에서만 계산하고 저장합니다.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 10.dp)
+                    modifier = Modifier.padding(top = 8.dp)
                 )
             }
 
@@ -90,7 +90,7 @@ fun ProfileScreen(
             item {
                 Text("달력 기준", style = MaterialTheme.typography.titleMedium)
                 Row(
-                    modifier = Modifier.padding(top = 10.dp),
+                    modifier = Modifier.padding(top = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     FilterChip(
