@@ -87,9 +87,8 @@ class NativeScreenSmokeTest {
         composeRule.onNodeWithText("음력").performClick()
         composeRule.onNodeWithText("윤달로 태어났어요").assertIsDisplayed()
         composeRule.onNodeWithText("양력").performClick()
-        composeRule.onNodeWithText("출생시간을 알고 있어요").assertIsDisplayed()
-        composeRule.onNodeWithTag("profile-list").performScrollToIndex(6)
-        composeRule.onNodeWithText("내 사주 시작하기").assertIsDisplayed()
+        composeRule.onNodeWithText("출생시간을 알고 있어요").performScrollTo().assertIsDisplayed()
+        composeRule.onNodeWithText("내 사주 시작하기").performScrollTo().assertIsDisplayed()
         saveRootScreenshot("qa-profile.png")
     }
 
