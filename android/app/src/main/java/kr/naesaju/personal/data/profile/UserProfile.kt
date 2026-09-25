@@ -8,7 +8,8 @@ data class UserProfile(
     val birthDate: String,
     val birthTime: String,
     val birthTimeKnown: Boolean,
-    val gender: String
+    val gender: String,
+    val isLeap: Boolean = false
 ) {
     fun toEngineRequestJson(): String {
         return JSONObject()
@@ -17,6 +18,7 @@ data class UserProfile(
             .put("birthTime", birthTime)
             .put("birthTimeKnown", birthTimeKnown)
             .put("gender", gender)
+            .put("isLeap", calendar == "lunar" && isLeap)
             .put("location", "korea")
             .put("dayBoundary", "midnight")
             .put("precision", false)

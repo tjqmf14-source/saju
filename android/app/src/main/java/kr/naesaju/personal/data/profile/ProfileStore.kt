@@ -19,7 +19,8 @@ class ProfileStore(private val context: Context) {
             birthDate = birthDate,
             birthTime = preferences[Keys.BirthTime] ?: "12:00",
             birthTimeKnown = preferences[Keys.BirthTimeKnown] ?: true,
-            gender = preferences[Keys.Gender] ?: "male"
+            gender = preferences[Keys.Gender] ?: "male",
+            isLeap = preferences[Keys.IsLeap] ?: false
         )
     }
 
@@ -31,6 +32,7 @@ class ProfileStore(private val context: Context) {
             preferences[Keys.BirthTime] = profile.birthTime
             preferences[Keys.BirthTimeKnown] = profile.birthTimeKnown
             preferences[Keys.Gender] = profile.gender
+            preferences[Keys.IsLeap] = profile.calendar == "lunar" && profile.isLeap
         }
     }
 
@@ -41,5 +43,6 @@ class ProfileStore(private val context: Context) {
         val BirthTime = stringPreferencesKey("birth_time")
         val BirthTimeKnown = booleanPreferencesKey("birth_time_known")
         val Gender = stringPreferencesKey("gender")
+        val IsLeap = booleanPreferencesKey("is_leap")
     }
 }

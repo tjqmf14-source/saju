@@ -84,6 +84,9 @@ class NativeScreenSmokeTest {
 
         composeRule.onNodeWithText("처음 한 번만\n나를 알려주세요.").assertIsDisplayed()
         composeRule.onNodeWithText("생년월일").assertIsDisplayed()
+        composeRule.onNodeWithText("음력").performClick()
+        composeRule.onNodeWithText("윤달로 태어났어요").assertIsDisplayed()
+        composeRule.onNodeWithText("양력").performClick()
         composeRule.onNodeWithText("출생시간을 알고 있어요").assertIsDisplayed()
         composeRule.onNodeWithTag("profile-list").performScrollToIndex(6)
         composeRule.onNodeWithText("내 사주 시작하기").assertIsDisplayed()

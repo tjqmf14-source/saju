@@ -88,6 +88,70 @@ function readingSection(report, key, title) {
   };
 }
 
+function hasFinalConsonant(text = '') {
+  const syllable = [...String(text)].reverse().find((character) => /[가-힣]/.test(character));
+  if (!syllable) return false;
+  return (syllable.charCodeAt(0) - 0xAC00) % 28 !== 0;
+}
+
+function attachParticle(text, consonantParticle, vowelParticle) {
+  const value = String(text || '').trim();
+  return value + (hasFinalConsonant(value) ? consonantParticle : vowelParticle);
+}
+
+const DAILY_GUIDANCE = {
+  work: {
+    high: '결정할 일을 한 가지 고르고 결과까지 연결해 보세요.',
+    steady: '우선순위를 한 가지로 좁히면 흐름을 쓰기 쉽습니다.',
+    caution: '급한 일과 중요한 일을 나눠 순서대로 처리하세요.',
+    low: '새 일을 벌이기보다 밀린 일과 오류부터 정리하세요.'
+  },
+  money: {
+    high: '기회가 보여도 예산 범위와 회수 조건을 먼저 확인하세요.',
+    steady: '필요한 지출과 미룰 지출을 구분해 보세요.',
+    caution: '큰 결제나 투자는 조건을 한 번 더 확인하세요.',
+    low: '새 위험을 늘리기보다 현금 흐름을 지키는 쪽에 집중하세요.'
+  },
+  love: {
+    high: '먼저 연락하거나 필요한 말을 짧고 분명하게 전해 보세요.',
+    steady: '추측보다 확인하는 대화를 우선하면 편안합니다.',
+    caution: '감정이 올라오면 결론보다 서로의 의도를 먼저 확인하세요.',
+    low: '답을 서두르지 말고 불편한 지점을 한 문장으로 정리하세요.'
+  },
+  condition: {
+    high: '활동과 휴식 시간을 나눠 좋은 리듬을 유지해 보세요.',
+    steady: '쉬는 시간을 일정에 먼저 넣어 리듬을 지켜보세요.',
+    caution: '피로 신호가 보이면 일정을 줄이고 회복 시간을 확보하세요.',
+    low: '무리한 일정을 미루고 수면과 식사 같은 기본 리듬부터 챙기세요.'
+  }
+};
+
+function dailyGuidance(category, score) {
+  const copy = DAILY_GUIDANCE[category] || DAILY_GUIDANCE.work;
+  if (score >= 72) return copy.high;
+  if (score >= 58) return copy.steady;
+  if (score >= 44) return copy.caution;
+  return copy.low;
+}
+
+function dailyHeadline(scores) {
+  const ranked = [
+    { title: '일', score: scores.work.score },
+    { title: '돈', score: scores.money.score },
+    { title: '관계', score: scores.love.score },
+    { title: '컨디션', score: scores.condition.score }
+  ].sort((a, b) => b.score - a.score);
+  const strongest = ranked[0];
+  const weakest = ranked.at(-1);
+  if (strongest.score - weakest.score >= 10) {
+    return `${strongest.title}은 비교적 수월하고, ${weakest.title}은 한 번 더 점검해 보세요.`;
+  }
+  if (scores.overall.score >= 72) return '오늘은 중요한 한 가지를 정해 끝까지 이어가기 좋은 흐름입니다.';
+  if (scores.overall.score >= 58) return '큰 무리 없이 움직일 수 있지만, 중요한 일부터 순서를 정해 보세요.';
+  if (scores.overall.score >= 44) return '속도를 높이기보다 확인과 정리에 시간을 조금 더 써보세요.';
+  return '새 결정을 늘리기보다 이미 정한 일과 회복에 집중해 보세요.';
+}
+
 function nativePayload(chart, now = new Date()) {
   const today = calculateTodayFlow(chart, now);
   const scores = calculateDailyScores(chart, today);
@@ -116,12 +180,12 @@ function nativePayload(chart, now = new Date()) {
       readingSection(report, 'recovery', '생활과 회복')
     ],
     today: {
-      headline: scores.overall.reason,
+      headline: dailyHeadline(scores),
       items: [
-        { id: 'work', title: '일', label: scores.work.label, text: scores.work.reason },
-        { id: 'money', title: '돈', label: scores.money.label, text: scores.money.reason },
-        { id: 'love', title: '관계', label: scores.love.label, text: scores.love.reason },
-        { id: 'condition', title: '컨디션', label: scores.condition.label, text: scores.condition.reason }
+        { id: 'work', title: '일', label: scores.work.label, text: dailyGuidance('work', scores.work.score) },
+        { id: 'money', title: '돈', label: scores.money.label, text: dailyGuidance('money', scores.money.score) },
+        { id: 'love', title: '관계', label: scores.love.label, text: dailyGuidance('love', scores.love.score) },
+        { id: 'condition', title: '컨디션', label: scores.condition.label, text: dailyGuidance('condition', scores.condition.score) }
       ],
       good: currentMonth?.action || '오늘 할 수 있는 한 가지를 작게 정해 실행해 보세요.',
       avoid: currentMonth?.check || '한 번에 너무 많은 결정을 내리지 마세요.'
@@ -202,7 +266,7 @@ function compatibilityPayload(first, second) {
   const friction = relationSignals.filter((item) => ['충','형','파','해'].includes(item.type));
 
   const strengths = firstRole === secondRole
-    ? '두 사람 모두 ' + ROLE_COPY[firstRole] + '을 중요하게 보는 편이라 결정 기준을 맞추기 쉽습니다.'
+    ? '두 사람 모두 ' + attachParticle(ROLE_COPY[firstRole], '을', '를') + ' 중요하게 보는 편이라 결정 기준을 맞추기 쉽습니다.'
     : '한 사람은 ' + ROLE_COPY[firstRole] + ', 다른 사람은 ' + ROLE_COPY[secondRole] + ' 쪽이 두드러져 역할을 나누면 서로의 빈틈을 보완할 수 있습니다.';
 
   const differences = first.dayMaster === second.dayMaster
@@ -226,7 +290,7 @@ function compatibilityPayload(first, second) {
       {
         id:'understand',
         title:'서로 이해하면 좋은 점',
-        text:'첫 번째 사람은 ' + ROLE_COPY[firstRole] + ', 두 번째 사람은 ' + ROLE_COPY[secondRole] + '을 우선하기 쉽습니다. 상대의 방식이 틀렸다기보다 우선순위가 다를 수 있다는 점을 먼저 확인하세요.'
+        text:'첫 번째 사람은 ' + ROLE_COPY[firstRole] + ', 두 번째 사람은 ' + attachParticle(ROLE_COPY[secondRole], '을', '를') + ' 우선하기 쉽습니다. 상대의 방식이 틀렸다기보다 우선순위가 다를 수 있다는 점을 먼저 확인하세요.'
       },
       {
         id:'advice',
