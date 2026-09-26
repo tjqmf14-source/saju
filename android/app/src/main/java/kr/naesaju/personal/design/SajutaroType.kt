@@ -27,13 +27,13 @@ val SajutaroTypography = Typography(
         fontWeight = FontWeight.SemiBold
     ),
     bodyLarge = TextStyle(
-        fontSize = 16.sp,
-        lineHeight = 25.sp,
+        fontSize = 18.sp,
+        lineHeight = 28.sp,
         fontWeight = FontWeight.Normal
     ),
     bodyMedium = TextStyle(
-        fontSize = 15.sp,
-        lineHeight = 23.sp,
+        fontSize = 16.sp,
+        lineHeight = 25.sp,
         fontWeight = FontWeight.Normal
     ),
     labelLarge = TextStyle(

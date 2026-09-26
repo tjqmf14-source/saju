@@ -45,7 +45,7 @@ fun FortuneScreen(
             PageHeader(
                 eyebrow = "운세",
                 title = "지금 필요한 흐름만",
-                subtitle = "오늘·올해·월별·토정비결을 같은 기준으로 비교해 볼 수 있습니다."
+                subtitle = "오늘부터 올해까지 필요한 흐름만 보고, 월별·토정비결도 같은 기준으로 비교합니다."
             )
             LazyRow(
                 modifier = Modifier.padding(top = 14.dp),

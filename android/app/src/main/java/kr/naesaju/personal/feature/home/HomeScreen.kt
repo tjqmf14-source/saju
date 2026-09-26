@@ -67,7 +67,10 @@ fun HomeScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                TextButton(onClick = onEditProfile) { Text("프로필") }
+                Column(horizontalAlignment = Alignment.End) {
+                    MoonMark()
+                    TextButton(onClick = onEditProfile) { Text("프로필") }
+                }
             }
         }
 
@@ -148,6 +151,15 @@ fun HomeScreen(
             }
         }
     }
+}
+
+@Composable
+private fun MoonMark() {
+    Text(
+        text = "◐",
+        style = MaterialTheme.typography.titleLarge,
+        color = MaterialTheme.colorScheme.tertiary
+    )
 }
 
 @Composable
