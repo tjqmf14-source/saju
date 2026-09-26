@@ -12,11 +12,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -31,6 +30,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import kr.naesaju.personal.bridge.SajuEngineGateway
 import kr.naesaju.personal.data.profile.UserProfile
+import kr.naesaju.personal.design.HeroInsightCard
+import kr.naesaju.personal.design.InsightCard
+import kr.naesaju.personal.design.PageHeader
 import kr.naesaju.personal.domain.CompatibilityReading
 import kr.naesaju.personal.domain.parseCompatibilityReading
 import org.json.JSONObject
@@ -52,99 +54,100 @@ fun CompatibilityScreen(
     LazyColumn(
         modifier = Modifier.fillMaxSize().testTag("compatibility-list"),
         contentPadding = androidx.compose.foundation.layout.PaddingValues(
-            start = 20.dp,
-            top = 24.dp,
-            end = 20.dp,
-            bottom = 40.dp
+            start = 18.dp,
+            top = 18.dp,
+            end = 18.dp,
+            bottom = 30.dp
         ),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         item {
             TextButton(onClick = onBack) { Text("← 홈") }
-            Text(
-                "궁합",
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-            Text(
-                "점수보다\n서로 다른 방식을 봅니다.",
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-            Text(
-                "좋고 나쁨을 단정하지 않고, 대화와 생활에서 부딪히기 쉬운 지점을 정리합니다.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 10.dp)
+            PageHeader(
+                eyebrow = "궁합",
+                title = "점수보다
+서로 다른 방식을 봅니다.",
+                subtitle = "대화와 생활에서 부딪히기 쉬운 지점, 맞추기 쉬운 지점, 조율 방법을 나눠서 봅니다."
             )
         }
 
         item {
-            OutlinedTextField(
-                value = partnerName,
-                onValueChange = { partnerName = it },
+            Surface(
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("상대 이름 또는 닉네임") },
-                singleLine = true
-            )
-        }
-
-        item {
-            OutlinedTextField(
-                value = birthDate,
-                onValueChange = {
-                    val digits = it.filter(Char::isDigit).take(8)
-                    birthDate = when {
-                        digits.length <= 4 -> digits
-                        digits.length <= 6 -> digits.take(4) + "-" + digits.drop(4)
-                        else -> digits.take(4) + "-" + digits.substring(4, 6) + "-" + digits.drop(6)
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("상대 생년월일") },
-                supportingText = { Text("양력 기준 · 숫자 8자리") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true
-            )
-        }
-
-        item {
-            OutlinedTextField(
-                value = birthTime,
-                onValueChange = {
-                    val digits = it.filter(Char::isDigit).take(4)
-                    birthTime = if (digits.length <= 2) digits else digits.take(2) + ":" + digits.drop(2)
-                },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("상대 출생시간") },
-                supportingText = { Text("모르면 12:00을 그대로 사용하세요.") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true
-            )
-        }
-
-        item {
-            Text("상대 성별", style = MaterialTheme.typography.titleMedium)
-            Row(
-                modifier = Modifier.padding(top = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                shape = RoundedCornerShape(20.dp),
+                color = MaterialTheme.colorScheme.surface
             ) {
-                FilterChip(selected = gender == "male", onClick = { gender = "male" }, label = { Text("남성") })
-                FilterChip(selected = gender == "female", onClick = { gender = "female" }, label = { Text("여성") })
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(11.dp)
+                ) {
+                    Text("상대 정보", style = MaterialTheme.typography.titleLarge)
+                    OutlinedTextField(
+                        value = partnerName,
+                        onValueChange = { partnerName = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("이름 또는 닉네임") },
+                        singleLine = true
+                    )
+                    OutlinedTextField(
+                        value = birthDate,
+                        onValueChange = {
+                            val digits = it.filter(Char::isDigit).take(8)
+                            birthDate = when {
+                                digits.length <= 4 -> digits
+                                digits.length <= 6 -> digits.take(4) + "-" + digits.drop(4)
+                                else -> digits.take(4) + "-" + digits.substring(4, 6) + "-" + digits.drop(6)
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("상대 생년월일") },
+                        supportingText = { Text("양력 기준 · 숫자 8자리") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true
+                    )
+                    OutlinedTextField(
+                        value = birthTime,
+                        onValueChange = {
+                            val digits = it.filter(Char::isDigit).take(4)
+                            birthTime = if (digits.length <= 2) digits else digits.take(2) + ":" + digits.drop(2)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("상대 출생시간") },
+                        supportingText = { Text("모르면 12:00을 그대로 사용하세요.") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true
+                    )
+                }
+            }
+        }
+
+        item {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp),
+                color = MaterialTheme.colorScheme.surface
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(9.dp)
+                ) {
+                    Text("상대 성별", style = MaterialTheme.typography.titleMedium)
+                    Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                        FilterChip(selected = gender == "male", onClick = { gender = "male" }, label = { Text("남성") })
+                        FilterChip(selected = gender == "female", onClick = { gender = "female" }, label = { Text("여성") })
+                    }
+                }
             }
         }
 
         if (error.isNotBlank()) {
-            item {
-                Text(error, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error)
-            }
+            item { Text(error, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error) }
         }
 
         item {
             Button(
                 enabled = !loading,
-                modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp),
+                modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
                 onClick = {
                     error = validatePartner(birthDate, birthTime)
                     if (error.isNotBlank()) return@Button
@@ -180,14 +183,14 @@ fun CompatibilityScreen(
 
         result?.let { reading ->
             item {
-                CompatibilityCard(
-                    title = if (partnerName.isBlank()) "두 사람의 관계" else profile.name + " · " + partnerName,
-                    body = reading.summary,
-                    emphasized = true
+                HeroInsightCard(
+                    label = if (partnerName.isBlank()) "두 사람의 관계" else profile.name + " · " + partnerName,
+                    title = reading.summary,
+                    body = "아래에서 관계의 강점과 조율할 지점을 나눠 확인해 보세요."
                 )
             }
             items(reading.sections) { section ->
-                CompatibilityCard(section.title, section.text)
+                InsightCard(section.title, section.text)
             }
             item {
                 Text(
@@ -216,35 +219,4 @@ private fun validatePartner(date: String, time: String): String {
     val minute = timeMatch.groupValues[2].toIntOrNull() ?: return "상대 출생분을 확인해 주세요."
     if (hour !in 0..23 || minute !in 0..59) return "상대 출생시간은 00:00~23:59 범위여야 합니다."
     return ""
-}
-
-@Composable
-private fun CompatibilityCard(
-    title: String,
-    body: String,
-    emphasized: Boolean = false
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (emphasized) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
-        )
-    ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 22.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                title,
-                style = MaterialTheme.typography.titleLarge,
-                color = if (emphasized) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
-            )
-            Text(
-                body,
-                style = MaterialTheme.typography.bodyLarge,
-                color = if (emphasized) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
 }

@@ -17,10 +17,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,6 +36,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import kr.naesaju.personal.bridge.SajuEngineGateway
+import kr.naesaju.personal.design.InfoPill
+import kr.naesaju.personal.design.PageHeader
 import kr.naesaju.personal.domain.TarotCardReading
 import kr.naesaju.personal.domain.TarotReading
 import kr.naesaju.personal.domain.parseTarotReading
@@ -55,102 +56,97 @@ fun TarotScreen(
 
     LazyColumn(
         contentPadding = PaddingValues(
-            start = 20.dp,
-            top = contentPadding.calculateTopPadding() + 24.dp,
-            end = 20.dp,
-            bottom = contentPadding.calculateBottomPadding() + 28.dp
+            start = 18.dp,
+            top = contentPadding.calculateTopPadding() + 18.dp,
+            end = 18.dp,
+            bottom = contentPadding.calculateBottomPadding() + 24.dp
         ),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         item {
-            Text("타로", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
-            Text(
-                "질문을 정하고\n카드를 펼쳐보세요.",
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-            Text(
-                "미래를 확정하는 답이 아니라 지금 놓친 관점을 확인하는 용도로 사용합니다.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 10.dp)
+            PageHeader(
+                eyebrow = "타로",
+                title = "질문을 정하고 카드를 펼쳐보세요.",
+                subtitle = "미래를 단정하기보다 지금 놓친 관점과 다음 행동을 확인하는 용도로 사용합니다."
             )
         }
 
         item {
-            Text("카드 수", style = MaterialTheme.typography.titleMedium)
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.padding(top = 8.dp)) {
-                FilterChip(
-                    selected = count == 1,
-                    onClick = {
-                        count = 1
-                        mode = "today"
-                        reading = null
-                    },
-                    label = { Text("1장") }
-                )
-                FilterChip(
-                    selected = count == 3,
-                    onClick = {
-                        count = 3
-                        if (mode == "today") mode = "question"
-                        reading = null
-                    },
-                    label = { Text("3장") }
-                )
-            }
-        }
-
-        if (count == 3) {
-            item {
-                Text("질문 유형", style = MaterialTheme.typography.titleMedium)
-                LazyRow(
-                    contentPadding = PaddingValues(top = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp),
+                color = MaterialTheme.colorScheme.surface
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(
-                        listOf(
-                            "question" to "일반",
-                            "career" to "일",
-                            "money" to "돈",
-                            "love" to "관계"
-                        )
-                    ) { option ->
+                    Text("카드 수", style = MaterialTheme.typography.titleMedium)
+                    Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
                         FilterChip(
-                            selected = mode == option.first,
+                            selected = count == 1,
                             onClick = {
-                                mode = option.first
+                                count = 1
+                                mode = "today"
                                 reading = null
                             },
-                            label = { Text(option.second) }
+                            label = { Text("1장") }
+                        )
+                        FilterChip(
+                            selected = count == 3,
+                            onClick = {
+                                count = 3
+                                if (mode == "today") mode = "question"
+                                reading = null
+                            },
+                            label = { Text("3장") }
                         )
                     }
-                }
-            }
-        }
-
-        item {
-            Button(
-                enabled = !drawing,
-                modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp),
-                onClick = {
-                    drawing = true
-                    error = ""
-                    val request = JSONObject().put("count", count).put("mode", mode).toString()
-                    engine.drawTarot(request) { result ->
-                        drawing = false
-                        result.onSuccess { raw ->
-                            reading = parseTarotReading(raw)
-                            if (reading == null) {
-                                error = "카드 결과를 읽지 못했습니다. 다시 시도해 주세요."
+                    if (count == 3) {
+                        Text("질문 유형", style = MaterialTheme.typography.titleMedium)
+                        LazyRow(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                            items(
+                                listOf(
+                                    "question" to "일반",
+                                    "career" to "일",
+                                    "money" to "돈",
+                                    "love" to "관계"
+                                )
+                            ) { option ->
+                                FilterChip(
+                                    selected = mode == option.first,
+                                    onClick = {
+                                        mode = option.first
+                                        reading = null
+                                    },
+                                    label = { Text(option.second) }
+                                )
                             }
-                        }.onFailure {
-                            error = it.message ?: "카드를 펼치는 중 문제가 생겼습니다."
                         }
                     }
+                    Button(
+                        enabled = !drawing,
+                        modifier = Modifier.fillMaxWidth().heightIn(min = 50.dp),
+                        onClick = {
+                            drawing = true
+                            error = ""
+                            val request = JSONObject().put("count", count).put("mode", mode).toString()
+                            engine.drawTarot(request) { result ->
+                                drawing = false
+                                result.onSuccess { raw ->
+                                    reading = parseTarotReading(raw)
+                                    if (reading == null) {
+                                        error = "카드 결과를 읽지 못했습니다. 다시 시도해 주세요."
+                                    }
+                                }.onFailure {
+                                    error = it.message ?: "카드를 펼치는 중 문제가 생겼습니다."
+                                }
+                            }
+                        }
+                    ) {
+                        Text(if (drawing) "카드를 섞는 중..." else if (count == 1) "오늘의 카드 뽑기" else "3장 펼치기")
+                    }
                 }
-            ) {
-                Text(if (drawing) "카드를 섞는 중..." else if (count == 1) "오늘의 카드 뽑기" else "3장 펼치기")
             }
         }
 
@@ -170,22 +166,44 @@ fun TarotScreen(
 
 @Composable
 private fun TarotReadingCard(card: TarotCardReading) {
-    Card(
+    Surface(
         modifier = Modifier.fillMaxWidth().animateContentSize(),
-        shape = RoundedCornerShape(28.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        shape = RoundedCornerShape(22.dp),
+        color = MaterialTheme.colorScheme.surface
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 20.dp, vertical = 22.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.padding(horizontal = 18.dp, vertical = 18.dp),
+            verticalArrangement = Arrangement.spacedBy(11.dp)
         ) {
-            Text(card.position, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.tertiary)
+            Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                InfoPill(card.position)
+                InfoPill(card.orientation, containerColor = MaterialTheme.colorScheme.tertiaryContainer)
+            }
             AssetTarotImage(card)
             Text(card.name + " · " + card.orientation, style = MaterialTheme.typography.titleLarge)
-            Text(card.keywords, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                card.keywords,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.secondary
+            )
             Text(card.meaning, style = MaterialTheme.typography.bodyLarge)
-            Text("행동 조언", style = MaterialTheme.typography.titleMedium)
-            Text(card.advice, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                color = MaterialTheme.colorScheme.primaryContainer
+            ) {
+                Column(
+                    modifier = Modifier.padding(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    Text("행동 조언", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        card.advice,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
         }
     }
 }
@@ -207,21 +225,21 @@ private fun AssetTarotImage(card: TarotCardReading) {
                 bitmap = bitmap.asImageBitmap(),
                 contentDescription = card.name + " 카드 이미지",
                 modifier = Modifier
-                    .fillMaxWidth(0.58f)
+                    .fillMaxWidth(0.50f)
                     .aspectRatio(0.58f)
-                    .clip(RoundedCornerShape(18.dp))
+                    .clip(RoundedCornerShape(14.dp))
                     .graphicsLayer { rotationZ = if (card.reversed) 180f else 0f },
                 contentScale = ContentScale.Fit
             )
         } else {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.58f)
-                    .aspectRatio(0.58f)
-                    .clip(RoundedCornerShape(18.dp)),
-                contentAlignment = Alignment.Center
+            Surface(
+                modifier = Modifier.fillMaxWidth(0.50f).aspectRatio(0.58f),
+                shape = RoundedCornerShape(14.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant
             ) {
-                Text(card.name, style = MaterialTheme.typography.titleMedium)
+                Box(contentAlignment = Alignment.Center) {
+                    Text(card.name, style = MaterialTheme.typography.titleMedium)
+                }
             }
         }
     }

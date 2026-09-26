@@ -9,10 +9,13 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -138,7 +141,7 @@ fun SajutaroApp() {
             ) {
                 AppDestination.entries.forEach { destination ->
                     NavigationBarItem(
-                        modifier = Modifier.heightIn(min = 56.dp),
+                        modifier = Modifier.heightIn(min = 58.dp),
                         selected = selected == destination,
                         onClick = { destinationName = destination.name },
                         icon = { DestinationGlyph(selected = selected == destination) },
@@ -151,7 +154,7 @@ fun SajutaroApp() {
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = MaterialTheme.colorScheme.primary,
                             selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.surfaceVariant
+                            indicatorColor = MaterialTheme.colorScheme.primaryContainer
                         )
                     )
                 }
@@ -162,9 +165,9 @@ fun SajutaroApp() {
             targetState = selected,
             label = "main_destination",
             transitionSpec = {
-                (fadeIn(tween(220)) + slideInHorizontally(tween(220)) { fullWidth -> fullWidth / 18 })
+                (fadeIn(tween(180)) + slideInHorizontally(tween(180)) { fullWidth -> fullWidth / 24 })
                     .togetherWith(
-                        fadeOut(tween(140)) + slideOutHorizontally(tween(140)) { fullWidth -> -fullWidth / 24 }
+                        fadeOut(tween(120)) + slideOutHorizontally(tween(120)) { fullWidth -> -fullWidth / 30 }
                     )
             }
         ) { destination ->
@@ -199,12 +202,14 @@ fun SajutaroApp() {
 
 @Composable
 private fun DestinationGlyph(selected: Boolean) {
-    Box(
+    Row(
         modifier = Modifier
-            .size(if (selected) 11.dp else 9.dp)
+            .width(if (selected) 24.dp else 18.dp)
+            .height(4.dp)
             .background(
-                color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-                shape = CircleShape
+                color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                shape = RoundedCornerShape(999.dp)
             )
-    )
+            .padding(0.dp)
+    ) {}
 }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilterChip
@@ -28,6 +29,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import kr.naesaju.personal.data.profile.UserProfile
+import kr.naesaju.personal.design.PageHeader
 
 @Composable
 fun ProfileScreen(
@@ -51,97 +53,87 @@ fun ProfileScreen(
                 .imePadding()
                 .testTag("profile-list"),
             contentPadding = androidx.compose.foundation.layout.PaddingValues(
-                start = 20.dp,
-                top = 20.dp,
-                end = 20.dp,
+                start = 18.dp,
+                top = 18.dp,
+                end = 18.dp,
                 bottom = 24.dp
             ),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             item {
-                Text(
-                    text = "사주타로",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-                Text(
-                    text = if (initial == null) "처음 한 번만\n나를 알려주세요." else "프로필을\n다시 확인해 주세요.",
-                    style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(top = 6.dp)
-                )
-                Text(
-                    text = "입력한 정보는 기기 안에서만 계산하고 저장합니다.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 8.dp)
+                PageHeader(
+                    eyebrow = "사주타로",
+                    title = if (initial == null) "처음 한 번만
+나를 알려주세요." else "프로필을
+다시 확인해 주세요.",
+                    subtitle = "입력한 정보는 기기 안에서만 계산하고 저장합니다."
                 )
             }
 
             item {
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text("이름 또는 닉네임") },
-                    singleLine = true
-                )
-            }
-
-            item {
-                Text("달력 기준", style = MaterialTheme.typography.titleMedium)
-                Row(
-                    modifier = Modifier.padding(top = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    FilterChip(
-                        selected = calendar == "solar",
-                        onClick = {
-                            calendar = "solar"
-                            isLeap = false
-                        },
-                        label = { Text("양력") }
-                    )
-                    FilterChip(
-                        selected = calendar == "lunar",
-                        onClick = { calendar = "lunar" },
-                        label = { Text("음력") }
+                FormCard("이름") {
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = { name = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("이름 또는 닉네임") },
+                        singleLine = true
                     )
                 }
-                if (calendar == "lunar") {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text("윤달로 태어났어요", style = MaterialTheme.typography.bodyLarge)
-                            Text(
-                                "윤달 생일인 경우에만 켜주세요.",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        Switch(
-                            checked = isLeap,
-                            onCheckedChange = { isLeap = it }
+            }
+
+            item {
+                FormCard("달력 기준") {
+                    Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                        FilterChip(
+                            selected = calendar == "solar",
+                            onClick = {
+                                calendar = "solar"
+                                isLeap = false
+                            },
+                            label = { Text("양력") }
                         )
+                        FilterChip(
+                            selected = calendar == "lunar",
+                            onClick = { calendar = "lunar" },
+                            label = { Text("음력") }
+                        )
+                    }
+                    if (calendar == "lunar") {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text("윤달로 태어났어요", style = MaterialTheme.typography.bodyLarge)
+                                Text(
+                                    "윤달 생일인 경우에만 켜주세요.",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            Switch(checked = isLeap, onCheckedChange = { isLeap = it })
+                        }
                     }
                 }
             }
 
             item {
-                OutlinedTextField(
-                    value = birthDate,
-                    onValueChange = { birthDate = formatDate(it) },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = { Text("생년월일") },
-                    supportingText = { Text("숫자만 입력해도 1987-06-14처럼 정리됩니다.") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true
-                )
+                FormCard("생년월일") {
+                    OutlinedTextField(
+                        value = birthDate,
+                        onValueChange = { birthDate = formatDate(it) },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("생년월일") },
+                        supportingText = { Text("숫자 8자리만 입력해도 자동으로 정리됩니다.") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        singleLine = true
+                    )
+                }
             }
 
             item {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                FormCard("출생시간") {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -163,9 +155,9 @@ fun ProfileScreen(
                         OutlinedTextField(
                             value = birthTime,
                             onValueChange = { birthTime = formatTime(it) },
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
                             label = { Text("출생시간") },
-                            supportingText = { Text("숫자만 입력해도 11:45처럼 정리됩니다.") },
+                            supportingText = { Text("예: 1145 → 11:45") },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true
                         )
@@ -174,21 +166,19 @@ fun ProfileScreen(
             }
 
             item {
-                Text("성별", style = MaterialTheme.typography.titleMedium)
-                Row(
-                    modifier = Modifier.padding(top = 10.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    FilterChip(
-                        selected = gender == "male",
-                        onClick = { gender = "male" },
-                        label = { Text("남성") }
-                    )
-                    FilterChip(
-                        selected = gender == "female",
-                        onClick = { gender = "female" },
-                        label = { Text("여성") }
-                    )
+                FormCard("성별") {
+                    Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                        FilterChip(
+                            selected = gender == "male",
+                            onClick = { gender = "male" },
+                            label = { Text("남성") }
+                        )
+                        FilterChip(
+                            selected = gender == "female",
+                            onClick = { gender = "female" },
+                            label = { Text("여성") }
+                        )
+                    }
                 }
             }
 
@@ -204,9 +194,7 @@ fun ProfileScreen(
 
             item {
                 Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 56.dp),
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 52.dp),
                     onClick = {
                         error = validateProfile(birthDate, birthTime, birthTimeKnown)
                         if (error.isBlank()) {
@@ -227,6 +215,26 @@ fun ProfileScreen(
                     Text(if (initial == null) "내 사주 시작하기" else "프로필 저장하기")
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun FormCard(
+    title: String,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(20.dp),
+        color = MaterialTheme.colorScheme.surface
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 15.dp),
+            verticalArrangement = Arrangement.spacedBy(9.dp)
+        ) {
+            Text(title, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.secondary)
+            content()
         }
     }
 }
